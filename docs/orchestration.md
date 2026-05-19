@@ -32,10 +32,19 @@ Die lokalen Ordner duerfen dabei nicht geloescht werden.
   Master-Repos.
 - `status.plan.cailama.md` beschreibt den aktuellen Stand und Ausbaupfade des
   Oekosystems.
+- `hinweise.md` enthaelt allgemeine Projekthinweise fuer ChatGPT-Kontexte. Fuer
+  Codex-Arbeit gelten weiterhin `AGENTS.md`, `TODO.md` und die
+  aufgabenspezifischen Nutzeranweisungen.
 - Neue Plaene muessen klar benannt und als Plan, Status oder Handoff erkennbar
   sein.
 - Plan-Dateien duerfen keine Secrets, lokalen Zugangsdaten oder privaten
   Credential-Werte enthalten.
+- Namensschema fuer neue Plaene:
+  `YYYY-MM-DD.<thema>.plan.md`, zum Beispiel
+  `2026-05-19.search-integration.plan.md`.
+- Statusplaene werden aktualisiert, wenn sich Repo-Rollen, Schnittstellen,
+  aktive Integrationsarbeiten oder belastbare Pruefergebnisse wesentlich
+  aendern.
 
 ## Umgang mit Cross-Repo-Aufgaben
 
@@ -48,6 +57,9 @@ Umsetzung erfolgt im jeweiligen Ziel-Repo:
 
 Master-TODOs sollen deshalb Ziel-Repo, Schnittstelle und erwartetes Ergebnis
 nennen, aber keine direkten Code-Aenderungen in Unter-Repos verlangen.
+
+Die aktuelle Roadmap steht in `docs/roadmap.md`. Schnittstellen- und
+Smoke-Test-Regeln stehen in `docs/integrations.md`.
 
 ## Statuspruefung der Unter-Repos
 
@@ -71,3 +83,7 @@ Lokale Konfiguration bleibt ausserhalb des Master-Repos:
   werden nicht dokumentiert und nicht committed.
 - Lokale Datenbanken, Logs, Caches und Meilisearch-Datenverzeichnisse werden
   ignoriert.
+
+## Qualitaet
+
+Die Master-Checks und Akzeptanzkriterien stehen in `docs/quality.md`.

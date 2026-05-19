@@ -62,6 +62,8 @@ Dieses Repo dient dazu:
 ## Wichtige Dateien
 
 - `AGENTS.md` - Regeln fuer Codex/Kimi/LLM-Agenten im Master-Repo.
+- `hinweise.md` - allgemeine Projekthinweise fuer ChatGPT-Kontexte; keine
+  operativen Codex-Anweisungen.
 - `TODO.md` - Ecosystem-weite Aufgaben.
 - `master-repo-orchestration.plan.md` - Plan fuer den Aufbau dieses
   Master-Repos.
@@ -69,6 +71,13 @@ Dieses Repo dient dazu:
   CaiLama-Oekosystems.
 - `docs/ecosystem-map.md` - Architekturkarte und Verantwortlichkeiten.
 - `docs/orchestration.md` - Pflege- und Arbeitsregeln fuer das Master-Repo.
+- `docs/local-setup.md` - lokaler Checkout, Webspace und Konfiguration ohne
+  Secrets.
+- `docs/integrations.md` - Cross-Repo-Schnittstellen, Rollen, Endpunkte und
+  Smoke-Test-Grenzen.
+- `docs/roadmap.md` - Roadmap aus `status.plan.cailama.md` als pflegbare
+  Master-Sicht.
+- `docs/quality.md` - Master-Checks, Index-Regeln und TODO-Konsistenz.
 - `docs/website.md` - URL, Quellpfad und Deployment-Pfad der Webseite.
 - `web/index.html` - statische Webseite fuer `https://cailama.org/`.
 - `scripts/check-ecosystem.sh` - lokale Statuspruefung ohne Schreibzugriffe.
