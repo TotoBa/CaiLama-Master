@@ -3,573 +3,201 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="CaiLama ist ein modulares Schachtrainingssystem mit PGN-Arbeit, Stockfish-Analyse, LLM-Router, Search/RAG und DGT-nahen Workflows.">
+  <meta name="description" content="CaiLama ist ein modulares Schachtrainingssystem mit Analyse, Training, LLM-Router, Search/RAG und DGT-nahen Workflows.">
   <meta property="og:title" content="CaiLama">
   <meta property="og:description" content="Modulares Schachtraining mit Analyse, LLM, Search/RAG und personalisierten Trainingspfaden.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://cailama.org/">
   <meta property="og:image" content="https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png">
-  <title>CaiLama - Modulares Schachtraining</title>
-  <style>
-    :root {
-      color-scheme: light;
-      --ink: #17201a;
-      --muted: #5c665e;
-      --paper: #fbf7ef;
-      --panel: #fffdf8;
-      --line: #d9d0bf;
-      --forest: #1e5a43;
-      --moss: #6f8b4f;
-      --copper: #a15d31;
-      --gold: #c99842;
-      --red: #8a3340;
-      --shadow: 0 18px 55px rgba(24, 28, 24, 0.14);
-      --max: 1180px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.55;
-      color: var(--ink);
-      background: var(--paper);
-    }
-
-    a {
-      color: inherit;
-      text-decoration-color: rgba(30, 90, 67, 0.42);
-      text-underline-offset: 0.18em;
-    }
-
-    a:hover {
-      color: var(--forest);
-      text-decoration-color: currentColor;
-    }
-
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      border-bottom: 1px solid rgba(217, 208, 191, 0.85);
-      background: rgba(251, 247, 239, 0.94);
-      backdrop-filter: blur(16px);
-    }
-
-    .nav {
-      width: min(100% - 32px, var(--max));
-      min-height: 64px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 800;
-      letter-spacing: 0;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .brand img {
-      width: 36px;
-      height: 36px;
-      object-fit: contain;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      font-size: 0.94rem;
-      color: var(--muted);
-    }
-
-    .nav-links a {
-      text-decoration: none;
-    }
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      min-height: 84vh;
-      display: grid;
-      place-items: center;
-      padding: 72px 20px 88px;
-      color: #f9f5ea;
-      background: #18231b;
-      isolation: isolate;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: -8% -12%;
-      z-index: -2;
-      background-image: url("https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png");
-      background-repeat: no-repeat;
-      background-position: center 46%;
-      background-size: min(1080px, 132vw);
-      opacity: 0.12;
-      filter: saturate(0.9);
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: auto 0 0;
-      height: 170px;
-      z-index: -1;
-      background: rgba(251, 247, 239, 0.04);
-      border-top: 1px solid rgba(251, 247, 239, 0.12);
-    }
-
-    .hero-inner {
-      width: min(100%, 940px);
-      text-align: center;
-    }
-
-    .hero-logo {
-      width: min(460px, 82vw);
-      height: auto;
-      margin: 0 auto 26px;
-      display: block;
-      filter: drop-shadow(0 26px 50px rgba(0, 0, 0, 0.32));
-    }
-
-    .eyebrow {
-      margin: 0 0 10px;
-      color: #dbc58a;
-      font-size: 0.82rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    h1,
-    h2,
-    h3 {
-      margin: 0;
-      line-height: 1.08;
-      letter-spacing: 0;
-    }
-
-    h1 {
-      font-size: clamp(3rem, 9vw, 7rem);
-      font-weight: 900;
-    }
-
-    .lead {
-      width: min(100%, 780px);
-      margin: 22px auto 0;
-      color: rgba(249, 245, 234, 0.86);
-      font-size: clamp(1.08rem, 2.2vw, 1.45rem);
-    }
-
-    .hero-actions {
-      margin-top: 34px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 11px 18px;
-      border: 1px solid rgba(251, 247, 239, 0.28);
-      border-radius: 8px;
-      font-weight: 800;
-      text-decoration: none;
-      background: rgba(251, 247, 239, 0.1);
-      color: #fffaf0;
-    }
-
-    .button.primary {
-      border-color: #dbc58a;
-      background: #dbc58a;
-      color: #1c2119;
-    }
-
-    main {
-      background: var(--paper);
-    }
-
-    section {
-      padding: 74px 20px;
-    }
-
-    .section-inner {
-      width: min(100%, var(--max));
-      margin: 0 auto;
-    }
-
-    .section-head {
-      display: grid;
-      gap: 14px;
-      max-width: 760px;
-      margin-bottom: 30px;
-    }
-
-    h2 {
-      font-size: clamp(2rem, 5vw, 3.4rem);
-    }
-
-    .section-head p,
-    .muted {
-      margin: 0;
-      color: var(--muted);
-      font-size: 1.04rem;
-    }
-
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .feature {
-      min-height: 210px;
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      box-shadow: 0 6px 22px rgba(24, 28, 24, 0.06);
-    }
-
-    .feature strong {
-      display: block;
-      margin-bottom: 12px;
-      font-size: 1.1rem;
-    }
-
-    .feature p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      height: 28px;
-      padding: 0 10px;
-      margin-bottom: 16px;
-      border-radius: 999px;
-      color: #fffaf0;
-      font-size: 0.78rem;
-      font-weight: 800;
-      background: var(--forest);
-    }
-
-    .tag.copper {
-      background: var(--copper);
-    }
-
-    .tag.red {
-      background: var(--red);
-    }
-
-    .band {
-      background: #efe7d8;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .ecosystem {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    .repo {
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fffaf0;
-    }
-
-    .repo h3 {
-      margin-bottom: 10px;
-      font-size: 1.28rem;
-    }
-
-    .repo p {
-      margin: 0 0 16px;
-      color: var(--muted);
-    }
-
-    .repo a {
-      font-weight: 800;
-    }
-
-    .quickstart {
-      display: grid;
-      grid-template-columns: 0.86fr 1.14fr;
-      gap: 24px;
-      align-items: start;
-    }
-
-    pre {
-      margin: 0;
-      padding: 22px;
-      overflow-x: auto;
-      border-radius: 8px;
-      background: #151916;
-      color: #f8f0dc;
-      box-shadow: var(--shadow);
-      font-size: 0.92rem;
-    }
-
-    code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-    }
-
-    .timeline {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .step {
-      padding: 20px;
-      min-height: 180px;
-      border-left: 4px solid var(--gold);
-      background: var(--panel);
-      border-radius: 0 8px 8px 0;
-    }
-
-    .step strong {
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    .step p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    footer {
-      padding: 36px 20px;
-      color: rgba(249, 245, 234, 0.78);
-      background: #17201a;
-    }
-
-    footer .section-inner {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    footer a {
-      color: #f9f5ea;
-    }
-
-    @media (max-width: 900px) {
-      .feature-grid,
-      .ecosystem,
-      .quickstart,
-      .timeline {
-        grid-template-columns: 1fr;
-      }
-
-      .nav {
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 12px 0;
-      }
-
-      .nav-links {
-        width: 100%;
-        overflow-x: auto;
-        padding-bottom: 2px;
-      }
-    }
-
-    @media (max-width: 560px) {
-      section {
-        padding: 56px 16px;
-      }
-
-      .hero {
-        min-height: 82vh;
-        padding: 54px 16px 76px;
-      }
-
-      .hero-actions {
-        align-items: stretch;
-        flex-direction: column;
-      }
-
-      .button {
-        width: 100%;
-      }
-
-      pre {
-        font-size: 0.82rem;
-      }
-    }
-  </style>
+  <title>CaiLama - Schachtraining als System</title>
+  <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
-  <header class="site-header" aria-label="Hauptnavigation">
-    <nav class="nav">
-      <a class="brand" href="#top" aria-label="CaiLama Start">
+  <header class="site-header">
+    <nav class="nav" aria-label="Hauptnavigation">
+      <a class="brand" href="index.html">
         <img src="https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-small.png" alt="">
         <span>CaiLama</span>
       </a>
-      <div class="nav-links" aria-label="Seitenbereiche">
-        <a href="#system">System</a>
-        <a href="#ecosystem">Repos</a>
-        <a href="#quickstart">Quick Start</a>
-        <a href="#roadmap">Roadmap</a>
+      <div class="nav-links">
+        <a href="projects.html">Projekte</a>
+        <a href="architecture.html">Architektur</a>
+        <a href="roadmap.html">Roadmap</a>
+        <a href="operations.html">Betrieb</a>
+        <a href="reference.html">Referenz</a>
       </div>
     </nav>
   </header>
 
-  <main id="top">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-inner">
+  <main>
+    <section class="hero">
+      <div class="hero-inner hero-grid">
+        <div>
+          <p class="eyebrow">Schachtraining, Analyse und lokale Modellinfrastruktur</p>
+          <h1>CaiLama</h1>
+          <p class="lead">
+            CaiLama ist ein praxistaugliches Schachanalyse-, Trainings- und
+            Automatisierungs-Oekosystem. Es verbindet PGNs, Stockfish,
+            LLM-Kommentierung, DGT-Board-Training, Wissenssuche,
+            Spielerprofile und langfristige Trainingsentwicklung.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="projects.html">Projektstand ansehen</a>
+            <a class="button" href="architecture.html">Architektur verstehen</a>
+            <a class="button" href="https://github.com/TotoBa/CaiLama">GitHub</a>
+          </div>
+        </div>
         <img class="hero-logo" src="https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png" alt="CaiLama Logo">
-        <p class="eyebrow">Schachtraining, Analyse und lokale Modellinfrastruktur</p>
-        <h1 id="hero-title">CaiLama</h1>
-        <p class="lead">
-          Ein modulares Schachtrainingssystem fuer PGN-Arbeit, Stockfish-Analyse,
-          statische Brettwahrheit, LLM-Router, Search/RAG, Spielerprofile,
-          Trainingskarten und DGT-nahe Workflows.
-        </p>
-        <div class="hero-actions" aria-label="Primaere Links">
-          <a class="button primary" href="https://github.com/TotoBa/CaiLama">CaiLama auf GitHub</a>
-          <a class="button" href="#quickstart">Quick Start</a>
-          <a class="button" href="#ecosystem">Ecosystem ansehen</a>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-inner">
+        <div class="section-head">
+          <h2>Aktueller Stand.</h2>
+          <p>
+            Das Oekosystem besteht aus einem reifen Kernsystem und zwei
+            spezialisierten Diensten. Der Master haelt Roadmap, Webseite,
+            Status und Cross-Repo-Regeln zusammen.
+          </p>
+        </div>
+        <div class="grid-4">
+          <article class="metric">
+            <strong>4</strong>
+            <p>Repos mit klarer Verantwortlichkeit.</p>
+          </article>
+          <article class="metric">
+            <strong>3</strong>
+            <p>aktive Integrationslinien: Training, Router, Search.</p>
+          </article>
+          <article class="metric">
+            <strong>200</strong>
+            <p>cailama.org ist erreichbar und liefert die statische Site aus.</p>
+          </article>
+          <article class="metric">
+            <strong>0</strong>
+            <p>Unter-Repo-Dateien im Master-Index.</p>
+          </article>
         </div>
       </div>
     </section>
 
-    <section id="system">
+    <section class="band">
       <div class="section-inner">
         <div class="section-head">
-          <h2>Ein Kernsystem, klare Bausteine.</h2>
+          <h2>Was CaiLama leisten soll.</h2>
           <p>
-            CaiLama verbindet vorhandene Module statt Fachlogik zu duplizieren.
-            Analyse, Training, Agent-CLI, Profile, Knowledge und externe
-            Integrationen bleiben als testbare Bausteine getrennt.
+            Das System soll nicht nur Fragen beantworten, sondern aktiv
+            Analyse- und Trainingsaufgaben ausfuehren.
           </p>
         </div>
-        <div class="feature-grid">
-          <article class="feature">
+        <div class="grid-3">
+          <article class="card">
             <span class="tag">Analyse</span>
-            <strong>PGN, Stockfish und Brettwahrheit</strong>
+            <h3>PGN und Stockfish</h3>
             <p>
-              Lokale PGN-Flows, deterministische Engine-Analyse, statische
-              Stellungsauswertung und wiederverwendbare Datenmodelle fuer
-              robuste Trainingsentscheidungen.
+              Partien importieren, Hauptvarianten verarbeiten,
+              Stockfish-Analysen erhalten, menschliche Kommentare ergaenzen
+              und gueltige PGN-Artefakte erzeugen.
             </p>
           </article>
-          <article class="feature">
+          <article class="card">
             <span class="tag copper">Training</span>
-            <strong>Profile, Karten und Feedback</strong>
+            <h3>Personalisierte Aufgaben</h3>
             <p>
-              Spielerprofile, Plattformpartien, Rating-Kontext,
-              Trainingskarten und Review-Historie bilden die Grundlage fuer
-              personalisierte Trainingspfade.
+              Schluesselstellungen erkennen, Fehlerarten klassifizieren,
+              wiederkehrende Muster ableiten und daraus konkrete
+              Trainingskarten sowie DGT-nahe Einheiten erzeugen.
             </p>
           </article>
-          <article class="feature">
-            <span class="tag red">Agenten</span>
-            <strong>CLI, Rollen und Tools</strong>
+          <article class="card">
+            <span class="tag blue">Recherche</span>
+            <h3>Search und RAG</h3>
             <p>
-              Eine terminal-native Agent-Console nutzt Rollen wie Coach,
-              Analyst, Critic, Vision, Scribe und Researcher ueber klare
-              Prompts und Tools.
+              Schachspezifische Quellen, DWZ-Daten, eigene Analysen und
+              Trainingsmaterialien als kontrollierten Kontext fuer Rollen wie
+              Researcher und Analyst bereitstellen.
             </p>
           </article>
         </div>
       </div>
     </section>
 
-    <section id="ecosystem" class="band">
+    <section>
       <div class="section-inner">
         <div class="section-head">
-          <h2>Das CaiLama-Oekosystem.</h2>
+          <h2>Repo-Uebersicht.</h2>
           <p>
-            Das Projekt ist bewusst kein Monorepo. CaiLama bleibt Produktkern,
-            Router und Search sind eigenstaendige Dienste, Master koordiniert.
+            Kein Monorepo: Jedes Repository hat einen eigenen Zweck. Die
+            Kopplung laeuft ueber dokumentierte Schnittstellen.
           </p>
         </div>
-        <div class="ecosystem">
-          <article class="repo">
-            <h3>TotoBa/CaiLama</h3>
-            <p>Hauptsystem fuer Schachanalyse, Training, Profile, Agent-CLI und produktnahe Workflows.</p>
-            <a href="https://github.com/TotoBa/CaiLama">Repository oeffnen</a>
+        <div class="grid-2">
+          <article class="repo-card">
+            <div>
+              <span class="tag">Hauptsystem</span>
+              <h3>CaiLama</h3>
+              <p>Schachanalyse, Training, Profile, Agent-CLI, PGN, Stockfish, DGT-nahe Workflows.</p>
+              <ul>
+                <li>Personalisierter Trainingsgenerator und Folgehaertung.</li>
+                <li>SearchAdapter als Standardpfad vor Web-Fallback.</li>
+                <li>LLM-Rollen ueber Router-Aliase.</li>
+              </ul>
+            </div>
+            <a href="projects.html#cailama">Details</a>
           </article>
-          <article class="repo">
-            <h3>TotoBa/CaiLama-LLM-Router</h3>
-            <p>OpenAI-kompatibler Router fuer Modell-Aliase, Backends, Fallbacks und Betriebschecks.</p>
-            <a href="https://github.com/TotoBa/CaiLama-LLM-Router">Repository oeffnen</a>
+          <article class="repo-card">
+            <div>
+              <span class="tag copper">Router</span>
+              <h3>CaiLama-LLM-Router</h3>
+              <p>OpenAI-kompatible Modellzugriffe, Backends, Aliase, Fallbacks und JSONL-Betriebsdaten.</p>
+              <ul>
+                <li>Backend-Routing und Cooldown-Verhalten.</li>
+                <li>Rollen-Aliase fuer CaiLama und Kimi.</li>
+                <li>Keine Schachproduktlogik im Router.</li>
+              </ul>
+            </div>
+            <a href="projects.html#router">Details</a>
           </article>
-          <article class="repo">
-            <h3>TotoBa/CaiLama-Search</h3>
-            <p>Search-, DWZ- und RAG-Dienst mit FastAPI, Meilisearch, Quellen und Importpfaden.</p>
-            <a href="https://github.com/TotoBa/CaiLama-Search">Repository oeffnen</a>
+          <article class="repo-card">
+            <div>
+              <span class="tag red">Search</span>
+              <h3>CaiLama-Search</h3>
+              <p>FastAPI, Meilisearch, DWZ, Crawler, Quellen, Kontext-API und spaeter semantisches Retrieval.</p>
+              <ul>
+                <li>Meilisearch-Key-Management und Admin-Haertung.</li>
+                <li>Vertrag fuer <code>/v1/search</code>, <code>/v1/context</code>, <code>/v1/dwz/*</code>.</li>
+                <li>Quellenprovenienz fuer RAG-Antworten.</li>
+              </ul>
+            </div>
+            <a href="projects.html#search">Details</a>
           </article>
-          <article class="repo">
-            <h3>TotoBa/CaiLama-Master</h3>
-            <p>Koordination, Statusplaene, TODO-Pflege, Webseite und lokale Ecosystem-Pruefungen.</p>
-            <a href="https://github.com/TotoBa/CaiLama-Master">Repository oeffnen</a>
+          <article class="repo-card">
+            <div>
+              <span class="tag moss">Koordination</span>
+              <h3>CaiLama-Master</h3>
+              <p>Gesamt-Doku, Status, Roadmap, Regeln, Checkskripte, LLM-Referenz und Cross-Repo-Dokumentation.</p>
+              <ul>
+                <li>Unter-Repos bleiben ignoriert.</li>
+                <li>Keine Runtime-Logik, keine Secrets.</li>
+                <li>Diese Website ist die Human-Version der Gesamt-Dokumentation.</li>
+                <li><code>llms.txt</code>, Markdown und JSON bilden die LLM-freundliche Referenz.</li>
+              </ul>
+            </div>
+            <a href="operations.html#master">Details</a>
           </article>
         </div>
       </div>
     </section>
 
-    <section id="quickstart">
-      <div class="section-inner quickstart">
-        <div class="section-head">
-          <h2>Lokaler Start.</h2>
-          <p>
-            Die Kerninstallation folgt dem Haupt-Repository. Live-Zugriffe auf
-            externe Dienste, Router, Hardware oder echte Datenbanken bleiben
-            bewusst explizite Entscheidungen.
-          </p>
-        </div>
-        <pre><code>python3 -m venv .venv
-.venv/bin/python -m pip install --upgrade pip setuptools wheel
-.venv/bin/python -m pip install -e '.[ocr,assets,test]'
-
-cp config/default.sample.toml config/default.toml
-
-cailama --help
-cailama-cli --help
-cailama-cli --fake-llm
-printf '/chain\n/exit\n' | cailama-cli --fake-llm</code></pre>
-      </div>
-    </section>
-
-    <section id="roadmap" class="band">
+    <section class="band">
       <div class="section-inner">
         <div class="section-head">
-          <h2>Roadmap.</h2>
+          <h2>Naechste Plattformstufe.</h2>
           <p>
-            Der naechste Schritt ist Integrationsdisziplin: Search haerten,
-            SearchAdapter anbinden, personalisiertes Training fertig
-            operationalisieren und danach die Plattform verbreitern.
+            Der Fokus liegt auf Integrationsdisziplin: Search sicher machen,
+            CaiLama daran anbinden, Training personalisieren und erst danach
+            breiter ausbauen.
           </p>
         </div>
         <div class="timeline">
@@ -592,12 +220,42 @@ printf '/chain\n/exit\n' | cailama-cli --fake-llm</code></pre>
         </div>
       </div>
     </section>
+
+    <section>
+      <div class="section-inner">
+        <div class="section-head">
+          <h2>Human und LLM-freundlich.</h2>
+          <p>
+            Die Master-Doku dokumentiert das gesamte Oekosystem. Menschen lesen
+            die HTML-Seiten; Agenten und LLMs nutzen <code>llms.txt</code>,
+            <code>ecosystem-reference.md</code> und <code>data/ecosystem.json</code>.
+          </p>
+        </div>
+        <div class="grid-3">
+          <article class="doc-card">
+            <h3>Human-Version</h3>
+            <p>Projektseiten, Architektur, Roadmap und Betrieb als einheitliche Website.</p>
+            <p><a href="reference.html">Referenz oeffnen</a></p>
+          </article>
+          <article class="doc-card">
+            <h3>LLM-Markdown</h3>
+            <p>Kompakte Gesamtreferenz fuer Codex, Kimi und andere Agenten.</p>
+            <p><a href="ecosystem-reference.md">ecosystem-reference.md</a></p>
+          </article>
+          <article class="doc-card">
+            <h3>Maschinenlesbar</h3>
+            <p>Strukturierte JSON-Quelle fuer Tools, Validierung und Automatisierung.</p>
+            <p><a href="data/ecosystem.json">data/ecosystem.json</a></p>
+          </article>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <footer>
+  <footer class="footer">
     <div class="section-inner">
-      <span>CaiLama - zukuenftig unter https://cailama.org/</span>
-      <a href="https://github.com/TotoBa/CaiLama">GitHub</a>
+      <span>CaiLama - Schachtraining als System</span>
+      <a href="https://github.com/TotoBa/CaiLama-Master">Master-Repository</a>
     </div>
   </footer>
 </body>

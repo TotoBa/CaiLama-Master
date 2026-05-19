@@ -1,0 +1,33 @@
+# CaiLama
+
+> CaiLama is a chess analysis, training, automation and retrieval ecosystem.
+> The canonical public documentation is https://cailama.org/.
+
+## Human documentation
+
+- Home: https://cailama.org/
+- Projects: https://cailama.org/projects.html
+- Architecture: https://cailama.org/architecture.html
+- Roadmap: https://cailama.org/roadmap.html
+- Operations: https://cailama.org/operations.html
+- Reference: https://cailama.org/reference.html
+
+## LLM-friendly documentation
+
+- Markdown reference: https://cailama.org/ecosystem-reference.md
+- Machine-readable JSON: https://cailama.org/data/ecosystem.json
+
+## Repositories
+
+- CaiLama-Master: https://github.com/TotoBa/CaiLama-Master
+- CaiLama: https://github.com/TotoBa/CaiLama
+- CaiLama-LLM-Router: https://github.com/TotoBa/CaiLama-LLM-Router
+- CaiLama-Search: https://github.com/TotoBa/CaiLama-Search
+
+## Important constraints for agents
+
+- CaiLama-Master is not a monorepo and not a runtime repository.
+- Sub-repositories must stay ignored by the master Git repository.
+- Do not create submodules.
+- Do not store secrets, tokens, .env files or production credentials.
+- Runtime code belongs in the target sub-repositories, not in CaiLama-Master.

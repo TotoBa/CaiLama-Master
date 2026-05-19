@@ -9,6 +9,13 @@ CaiLama-Oekosystem.
 
 Webseite: <https://cailama.org/>
 
+Human-/LLM-Referenz:
+
+- <https://cailama.org/reference.html>
+- <https://cailama.org/llms.txt>
+- <https://cailama.org/ecosystem-reference.md>
+- <https://cailama.org/data/ecosystem.json>
+
 Dieses Repository ist kein Monorepo und enthaelt keinen produktiven Code der
 Unterprojekte.
 
@@ -26,7 +33,8 @@ CaiLama-Master/
 ├── AGENTS.md
 ├── TODO.md
 ├── docs/
-└── scripts/
+├── scripts/
+└── web/
 ```
 
 Die drei Unterordner sind eigenstaendige Git-Repositories und werden im
@@ -70,6 +78,10 @@ Dieses Repo dient dazu:
 - `status.plan.cailama.md` - aktueller Status- und Ausbaupfad des
   CaiLama-Oekosystems.
 - `docs/ecosystem-map.md` - Architekturkarte und Verantwortlichkeiten.
+- `docs/ecosystem-reference.md` - LLM-freundliche Gesamtreferenz des
+  Oekosystems.
+- `docs/data/ecosystem.json` - maschinenlesbare Struktur der Repos,
+  Schnittstellen und Roadmap.
 - `docs/orchestration.md` - Pflege- und Arbeitsregeln fuer das Master-Repo.
 - `docs/local-setup.md` - lokaler Checkout, Webspace und Konfiguration ohne
   Secrets.
@@ -79,8 +91,10 @@ Dieses Repo dient dazu:
   Master-Sicht.
 - `docs/quality.md` - Master-Checks, Index-Regeln und TODO-Konsistenz.
 - `docs/website.md` - URL, Quellpfad und Deployment-Pfad der Webseite.
-- `web/index.html` - statische Webseite fuer `https://cailama.org/`.
+- `web/` - statische Human-/LLM-Dokumentationswebsite fuer
+  `https://cailama.org/`.
 - `scripts/check-ecosystem.sh` - lokale Statuspruefung ohne Schreibzugriffe.
+- `scripts/deploy-website.sh` - reproduzierbares Deployment von `web/`.
 
 ## Sicherheitsregel
 

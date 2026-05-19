@@ -40,6 +40,10 @@ pnpm-debug.log*
 
 # Local runtime data and databases
 data/
+!docs/data/
+!docs/data/ecosystem.json
+!web/data/
+!web/data/ecosystem.json
 runtime/
 storage/
 *.sqlite

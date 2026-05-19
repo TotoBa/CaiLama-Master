@@ -49,13 +49,25 @@ required_files=(
   "TODO.md"
   "hinweise.md"
   "docs/ecosystem-map.md"
+  "docs/ecosystem-reference.md"
+  "docs/data/ecosystem.json"
   "docs/integrations.md"
   "docs/local-setup.md"
   "docs/orchestration.md"
   "docs/quality.md"
   "docs/roadmap.md"
   "docs/website.md"
+  "scripts/deploy-website.sh"
+  "web/assets/styles.css"
+  "web/architecture.html"
+  "web/data/ecosystem.json"
+  "web/ecosystem-reference.md"
   "web/index.html"
+  "web/llms.txt"
+  "web/operations.html"
+  "web/projects.html"
+  "web/reference.html"
+  "web/roadmap.html"
 )
 
 for path in "${required_files[@]}"; do
@@ -66,10 +78,36 @@ for path in "${required_files[@]}"; do
 done
 echo "OK: required master files exist"
 
-if cmp -s "web/index.html" "/srv/cailama-web/public/index.html"; then
-  echo "OK: deployed website matches web/index.html"
+if cmp -s "docs/ecosystem-reference.md" "web/ecosystem-reference.md"; then
+  echo "OK: LLM markdown reference is synced between docs/ and web/"
 else
-  echo "WARN: deployed website differs from web/index.html"
+  echo "ERROR: docs/ecosystem-reference.md differs from web/ecosystem-reference.md"
+  exit 1
+fi
+
+if cmp -s "docs/data/ecosystem.json" "web/data/ecosystem.json"; then
+  echo "OK: machine-readable JSON is synced between docs/ and web/"
+else
+  echo "ERROR: docs/data/ecosystem.json differs from web/data/ecosystem.json"
+  exit 1
+fi
+
+web_target="/srv/cailama-web/public"
+if [[ -d "$web_target" ]]; then
+  deployed_mismatch=0
+  while IFS= read -r -d '' source; do
+    relative="${source#web/}"
+    deployed="$web_target/$relative"
+    if [[ ! -f "$deployed" ]] || ! cmp -s "$source" "$deployed"; then
+      echo "WARN: deployed website differs for $relative"
+      deployed_mismatch=1
+    fi
+  done < <(find web -type f -print0)
+  if [[ "$deployed_mismatch" -eq 0 ]]; then
+    echo "OK: deployed website matches web/"
+  fi
+else
+  echo "WARN: web target does not exist: $web_target"
 fi
 echo
 

@@ -1,0 +1,199 @@
+{
+  "schema_version": "1.0",
+  "generated_for": "CaiLama ecosystem documentation",
+  "last_reviewed": "2026-05-19",
+  "canonical_url": "https://cailama.org/",
+  "language": "de",
+  "summary": {
+    "name": "CaiLama",
+    "type": "chess analysis, training, automation and retrieval ecosystem",
+    "purpose": "PGN import, Stockfish analysis, LLM-assisted commentary, DGT-aware training, knowledge search, player development and reproducible artifacts",
+    "master_rule": "CaiLama-Master is documentation, coordination and website only; it is not a monorepo and contains no runtime implementation from subprojects."
+  },
+  "repositories": [
+    {
+      "name": "CaiLama-Master",
+      "github": "TotoBa/CaiLama-Master",
+      "role": "ecosystem documentation, website, roadmap, orchestration and local checks",
+      "local_path": "CaiLama-Master",
+      "tracked_in_master": true,
+      "runtime_repo": false,
+      "important_paths": [
+        "README.md",
+        "TODO.md",
+        "AGENTS.md",
+        "hinweise.md",
+        "docs/",
+        "scripts/check-ecosystem.sh",
+        "web/"
+      ],
+      "rules": [
+        "Do not track sub-repository files.",
+        "Do not create submodules.",
+        "Do not store secrets, tokens, .env files or production credentials.",
+        "Keep runtime implementation out of the master repository."
+      ]
+    },
+    {
+      "name": "CaiLama",
+      "github": "TotoBa/CaiLama",
+      "role": "main chess system for analysis, training, profiles, agent CLI, PGN, Stockfish and DGT-aware workflows",
+      "local_path": "CaiLama",
+      "tracked_in_master": false,
+      "runtime_repo": true,
+      "major_modules": [
+        "analysis",
+        "chess_eval",
+        "database",
+        "player_profile",
+        "training",
+        "agent",
+        "knowledge",
+        "queue",
+        "hardware"
+      ],
+      "current_focus": [
+        "personalized training generator hardening",
+        "deterministic mistake and pattern taxonomy",
+        "internal SearchAdapter for CaiLama-Search",
+        "DWZ identity linking",
+        "RAG-assisted analysis packages"
+      ],
+      "constraints": [
+        "No live external, engine, router, database or hardware calls unless explicitly requested.",
+        "Do not expose local configuration secrets.",
+        "New domain logic should be implemented as reusable modules first."
+      ]
+    },
+    {
+      "name": "CaiLama-LLM-Router",
+      "github": "TotoBa/CaiLama-LLM-Router",
+      "role": "OpenAI-compatible LLM router with aliases, backend routing, fallback policies and operational checks",
+      "local_path": "CaiLama-LLM-Router",
+      "tracked_in_master": false,
+      "runtime_repo": true,
+      "endpoints": [
+        "/health",
+        "/v1/models",
+        "/v1/chat/completions"
+      ],
+      "model_aliases": [
+        "chess-router",
+        "chess-small",
+        "chess-large",
+        "chess-task",
+        "chess-coach",
+        "chess-analyst",
+        "chess-critic",
+        "chess-vision",
+        "chess-scribe",
+        "chess-researcher"
+      ],
+      "current_focus": [
+        "backend state model",
+        "fallback behavior",
+        "exhausted-backend behavior",
+        "privacy-safe observability"
+      ],
+      "constraints": [
+        "No chess product logic in the router.",
+        "No provider secrets in repository files.",
+        "Retrieval context belongs to CaiLama and CaiLama-Search."
+      ]
+    },
+    {
+      "name": "CaiLama-Search",
+      "github": "TotoBa/CaiLama-Search",
+      "role": "search, DWZ and RAG service with FastAPI, Meilisearch, crawler and import paths",
+      "local_path": "CaiLama-Search",
+      "tracked_in_master": false,
+      "runtime_repo": true,
+      "endpoints": [
+        "/healthz",
+        "/readyz",
+        "/v1/search",
+        "/v1/context",
+        "/v1/dwz/search",
+        "/v1/dwz/player/{pkz}",
+        "/v1/doc/{id}",
+        "/v1/admin/reindex/dwz",
+        "/v1/admin/reindex/source/{id}"
+      ],
+      "current_focus": [
+        "MeiliKeyManager runtime integration",
+        "consistent environment variable names",
+        "admin endpoint hardening",
+        "source provenance for RAG",
+        "download-based DWZ import",
+        "optional semantic retrieval with evaluation data"
+      ],
+      "constraints": [
+        "No real Meilisearch keys, master keys, admin keys or .env files in repository files.",
+        "Live imports, crawls and external network calls require explicit instruction.",
+        "Do not rely on disabled tokenized DWZ interfaces."
+      ]
+    }
+  ],
+  "interfaces": [
+    {
+      "from": "CaiLama",
+      "to": "CaiLama-LLM-Router",
+      "purpose": "LLM access through OpenAI-compatible endpoints and role aliases",
+      "paths": [
+        "/health",
+        "/v1/models",
+        "/v1/chat/completions"
+      ]
+    },
+    {
+      "from": "CaiLama",
+      "to": "CaiLama-Search",
+      "purpose": "controlled search, RAG context and DWZ data",
+      "paths": [
+        "/v1/search",
+        "/v1/context",
+        "/v1/dwz/search",
+        "/v1/dwz/player/{pkz}"
+      ]
+    },
+    {
+      "from": "CaiLama-Master",
+      "to": "all repositories",
+      "purpose": "documentation, coordination and local status checks only",
+      "paths": []
+    }
+  ],
+  "roadmap": {
+    "now": [
+      "Search-Auth-Hardening in CaiLama-Search",
+      "internal SearchAdapter in CaiLama"
+    ],
+    "next": [
+      "PTG MVP and follow-up hardening in CaiLama",
+      "DWZ identity linking between CaiLama and CaiLama-Search"
+    ],
+    "later": [
+      "RAG-assisted analysis packages",
+      "unified job orchestration for import, crawl, game analysis, PTG and reindex"
+    ],
+    "expansion": [
+      "privacy-safe observability and KPIs",
+      "optional semantic retrieval layer in CaiLama-Search"
+    ]
+  },
+  "public_documentation": {
+    "human_pages": [
+      "https://cailama.org/",
+      "https://cailama.org/projects.html",
+      "https://cailama.org/architecture.html",
+      "https://cailama.org/roadmap.html",
+      "https://cailama.org/operations.html",
+      "https://cailama.org/reference.html"
+    ],
+    "llm_resources": [
+      "https://cailama.org/llms.txt",
+      "https://cailama.org/ecosystem-reference.md",
+      "https://cailama.org/data/ecosystem.json"
+    ]
+  }
+}

@@ -17,7 +17,7 @@ Unter-Repos.
 - [x] `scripts/check-ecosystem.sh` als reine Statuspruefung ergaenzen.
 - [x] Bei kuenftigen Aenderungen erneut pruefen, dass keine Unter-Repo-Dateien getrackt werden.
 - [x] Webseite fuer `https://cailama.org/` als statische HTML-Seite aufbauen:
-  Quelle `web/index.html`, Deployment nach `/srv/cailama-web/public/index.html`,
+  Quelle `web/`, Deployment nach `/srv/cailama-web/public/`,
   Inhalt angelehnt an die aktuelle `README.md` aus `TotoBa/CaiLama` mit Logo.
 
 ## 2. Orchestrierung und Status
@@ -113,6 +113,17 @@ Unter-Repos.
 - [x] Historische Namen nur als historische Referenz erwaehnen.
 - [x] Dokumentation aktualisieren, wenn Repos umbenannt, verschoben oder neu
   strukturiert werden.
+
+## 8. Website und LLM-Referenz
+
+- [x] Webseite von einzelner HTML-Seite zu mehrseitiger Human-Doku ausbauen.
+- [x] Alle vier Repositories in der Master-Doku dokumentieren.
+- [x] LLM-freundliche Markdown-Gesamtreferenz erstellen.
+- [x] Maschinenlesbare JSON-Referenz erstellen.
+- [x] `llms.txt` als LLM-Einstiegspunkt bereitstellen.
+- [x] Reproduzierbares Deployment per `scripts/deploy-website.sh` dokumentieren.
+- [x] Checkskript um Website-, JSON- und Referenz-Synchronisation erweitern.
+- [x] Unterprojekt-READMEs auf Human-/LLM-Ecosystem-Doku verweisen lassen.
 
 ## Kimi-Arbeitsregeln
 

@@ -69,6 +69,12 @@ Das Skript `scripts/check-ecosystem.sh` prueft lokal:
 - ob sie eigene `.git`-Verzeichnisse haben,
 - welchen `git status --short` jedes Unter-Repo hat,
 - ob die drei Ordner im Master-Repo ignoriert werden.
+- ob die Human-/LLM-Webquellen vorhanden sind,
+- ob `docs/ecosystem-reference.md` und `web/ecosystem-reference.md`
+  identisch sind,
+- ob `docs/data/ecosystem.json` und `web/data/ecosystem.json` identisch sind,
+- ob der lokale Webspace `/srv/cailama-web/public` den Dateien unter `web/`
+  entspricht, sofern der Webspace existiert.
 
 Das Skript nimmt keine Aenderungen vor.
 

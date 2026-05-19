@@ -13,6 +13,10 @@ find . -maxdepth 2 -name .git -type d
 git ls-files | grep -E '^(CaiLama|CaiLama-LLM-Router|CaiLama-Search)/' || true
 git check-ignore -v CaiLama CaiLama-LLM-Router CaiLama-Search prompt.md
 bash scripts/check-ecosystem.sh
+python3 -m json.tool docs/data/ecosystem.json >/dev/null
+python3 -m json.tool web/data/ecosystem.json >/dev/null
+cmp -s docs/ecosystem-reference.md web/ecosystem-reference.md
+cmp -s docs/data/ecosystem.json web/data/ecosystem.json
 git diff --check
 ```
 
@@ -24,6 +28,10 @@ Der Master-Index darf nicht enthalten:
 - `.env` oder `.env.*`,
 - Prompt-/Handoff-/Followup-Dateien,
 - Secrets, Tokens, Zertifikate oder lokale Credential-Dateien.
+
+Ausnahme fuer maschinenlesbare Doku: `docs/data/ecosystem.json` und
+`web/data/ecosystem.json` sind trotz globaler `data/`-Ignore-Regel bewusst
+versioniert.
 
 ## Statusdateien
 
@@ -51,6 +59,13 @@ sind manuell zu bewerten. Echte Credential-Werte duerfen nicht committed werden.
 
 Master-`TODO.md` ist die abgeschlossene Koordinationsliste fuer den Master.
 Operative Folgearbeit in Unter-Repos gehoert in deren jeweilige `TODO.md`.
+
+Die Unterprojekt-READMEs verweisen auf die gemeinsame Master-Doku:
+
+- `https://cailama.org/reference.html`
+- `https://cailama.org/llms.txt`
+- `https://cailama.org/ecosystem-reference.md`
+- `https://cailama.org/data/ecosystem.json`
 
 Bei neuer Cross-Repo-Arbeit muessen mindestens diese Angaben vorhanden sein:
 

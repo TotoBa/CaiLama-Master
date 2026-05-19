@@ -25,20 +25,24 @@ Master-Repo ignoriert und duerfen nicht als Submodule eingetragen werden.
 Die statische Webseite liegt versioniert unter:
 
 ```text
-web/index.html
+web/
 ```
 
 Der lokale Webspace fuer die oeffentliche Seite ist:
 
 ```text
-/srv/cailama-web/public/index.html
+/srv/cailama-web/public/
 ```
 
 Deployment:
 
 ```bash
-install -D -m 0644 web/index.html /srv/cailama-web/public/index.html
+scripts/deploy-website.sh
 ```
+
+Das Skript synchronisiert den kompletten Inhalt von `web/`, also HTML,
+Stylesheet, `llms.txt`, `ecosystem-reference.md` und
+`data/ecosystem.json`.
 
 Die URL `https://cailama.org/` wurde am 2026-05-19 per `curl -I -L` mit
 `HTTP/2 200` verifiziert.

@@ -38,8 +38,9 @@ Koordinationssicht.
 - Definiert Regeln fuer Agentenarbeit im Master-Repo.
 - Prueft lokal, ob die drei Unter-Repos vorhanden, eigene Git-Repos und vom
   Master-Repo ignoriert sind.
-- Pflegt die statische Webseite fuer `https://cailama.org/` unter
-  `web/index.html`.
+- Pflegt die statische Webseite fuer `https://cailama.org/` unter `web/`.
+- Liefert die Human-Doku als HTML und die LLM-/Maschinenreferenz als
+  `llms.txt`, `ecosystem-reference.md` und `data/ecosystem.json` aus.
 - Enthaelt keine produktive Laufzeitlogik.
 - Enthaelt keine Secrets.
 
