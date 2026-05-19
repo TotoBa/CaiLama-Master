@@ -39,6 +39,7 @@ Agenten duerfen im Master-Repo folgende Dateien und Ordner bearbeiten:
 - `master-repo-orchestration.plan.md`
 - `docs/`
 - `scripts/`
+- `web/`
 - weitere reine Planungs-, Status- und Orchestrierungsdateien
 
 ## Verbotene Aktionen

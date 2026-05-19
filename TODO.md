@@ -15,8 +15,10 @@ Unter-Repos.
 - [x] `README.md` mit Zweck und lokaler Struktur erstellen.
 - [x] `docs/` fuer Ecosystem-Dokumentation anlegen.
 - [x] `scripts/check-ecosystem.sh` als reine Statuspruefung ergaenzen.
-- [ ] Bei kuenftigen Aenderungen erneut pruefen, dass keine Unter-Repo-Dateien
-  getrackt werden.
+- [ ] Bei kuenftigen Aenderungen erneut pruefen, dass keine Unter-Repo-Dateien getrackt werden.
+- [x] Webseite fuer `https://cailama.org/` als statische HTML-Seite aufbauen:
+  Quelle `web/index.html`, Deployment nach `/srv/cailama-web/public/index.html`,
+  Inhalt angelehnt an die aktuelle `README.md` aus `TotoBa/CaiLama` mit Logo.
 
 ## 2. Orchestrierung und Status
 
@@ -105,6 +107,7 @@ Unter-Repos.
 
 - [x] `docs/ecosystem-map.md` erstellen.
 - [x] `docs/orchestration.md` erstellen.
+- [x] `docs/website.md` fuer URL, Webspace und Deployment der Webseite erstellen.
 - [ ] Lokale Setup-Hinweise ohne Secrets aktuell halten.
 - [ ] Betriebsrollen der vier Repos klar halten.
 - [ ] Historische Namen nur als historische Referenz erwaehnen.

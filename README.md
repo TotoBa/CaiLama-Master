@@ -7,6 +7,8 @@
 `CaiLama-Master` ist das Orchestrierungs- und Koordinations-Repository fuer das
 CaiLama-Oekosystem.
 
+Webseite: <https://cailama.org/>
+
 Dieses Repository ist kein Monorepo und enthaelt keinen produktiven Code der
 Unterprojekte.
 
@@ -67,6 +69,8 @@ Dieses Repo dient dazu:
   CaiLama-Oekosystems.
 - `docs/ecosystem-map.md` - Architekturkarte und Verantwortlichkeiten.
 - `docs/orchestration.md` - Pflege- und Arbeitsregeln fuer das Master-Repo.
+- `docs/website.md` - URL, Quellpfad und Deployment-Pfad der Webseite.
+- `web/index.html` - statische Webseite fuer `https://cailama.org/`.
 - `scripts/check-ecosystem.sh` - lokale Statuspruefung ohne Schreibzugriffe.
 
 ## Sicherheitsregel
