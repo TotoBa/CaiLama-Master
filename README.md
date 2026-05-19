@@ -1,0 +1,71 @@
+# CaiLama-Master
+
+`CaiLama-Master` ist das Orchestrierungs- und Koordinations-Repository fuer das
+CaiLama-Oekosystem.
+
+Dieses Repository ist kein Monorepo und enthaelt keinen produktiven Code der
+Unterprojekte.
+
+## Lokale Struktur
+
+Typischer lokaler Checkout:
+
+```text
+CaiLama-Master/
+├── CaiLama/
+├── CaiLama-LLM-Router/
+├── CaiLama-Search/
+├── master-repo-orchestration.plan.md
+├── status.plan.cailama.md
+├── AGENTS.md
+├── TODO.md
+├── docs/
+└── scripts/
+```
+
+Die drei Unterordner sind eigenstaendige Git-Repositories und werden im
+Master-Repo ignoriert:
+
+- `/CaiLama/`
+- `/CaiLama-LLM-Router/`
+- `/CaiLama-Search/`
+
+Es werden keine Submodules verwendet.
+
+## Repositories
+
+- `TotoBa/CaiLama-Master` - Koordination, Status, Plaene und lokale
+  Orchestrierungspruefungen.
+- `TotoBa/CaiLama` - Hauptsystem fuer Schachanalyse, Training, Profile,
+  Agent-CLI und produktnahe Workflows.
+- `TotoBa/CaiLama-LLM-Router` - OpenAI-kompatibler LLM-Router fuer Modellzugriff,
+  Aliase, Backends und Fallbacks.
+- `TotoBa/CaiLama-Search` - Such-, Index-, DWZ- und RAG-Dienst auf Basis von
+  Meilisearch und FastAPI.
+
+## Zweck
+
+Dieses Repo dient dazu:
+
+- Ecosystem-weite Plaene zu speichern,
+- Cross-Repo-Aufgaben zu koordinieren,
+- Statusstaende festzuhalten,
+- Agentenregeln fuer Codex, Kimi und andere LLM-Agenten zu definieren,
+- lokale Orchestrierungspruefungen bereitzustellen.
+
+## Wichtige Dateien
+
+- `AGENTS.md` - Regeln fuer Codex/Kimi/LLM-Agenten im Master-Repo.
+- `TODO.md` - Ecosystem-weite Aufgaben.
+- `master-repo-orchestration.plan.md` - Plan fuer den Aufbau dieses
+  Master-Repos.
+- `status.plan.cailama.md` - aktueller Status- und Ausbaupfad des
+  CaiLama-Oekosystems.
+- `docs/ecosystem-map.md` - Architekturkarte und Verantwortlichkeiten.
+- `docs/orchestration.md` - Pflege- und Arbeitsregeln fuer das Master-Repo.
+- `scripts/check-ecosystem.sh` - lokale Statuspruefung ohne Schreibzugriffe.
+
+## Sicherheitsregel
+
+Keine Secrets, Tokens, API-Keys, lokalen `.env`-Dateien oder privaten
+Zugangsdaten in dieses Repository committen.

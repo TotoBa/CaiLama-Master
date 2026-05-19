@@ -1,0 +1,125 @@
+# AGENTS.md - CaiLama-Master
+
+## Zweck dieses Repositories
+
+`TotoBa/CaiLama-Master` ist das Orchestrierungs- und Koordinations-Repository
+fuer das CaiLama-Oekosystem.
+
+Dieses Repository ist kein Monorepo, kein Submodule-Repo und kein Runtime-Repo.
+Es enthaelt keine produktive Implementierung der Unterprojekte.
+
+Die lokal darunter liegenden Repositories sind eigenstaendig:
+
+- `CaiLama` - Hauptsystem fuer Schachanalyse, Training, Profile,
+  PGN-/Stockfish-/LLM-Workflows und DGT-nahe Integrationen.
+- `CaiLama-LLM-Router` - eigenstaendiger LLM-Router mit OpenAI-kompatibler API,
+  Modell-Aliasen, Backend-Routing und Fallbacks.
+- `CaiLama-Search` - eigenstaendiger Such-, Index-, DWZ- und RAG-Dienst.
+
+Diese drei Unterordner sind lokal hilfreich, muessen aber im Master-Repo
+vollstaendig ignoriert bleiben.
+
+## Grundregel
+
+Agenten duerfen im Master-Repo koordinieren, dokumentieren und pruefen.
+
+Agenten duerfen aus dem Master-Repo heraus keine Code-Aenderungen in den
+Unter-Repos vornehmen, ausser der Nutzer verlangt explizit eine separate Arbeit
+im jeweiligen Unter-Repo.
+
+## Erlaubte Bereiche
+
+Agenten duerfen im Master-Repo folgende Dateien und Ordner bearbeiten:
+
+- `.gitignore`
+- `README.md`
+- `AGENTS.md`
+- `TODO.md`
+- `status.plan.cailama.md`
+- `master-repo-orchestration.plan.md`
+- `docs/`
+- `scripts/`
+- weitere reine Planungs-, Status- und Orchestrierungsdateien
+
+## Verbotene Aktionen
+
+Agenten duerfen nicht:
+
+- Dateien aus `CaiLama/`, `CaiLama-LLM-Router/` oder `CaiLama-Search/` in das
+  Master-Repo committen.
+- Die Unter-Repos als Submodules hinzufuegen.
+- `.git`-Verzeichnisse der Unter-Repos veraendern.
+- Unter-Repos loeschen, verschieben oder automatisch normalisieren.
+- `rm -rf` auf Unter-Repo-Ordner anwenden.
+- Lokale Secrets, Tokens, API-Keys, Meilisearch-Keys, Router-Keys oder
+  `.env`-Dateien erzeugen oder committen.
+- Produktive Credentials in Dokumentation oder Beispielkonfigurationen
+  schreiben.
+- Produktive Laufzeitlogik ins Master-Repo einbauen.
+
+## Arbeitsweise
+
+Vor Aenderungen:
+
+1. `pwd` und `git rev-parse --show-toplevel` ausfuehren.
+2. `git status --short` ausfuehren.
+3. Mit `find . -maxdepth 2 -name .git -type d` bestaetigen, dass die
+   Unter-Repos eigene Git-Repositories sind.
+4. Mit `git ls-files` pruefen, ob Unter-Repo-Dateien versehentlich im
+   Master-Index liegen.
+5. Bestehende Plan- und Statusdateien lesen.
+
+Bei Aenderungen:
+
+1. Master-Dateien klein und nachvollziehbar aendern.
+2. Cross-Repo-Aufgaben als Koordinationspunkte dokumentieren.
+3. Keine lokalen Pfade, Secrets oder produktiven Zugangsdaten aufnehmen.
+4. Unter-Repo-Arbeit nur als separate Repo-Arbeit behandeln.
+
+Nach Aenderungen:
+
+1. `git status --short` ausfuehren.
+2. `git check-ignore -v CaiLama CaiLama-LLM-Router CaiLama-Search` ausfuehren.
+3. `bash scripts/check-ecosystem.sh` ausfuehren.
+4. Pruefen, dass keine Dateien aus den Unter-Repos im Master-Repo getrackt
+   werden.
+
+## Status- und TODO-Pflege
+
+`TODO.md` enthaelt Ecosystem-weite Aufgaben. Es ersetzt nicht die TODOs der
+einzelnen Repositories.
+
+`status.plan.cailama.md` enthaelt groessere Analyse-, Architektur- und
+Roadmap-Staende. Neue Erkenntnisse duerfen dort oder in klar benannten
+Plan-Dateien dokumentiert werden.
+
+Neue Plan-Dateien sollen nachvollziehbar benannt werden, zum Beispiel:
+
+- `YYYY-MM-DD.master-orchestration.plan.md`
+- `YYYY-MM-DD.search-integration.plan.md`
+- `YYYY-MM-DD.ptg-roadmap.plan.md`
+
+Abgeschlossene Punkte in `TODO.md` nur abhaken, wenn die Umsetzung ueberprueft
+wurde. Cross-Repo-Punkte muessen das Ziel-Repo klar nennen.
+
+## Architekturprinzipien
+
+- CaiLama bleibt das Hauptsystem.
+- LLM-Zugriff erfolgt ueber CaiLama-LLM-Router.
+- Suche, DWZ und RAG-Kontext laufen ueber CaiLama-Search.
+- Dienste werden ueber HTTP/API gekoppelt.
+- Konfiguration und Code bleiben getrennt.
+- Produktionsdatenhaltung liegt nicht im Master-Repo.
+- Das Master-Repo ist Koordination, nicht Runtime.
+
+## Akzeptanzkriterien fuer Master-Repo-Aenderungen
+
+Eine Aenderung ist nur akzeptabel, wenn:
+
+- die drei Unter-Repos eindeutig durch `.gitignore` ignoriert sind,
+- keine Unter-Repo-Dateien im Master-Repo getrackt werden,
+- keine Secrets enthalten sind,
+- Plan- und Statusdateien erhalten bleiben,
+- offene Punkte klar als offen markiert sind,
+- lokale Annahmen als Annahmen gekennzeichnet sind,
+- `scripts/check-ecosystem.sh` ohne Schreibzugriffe laeuft.

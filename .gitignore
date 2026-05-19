@@ -1,0 +1,98 @@
+# CaiLama ecosystem sub-repositories
+# These folders are checked out locally for orchestration only.
+# They must never be committed into CaiLama-Master.
+/CaiLama/
+/CaiLama-LLM-Router/
+/CaiLama-Search/
+
+# Local prompts supplied to agents
+prompt.md
+PROMPT.md
+*prompt*.md
+*Prompt*.md
+*.prompt.md
+*.prompts.md
+*PROMPT*.md
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+secrets/
+.secret/
+.secrets/
+.local-secrets/
+credentials/
+tokens/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local runtime data and databases
+data/
+runtime/
+storage/
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Meilisearch data directories
+meili_data/
+meilisearch_data/
+meilisearch/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# Node artifacts
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/
+coverage/
+
+# Editor and OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Temporary working files
+tmp/
+temp/
+*.tmp
+*.bak
+*.orig
+*.rej
