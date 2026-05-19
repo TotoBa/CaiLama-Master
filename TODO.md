@@ -98,3 +98,18 @@ Unter-Repos.
 - [ ] Historische Namen nur als historische Referenz erwaehnen.
 - [ ] Dokumentation aktualisieren, wenn Repos umbenannt, verschoben oder neu
   strukturiert werden.
+
+## Kimi-Arbeitsregeln
+
+- [ ] Vor Arbeitsbeginn `AGENTS.md`, `README.md`, diese `TODO.md`,
+  `docs/ecosystem-map.md`, `docs/orchestration.md`,
+  `status.plan.cailama.md` und `master-repo-orchestration.plan.md` lesen.
+- [ ] Nur Master-Repo-Dateien bearbeiten; Unter-Repos bleiben eigene Repos und
+  werden im Master nur ignoriert.
+- [ ] Keine Prompt-Dateien versionieren. Operative Folgearbeit gehoert in
+  `TODO.md`; groessere Konzepte duerfen als `*.plan.md` abgelegt werden.
+- [ ] Abschlusspruefung ausfuehren:
+  `git status --short`,
+  `git check-ignore -v CaiLama CaiLama-LLM-Router CaiLama-Search`,
+  `bash scripts/check-ecosystem.sh`,
+  `git diff --check`.
