@@ -1,5 +1,9 @@
 # CaiLama-Master
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png" alt="CaiLama Logo" width="600">
+</p>
+
 `CaiLama-Master` ist das Orchestrierungs- und Koordinations-Repository fuer das
 CaiLama-Oekosystem.
 

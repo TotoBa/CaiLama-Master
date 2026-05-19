@@ -31,6 +31,16 @@ Unter-Repos.
   - [ ] CaiLama: personalisierter Trainingsgenerator und Folgehaertung.
   - [ ] CaiLama-Search: Meilisearch-API-Key-Management.
   - [ ] CaiLama-LLM-Router: Betriebs-, Fallback- und Backend-Haertung.
+- [ ] Roadmap aus `status.plan.cailama.md` vollstaendig nachhalten:
+  - [ ] Jetzt: Search-Auth-Hardening in CaiLama-Search.
+  - [ ] Jetzt: interner SearchAdapter in CaiLama.
+  - [ ] Danach: PTG-MVP/Folgehaertung in CaiLama.
+  - [ ] Danach: DWZ-Identity-Linking zwischen CaiLama und CaiLama-Search.
+  - [ ] Spaeter: RAG-gestuetzte Analysepakete.
+  - [ ] Spaeter: einheitliche Job-Orchestrierung fuer Import, Crawl,
+    Game-Analyse, PTG und Reindex.
+  - [ ] Ausbau: Observability/KPIs fuer Router, Search und PTG.
+  - [ ] Ausbau: optionale semantische Retrieval-Schicht in CaiLama-Search.
 
 ## 3. CaiLama Integrationsthemen
 
@@ -85,6 +95,8 @@ Unter-Repos.
   sind.
 - [ ] Bei jeder Master-Aenderung pruefen, dass keine Secrets in Markdown-Dateien
   stehen.
+- [ ] Pruefen, dass Repo-TODOs die jeweils relevanten Punkte aus
+  `status.plan.cailama.md` enthalten.
 - [ ] Pruefen, dass Statusdateien keine falschen Aussagen ueber Repo-Zustaende
   enthalten.
 - [ ] Pruefen, dass alle Cross-Repo-Aufgaben klare Ziel-Repos nennen.
