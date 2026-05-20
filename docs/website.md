@@ -66,9 +66,9 @@ https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png
 
 Dadurch wird die Logo-Datei nicht im Master-Repo dupliziert.
 
-Im Hero-Bereich wird das Hintergrund-Logo als helle Silhouette gerendert. Das
-sichtbare Hero-Logo nutzt eine dezente helle Rueckflaeche, weil der dunkle
-`Cai`-Teil des Logos auf dem dunklen/gruenen Hintergrund sonst verschwindet.
+Im Hero-Bereich wird das Hintergrund-Logo heller und monochromer gerendert,
+weil der dunkle `Cai`-Teil des Logos auf dem dunklen/gruenen Hintergrund sonst
+verschwindet. Das sichtbare Hero-Logo bleibt unverfaelscht.
 
 ## Webspace
 
