@@ -27,7 +27,8 @@ Agenten duerfen aus dem Master-Repo heraus keine Code-Aenderungen in den
 Unter-Repos vornehmen, ausser der Nutzer verlangt explizit eine separate Arbeit
 im jeweiligen Unter-Repo.
 
-hinweise.md enthält Anweisungen für chatgpt und sind hier nicht wichtig
+`hinweise.md` enthält allgemeine Projekthinweise für ChatGPT-Kontexte;
+operative Agentenregeln stehen in dieser Datei.
 
 ## CaiLama-Team
 

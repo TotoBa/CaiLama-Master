@@ -9,7 +9,7 @@ Aktuelle Repos/Namen:
 - `TotoBa/CaiLama` – Hauptprojekt, früher DGT-Chesstrainer.
 - `TotoBa/CaiLama-LLM-Router` – generischer lokaler/cloudfähiger LLM-Router, früher LLM-Router.
 - `TotoBa/CaiLama-Search` – schachspezifisches Such-/Indexsystem für Webseiten, DWZ-/Spielerdaten und später RAG-Kontext.
-
+- `https://cailama.org` - Webseite des Projekts.
 Die Namen sollen die Zugehörigkeit zum CaiLama-System klar sichtbar machen. Alte Namen dürfen nur als historische Referenz verwendet werden.
 
 ## Zielbild
