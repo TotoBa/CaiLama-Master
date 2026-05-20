@@ -30,6 +30,42 @@ im jeweiligen Unter-Repo.
 `hinweise.md` enthält allgemeine Projekthinweise für ChatGPT-Kontexte;
 operative Agentenregeln stehen in dieser Datei.
 
+## Runtime- und Live-Betrieb
+
+- Laufende Dienste und testbare Runtime-Kopien duerfen ausserhalb der sich
+  aendernden Code-Checkouts liegen. Diese Runtime-Orte sind bewusst keine Git-
+  Repositories.
+- Offizielle Dokumentation beschreibt nur, dass Live-Runtime ausserhalb der
+  Codebasis liegt. Keine echten lokalen Pfade, Nutzerverzeichnisse, Secrets
+  oder produktiven Zugangsdaten in Doku, Beispiele oder Commits schreiben.
+- Skripte duerfen fuer lokale Defaults `~` verwenden. Harte Pfade wie ein
+  konkretes Home-Verzeichnis gehoeren nicht in versionierte Defaults.
+- CaiLama-LLM-Router und CaiLama-Search sollen im Live-Betrieb aus ihren
+  Runtime-Ordnern gestartet werden. Arbeiten am Quellcode-Checkout duerfen den
+  laufenden Dienst nicht still ersetzen.
+- Tests gegen Router oder Search muessen eine eigene Testkonfiguration und
+  eigene Ports nutzen, wenn nicht ausdruecklich der Live-Dienst gemeint ist.
+- CaiLama selbst kann in einer Runtime-Kopie auf eine bestimmte Version gesetzt
+  und getestet werden, ohne die Quellcodebasis zu veraendern.
+
+## Webseite und Webspace-API
+
+- Die Webseite unter `web/` ist als PHP-Webspace vorbereitet.
+- HTTP-Aufrufe sollen per Webserver-Regel auf HTTPS umgeleitet werden.
+- Die vorbereitete DB-API ist eine kleine fachliche PHP-Fassade, kein
+  generischer SQL-over-HTTP-Proxy.
+- DB-Zugangsdaten, API-Keys, Hoster-Zugangsdaten und lokale Secret-Dateien
+  bleiben ausserhalb des Repos.
+- Alte `.html`-URLs duerfen serverseitig auf `.php` weitergeleitet werden.
+
+## Sicherheitsdefaults
+
+- CaiLama-Search darf in Docker keinen vorhersehbaren Meilisearch-Fallback-Key
+  verwenden. `MEILI_MASTER_KEY` muss explizit gesetzt sein.
+- Lokal orientierte Docker-Ports fuer Meilisearch und Search-API binden
+  standardmaessig an `127.0.0.1`, solange keine bewusste Exposition geplant und
+  dokumentiert ist.
+
 ## CaiLama-Team
 
 CaiLama wird von Torsten Baublies geführt und agentengestützt entwickelt.
