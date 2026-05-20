@@ -29,6 +29,17 @@ Unter-Repos.
   laufende Integrationsarbeiten wesentlich aendern.
 - [x] Cross-Repo-Aufgaben im Master dokumentieren, Umsetzung aber in den
   jeweiligen Repos belassen.
+- [x] Knappe Unterrepo-Prioritaeten fuer den naechsten Kimi-Lauf festhalten:
+  - CaiLama: PTG-End-to-End, interner SearchAdapter, DWZ-Identity-Linking,
+    RAG-Analysepakete.
+  - CaiLama-LLM-Router: Fallback-Verhalten, Rollen-/Modell-Aliase,
+    privacy-safe Observability.
+  - CaiLama-Search: Meilisearch-Key-Betrieb, Admin-Auth, CaiLama-API-Vertrag.
+- [x] Einheitlichen Kimi-Prompt in den Unterrepo-`TODO.md`-Dateien verankern:
+  Kimi liest `AGENTS.md`, `README.md`, `TODO.md` und relevante Modul-/Doku-
+  Dateien, arbeitet nur den Abschnitt `Kimi-Handoff: aktuelle Prioritaeten`
+  ab, vermeidet Secrets/Live-Zugriffe, testet gezielt und committed/pusht im
+  aktuellen Repository.
 - [x] Laufende Arbeiten regelmaessig nachfuehren:
   - [x] CaiLama: personalisierter Trainingsgenerator und Folgehaertung.
   - [x] CaiLama-Search: Meilisearch-API-Key-Management.
