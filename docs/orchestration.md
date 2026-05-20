@@ -61,6 +61,13 @@ nennen, aber keine direkten Code-Aenderungen in Unter-Repos verlangen.
 Die aktuelle Roadmap steht in `docs/roadmap.md`. Schnittstellen- und
 Smoke-Test-Regeln stehen in `docs/integrations.md`.
 
+## Runtime-Kopien
+
+Laufende Dienste werden nicht direkt aus den Git-Unter-Repos gestartet. Die
+Runtime-Kopien liegen ausserhalb des Master-Repos und werden ueber
+`scripts/update-runtime-projects.sh` aktualisiert. Details stehen in
+`docs/runtime-projects.md`.
+
 ## Statuspruefung der Unter-Repos
 
 Das Skript `scripts/check-ecosystem.sh` prueft lokal:

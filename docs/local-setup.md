@@ -47,6 +47,16 @@ Stylesheet, `llms.txt`, `ecosystem-reference.md` und
 Die URL `https://cailama.org/` wurde am 2026-05-19 per `curl -I -L` mit
 `HTTP/2 200` verifiziert.
 
+## Runtime-Ordner
+
+Laufende Dienste und testbare Kopien werden ausserhalb des Master-Repos in
+separaten Runtime-Ordnern gehalten. Details stehen in
+`docs/runtime-projects.md`.
+
+```bash
+scripts/update-runtime-projects.sh all
+```
+
 ## Konfiguration
 
 - Keine lokalen `.env`-Dateien im Master-Repo versionieren.
