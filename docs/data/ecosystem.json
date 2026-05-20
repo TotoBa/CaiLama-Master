@@ -184,11 +184,11 @@
   "public_documentation": {
     "human_pages": [
       "https://cailama.org/",
-      "https://cailama.org/projects.html",
-      "https://cailama.org/architecture.html",
-      "https://cailama.org/roadmap.html",
-      "https://cailama.org/operations.html",
-      "https://cailama.org/reference.html"
+      "https://cailama.org/projects.php",
+      "https://cailama.org/architecture.php",
+      "https://cailama.org/roadmap.php",
+      "https://cailama.org/operations.php",
+      "https://cailama.org/reference.php"
     ],
     "llm_resources": [
       "https://cailama.org/llms.txt",

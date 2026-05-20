@@ -80,8 +80,8 @@ Das Skript `scripts/check-ecosystem.sh` prueft lokal:
 - ob `docs/ecosystem-reference.md` und `web/ecosystem-reference.md`
   identisch sind,
 - ob `docs/data/ecosystem.json` und `web/data/ecosystem.json` identisch sind,
-- ob der lokale Webspace `/srv/cailama-web/public` den Dateien unter `web/`
-  entspricht, sofern der Webspace existiert.
+- ob ein lokal konfigurierter Webspace den Dateien unter `web/` entspricht,
+  sofern dieser Webspace existiert.
 
 Das Skript nimmt keine Aenderungen vor.
 

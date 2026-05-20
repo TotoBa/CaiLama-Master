@@ -11,16 +11,16 @@
 <body>
   <header class="site-header">
     <nav class="nav" aria-label="Hauptnavigation">
-      <a class="brand" href="index.html">
+      <a class="brand" href="index.php">
         <img src="https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-small.png" alt="">
         <span>CaiLama</span>
       </a>
       <div class="nav-links">
-        <a href="projects.html">Projekte</a>
-        <a href="architecture.html">Architektur</a>
-        <a href="roadmap.html">Roadmap</a>
-        <a href="operations.html">Betrieb</a>
-        <a aria-current="page" href="reference.html">Referenz</a>
+        <a href="projects.php">Projekte</a>
+        <a href="architecture.php">Architektur</a>
+        <a href="roadmap.php">Roadmap</a>
+        <a href="operations.php">Betrieb</a>
+        <a aria-current="page" href="reference.php">Referenz</a>
       </div>
     </nav>
   </header>
@@ -48,22 +48,22 @@
           <article class="doc-card">
             <h3>Projekte</h3>
             <p>Detailstand von CaiLama, Router, Search und Master.</p>
-            <p><a href="projects.html">projects.html</a></p>
+            <p><a href="projects.php">projects.php</a></p>
           </article>
           <article class="doc-card">
             <h3>Architektur</h3>
             <p>Schnittstellen, Fluesse, Analyse- und Trainingskette.</p>
-            <p><a href="architecture.html">architecture.html</a></p>
+            <p><a href="architecture.php">architecture.php</a></p>
           </article>
           <article class="doc-card">
             <h3>Roadmap</h3>
             <p>Priorisierte Umsetzung aus dem aktuellen Statusplan.</p>
-            <p><a href="roadmap.html">roadmap.html</a></p>
+            <p><a href="roadmap.php">roadmap.php</a></p>
           </article>
           <article class="doc-card">
             <h3>Betrieb</h3>
             <p>Webspace, Checks, Master-Regeln und Qualitaet.</p>
-            <p><a href="operations.html">operations.html</a></p>
+            <p><a href="operations.php">operations.php</a></p>
           </article>
           <article class="doc-card">
             <h3>GitHub</h3>
@@ -73,7 +73,7 @@
           <article class="doc-card">
             <h3>Website</h3>
             <p>Diese statische Site ist unter cailama.org erreichbar.</p>
-            <p><a href="index.html">Startseite</a></p>
+            <p><a href="index.php">Startseite</a></p>
           </article>
         </div>
       </div>
@@ -129,7 +129,7 @@ https://cailama.org/data/ecosystem.json</code></pre>
   <footer class="footer">
     <div class="section-inner">
       <span>CaiLama-Referenz</span>
-      <a href="index.html">Start</a>
+      <a href="index.php">Start</a>
     </div>
   </footer>
 </body>

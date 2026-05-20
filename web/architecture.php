@@ -11,16 +11,16 @@
 <body>
   <header class="site-header">
     <nav class="nav" aria-label="Hauptnavigation">
-      <a class="brand" href="index.html">
+      <a class="brand" href="index.php">
         <img src="https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-small.png" alt="">
         <span>CaiLama</span>
       </a>
       <div class="nav-links">
-        <a href="projects.html">Projekte</a>
-        <a aria-current="page" href="architecture.html">Architektur</a>
-        <a href="roadmap.html">Roadmap</a>
-        <a href="operations.html">Betrieb</a>
-        <a href="reference.html">Referenz</a>
+        <a href="projects.php">Projekte</a>
+        <a aria-current="page" href="architecture.php">Architektur</a>
+        <a href="roadmap.php">Roadmap</a>
+        <a href="operations.php">Betrieb</a>
+        <a href="reference.php">Referenz</a>
       </div>
     </nav>
   </header>
@@ -155,7 +155,7 @@
   <footer class="footer">
     <div class="section-inner">
       <span>CaiLama-Architektur</span>
-      <a href="roadmap.html">Roadmap</a>
+      <a href="roadmap.php">Roadmap</a>
     </div>
   </footer>
 </body>

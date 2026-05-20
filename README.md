@@ -11,7 +11,7 @@ Webseite: <https://cailama.org/>
 
 Human-/LLM-Referenz:
 
-- <https://cailama.org/reference.html>
+- <https://cailama.org/reference.php>
 - <https://cailama.org/llms.txt>
 - <https://cailama.org/ecosystem-reference.md>
 - <https://cailama.org/data/ecosystem.json>
@@ -91,8 +91,8 @@ Dieses Repo dient dazu:
   Master-Sicht.
 - `docs/quality.md` - Master-Checks, Index-Regeln und TODO-Konsistenz.
 - `docs/website.md` - URL, Quellpfad und Deployment-Pfad der Webseite.
-- `web/` - statische Human-/LLM-Dokumentationswebsite fuer
-  `https://cailama.org/`.
+- `web/` - PHP-basierte Human-/LLM-Dokumentationswebsite und vorbereitete
+  Webspace-API-Fassade fuer `https://cailama.org/`.
 - `scripts/check-ecosystem.sh` - lokale Statuspruefung ohne Schreibzugriffe.
 - `scripts/deploy-website.sh` - reproduzierbares Deployment von `web/`.
 

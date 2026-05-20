@@ -62,7 +62,7 @@ Operative Folgearbeit in Unter-Repos gehoert in deren jeweilige `TODO.md`.
 
 Die Unterprojekt-READMEs verweisen auf die gemeinsame Master-Doku:
 
-- `https://cailama.org/reference.html`
+- `https://cailama.org/reference.php`
 - `https://cailama.org/llms.txt`
 - `https://cailama.org/ecosystem-reference.md`
 - `https://cailama.org/data/ecosystem.json`

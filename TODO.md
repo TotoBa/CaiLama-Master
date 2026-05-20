@@ -16,8 +16,8 @@ Unter-Repos.
 - [x] `docs/` fuer Ecosystem-Dokumentation anlegen.
 - [x] `scripts/check-ecosystem.sh` als reine Statuspruefung ergaenzen.
 - [x] Bei kuenftigen Aenderungen erneut pruefen, dass keine Unter-Repo-Dateien getrackt werden.
-- [x] Webseite fuer `https://cailama.org/` als statische HTML-Seite aufbauen:
-  Quelle `web/`, Deployment nach `/srv/cailama-web/public/`,
+- [x] Webseite fuer `https://cailama.org/` als PHP-Webspace vorbereiten:
+  Quelle `web/`, Deployment in einen host-spezifischen Webspace,
   Inhalt angelehnt an die aktuelle `README.md` aus `TotoBa/CaiLama` mit Logo.
 
 ## 2. Orchestrierung und Status

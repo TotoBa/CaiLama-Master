@@ -16,16 +16,16 @@
 <body>
   <header class="site-header">
     <nav class="nav" aria-label="Hauptnavigation">
-      <a class="brand" href="index.html">
+      <a class="brand" href="index.php">
         <img src="https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-small.png" alt="">
         <span>CaiLama</span>
       </a>
       <div class="nav-links">
-        <a href="projects.html">Projekte</a>
-        <a href="architecture.html">Architektur</a>
-        <a href="roadmap.html">Roadmap</a>
-        <a href="operations.html">Betrieb</a>
-        <a href="reference.html">Referenz</a>
+        <a href="projects.php">Projekte</a>
+        <a href="architecture.php">Architektur</a>
+        <a href="roadmap.php">Roadmap</a>
+        <a href="operations.php">Betrieb</a>
+        <a href="reference.php">Referenz</a>
       </div>
     </nav>
   </header>
@@ -43,8 +43,8 @@
             Spielerprofile und langfristige Trainingsentwicklung.
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="projects.html">Projektstand ansehen</a>
-            <a class="button" href="architecture.html">Architektur verstehen</a>
+            <a class="button primary" href="projects.php">Projektstand ansehen</a>
+            <a class="button" href="architecture.php">Architektur verstehen</a>
             <a class="button" href="https://github.com/TotoBa/CaiLama">GitHub</a>
           </div>
         </div>
@@ -145,7 +145,7 @@
                 <li>LLM-Rollen ueber Router-Aliase.</li>
               </ul>
             </div>
-            <a href="projects.html#cailama">Details</a>
+            <a href="projects.php#cailama">Details</a>
           </article>
           <article class="repo-card">
             <div>
@@ -158,7 +158,7 @@
                 <li>Keine Schachproduktlogik im Router.</li>
               </ul>
             </div>
-            <a href="projects.html#router">Details</a>
+            <a href="projects.php#router">Details</a>
           </article>
           <article class="repo-card">
             <div>
@@ -171,7 +171,7 @@
                 <li>Quellenprovenienz fuer RAG-Antworten.</li>
               </ul>
             </div>
-            <a href="projects.html#search">Details</a>
+            <a href="projects.php#search">Details</a>
           </article>
           <article class="repo-card">
             <div>
@@ -185,7 +185,7 @@
                 <li><code>llms.txt</code>, Markdown und JSON bilden die LLM-freundliche Referenz.</li>
               </ul>
             </div>
-            <a href="operations.html#master">Details</a>
+            <a href="operations.php#master">Details</a>
           </article>
         </div>
       </div>
@@ -236,7 +236,7 @@
           <article class="doc-card">
             <h3>Human-Version</h3>
             <p>Projektseiten, Architektur, Roadmap und Betrieb als einheitliche Website.</p>
-            <p><a href="reference.html">Referenz oeffnen</a></p>
+            <p><a href="reference.php">Referenz oeffnen</a></p>
           </article>
           <article class="doc-card">
             <h3>LLM-Markdown</h3>

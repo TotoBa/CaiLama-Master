@@ -6,11 +6,11 @@
 ## Human documentation
 
 - Home: https://cailama.org/
-- Projects: https://cailama.org/projects.html
-- Architecture: https://cailama.org/architecture.html
-- Roadmap: https://cailama.org/roadmap.html
-- Operations: https://cailama.org/operations.html
-- Reference: https://cailama.org/reference.html
+- Projects: https://cailama.org/projects.php
+- Architecture: https://cailama.org/architecture.php
+- Roadmap: https://cailama.org/roadmap.php
+- Operations: https://cailama.org/operations.php
+- Reference: https://cailama.org/reference.php
 
 ## LLM-friendly documentation
 

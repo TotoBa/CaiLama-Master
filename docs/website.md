@@ -8,8 +8,10 @@ https://cailama.org/
 
 ## Ziel
 
-Die Webseite ist die Human-Version der Master-Gesamtdokumentation. Zusaetzlich
-werden LLM-freundliche und maschinenlesbare Dateien ausgeliefert.
+Die Webseite ist die Human-Version der Master-Gesamtdokumentation. Sie wird als
+PHP-Webspace vorbereitet, auch wenn die sichtbaren Seiten aktuell noch ohne
+dynamische Produktlogik auskommen. Zusaetzlich werden LLM-freundliche und
+maschinenlesbare Dateien ausgeliefert.
 
 ## Versionierte Quellen
 
@@ -22,12 +24,14 @@ web/
 Wichtige Dateien:
 
 ```text
-web/index.html                 # Startseite
-web/projects.html              # Projekt- und Repo-Details
-web/architecture.html          # Architektur und Schnittstellen
-web/roadmap.html               # Roadmap aus status.plan.cailama.md
-web/operations.html            # Betrieb, Checks, Deployment
-web/reference.html             # Human-/LLM-Referenzseite
+web/index.php                 # Startseite
+web/projects.php              # Projekt- und Repo-Details
+web/architecture.php          # Architektur und Schnittstellen
+web/roadmap.php               # Roadmap aus status.plan.cailama.md
+web/operations.php            # Betrieb, Checks, Deployment
+web/reference.php             # Human-/LLM-Referenzseite
+web/api/public/index.php      # vorbereiteter API-Frontcontroller
+web/api_app/                  # interne API-Skelettstruktur ohne Secrets
 web/assets/styles.css          # Gemeinsames Styling
 web/llms.txt                   # LLM-Einstiegspunkt
 web/ecosystem-reference.md     # LLM-freundliche Markdown-Referenz
@@ -62,18 +66,16 @@ https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png
 
 Dadurch wird die Logo-Datei nicht im Master-Repo dupliziert.
 
-## Lokaler Webspace
+## Webspace
 
-Der aktuell vorgesehene lokale Webspace ist:
-
-```text
-/srv/cailama-web/public
-```
+Der Live-Webspace-Pfad ist host-spezifisch und wird nicht in der offiziellen
+Doku festgeschrieben. Das Deployment-Skript kann lokal mit einem expliziten
+Zielpfad aufgerufen werden.
 
 ## Reproduzierbares Deployment
 
 Die Website hat keinen Build-Schritt. Deployment ist ein synchronisierter
-Kopiervorgang von `web/` in den Webspace.
+Kopiervorgang von `web/` in den PHP-Webspace.
 
 Standardbefehl:
 
@@ -84,13 +86,13 @@ scripts/deploy-website.sh
 Expliziter Zielpfad:
 
 ```bash
-scripts/deploy-website.sh /srv/cailama-web/public
+scripts/deploy-website.sh <webspace-public-dir>
 ```
 
 Das Skript:
 
 1. ermittelt das Git-Root,
-2. synchronisiert `web/` nach `/srv/cailama-web/public`,
+2. synchronisiert `web/` in den angegebenen PHP-Webspace,
 3. entfernt dort Dateien, die nicht mehr in `web/` existieren,
 4. vergleicht jede ausgelieferte Datei bytegenau mit der Quelle.
 
@@ -112,9 +114,30 @@ Erwartung:
 
 - `https://cailama.org/` liefert `HTTP/2 200` oder einen gleichwertigen
   erfolgreichen HTTP-Status.
+- HTTP-Aufrufe werden per Webserver-Regel auf HTTPS umgeleitet, sofern
+  `.htaccess` vom Hoster ausgewertet wird.
+- Alte Seiten-URLs mit `.html` werden serverseitig auf `.php` umgeleitet,
+  sofern `.htaccess` vom Hoster ausgewertet wird.
 - `https://cailama.org/llms.txt` ist erreichbar.
 - `https://cailama.org/ecosystem-reference.md` ist erreichbar.
 - `https://cailama.org/data/ecosystem.json` ist erreichbar und valides JSON.
+
+## Webspace-API
+
+Die DB-API ist als kleine PHP-Fassade vorbereitet. Sie ist kein generischer
+SQL-Proxy und enthaelt keine produktiven Datenbankzugangsdaten. Der aktuelle
+Stand stellt nur die Struktur und einen Status-Stub bereit:
+
+```text
+/api/v1/status
+```
+
+Echte DB-Verbindung, API-Key-Pruefung, Scopes, Rate-Limits und fachliche
+Read-/Write-Endpunkte werden erst mit lokaler Hosting-Konfiguration und
+separater Secret-Datei verdrahtet. Keine produktiven Keys, DB-Passwoerter oder
+Hoster-Zugangsdaten werden in `web/`, `docs/` oder Beispiele geschrieben.
+
+Der Umsetzungsplan liegt unter `docs/db-api.plan.md`.
 
 ## Unterprojekte
 
@@ -122,7 +145,7 @@ Die Unterprojekte verweisen in ihren `README.md` auf die gemeinsame
 Ecosystem-Doku:
 
 ```text
-https://cailama.org/reference.html
+https://cailama.org/reference.php
 https://cailama.org/llms.txt
 https://cailama.org/ecosystem-reference.md
 https://cailama.org/data/ecosystem.json

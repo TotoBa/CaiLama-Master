@@ -11,16 +11,16 @@
 <body>
   <header class="site-header">
     <nav class="nav" aria-label="Hauptnavigation">
-      <a class="brand" href="index.html">
+      <a class="brand" href="index.php">
         <img src="https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-small.png" alt="">
         <span>CaiLama</span>
       </a>
       <div class="nav-links">
-        <a href="projects.html">Projekte</a>
-        <a href="architecture.html">Architektur</a>
-        <a href="roadmap.html">Roadmap</a>
-        <a aria-current="page" href="operations.html">Betrieb</a>
-        <a href="reference.html">Referenz</a>
+        <a href="projects.php">Projekte</a>
+        <a href="architecture.php">Architektur</a>
+        <a href="roadmap.php">Roadmap</a>
+        <a aria-current="page" href="operations.php">Betrieb</a>
+        <a href="reference.php">Referenz</a>
       </div>
     </nav>
   </header>
@@ -42,12 +42,11 @@
         <div class="section-head">
           <h2>Website-Deployment.</h2>
           <p>
-            <code>https://cailama.org/</code> wird aus dem lokalen Webspace
-            <code>/srv/cailama-web/public</code> ausgeliefert. Versionierte Quelle ist
-            <code>web/</code>.
+            <code>https://cailama.org/</code> wird aus einem host-spezifischen
+            PHP-Webspace ausgeliefert. Versionierte Quelle ist <code>web/</code>.
           </p>
         </div>
-        <pre><code>rsync -a --delete web/ /srv/cailama-web/public/
+        <pre><code>scripts/deploy-website.sh &lt;webspace-public-dir&gt;
 curl -I -L https://cailama.org/
 bash scripts/check-ecosystem.sh</code></pre>
       </div>
@@ -138,7 +137,7 @@ git diff --check</code></pre>
   <footer class="footer">
     <div class="section-inner">
       <span>CaiLama-Betrieb</span>
-      <a href="index.html">Start</a>
+      <a href="index.php">Start</a>
     </div>
   </footer>
 </body>

@@ -28,19 +28,16 @@ Die statische Webseite liegt versioniert unter:
 web/
 ```
 
-Der lokale Webspace fuer die oeffentliche Seite ist:
-
-```text
-/srv/cailama-web/public/
-```
+Der Live-Webspace-Pfad ist host-spezifisch und wird nicht in der offiziellen
+Doku festgeschrieben.
 
 Deployment:
 
 ```bash
-scripts/deploy-website.sh
+scripts/deploy-website.sh <webspace-public-dir>
 ```
 
-Das Skript synchronisiert den kompletten Inhalt von `web/`, also HTML,
+Das Skript synchronisiert den kompletten Inhalt von `web/`, also PHP-Seiten,
 Stylesheet, `llms.txt`, `ecosystem-reference.md` und
 `data/ecosystem.json`.
 
