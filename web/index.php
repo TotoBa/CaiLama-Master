@@ -142,7 +142,7 @@
               <p>Schachanalyse, Training, Profile, Agent-CLI, PGN, Stockfish, DGT-nahe Workflows.</p>
               <ul>
                 <li>DB-Hybridpfad: native DB, Webspace-API und Backup-Betrieb.</li>
-                <li>PTG Phase 2, SearchAdapter, DWZ und RAG als Standardpfade.</li>
+                <li>PTG-Queue ist angebunden; SearchAdapter ist Standard fuer Web/DWZ.</li>
                 <li>LLM-Rollen ueber Router-Aliase.</li>
               </ul>
             </div>
@@ -154,8 +154,8 @@
               <h3>CaiLama-LLM-Router</h3>
               <p>OpenAI-kompatible Modellzugriffe, Backends, Aliase, Fallbacks und JSONL-Betriebsdaten.</p>
               <ul>
-                <li>Streaming-Fehlerbehandlung und Config-Hot-Reload klaeren.</li>
-                <li>Backend-spezifische Modellnamen je Alias testen.</li>
+                <li>Streaming-Fehler, Config-Hot-Reload und Backend-Modellmapping sind getestet.</li>
+                <li><code>mypy src</code> ist bereinigt.</li>
                 <li>Keine Schachproduktlogik im Router.</li>
               </ul>
             </div>
@@ -169,7 +169,7 @@
               <ul>
                 <li>Explizite Meili-Keys, Admin-Token und lokale Docker-Bindings.</li>
                 <li>Vertrag fuer <code>/v1/search</code>, <code>/v1/context</code>, <code>/v1/dwz/*</code>.</li>
-                <li>Quellenprovenienz fuer RAG-Antworten.</li>
+                <li>Crawler-/Robots-Quellenpolitik ist getestet; Observability folgt.</li>
               </ul>
             </div>
             <a href="projects.php#search">Details</a>
@@ -205,11 +205,11 @@
         <div class="timeline">
           <article class="step">
             <strong>Jetzt</strong>
-            <p>DB-Hybrid, Search/DWZ/RAG-Standardpfad, Router-Streaming, Search-Quellenpolitik.</p>
+            <p>DB-Hybrid-Client, DWZ-Identity-Linking, RAG-Provenienz und Search-Observability.</p>
           </article>
           <article class="step">
             <strong>Danach</strong>
-            <p>PTG Phase 2, DWZ-Identity-Linking, Search- und PTG-Observability.</p>
+            <p>PTG classify/analyze-Trifecta, Job-Orchestrierung und Goldsets.</p>
           </article>
           <article class="step">
             <strong>Spaeter</strong>

@@ -29,6 +29,8 @@ Koordinationspunkte:
 - Modi `internal_first`, `external_fallback`, `external_only` und
   `internal_only` pruefen.
 - Browserbasierte Websuche nur als bewussten Fallback nutzen.
+- Umgesetzt: `web_search` und `search_dwz` nutzen `SearchAdapter`; Recherche-
+  und Quellenfragen schlagen `search_rag` vor.
 
 ### Router-Folgehaertung
 
@@ -36,10 +38,11 @@ Ziel-Repo: `TotoBa/CaiLama-LLM-Router`
 
 Koordinationspunkte:
 
-- Streaming-Fehlerbehandlung fuer `stream: true` klaeren.
-- Config-Hot-Reload bewerten und bei Entscheidung testen.
-- Backend-spezifisches Modell-Mapping per Alias absichern.
-- Bekannte `mypy`-Fehler bereinigen.
+- Streaming-Fehlerbehandlung fuer `stream: true` ist als finaler SSE-Fehler
+  getestet.
+- Config-Hot-Reload ist optional ueber `runtime.reload_config_on_request`.
+- Backend-spezifisches Modell-Mapping per Alias ist validiert.
+- `mypy src` ist bereinigt.
 
 ### Search-Quellenpolitik
 
@@ -48,7 +51,7 @@ Ziel-Repo: `TotoBa/CaiLama-Search`
 Koordinationspunkte:
 
 - Crawler-Quellenpolitik, Robots-Parser und Rate-Limits testen.
-- Quellen-CRUD und Robots-Validierung absichern.
+- Quellen-CRUD, Robots-Validierung und Reindex-Tracking sind abgesichert.
 - Goldsets fuer Suchqualitaet vorbereiten.
 
 ## Danach
@@ -61,6 +64,7 @@ Koordinationspunkte:
 
 - Importierte Partien in Analyse-/Feature-Signale ueberfuehren.
 - Schwaechenprofil und Kartenqueue nachvollziehbar ableiten.
+- Umgesetzt: optionale Queue-Einspeisung ueber `ptg-games --queue-dir`.
 - Review-Ergebnisse in Schwierigkeit, Prioritaet und Wiederholung
   zurueckfuehren.
 - Datenschutz fuer personenbezogene Leistungsprofile klaeren.

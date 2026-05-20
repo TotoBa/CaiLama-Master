@@ -103,10 +103,11 @@ Aktueller Fokus:
 
 - DB-Hybridpfad vorbereiten: lokale MariaDB/MySQL, fachliche Webspace-API und
   spaetere Provider-Datenbank als konfigurierbare Zugriffsarten.
-- PTG Phase 2: Queue-Einspeisung, Analyse-/Feature-Signale und
-  personalisierte Karten end-to-end verbinden.
+- PTG Phase 2: Queue-Einspeisung ist im PTG-Kommando angebunden; direkte
+  classify/analyze-Trifecta bleibt offen.
 - Fehler-/Mustertaxonomie fuer personalisiertes Training.
-- Interne Search-Anbindung als Standardpfad fuer Suche, Kontext und DWZ.
+- Interne Search-Anbindung ist Standardpfad fuer `web_search` und
+  `search_dwz`; Recherchefragen schlagen `search_rag` vor.
 - DWZ-Identity-Linking in Store und CLI integrieren.
 - RAG-Analysepakete in Researcher-/Analyst-Promptflows einhaengen.
 
@@ -189,7 +190,8 @@ Aktueller Fokus:
   kompatible `context`/`sources`.
 - Docker-Defaults: expliziter `MEILI_MASTER_KEY`, expliziter `MEILI_API_KEY`,
   lokale Port-Bindings und optionaler `ADMIN_SERVICE_TOKEN`.
-- Crawler-Quellenpolitik, Robots- und Rate-Limit-Tests.
+- Crawler-Quellenpolitik, Robots-Gruppen, Source-Validierung und
+  Reindex-Tracking sind offline getestet.
 - Search-Observability und Goldsets.
 - Einheitliche Job-Orchestrierung mit CaiLama-Queue/Training.
 - Optionale semantische Retrieval-Schicht nur mit Eval-Datensatz.
@@ -271,15 +273,15 @@ Vertrag:
 Jetzt:
 
 - CaiLama-DB-Hybridpfad planen und implementieren.
-- CaiLama Search/DWZ/RAG-Integration als Standardpfad fertigstellen.
-- Router-Streaming-Fehlerbehandlung und Config-Hot-Reload klaeren.
-- Search-Crawler-Quellenpolitik testen.
+- CaiLama DB-API-Client und Hybridkonfiguration implementieren.
+- DWZ-Identity-Linking in Store/CLI und RAG-Provenienz fertigstellen.
+- Search-Observability und Goldsets definieren.
 
 Danach:
 
 - PTG Phase 2 und Folgehaertung in CaiLama.
-- DWZ-Identity-Linking in Store/CLI und Training integrieren.
-- Search- und PTG-Observability definieren.
+- PTG classify/analyze-Trifecta direkt an personalisierte Karten anbinden.
+- Einheitliche Job-Orchestrierung vorbereiten.
 
 Spaeter:
 

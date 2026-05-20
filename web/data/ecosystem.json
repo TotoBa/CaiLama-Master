@@ -56,10 +56,11 @@
       ],
       "current_focus": [
         "DB hybrid access through native MariaDB/MySQL, webspace API and hybrid mode",
-        "PTG phase 2 and follow-up hardening",
-        "internal SearchAdapter as standard path for search, context and DWZ",
+        "PTG queue enqueue is wired; classify/analyze trifecta remains open",
+        "internal SearchAdapter is standard path for web_search and search_dwz",
+        "search_rag is suggested for research/source questions",
         "DWZ identity linking store and CLI integration",
-        "RAG-assisted analysis packages in researcher and analyst flows"
+        "RAG provenance in researcher and analyst flows"
       ],
       "constraints": [
         "No live external, engine, router, database or hardware calls unless explicitly requested.",
@@ -126,7 +127,7 @@
         "CaiLama-compatible API contract with normalized items, results, context and sources",
         "explicit Meilisearch master key and dedicated API key in Docker defaults",
         "admin service token via environment or localhost fallback",
-        "crawler source policy and robots tests",
+        "crawler source policy, robots groups, source validation and reindex tracking are tested",
         "search observability and goldsets",
         "job orchestration with CaiLama queue and training",
         "optional semantic retrieval with evaluation data"
@@ -191,15 +192,13 @@
   ],
   "roadmap": {
     "now": [
-      "CaiLama DB hybrid access planning and implementation",
-      "CaiLama Search/DWZ/RAG standard-path integration",
-      "Router streaming error handling and config hot reload decision",
-      "Search crawler source policy tests"
+      "CaiLama DB API client and hybrid configuration",
+      "DWZ identity linking and RAG provenance",
+      "Search observability and goldsets"
     ],
     "next": [
-      "PTG phase 2 and follow-up hardening in CaiLama",
-      "DWZ identity linking store/CLI integration",
-      "Search and PTG observability"
+      "PTG classify/analyze trifecta linked to personalized cards",
+      "Unified job orchestration for CaiLama and Search"
     ],
     "later": [
       "RAG-assisted analysis packages",

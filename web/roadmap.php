@@ -66,7 +66,7 @@
       <div class="section-inner">
         <div class="section-head">
           <h2>Jetzt.</h2>
-          <p>Die besten Quick Wins betreffen Sicherheits- und Integrationsdisziplin.</p>
+          <p>Die naechsten Schritte liegen bei DB-Hybrid, Provenienz und Metriken.</p>
         </div>
         <div class="grid-2">
           <article class="card">
@@ -85,26 +85,26 @@
             <ul class="rich-list">
               <li><code>/v1/search</code>, <code>/v1/context</code> und <code>/v1/dwz/*</code> als Standard nutzen.</li>
               <li><code>items</code>/<code>results</code> und <code>context</code>/<code>sources</code> normalisieren.</li>
-              <li><code>internal_first</code>, <code>external_fallback</code>, <code>external_only</code>, <code>internal_only</code> pruefen.</li>
-              <li>Browser-Websuche nur als bewussten Fallback nutzen.</li>
+              <li><code>web_search</code> und <code>search_dwz</code> nutzen den <code>SearchAdapter</code>.</li>
+              <li>Recherchefragen schlagen <code>search_rag</code> vor.</li>
             </ul>
           </article>
           <article class="card">
             <span class="tag blue">Router</span>
             <h3>Folgehaertung</h3>
             <ul class="rich-list">
-              <li>Streaming-Fehlerbehandlung fuer <code>stream: true</code> klaeren.</li>
-              <li>Config-Hot-Reload bewerten und testen.</li>
-              <li>Backend-spezifisches Modell-Mapping per Alias absichern.</li>
-              <li>Bekannte <code>mypy</code>-Fehler bereinigen.</li>
+              <li>Streaming-Fehlerbehandlung fuer <code>stream: true</code> ist getestet.</li>
+              <li>Config-Hot-Reload ist optional verfuegbar.</li>
+              <li>Backend-spezifisches Modell-Mapping per Alias ist abgesichert.</li>
+              <li><code>mypy src</code> ist bereinigt.</li>
             </ul>
           </article>
           <article class="card">
             <span class="tag copper">CaiLama-Search</span>
             <h3>Quellenpolitik</h3>
             <ul class="rich-list">
-              <li>Crawler-Whitelists, Robots und Rate-Limits testen.</li>
-              <li>Quellen-CRUD und Robots-Validierung absichern.</li>
+              <li>Crawler-Whitelists, Robots-Gruppen und Source-Policy sind getestet.</li>
+              <li>Quellen-CRUD, Robots-Validierung und Reindex-Tracking sind abgesichert.</li>
               <li>Search-Goldsets und Observability vorbereiten.</li>
             </ul>
           </article>

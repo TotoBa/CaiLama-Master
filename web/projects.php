@@ -105,7 +105,7 @@
           <article class="card">
             <span class="tag red">Fallback</span>
             <h3>Folgehaertung</h3>
-            <p>Streaming-Fehler, Config-Hot-Reload, backend-spezifische Modellnamen und mypy-Bereinigung sind die naechsten offenen Punkte.</p>
+            <p>Streaming-Fehler, Config-Hot-Reload, backend-spezifische Modellnamen und <code>mypy src</code> sind umgesetzt und getestet.</p>
           </article>
           <article class="card">
             <span class="tag blue">Logging</span>
@@ -148,7 +148,7 @@
           <article class="card">
             <span class="tag copper">Ausbau</span>
             <h3>Quellenpolitik</h3>
-            <p>Crawler-Whitelists, Robots, Rate-Limits, Observability und Goldsets sind die naechsten Search-Arbeiten.</p>
+            <p>Crawler-Whitelists, Robots-Gruppen, Source-Validierung und Reindex-Tracking sind getestet; Observability und Goldsets folgen.</p>
           </article>
         </div>
       </div>
