@@ -48,7 +48,9 @@
             <a class="button" href="https://github.com/TotoBa/CaiLama">GitHub</a>
           </div>
         </div>
-        <img class="hero-logo" src="https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png" alt="CaiLama Logo">
+        <div class="hero-logo-frame">
+          <img class="hero-logo" src="https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png" alt="CaiLama Logo">
+        </div>
       </div>
     </section>
 

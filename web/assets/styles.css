@@ -120,7 +120,25 @@ img {
   background-repeat: no-repeat;
   background-position: center 44%;
   background-size: min(980px, 132vw);
-  opacity: 0.11;
+  opacity: 0.12;
+  filter: invert(1) grayscale(1) sepia(0.18) saturate(1.2) brightness(1.12);
+}
+
+@supports ((mask-image: url("")) or (-webkit-mask-image: url(""))) {
+  .hero::before {
+    background: rgba(255, 250, 240, 0.13);
+    background-image: none;
+    opacity: 1;
+    filter: none;
+    -webkit-mask-image: url("https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png");
+    mask-image: url("https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png");
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center 44%;
+    mask-position: center 44%;
+    -webkit-mask-size: min(980px, 132vw);
+    mask-size: min(980px, 132vw);
+  }
 }
 
 .hero::after {
@@ -147,12 +165,29 @@ img {
   align-items: center;
 }
 
-.hero-logo {
+.hero-logo-frame {
   width: min(360px, 76vw);
+  position: relative;
+  margin: 0 auto;
+  isolation: isolate;
+}
+
+.hero-logo-frame::before {
+  content: "";
+  position: absolute;
+  inset: 12% 3% 8%;
+  z-index: -1;
+  border: 1px solid rgba(255, 250, 240, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 250, 240, 0.86);
+  box-shadow: 0 26px 50px rgba(0, 0, 0, 0.3);
+}
+
+.hero-logo {
+  width: 100%;
   height: auto;
   display: block;
-  margin: 0 auto;
-  filter: drop-shadow(0 26px 50px rgba(0, 0, 0, 0.34));
+  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.24));
 }
 
 .eyebrow {
