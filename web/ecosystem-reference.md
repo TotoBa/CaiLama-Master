@@ -59,6 +59,8 @@ Rolle:
 - Human-Webseite unter `https://cailama.org/`.
 - LLM-freundliche Referenzen unter `llms.txt`,
   `ecosystem-reference.md` und `data/ecosystem.json`.
+- PHP-Login-/Session-Shell und Webspace-API-Vorbereitung ohne versionierte
+  Credentials.
 - Roadmap und Cross-Repo-Koordination.
 - Lokale Checks ohne Schreibzugriffe in Unter-Repos.
 
@@ -145,11 +147,13 @@ Relevante CaiLama-Rollen/Aliase:
 
 Aktueller Fokus:
 
-- Streaming-Fehlerbehandlung fuer `stream: true`-Flows klaeren.
-- Optionales Config-Hot-Reload pruefen.
-- Backend-spezifisches Modell-Mapping per Alias testen.
-- Optionales Prometheus-Format fuer `/metrics` bewerten.
-- Bekannte `mypy`-Fehler bereinigen.
+- Streaming-Fehlerbehandlung fuer `stream: true`-Flows ist als finaler
+  SSE-Fehlerchunk dokumentiert und getestet.
+- Optionales Config-Hot-Reload ist ueber `runtime.reload_config_on_request`
+  verfuegbar.
+- Backend-spezifisches Modell-Mapping per Alias ist validiert.
+- `/metrics` kann JSON oder Prometheus-Text liefern.
+- `mypy src` ist bereinigt.
 
 Grenzen:
 
@@ -231,6 +235,22 @@ Vertrag:
 - `/v1/context` akzeptiert Query-Parameter oder JSON und liefert kompatible
   Felder fuer RAG-Verbraucher.
 - Browserbasierte Suche ist nur Fallback.
+
+### CaiLama -> Webspace-DB-API
+
+Zweck:
+
+- Fachlicher DB-Zugriff ueber HTTPS statt direkter Provider-DB-Exposition.
+- Wahl zwischen lokaler DB, Provider-API und Hybridbetrieb vorbereiten.
+- Login/Session der Website ueber eine getrennte Auth-Datenbank abbilden.
+
+Vertrag:
+
+- Keine SQL-over-HTTP-Endpunkte.
+- Echte DB-Zugangsdaten stehen nur in der ignorierten
+  `web/api_app/config.local.php`.
+- `databases.auth` und `databases.cailama` sind getrennte PDO-Verbindungen.
+- `web/api_app/config.local.sample.php` ist nur Vorlage.
 
 ### Master -> Unter-Repos
 

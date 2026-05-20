@@ -33,6 +33,14 @@ if [[ -n "$tracked_env" ]]; then
 fi
 echo "OK: no .env files tracked by master"
 
+tracked_local_config="$(git ls-files | grep -E '^web/api_app/config\.local\.php$' || true)"
+if [[ -n "$tracked_local_config" ]]; then
+  echo "ERROR: local web config is tracked in master:"
+  echo "$tracked_local_config"
+  exit 1
+fi
+echo "OK: real web local config is not tracked by master"
+
 tracked_prompts="$(git ls-files | grep -Ei '(^|/).*(prompt|followup|handoff).*' || true)"
 if [[ -n "$tracked_prompts" ]]; then
   echo "ERROR: prompt or handoff files are tracked in master:"
@@ -64,20 +72,30 @@ required_files=(
   "skills/kimi-cli-cailama-ecosystem/SKILL.md"
   "web/assets/styles.css"
   "web/.htaccess"
+  "web/account.php"
   "web/api/.htaccess"
   "web/api/public/index.php"
   "web/api_app/.htaccess"
+  "web/api_app/Auth/AuthService.php"
+  "web/api_app/Auth/SessionManager.php"
   "web/api_app/bootstrap.php"
   "web/api_app/config.php"
+  "web/api_app/config.local.sample.php"
   "web/api_app/Controllers/StatusController.php"
+  "web/api_app/Db/ConnectionFactory.php"
   "web/api_app/Http/Request.php"
+  "web/api_app/init.php"
   "web/api_app/Response.php"
   "web/api_app/Router.php"
+  "web/api_app/schema/auth-login.sql"
+  "web/api_app/schema/cailama-data.sql"
   "web/architecture.php"
   "web/data/ecosystem.json"
   "web/ecosystem-reference.md"
   "web/index.php"
+  "web/login.php"
   "web/llms.txt"
+  "web/logout.php"
   "web/operations.php"
   "web/projects.php"
   "web/reference.php"
@@ -111,6 +129,11 @@ if [[ -d "$web_target" ]]; then
   deployed_mismatch=0
   while IFS= read -r -d '' source; do
     relative="${source#web/}"
+    case "$relative" in
+      api_app/config.local.php|api_app/config.local.*.php)
+        continue
+        ;;
+    esac
     deployed="$web_target/$relative"
     if [[ ! -f "$deployed" ]] || ! cmp -s "$source" "$deployed"; then
       echo "WARN: deployed website differs for $relative"

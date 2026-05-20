@@ -12,10 +12,18 @@ if [[ ! -d "web" ]]; then
 fi
 
 mkdir -p "$target"
-rsync -a --delete "web/" "$target/"
+rsync -a --delete \
+  --exclude "/api_app/config.local.php" \
+  --exclude "/api_app/config.local.*.php" \
+  "web/" "$target/"
 
 while IFS= read -r -d '' source; do
   relative="${source#web/}"
+  case "$relative" in
+    api_app/config.local.php|api_app/config.local.*.php)
+      continue
+      ;;
+  esac
   deployed="$target/$relative"
   if [[ ! -f "$deployed" ]]; then
     echo "ERROR: missing deployed file: $deployed" >&2

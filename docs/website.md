@@ -30,8 +30,12 @@ web/architecture.php          # Architektur und Schnittstellen
 web/roadmap.php               # Roadmap aus status.plan.cailama.md
 web/operations.php            # Betrieb, Checks, Deployment
 web/reference.php             # Human-/LLM-Referenzseite
+web/login.php                 # Login-Formular mit Session-Schutz
+web/account.php               # geschuetzter Konto-Stub
+web/logout.php                # CSRF-geschuetzter Logout
 web/api/public/index.php      # vorbereiteter API-Frontcontroller
 web/api_app/                  # interne API-Skelettstruktur ohne Secrets
+web/api_app/config.local.sample.php
 web/assets/styles.css          # Gemeinsames Styling
 web/llms.txt                   # LLM-Einstiegspunkt
 web/ecosystem-reference.md     # LLM-freundliche Markdown-Referenz
@@ -99,7 +103,8 @@ Das Skript:
 1. ermittelt das Git-Root,
 2. synchronisiert `web/` in den angegebenen PHP-Webspace,
 3. entfernt dort Dateien, die nicht mehr in `web/` existieren,
-4. vergleicht jede ausgelieferte Datei bytegenau mit der Quelle.
+4. schuetzt die echte, ignorierte `web/api_app/config.local.php` vor Loeschung,
+5. vergleicht jede ausgelieferte versionierte Datei bytegenau mit der Quelle.
 
 ## Reproduzierbare Pruefung
 
@@ -131,16 +136,37 @@ Erwartung:
 
 Die DB-API ist als kleine PHP-Fassade vorbereitet. Sie ist kein generischer
 SQL-Proxy und enthaelt keine produktiven Datenbankzugangsdaten. Der aktuelle
-Stand stellt nur die Struktur und einen Status-Stub bereit:
+Stand stellt Struktur, neutralen Status, Login-/Session-Shell und zwei getrennte
+PDO-Konfigurationen bereit:
 
 ```text
 /api/v1/status
+/login.php
+/account.php
 ```
 
-Echte DB-Verbindung, API-Key-Pruefung, Scopes, Rate-Limits und fachliche
-Read-/Write-Endpunkte werden erst mit lokaler Hosting-Konfiguration und
-separater Secret-Datei verdrahtet. Keine produktiven Keys, DB-Passwoerter oder
-Hoster-Zugangsdaten werden in `web/`, `docs/` oder Beispiele geschrieben.
+Die versionierte `web/api_app/config.php` enthaelt sichere Defaults. Die echte
+Provider-Konfiguration gehoert in `web/api_app/config.local.php` und bleibt
+gitignoriert. Als Vorlage dient:
+
+```text
+web/api_app/config.local.sample.php
+```
+
+Die Konfiguration trennt:
+
+- `databases.auth`: Provider-Datenbank fuer Website-Login und Sessions.
+- `databases.cailama`: separate CaiLama-Datenbank fuer spaetere Fachlogik.
+
+Der Login nutzt PHP-Sessions mit `HttpOnly`, `SameSite=Lax`, HTTPS-abhaengigem
+Secure-Cookie, CSRF-Token, einfachem Session-basiertem Versuchslimit und
+`password_verify()` gegen Passwort-Hashes aus der Auth-Datenbank. Die
+SQL-Vorlagen liegen unter `web/api_app/schema/`.
+
+API-Key-Pruefung, Scopes, Rate-Limits und fachliche Read-/Write-Endpunkte
+werden erst mit lokaler Hosting-Konfiguration und separater Secret-Datei
+verdrahtet. Keine produktiven Keys, DB-Passwoerter oder Hoster-Zugangsdaten
+werden in `web/`, `docs/` oder Beispiele geschrieben.
 
 Der Umsetzungsplan liegt unter `docs/db-api.plan.md`.
 

@@ -240,6 +240,12 @@ h3 {
   background: transparent;
 }
 
+.form-button {
+  width: 100%;
+  margin-top: 8px;
+  border-color: var(--forest);
+}
+
 .page-hero {
   padding: 76px 20px 66px;
   color: #fffaf0;
@@ -370,6 +376,87 @@ section {
 .repo-card li,
 .rich-list li {
   margin: 7px 0;
+}
+
+.auth-layout {
+  max-width: 560px;
+}
+
+.auth-panel {
+  display: grid;
+  gap: 14px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 6px 20px rgba(23, 32, 26, 0.06);
+}
+
+.auth-panel label {
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 850;
+}
+
+.auth-panel input {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: #fff;
+  font: inherit;
+}
+
+.auth-panel input:focus {
+  outline: 3px solid rgba(31, 93, 67, 0.18);
+  border-color: var(--forest);
+}
+
+.notice {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--surface-2);
+}
+
+.notice.error {
+  border-color: rgba(138, 51, 64, 0.38);
+  color: var(--red);
+  background: rgba(138, 51, 64, 0.08);
+}
+
+.account-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.account-list div {
+  display: grid;
+  gap: 4px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.account-list div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.account-list dt {
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 850;
+}
+
+.account-list dd {
+  margin: 0;
+  color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
 .metric {

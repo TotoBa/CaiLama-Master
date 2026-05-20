@@ -21,6 +21,7 @@
         <a href="roadmap.php">Roadmap</a>
         <a aria-current="page" href="operations.php">Betrieb</a>
         <a href="reference.php">Referenz</a>
+        <a href="login.php">Login</a>
       </div>
     </nav>
   </header>
@@ -69,6 +70,10 @@ bash scripts/check-ecosystem.sh</code></pre>
           <article class="card">
             <h3>Keine Runtime</h3>
             <p>Der Master koordiniert, dokumentiert und prueft. Produktive Logik gehoert in die Ziel-Repos.</p>
+          </article>
+          <article class="card">
+            <h3>Login-Konfig</h3>
+            <p>Die Website liest echte Auth- und CaiLama-DB-Zugaenge nur aus der ignorierten <code>config.local.php</code>.</p>
           </article>
         </div>
       </div>

@@ -22,13 +22,17 @@ Vor Arbeitsbeginn lesen:
 
 - [ ] CaiLama-DB-Hybrid koordinieren: native MariaDB/MySQL, fachliche Webspace-
   API und Hybridbetrieb in Master-Doku/Website nachziehen, sobald die
-  Umsetzung in `TotoBa/CaiLama` beginnt.
+  Umsetzung in `TotoBa/CaiLama` beginnt. Master-Seite: Login-/Session-Shell,
+  getrennte `auth`-/`cailama`-PDO-Konfiguration und Schema-Vorlagen sind
+  vorbereitet; echte Provider-Credentials bleiben in ignorierter
+  `web/api_app/config.local.php`.
 - [ ] CaiLama-Search-Vertrag weiter pruefen: `POST /v1/search`,
   kompatibles `GET /v1/search`, `POST /v1/context`, `items`/`results`,
   `context`/`sources` und DWZ-Endpunkte in Doku und Website synchron halten.
 - [ ] Kimi-CLI-Ecosystem-Skill nach erstem realen Kimi-Lauf pruefen:
   `skills/kimi-cli-cailama-ecosystem/SKILL.md` bei Bedarf schaerfen, ohne
-  lokale Secrets oder Runtime-Pfade aufzunehmen.
+  lokale Secrets oder Runtime-Pfade aufzunehmen. Der Skill ist lokal in den
+  Kimi-Skills-Ordner deployt; die versionierte Quelle bleibt der Master-Stand.
 - [ ] Runtime-Aktualisierung nach groesseren Unterrepo-Releases pruefen:
   `scripts/update-runtime-projects.sh` fuer Router/Search/CaiLama nutzen und
   dokumentieren, ob Dienste aus Runtime-Ordnern gestartet wurden.

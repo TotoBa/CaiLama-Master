@@ -94,7 +94,10 @@ Dieses Repo dient dazu:
 - `skills/kimi-cli-cailama-ecosystem/SKILL.md` - Kimi-CLI-Skill fuer
   repo-uebergreifenden Kontext aus Website und Online-Doku ohne Secret-Zugriff.
 - `web/` - PHP-basierte Human-/LLM-Dokumentationswebsite und vorbereitete
-  Webspace-API-Fassade fuer `https://cailama.org/`.
+  Webspace-API-Fassade fuer `https://cailama.org/`, inklusive Login-/Session-
+  Shell ohne versionierte Credentials.
+- `web/api_app/config.local.sample.php` - Vorlage fuer die echte, ignorierte
+  Webspace-Konfiguration mit separater Auth- und CaiLama-Datenbank.
 - `scripts/check-ecosystem.sh` - lokale Statuspruefung ohne Schreibzugriffe.
 - `scripts/deploy-website.sh` - reproduzierbares Deployment von `web/`.
 

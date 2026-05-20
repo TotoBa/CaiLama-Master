@@ -26,6 +26,7 @@
         "docs/",
         "skills/",
         "scripts/check-ecosystem.sh",
+        "web/api_app/config.local.sample.php",
         "web/"
       ],
       "rules": [
@@ -91,11 +92,11 @@
         "chess-researcher"
       ],
       "current_focus": [
-        "streaming error handling",
-        "optional config hot reload",
-        "backend-specific alias model mapping",
-        "optional Prometheus metrics format",
-        "mypy cleanup"
+        "streaming backend errors are returned as final SSE chunks",
+        "optional config hot reload through runtime.reload_config_on_request",
+        "validated backend-specific alias model mapping",
+        "JSON and Prometheus-compatible metrics output",
+        "mypy src is clean"
       ],
       "constraints": [
         "No chess product logic in the router.",
@@ -163,6 +164,22 @@
         "POST /v1/context accepts query parameters or JSON with query and limit.",
         "Search responses expose native hits and normalized items/results.",
         "Context responses expose context_blocks plus compatible context/sources."
+      ]
+    },
+    {
+      "from": "CaiLama",
+      "to": "CaiLama-Master web API",
+      "purpose": "future provider database access through a narrow PHP API and website login through a separate auth database",
+      "paths": [
+        "/api/v1/status",
+        "/login.php",
+        "/account.php"
+      ],
+      "contract_notes": [
+        "No SQL-over-HTTP endpoints.",
+        "Real credentials belong only in ignored web/api_app/config.local.php.",
+        "databases.auth and databases.cailama are separate PDO configurations.",
+        "web/api_app/config.local.sample.php is a placeholder template only."
       ]
     },
     {

@@ -268,14 +268,17 @@ webspace/
 ├── api_app/
 │   ├── bootstrap.php
 │   ├── config.php
+│   ├── config.local.sample.php
 │   ├── Router.php
 │   ├── Response.php
 │   ├── Auth/
+│   │   ├── AuthService.php
+│   │   ├── SessionManager.php
 │   │   ├── ApiKeyAuthenticator.php
 │   │   ├── ScopeGuard.php
 │   │   └── RateLimiter.php
 │   ├── Db/
-│   │   └── Connection.php
+│   │   └── ConnectionFactory.php
 │   ├── Http/
 │   │   └── Request.php
 │   ├── Controllers/
@@ -291,6 +294,18 @@ webspace/
 └── secrets/
     └── api.env
 ```
+
+Aktueller Master-Stand:
+
+- `web/api_app/config.php` enthaelt nur Defaults.
+- `web/api_app/config.local.sample.php` ist die Vorlage fuer die echte,
+  gitignorierte `config.local.php`.
+- `databases.auth` verbindet die Provider-Datenbank fuer Website-Login.
+- `databases.cailama` verbindet die getrennte CaiLama-Fachdatenbank.
+- `web/login.php`, `web/account.php` und `web/logout.php` bilden die
+  Session-Shell.
+- `web/api_app/schema/auth-login.sql` und
+  `web/api_app/schema/cailama-data.sql` enthalten neutrale Schema-Vorlagen.
 
 Ideal ist: `api_app/` und `secrets/` liegen **außerhalb des öffentlich erreichbaren Document Root**.
 

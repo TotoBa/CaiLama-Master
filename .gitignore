@@ -18,6 +18,9 @@ PROMPT.md
 .env
 .env.*
 !.env.example
+/web/api_app/config.local.php
+/web/api_app/config.local.*.php
+!/web/api_app/config.local.sample.php
 *.key
 *.pem
 *.crt

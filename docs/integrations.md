@@ -64,6 +64,9 @@ Zu klaerende bzw. laufend zu pruefende Punkte:
 - Konfiguration in CaiLama fuer `native`, `api` und `hybrid` definieren.
 - Lokale DB als Aufbau- und Backup-Pfad erhalten.
 - Provider-Datenbank nur ueber fachliche PHP-Fassade anbinden.
+- Website-Login nutzt eine getrennte Auth-Datenbank; CaiLama-Fachdaten bleiben
+  in einer separaten Datenbank und werden ueber eigene DSN-Konfiguration
+  angebunden.
 - Keine SQL-over-HTTP-API und keine DB-Secrets im Master.
 
 ### CaiLama-Master -> Unter-Repos
