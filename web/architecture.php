@@ -88,8 +88,13 @@
               </tr>
               <tr>
                 <td>CaiLama → Search</td>
-                <td><code>/v1/search</code>, <code>/v1/context</code>, <code>/v1/dwz/search</code>, <code>/v1/dwz/player/{pkz}</code></td>
-                <td>Interner SearchAdapter zuerst, Browser-Websuche nur als expliziter Fallback.</td>
+                <td><code>POST /v1/search</code>, <code>POST /v1/context</code>, <code>/v1/dwz/search</code>, <code>/v1/dwz/player/{pkz}</code></td>
+                <td>Normalisierte Items/Results und Context/Sources; Browser-Websuche nur als expliziter Fallback.</td>
+              </tr>
+              <tr>
+                <td>CaiLama → Webspace-DB-API</td>
+                <td><code>/api/v1/status</code> vorbereitet; fachliche DB-Endpunkte folgen.</td>
+                <td>Konfiguration waehlt native, API oder hybrid. Keine SQL-over-HTTP-API und keine Secrets im Master.</td>
               </tr>
               <tr>
                 <td>Master → alle</td>

@@ -49,6 +49,7 @@ docs/roadmap.md
 docs/orchestration.md
 docs/quality.md
 docs/local-setup.md
+skills/kimi-cli-cailama-ecosystem/SKILL.md
 ```
 
 Synchronisationsregel:
@@ -66,9 +67,9 @@ https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png
 
 Dadurch wird die Logo-Datei nicht im Master-Repo dupliziert.
 
-Im Hero-Bereich wird das Hintergrund-Logo heller und monochromer gerendert,
-weil der dunkle `Cai`-Teil des Logos auf dem dunklen/gruenen Hintergrund sonst
-verschwindet. Das sichtbare Hero-Logo bleibt unverfaelscht.
+Im Hero-Bereich wird das Hintergrund-Logo farbig, aber leicht aufgehellt
+gerendert, weil der dunkle `Cai`-Teil des Logos auf dem dunklen/gruenen
+Hintergrund sonst verschwindet. Das sichtbare Hero-Logo bleibt unverfaelscht.
 
 ## Webspace
 

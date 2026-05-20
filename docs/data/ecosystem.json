@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "generated_for": "CaiLama ecosystem documentation",
-  "last_reviewed": "2026-05-19",
+  "last_reviewed": "2026-05-20",
   "canonical_url": "https://cailama.org/",
   "language": "de",
   "summary": {
@@ -24,6 +24,7 @@
         "AGENTS.md",
         "hinweise.md",
         "docs/",
+        "skills/",
         "scripts/check-ecosystem.sh",
         "web/"
       ],
@@ -53,11 +54,11 @@
         "hardware"
       ],
       "current_focus": [
-        "personalized training generator hardening",
-        "deterministic mistake and pattern taxonomy",
-        "internal SearchAdapter for CaiLama-Search",
-        "DWZ identity linking",
-        "RAG-assisted analysis packages"
+        "DB hybrid access through native MariaDB/MySQL, webspace API and hybrid mode",
+        "PTG phase 2 and follow-up hardening",
+        "internal SearchAdapter as standard path for search, context and DWZ",
+        "DWZ identity linking store and CLI integration",
+        "RAG-assisted analysis packages in researcher and analyst flows"
       ],
       "constraints": [
         "No live external, engine, router, database or hardware calls unless explicitly requested.",
@@ -90,10 +91,11 @@
         "chess-researcher"
       ],
       "current_focus": [
-        "backend state model",
-        "fallback behavior",
-        "exhausted-backend behavior",
-        "privacy-safe observability"
+        "streaming error handling",
+        "optional config hot reload",
+        "backend-specific alias model mapping",
+        "optional Prometheus metrics format",
+        "mypy cleanup"
       ],
       "constraints": [
         "No chess product logic in the router.",
@@ -120,11 +122,12 @@
         "/v1/admin/reindex/source/{id}"
       ],
       "current_focus": [
-        "MeiliKeyManager runtime integration",
-        "consistent environment variable names",
-        "admin endpoint hardening",
-        "source provenance for RAG",
-        "download-based DWZ import",
+        "CaiLama-compatible API contract with normalized items, results, context and sources",
+        "explicit Meilisearch master key and dedicated API key in Docker defaults",
+        "admin service token via environment or localhost fallback",
+        "crawler source policy and robots tests",
+        "search observability and goldsets",
+        "job orchestration with CaiLama queue and training",
         "optional semantic retrieval with evaluation data"
       ],
       "constraints": [
@@ -154,6 +157,12 @@
         "/v1/context",
         "/v1/dwz/search",
         "/v1/dwz/player/{pkz}"
+      ],
+      "contract_notes": [
+        "POST /v1/search is canonical; GET /v1/search?q=... remains compatible.",
+        "POST /v1/context accepts query parameters or JSON with query and limit.",
+        "Search responses expose native hits and normalized items/results.",
+        "Context responses expose context_blocks plus compatible context/sources."
       ]
     },
     {
@@ -165,12 +174,15 @@
   ],
   "roadmap": {
     "now": [
-      "Search-Auth-Hardening in CaiLama-Search",
-      "internal SearchAdapter in CaiLama"
+      "CaiLama DB hybrid access planning and implementation",
+      "CaiLama Search/DWZ/RAG standard-path integration",
+      "Router streaming error handling and config hot reload decision",
+      "Search crawler source policy tests"
     ],
     "next": [
-      "PTG MVP and follow-up hardening in CaiLama",
-      "DWZ identity linking between CaiLama and CaiLama-Search"
+      "PTG phase 2 and follow-up hardening in CaiLama",
+      "DWZ identity linking store/CLI integration",
+      "Search and PTG observability"
     ],
     "later": [
       "RAG-assisted analysis packages",

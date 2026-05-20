@@ -91,6 +91,8 @@ Dieses Repo dient dazu:
   Master-Sicht.
 - `docs/quality.md` - Master-Checks, Index-Regeln und TODO-Konsistenz.
 - `docs/website.md` - URL, Quellpfad und Deployment-Pfad der Webseite.
+- `skills/kimi-cli-cailama-ecosystem/SKILL.md` - Kimi-CLI-Skill fuer
+  repo-uebergreifenden Kontext aus Website und Online-Doku ohne Secret-Zugriff.
 - `web/` - PHP-basierte Human-/LLM-Dokumentationswebsite und vorbereitete
   Webspace-API-Fassade fuer `https://cailama.org/`.
 - `scripts/check-ecosystem.sh` - lokale Statuspruefung ohne Schreibzugriffe.

@@ -31,3 +31,5 @@
 - Do not create submodules.
 - Do not store secrets, tokens, .env files or production credentials.
 - Runtime code belongs in the target sub-repositories, not in CaiLama-Master.
+- For Kimi CLI, the Master repository contains
+  skills/kimi-cli-cailama-ecosystem/SKILL.md as the repo-wide context skill.

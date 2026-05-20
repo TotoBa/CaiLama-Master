@@ -156,7 +156,18 @@ Neue Plan-Dateien sollen nachvollziehbar benannt werden, zum Beispiel:
 - `YYYY-MM-DD.ptg-roadmap.plan.md`
 
 Abgeschlossene Punkte in `TODO.md` nur abhaken, wenn die Umsetzung ueberprueft
-wurde. Cross-Repo-Punkte muessen das Ziel-Repo klar nennen.
+wurde. Erledigte TODO-Punkte duerfen nur geloescht werden, wenn der Nutzer das
+ausdruecklich verlangt. TODO ist nicht gleich Handoff; Handoff-Bloecke bleiben
+als naechste operative Orientierung erhalten. Cross-Repo-Punkte muessen das
+Ziel-Repo klar nennen.
+
+## Kimi-CLI-Skill
+
+Der Master enthaelt unter `skills/kimi-cli-cailama-ecosystem/SKILL.md` einen
+repo-uebergreifenden Kimi-CLI-Skill. Er erlaubt Kimi, die oeffentliche
+Ecosystem-Doku und Website zu lesen, bevor im aktuellen Ziel-Repo gearbeitet
+wird. Der Skill darf keine lokalen Secret-Dateien, Runtime-Konfigurationen oder
+Live-Dienste lesen.
 
 ## Architekturprinzipien
 

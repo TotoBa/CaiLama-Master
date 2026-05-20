@@ -6,34 +6,54 @@ Unter-Repositories.
 
 ## Jetzt
 
-### Search-Auth-Hardening
-
-Ziel-Repo: `TotoBa/CaiLama-Search`
-
-Koordinationspunkte:
-
-- `MeiliKeyManager` in Runtime-Pfade bringen.
-- Environment-Namen zwischen API, CLI, Scheduler, Config und `.env.example`
-  vereinheitlichen.
-- Bootstrap per Master-Key von Runtime-Keys trennen.
-- Admin-Endpunkte schuetzen.
-- Tests fuer Key-Bootstrap, Rotation, Config und Admin-Auth ergaenzen.
-
-### Interner SearchAdapter
+### CaiLama DB-Hybridpfad
 
 Ziel-Repo: `TotoBa/CaiLama`
 
 Koordinationspunkte:
 
-- `SearchApiClient` bzw. Adapter fuer `/v1/search`, `/v1/context` und
-  `/v1/dwz/*` schneiden.
-- Rueckgabeformate normalisieren.
-- Modi `internal_first`, `external_fallback` und `external_only` pruefen.
+- Konfigurationsmodus fuer `native`, `api` und `hybrid` definieren.
+- Native MariaDB/MySQL lokal fuer Aufbau und Backup nutzen.
+- Fachliche Webspace-DB-API als Provider-Pfad vorbereiten.
+- Keine generische SQL-over-HTTP-API einfuehren.
+
+### CaiLama Search/DWZ/RAG-Integration
+
+Ziel-Repo: `TotoBa/CaiLama`
+
+Koordinationspunkte:
+
+- `SearchAdapter` als Standardpfad fuer `/v1/search`, `/v1/context` und
+  `/v1/dwz/*` nutzen.
+- Rueckgabeformate `items`/`results`, `context`/`sources` und DWZ normalisieren.
+- Modi `internal_first`, `external_fallback`, `external_only` und
+  `internal_only` pruefen.
 - Browserbasierte Websuche nur als bewussten Fallback nutzen.
+
+### Router-Folgehaertung
+
+Ziel-Repo: `TotoBa/CaiLama-LLM-Router`
+
+Koordinationspunkte:
+
+- Streaming-Fehlerbehandlung fuer `stream: true` klaeren.
+- Config-Hot-Reload bewerten und bei Entscheidung testen.
+- Backend-spezifisches Modell-Mapping per Alias absichern.
+- Bekannte `mypy`-Fehler bereinigen.
+
+### Search-Quellenpolitik
+
+Ziel-Repo: `TotoBa/CaiLama-Search`
+
+Koordinationspunkte:
+
+- Crawler-Quellenpolitik, Robots-Parser und Rate-Limits testen.
+- Quellen-CRUD und Robots-Validierung absichern.
+- Goldsets fuer Suchqualitaet vorbereiten.
 
 ## Danach
 
-### PTG-MVP und Folgehaertung
+### PTG Phase 2 und Folgehaertung
 
 Ziel-Repo: `TotoBa/CaiLama`
 
@@ -51,6 +71,7 @@ Ziel-Repos: `TotoBa/CaiLama`, `TotoBa/CaiLama-Search`
 
 Koordinationspunkte:
 
+- Vorhandenen Matching-Pfad in Store und CLI integrieren.
 - Plattformprofile mit DWZ-Treffern verknuepfen.
 - Mehrdeutige Treffer manuell bestaetigen lassen.
 - PII-Minimierung und Export-/Retention-Regeln dokumentieren.

@@ -122,6 +122,10 @@ git diff --check</code></pre>
             <p>URL, Quellpfad, Deploypfad und Grenzen der Webserver-Konfiguration.</p>
           </article>
           <article class="doc-card">
+            <h3>skills/kimi-cli-cailama-ecosystem</h3>
+            <p>Kimi-CLI-Skill fuer Website- und Online-Doku-Kontext ohne Secret- oder Live-Zugriff.</p>
+          </article>
+          <article class="doc-card">
             <h3>docs/ecosystem-reference.md</h3>
             <p>LLM-freundliche Gesamtreferenz fuer alle Repositories, Schnittstellen und Regeln.</p>
           </article>

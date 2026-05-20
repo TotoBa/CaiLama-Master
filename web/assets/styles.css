@@ -118,11 +118,14 @@ img {
   z-index: -2;
   background-image: url("https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png");
   background-repeat: no-repeat;
-  background-position: center 44%;
-  background-size: min(980px, 132vw);
-  opacity: 0.17;
-  filter: invert(1) grayscale(1) sepia(0.12) saturate(1.15) brightness(1.05);
-  mix-blend-mode: screen;
+  background-position: center 46%;
+  background-size: min(940px, 128vw);
+  opacity: 0.22;
+  filter:
+    saturate(1.08)
+    brightness(1.2)
+    contrast(1.04)
+    drop-shadow(0 0 24px rgba(255, 250, 240, 0.2));
 }
 
 .hero::after {

@@ -61,6 +61,7 @@ required_files=(
   "docs/website.md"
   "scripts/deploy-website.sh"
   "scripts/update-runtime-projects.sh"
+  "skills/kimi-cli-cailama-ecosystem/SKILL.md"
   "web/assets/styles.css"
   "web/.htaccess"
   "web/api/.htaccess"

@@ -59,13 +59,13 @@
           </article>
           <article class="card">
             <span class="tag copper">Laufend</span>
-            <h3>PTG-Folgehaertung</h3>
-            <p>Review-Ergebnisse sollen Schwierigkeit, Prioritaet und Wiederholungslogik personalisierter Karten beeinflussen.</p>
+            <h3>PTG und DB-Hybrid</h3>
+            <p>PTG Phase 2 schliesst Queue und Analyse an; DB-Zugriff soll zwischen nativ, API und hybrid waehlbar werden.</p>
           </article>
           <article class="card">
             <span class="tag blue">Integration</span>
             <h3>SearchAdapter</h3>
-            <p>Interne Suche, Kontext und DWZ sollen zuerst ueber CaiLama-Search laufen; Browser-Websuche bleibt Fallback.</p>
+            <p>Interne Suche, Kontext, RAG und DWZ laufen zuerst ueber CaiLama-Search; Browser-Websuche bleibt Fallback.</p>
           </article>
           <article class="card">
             <span class="tag red">Datenschutz</span>
@@ -103,8 +103,8 @@
           </article>
           <article class="card">
             <span class="tag red">Fallback</span>
-            <h3>Ausfallverhalten</h3>
-            <p>Round-Robin, Cooldowns, Rate-Limit-Erkennung und exhausted-backend Policies muessen vorhersagbar bleiben.</p>
+            <h3>Folgehaertung</h3>
+            <p>Streaming-Fehler, Config-Hot-Reload, backend-spezifische Modellnamen und mypy-Bereinigung sind die naechsten offenen Punkte.</p>
           </article>
           <article class="card">
             <span class="tag blue">Logging</span>
@@ -130,14 +130,14 @@
         </div>
         <div class="grid-2">
           <article class="card">
-            <span class="tag red">Search-Auth</span>
-            <h3>Key-Management</h3>
-            <p><code>MeiliKeyManager</code> muss in Runtime-Pfade, Env-Namen muessen konsistent und Admin-Keys von Search-Keys getrennt sein.</p>
+            <span class="tag red">Search</span>
+            <h3>Key-Defaults</h3>
+            <p>Docker verlangt explizite Master- und API-Keys, bindet lokal und erlaubt Admin-Token per Environment.</p>
           </article>
           <article class="card">
             <span class="tag blue">Kontext</span>
             <h3>RAG-Vertrag</h3>
-            <p><code>/v1/context</code> soll Quellen, Snippets und Metadaten nachvollziehbar fuer LLM-Rollen liefern.</p>
+            <p><code>/v1/search</code> liefert normalisierte Items; <code>/v1/context</code> liefert Kontextbloecke plus kompatible Quellen.</p>
           </article>
           <article class="card">
             <span class="tag">DWZ</span>
@@ -146,8 +146,8 @@
           </article>
           <article class="card">
             <span class="tag copper">Ausbau</span>
-            <h3>Semantisches Retrieval</h3>
-            <p>Embedding/Reranking erst mit Eval-Datensatz und Fallback ueber dem bestehenden Meilisearch-Lexikalindex.</p>
+            <h3>Quellenpolitik</h3>
+            <p>Crawler-Whitelists, Robots, Rate-Limits, Observability und Goldsets sind die naechsten Search-Arbeiten.</p>
           </article>
         </div>
       </div>

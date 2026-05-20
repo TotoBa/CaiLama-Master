@@ -31,9 +31,9 @@
         <p class="eyebrow">Priorisierung</p>
         <h1>Erst haerten, dann personalisieren.</h1>
         <p class="page-lead">
-          Die Roadmap folgt dem Statusplan: Search sicher und nutzbar machen,
-          CaiLama daran anbinden, personalisiertes Training schliessen und
-          danach RAG, Jobs und Observability ausbauen.
+          Die Roadmap folgt dem Statusplan: DB-Zugriff und Search-Vertrag
+          sauber schneiden, CaiLama daran anbinden, personalisiertes Training
+          schliessen und danach RAG, Jobs und Observability ausbauen.
         </p>
       </div>
     </section>
@@ -43,11 +43,11 @@
         <div class="timeline">
           <article class="step">
             <strong>Jetzt</strong>
-            <p>Search-Auth-Hardening, interner SearchAdapter.</p>
+            <p>DB-Hybrid, Search/DWZ/RAG-Standardpfad, Router-Streaming, Search-Quellenpolitik.</p>
           </article>
           <article class="step">
             <strong>Danach</strong>
-            <p>PTG-MVP/Folgehaertung, DWZ-Identity-Linking.</p>
+            <p>PTG Phase 2, DWZ-Identity-Linking, Search- und PTG-Observability.</p>
           </article>
           <article class="step">
             <strong>Spaeter</strong>
@@ -69,23 +69,42 @@
         </div>
         <div class="grid-2">
           <article class="card">
-            <span class="tag red">CaiLama-Search</span>
-            <h3>Search-Auth-Hardening</h3>
+            <span class="tag red">CaiLama</span>
+            <h3>DB-Hybrid</h3>
             <ul class="rich-list">
-              <li><code>MeiliKeyManager</code> in Runtime-Pfade verdrahten.</li>
-              <li>Env-Namen zwischen API, CLI, Scheduler und Config vereinheitlichen.</li>
-              <li>Bootstrap-Key von Runtime-Keys trennen.</li>
-              <li>Admin-Endpunkte schuetzen und testen.</li>
+              <li>Konfigurationsmodus fuer <code>native</code>, <code>api</code> und <code>hybrid</code> definieren.</li>
+              <li>Lokale MariaDB/MySQL als Aufbau- und Backup-Pfad erhalten.</li>
+              <li>Provider-Datenbank ueber fachliche Webspace-API anbinden.</li>
+              <li>Keine generische SQL-over-HTTP-API einfuehren.</li>
             </ul>
           </article>
           <article class="card">
             <span class="tag">CaiLama</span>
-            <h3>Interner SearchAdapter</h3>
+            <h3>Search/DWZ/RAG-Standardpfad</h3>
             <ul class="rich-list">
-              <li><code>/v1/search</code>, <code>/v1/context</code> und <code>/v1/dwz/*</code> konsumieren.</li>
-              <li>Rueckgabeformate normalisieren.</li>
-              <li><code>internal_first</code>, <code>external_fallback</code>, <code>external_only</code> pruefen.</li>
+              <li><code>/v1/search</code>, <code>/v1/context</code> und <code>/v1/dwz/*</code> als Standard nutzen.</li>
+              <li><code>items</code>/<code>results</code> und <code>context</code>/<code>sources</code> normalisieren.</li>
+              <li><code>internal_first</code>, <code>external_fallback</code>, <code>external_only</code>, <code>internal_only</code> pruefen.</li>
               <li>Browser-Websuche nur als bewussten Fallback nutzen.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <span class="tag blue">Router</span>
+            <h3>Folgehaertung</h3>
+            <ul class="rich-list">
+              <li>Streaming-Fehlerbehandlung fuer <code>stream: true</code> klaeren.</li>
+              <li>Config-Hot-Reload bewerten und testen.</li>
+              <li>Backend-spezifisches Modell-Mapping per Alias absichern.</li>
+              <li>Bekannte <code>mypy</code>-Fehler bereinigen.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <span class="tag copper">CaiLama-Search</span>
+            <h3>Quellenpolitik</h3>
+            <ul class="rich-list">
+              <li>Crawler-Whitelists, Robots und Rate-Limits testen.</li>
+              <li>Quellen-CRUD und Robots-Validierung absichern.</li>
+              <li>Search-Goldsets und Observability vorbereiten.</li>
             </ul>
           </article>
         </div>
@@ -101,7 +120,7 @@
         <div class="grid-2">
           <article class="card">
             <span class="tag copper">CaiLama</span>
-            <h3>PTG-MVP und Folgehaertung</h3>
+            <h3>PTG Phase 2 und Folgehaertung</h3>
             <ul class="rich-list">
               <li>Importierte Partien in Feature-Signale ueberfuehren.</li>
               <li>Schwaechenprofil und Kartenqueue nachvollziehbar ableiten.</li>
@@ -127,7 +146,7 @@
       <div class="section-inner">
         <div class="section-head">
           <h2>Spaeter und Ausbau.</h2>
-          <p>Breitere Plattformfeatures kommen, wenn SearchAdapter, PTG und Search-Auth stabil sind.</p>
+          <p>Breitere Plattformfeatures kommen, wenn DB-Hybrid, SearchAdapter und PTG stabil sind.</p>
         </div>
         <div class="grid-3">
           <article class="card">

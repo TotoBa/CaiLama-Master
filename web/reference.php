@@ -116,7 +116,8 @@
             Ein LLM soll zuerst <code>llms.txt</code>, dann <code>ecosystem-reference.md</code> und
             bei strukturierter Verarbeitung <code>data/ecosystem.json</code> lesen. Fuer
             konkrete Codearbeit gilt danach das jeweilige <code>AGENTS.md</code> im
-            Ziel-Repository.
+            Ziel-Repository. Fuer Kimi-CLI gibt es im Master zusaetzlich den
+            Skill <code>skills/kimi-cli-cailama-ecosystem/SKILL.md</code>.
           </p>
         </div>
         <pre><code>https://cailama.org/llms.txt

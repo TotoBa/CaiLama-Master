@@ -57,6 +57,9 @@ Umsetzung erfolgt im jeweiligen Ziel-Repo:
 
 Master-TODOs sollen deshalb Ziel-Repo, Schnittstelle und erwartetes Ergebnis
 nennen, aber keine direkten Code-Aenderungen in Unter-Repos verlangen.
+Erledigte TODO-Punkte duerfen nur auf ausdrueckliche Nutzeranweisung geloescht
+werden. TODO ist nicht gleich Handoff; der Handoff-Abschnitt bleibt die
+operative Orientierung fuer naechste Agentenlaeufe.
 
 Die aktuelle Roadmap steht in `docs/roadmap.md`. Schnittstellen- und
 Smoke-Test-Regeln stehen in `docs/integrations.md`.

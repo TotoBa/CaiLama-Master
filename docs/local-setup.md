@@ -41,7 +41,7 @@ Das Skript synchronisiert den kompletten Inhalt von `web/`, also PHP-Seiten,
 Stylesheet, `llms.txt`, `ecosystem-reference.md` und
 `data/ecosystem.json`.
 
-Die URL `https://cailama.org/` wurde am 2026-05-19 per `curl -I -L` mit
+Die URL `https://cailama.org/` wurde am 2026-05-20 per `curl -I -L` mit
 `HTTP/2 200` verifiziert.
 
 ## Runtime-Ordner

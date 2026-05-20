@@ -31,7 +31,7 @@ Environment:
   CAILAMA_RUNTIME_DIR             Runtime copy for CaiLama. Default: ~/CaiLama
   CAILAMA_ROUTER_RUNTIME_DIR      Runtime copy for Router. Default: ~/CaiLama-LLM-Router
   CAILAMA_SEARCH_RUNTIME_DIR      Runtime copy for Search. Default: ~/CaiLama-Search
-  CAILAMA_SEARCH_HOST             Bind host for the Search API. Default: 0.0.0.0
+  CAILAMA_SEARCH_HOST             Bind host for the Search API. Default: 127.0.0.1
   CAILAMA_SEARCH_PORT             Bind port for the Search API. Default: 8080
 
 Runtime folders must not contain .git directories.
@@ -257,7 +257,7 @@ restart_router() {
 restart_search() {
   local target host port pids
   target="$(runtime_dir search)"
-  host="${CAILAMA_SEARCH_HOST:-0.0.0.0}"
+  host="${CAILAMA_SEARCH_HOST:-127.0.0.1}"
   port="${CAILAMA_SEARCH_PORT:-8080}"
 
   if [[ "$dry_run" -eq 1 ]]; then

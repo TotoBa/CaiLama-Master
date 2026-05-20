@@ -26,7 +26,8 @@ Der Master-Index darf nicht enthalten:
 
 - Dateien aus `CaiLama/`, `CaiLama-LLM-Router/` oder `CaiLama-Search/`,
 - `.env` oder `.env.*`,
-- Prompt-/Handoff-/Followup-Dateien,
+- lose Prompt-/Handoff-/Followup-Dateien ausserhalb von `TODO.md` oder
+  klar benannten Skills,
 - Secrets, Tokens, Zertifikate oder lokale Credential-Dateien.
 
 Ausnahme fuer maschinenlesbare Doku: `docs/data/ecosystem.json` und
@@ -57,8 +58,10 @@ sind manuell zu bewerten. Echte Credential-Werte duerfen nicht committed werden.
 
 ## TODO-Konsistenz
 
-Master-`TODO.md` ist die abgeschlossene Koordinationsliste fuer den Master.
+Master-`TODO.md` ist die offene Koordinationsliste fuer den Master.
 Operative Folgearbeit in Unter-Repos gehoert in deren jeweilige `TODO.md`.
+Erledigte TODO-Punkte werden nur geloescht, wenn der Nutzer das ausdruecklich
+verlangt; TODO ist nicht gleich Handoff.
 
 Die Unterprojekt-READMEs verweisen auf die gemeinsame Master-Doku:
 

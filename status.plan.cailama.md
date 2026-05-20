@@ -1,5 +1,26 @@
 # Status und Ausbaupfade des CaiLama-Ökosystems
 
+## Aktualisierung 2026-05-20
+
+Dieser Abschnitt ersetzt die operativen Prioritäten der ursprünglichen Analyse,
+ohne die historische Bewertung darunter umzuschreiben.
+
+- `TotoBa/CaiLama`: PTG Phase 1, SearchAdapter-Grundlage und RAG-Tooling sind
+  vorhanden. Offen sind jetzt DB-Hybrid (`native`/`api`/`hybrid`), Search/DWZ
+  als Standardpfad, PTG Phase 2, DWZ-Store/CLI-Integration und
+  RAG-Promptflow-Anschluss.
+- `TotoBa/CaiLama-LLM-Router`: Fallbacks, Aliase, Config-Checks und
+  privacy-safe JSON-Metriken sind umgesetzt. Offen sind
+  Streaming-Fehlervertrag, optionales Config-Hot-Reload, backend-spezifische
+  Modellnamen je Alias und `mypy`-Bereinigung.
+- `TotoBa/CaiLama-Search`: Key-Rotation, Admin-Auth, Read/Admin-Trennung,
+  Docker-Key-Defaults und der CaiLama-kompatible API-Vertrag sind umgesetzt.
+  Offen sind Crawler-Quellenpolitik-Tests, Search-Observability,
+  Job-Orchestrierung und optionale semantische Retrieval-Schicht.
+- `TotoBa/CaiLama-Master`: Website, PHP-Webspace-Skelett, HTTPS-Redirect-Regeln,
+  Runtime-Update-Skript und Kimi-CLI-Ecosystem-Skill sind die aktuelle
+  Koordinationsbasis.
+
 ## Executive Summary
 
 Das CaiLama-Ökosystem zeigt derzeit ein klares Muster aus **reifem Kernsystem plus zwei jungen, architekturpräzisen Satelliten-Repositories**. Das Hauptrepo **CaiLama** ist bereits ein modularer Schachtrainer mit belastbarer Runtime-, Rollen-, Trainings- und Player-Profile-Infrastruktur. **CaiLama-LLM-Router** ist dagegen ein sehr junges, aber schon erstaunlich konsistentes Gateway mit OpenAI-kompatibler API, Modell-Aliasen, Fallback-Policies und balanciertem Backend-Routing. **CaiLama-Search** ist die jüngste Codebasis; sie startet schon mit einer schlüssigen Zielarchitektur aus FastAPI-Zugriffsschicht, Meilisearch-Indizes, Trafilatura-Crawler und DWZ-Importpfad, ist aber funktional noch im Alpha-Stadium. fileciteturn60file0L3-L3 fileciteturn51file0L3-L3 fileciteturn53file0L3-L3 fileciteturn37file0L3-L3 fileciteturn41file0L3-L3 fileciteturn49file0L1-L3

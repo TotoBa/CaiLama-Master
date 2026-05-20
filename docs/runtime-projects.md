@@ -63,7 +63,7 @@ Search wird ohne Git-Repo aus seiner Runtime-Kopie gestartet. Der Startbefehl
 liegt im Script und nutzt standardmaessig den Search-API-Entry-Point:
 
 ```text
-uvicorn cailama.search_backend.api:app --host 0.0.0.0 --port 8080
+uvicorn cailama.search_backend.api:app --host 127.0.0.1 --port 8080
 ```
 
 Ports koennen fuer Search ueber `CAILAMA_SEARCH_HOST` und

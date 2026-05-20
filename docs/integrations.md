@@ -25,11 +25,11 @@ Relevante Modellrollen:
 
 Zu klaerende bzw. laufend zu pruefende Punkte:
 
-- Erwartete Modell-Aliase in CaiLama gegen Router-Konfiguration abgleichen.
-- `/health`, `/v1/models` und `/v1/chat/completions` als Smoke-Pfade
-  dokumentieren.
-- Fallback-, Limit- und Exhausted-Backend-Verhalten im Router nachvollziehbar
-  halten.
+- Streaming-Fehlerbehandlung fuer `stream: true`-Flows nachvollziehbar machen.
+- Optionales Config-Hot-Reload mit Tests klaeren.
+- Backend-spezifisches Modell-Mapping per Alias absichern.
+- `/health`, `/v1/models`, `/v1/chat/completions` und `/metrics` als Smoke-
+  und Observability-Pfade dokumentieren.
 - Keine Provider-Secrets im Master speichern.
 
 ### CaiLama -> CaiLama-Search
@@ -39,17 +39,32 @@ DWZ-Daten.
 
 Relevante Endpunkte:
 
-- `/v1/search`
-- `/v1/context`
+- `POST /v1/search` als kanonischer Suchvertrag; `GET /v1/search?q=...` bleibt
+  fuer einfache Clients kompatibel.
+- `POST /v1/context`
 - `/v1/dwz/search`
 - `/v1/dwz/player/{pkz}`
 
 Zu klaerende bzw. laufend zu pruefende Punkte:
 
 - SearchAdapter in CaiLama als Standardpfad vor browserbasierter Websuche.
+- Normalisierte `items`/`results` aus `/v1/search` und `context`/`sources` aus
+  `/v1/context` synchron halten.
 - Browserbasierter Webpfad nur als expliziter Fallback.
 - Quellenprovenienz bei RAG-Antworten sichtbar halten.
 - DWZ-Identity-Linking mit Ambiguitaetsbehandlung und PII-Minimierung.
+
+### CaiLama -> Webspace-DB-API
+
+Ziel: CaiLama soll kuenftig zwischen nativem MariaDB/MySQL-Zugriff,
+fachlicher Webspace-API und Hybridbetrieb waehlen koennen.
+
+Zu klaerende bzw. laufend zu pruefende Punkte:
+
+- Konfiguration in CaiLama fuer `native`, `api` und `hybrid` definieren.
+- Lokale DB als Aufbau- und Backup-Pfad erhalten.
+- Provider-Datenbank nur ueber fachliche PHP-Fassade anbinden.
+- Keine SQL-over-HTTP-API und keine DB-Secrets im Master.
 
 ### CaiLama-Master -> Unter-Repos
 

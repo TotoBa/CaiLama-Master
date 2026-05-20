@@ -4,148 +4,79 @@ Dieses TODO koordiniert Ecosystem-weite Aufgaben. Es ersetzt nicht die TODOs der
 einzelnen Repositories und verlangt keine direkten Code-Aenderungen in den
 Unter-Repos.
 
-## 1. Master-Repo-Basis
+Erledigte TODOs werden nur auf ausdrueckliche Nutzeranweisung entfernt; TODO
+ist nicht gleich Handoff. Diese Bereinigung wurde am 2026-05-20 auf
+ausdrueckliche Nutzeranweisung durchgefuehrt.
 
-- [x] `.gitignore` erstellen und Unter-Repos ignorieren:
-  - [x] `/CaiLama/`
-  - [x] `/CaiLama-LLM-Router/`
-  - [x] `/CaiLama-Search/`
-- [x] Pruefen, ob Unter-Repos versehentlich im Master-Index liegen.
-- [x] `AGENTS.md` fuer Master-Repo-Regeln erstellen.
-- [x] `README.md` mit Zweck und lokaler Struktur erstellen.
-- [x] `docs/` fuer Ecosystem-Dokumentation anlegen.
-- [x] `scripts/check-ecosystem.sh` als reine Statuspruefung ergaenzen.
-- [x] Bei kuenftigen Aenderungen erneut pruefen, dass keine Unter-Repo-Dateien getrackt werden.
-- [x] Webseite fuer `https://cailama.org/` als PHP-Webspace vorbereiten:
-  Quelle `web/`, Deployment in einen host-spezifischen Webspace,
-  Inhalt angelehnt an die aktuelle `README.md` aus `TotoBa/CaiLama` mit Logo.
+## Arbeitskontext
 
-## 2. Orchestrierung und Status
+Vor Arbeitsbeginn lesen:
 
-- [x] `master-repo-orchestration.plan.md` als Orchestrierungsplan erhalten.
-- [x] `status.plan.cailama.md` als aktuellen Ecosystem-Status erhalten.
-- [x] Namensschema fuer neue Plan-Dateien konsequent anwenden.
-- [x] Statusplaene aktualisieren, wenn sich Repo-Rollen, Schnittstellen oder
-  laufende Integrationsarbeiten wesentlich aendern.
-- [x] Cross-Repo-Aufgaben im Master dokumentieren, Umsetzung aber in den
-  jeweiligen Repos belassen.
-- [x] Knappe Unterrepo-Prioritaeten fuer den naechsten Kimi-Lauf festhalten:
-  - CaiLama: PTG-End-to-End, interner SearchAdapter, DWZ-Identity-Linking,
-    RAG-Analysepakete.
-  - CaiLama-LLM-Router: Fallback-Verhalten, Rollen-/Modell-Aliase,
-    privacy-safe Observability.
-  - CaiLama-Search: Meilisearch-Key-Betrieb, Admin-Auth, CaiLama-API-Vertrag.
-- [x] Einheitlichen Kimi-Prompt in den Unterrepo-`TODO.md`-Dateien verankern:
-  Kimi liest `AGENTS.md`, `README.md`, `TODO.md` und relevante Modul-/Doku-
-  Dateien, arbeitet nur den Abschnitt `Kimi-Handoff: aktuelle Prioritaeten`
-  ab, vermeidet Secrets/Live-Zugriffe, testet gezielt und committed/pusht im
-  aktuellen Repository.
-- [x] Laufende Arbeiten regelmaessig nachfuehren:
-  - [x] CaiLama: personalisierter Trainingsgenerator und Folgehaertung.
-  - [x] CaiLama-Search: Meilisearch-API-Key-Management.
-  - [x] CaiLama-LLM-Router: Betriebs-, Fallback- und Backend-Haertung.
-- [x] Roadmap aus `status.plan.cailama.md` vollstaendig nachhalten:
-  - [x] Jetzt: Search-Auth-Hardening in CaiLama-Search.
-  - [x] Jetzt: interner SearchAdapter in CaiLama.
-  - [x] Danach: PTG-MVP/Folgehaertung in CaiLama.
-  - [x] Danach: DWZ-Identity-Linking zwischen CaiLama und CaiLama-Search.
-  - [x] Spaeter: RAG-gestuetzte Analysepakete.
-  - [x] Spaeter: einheitliche Job-Orchestrierung fuer Import, Crawl,
-    Game-Analyse, PTG und Reindex.
-  - [x] Ausbau: Observability/KPIs fuer Router, Search und PTG.
-  - [x] Ausbau: optionale semantische Retrieval-Schicht in CaiLama-Search.
+- `AGENTS.md`, `README.md`, diese `TODO.md`.
+- `docs/ecosystem-map.md`, `docs/orchestration.md`,
+  `status.plan.cailama.md`, `master-repo-orchestration.plan.md`.
+- Bei Website-Aenderungen zusaetzlich `docs/website.md`,
+  `docs/ecosystem-reference.md`, `docs/data/ecosystem.json` und `web/`.
 
-## 3. CaiLama Integrationsthemen
+## Naechster Arbeitsschritt
 
-- [x] Status des personalisierten Trainingsgenerators regelmaessig
-  dokumentieren.
-- [x] Schnittstelle CaiLama -> CaiLama-Search fuer Suche, RAG und DWZ als
-  Koordinationsthema beschreiben.
-- [x] Schnittstelle CaiLama -> CaiLama-LLM-Router fuer Modellzugriff als
-  Koordinationsthema beschreiben.
-- [x] Klaeren, welche Runtime-Konfigurationen dokumentiert werden muessen, ohne
-  Secrets offenzulegen.
-- [x] Pruefen, welche Smoke-Tests fuer das Gesamtsystem sinnvoll sind.
+- [ ] CaiLama-DB-Hybrid koordinieren: native MariaDB/MySQL, fachliche Webspace-
+  API und Hybridbetrieb in Master-Doku/Website nachziehen, sobald die
+  Umsetzung in `TotoBa/CaiLama` beginnt.
+- [ ] CaiLama-Search-Vertrag weiter pruefen: `POST /v1/search`,
+  kompatibles `GET /v1/search`, `POST /v1/context`, `items`/`results`,
+  `context`/`sources` und DWZ-Endpunkte in Doku und Website synchron halten.
+- [ ] Kimi-CLI-Ecosystem-Skill nach erstem realen Kimi-Lauf pruefen:
+  `skills/kimi-cli-cailama-ecosystem/SKILL.md` bei Bedarf schaerfen, ohne
+  lokale Secrets oder Runtime-Pfade aufzunehmen.
+- [ ] Runtime-Aktualisierung nach groesseren Unterrepo-Releases pruefen:
+  `scripts/update-runtime-projects.sh` fuer Router/Search/CaiLama nutzen und
+  dokumentieren, ob Dienste aus Runtime-Ordnern gestartet wurden.
+- [ ] Roadmap regelmaessig aus den Unterrepo-`TODO.md`-Dateien abgleichen:
+  CaiLama = PTG/Search/DWZ/RAG/DB-Hybrid; Router =
+  Streaming-Fehlerbehandlung/Hot-Reload/backend_models/mypy; Search =
+  Crawler-Quellenpolitik/Observability/Job-Orchestrierung/semantisches
+  Retrieval.
 
-## 4. CaiLama-Search Integrationsthemen
+## Kimi-Handoff
 
-- [x] Fortschritt des Meilisearch-API-Key-Managements dokumentieren.
-- [x] Offene Punkte fuer Search-Auth-Hardening sammeln.
-- [x] Einheitliche Env-Namen und Runtime-Konfiguration als Cross-Repo-Thema
-  dokumentieren.
-- [x] Search-API-Endpunkte dokumentieren, die CaiLama nutzen soll:
-  - [x] `/v1/search`
-  - [x] `/v1/context`
-  - [x] `/v1/dwz/search`
-  - [x] `/v1/dwz/player/{pkz}`
-- [x] Pruefen, welche Quellenlisten und Crawler-Policies in CaiLama-Search
-  gepflegt werden sollen.
+Der Master bleibt Koordination, Website und Doku. Keine Unterrepo-Dateien im
+Master tracken, keine Submodules, keine produktive Runtime-Logik.
 
-## 5. CaiLama-LLM-Router Integrationsthemen
+```text
+Du arbeitest im CaiLama-Master-Repository. Lies zuerst AGENTS.md, README.md und
+TODO.md vollstaendig. Lies danach docs/ecosystem-map.md, docs/orchestration.md,
+status.plan.cailama.md und master-repo-orchestration.plan.md. Wenn die Aufgabe
+Website oder LLM-Doku betrifft, lies zusaetzlich docs/website.md,
+docs/ecosystem-reference.md, docs/data/ecosystem.json und die betroffenen
+Dateien unter web/.
 
-- [x] Modellklassen und Rollen-Aliase dokumentieren:
-  - [x] `router`
-  - [x] `small`
-  - [x] `large`
-  - [x] `task`
-  - [x] `coach`
-  - [x] `analyst`
-  - [x] `critic`
-  - [x] `vision`
-  - [x] `scribe`
-  - [x] `researcher`
-- [x] Pruefen, welche Modell-Aliase CaiLama erwartet.
-- [x] Pruefen, welche Health- und Smoke-Checks aus dem Master heraus
-  dokumentiert werden koennen.
-- [x] Fallback- und Limit-Verhalten als Betriebsnotiz dokumentieren.
-- [x] Keine lokalen Provider-Secrets im Master speichern.
+Arbeite danach ausschliesslich den ersten offenen Punkt in TODO.md ab. Keine
+Secrets, lokalen Pfade oder produktiven Zugangsdaten aufnehmen. Keine
+Unterrepo-Dateien im Master committen. Erledigte TODO-Punkte nicht loeschen,
+ausser der Nutzer fordert diese Bereinigung ausdruecklich an. TODO ist nicht
+gleich Handoff.
 
-## 6. Qualitaetssicherung
+Nach jeder Aenderung:
+1. Betroffene Master-Doku oder Website knapp aktualisieren.
+2. git diff --check ausfuehren.
+3. git check-ignore -v CaiLama CaiLama-LLM-Router CaiLama-Search ausfuehren.
+4. bash scripts/check-ecosystem.sh ausfuehren.
+5. git status --short ausfuehren.
+6. Commit und Push im Master-Repository ausfuehren, wenn der Nutzer das
+   verlangt.
+```
 
-- [x] Master-Repo-Checkskript ergaenzen.
-- [x] Bei jeder Master-Aenderung pruefen, dass die Unter-Repos ignoriert sind.
-- [x] Bei jeder Master-Aenderung pruefen, dass keine `.env`-Dateien getrackt
-  sind.
-- [x] Bei jeder Master-Aenderung pruefen, dass keine Secrets in Markdown-Dateien
-  stehen.
-- [x] Pruefen, dass Repo-TODOs die jeweils relevanten Punkte aus
-  `status.plan.cailama.md` enthalten.
-- [x] Pruefen, dass Statusdateien keine falschen Aussagen ueber Repo-Zustaende
-  enthalten.
-- [x] Pruefen, dass alle Cross-Repo-Aufgaben klare Ziel-Repos nennen.
+## Master-Arbeitsregeln
 
-## 7. Dokumentation
-
-- [x] `docs/ecosystem-map.md` erstellen.
-- [x] `docs/orchestration.md` erstellen.
-- [x] `docs/website.md` fuer URL, Webspace und Deployment der Webseite erstellen.
-- [x] Lokale Setup-Hinweise ohne Secrets aktuell halten.
-- [x] Betriebsrollen der vier Repos klar halten.
-- [x] Historische Namen nur als historische Referenz erwaehnen.
-- [x] Dokumentation aktualisieren, wenn Repos umbenannt, verschoben oder neu
-  strukturiert werden.
-
-## 8. Website und LLM-Referenz
-
-- [x] Webseite von einzelner HTML-Seite zu mehrseitiger Human-Doku ausbauen.
-- [x] Alle vier Repositories in der Master-Doku dokumentieren.
-- [x] LLM-freundliche Markdown-Gesamtreferenz erstellen.
-- [x] Maschinenlesbare JSON-Referenz erstellen.
-- [x] `llms.txt` als LLM-Einstiegspunkt bereitstellen.
-- [x] Reproduzierbares Deployment per `scripts/deploy-website.sh` dokumentieren.
-- [x] Checkskript um Website-, JSON- und Referenz-Synchronisation erweitern.
-- [x] Unterprojekt-READMEs auf Human-/LLM-Ecosystem-Doku verweisen lassen.
-
-## Kimi-Arbeitsregeln
-
-- [x] Vor Arbeitsbeginn `AGENTS.md`, `README.md`, diese `TODO.md`,
-  `docs/ecosystem-map.md`, `docs/orchestration.md`,
-  `status.plan.cailama.md` und `master-repo-orchestration.plan.md` lesen.
-- [x] Nur Master-Repo-Dateien bearbeiten; Unter-Repos bleiben eigene Repos und
-  werden im Master nur ignoriert.
-- [x] Keine Prompt-Dateien versionieren. Operative Folgearbeit gehoert in
-  `TODO.md`; groessere Konzepte duerfen als `*.plan.md` abgelegt werden.
-- [x] Abschlusspruefung ausfuehren:
+- [ ] Vor Arbeitsbeginn die Dateien aus "Arbeitskontext" lesen.
+- [ ] Unter-Repos bleiben eigenstaendige Git-Repositories und im Master
+  ignoriert.
+- [ ] Keine Prompt- oder Handoff-Dateien ausserhalb von `TODO.md` anlegen;
+  groessere Konzepte duerfen als klar benannte `*.plan.md` abgelegt werden.
+- [ ] Keine Secrets, Tokens, `.env`, lokalen Service-Dateien oder produktiven
+  Credentials in Doku, Website, Skripte oder Beispiele schreiben.
+- [ ] Abschlusspruefung ausfuehren:
   `git status --short`,
   `git check-ignore -v CaiLama CaiLama-LLM-Router CaiLama-Search`,
   `bash scripts/check-ecosystem.sh`,

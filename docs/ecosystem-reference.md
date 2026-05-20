@@ -3,7 +3,7 @@
 Zielgruppe: Menschen, Codex, Kimi und andere LLM-Agenten, die schnell den
 aktuellen Systemzuschnitt verstehen muessen.
 
-Stand: 2026-05-19.
+Stand: 2026-05-20.
 
 ## Kurzfassung
 
@@ -99,12 +99,14 @@ Wichtige Modulgruppen:
 
 Aktueller Fokus:
 
-- PTG-Folgehaertung: Review-Resultate in Schwierigkeit, Prioritaet und
-  Wiederholung personalisierter Karten zurueckfuehren.
+- DB-Hybridpfad vorbereiten: lokale MariaDB/MySQL, fachliche Webspace-API und
+  spaetere Provider-Datenbank als konfigurierbare Zugriffsarten.
+- PTG Phase 2: Queue-Einspeisung, Analyse-/Feature-Signale und
+  personalisierte Karten end-to-end verbinden.
 - Fehler-/Mustertaxonomie fuer personalisiertes Training.
-- Interner SearchAdapter fuer CaiLama-Search.
-- DWZ-Identity-Linking mit Ambiguitaetsbehandlung.
-- RAG-gestuetzte Analysepakete fuer Researcher/Analyst-Rollen.
+- Interne Search-Anbindung als Standardpfad fuer Suche, Kontext und DWZ.
+- DWZ-Identity-Linking in Store und CLI integrieren.
+- RAG-Analysepakete in Researcher-/Analyst-Promptflows einhaengen.
 
 Grenzen:
 
@@ -143,10 +145,11 @@ Relevante CaiLama-Rollen/Aliase:
 
 Aktueller Fokus:
 
-- Backend-Zustandsmodell pruefen.
-- Fallback-Verhalten fuer Rate-Limits, Connection-Errors und 5xx testen.
-- Exhausted-Backend-Verhalten klar dokumentieren.
-- Privacy-safe Observability ohne Prompt-/Response-Logging.
+- Streaming-Fehlerbehandlung fuer `stream: true`-Flows klaeren.
+- Optionales Config-Hot-Reload pruefen.
+- Backend-spezifisches Modell-Mapping per Alias testen.
+- Optionales Prometheus-Format fuer `/metrics` bewerten.
+- Bekannte `mypy`-Fehler bereinigen.
 
 Grenzen:
 
@@ -177,13 +180,14 @@ Wichtige Endpunkte:
 
 Aktueller Fokus:
 
-- `MeiliKeyManager` in Runtime-Pfade verdrahten.
-- Environment-Namen konsistent machen.
-- Master-Key nur fuer Bootstrap/Admin nutzen.
-- Admin-Endpunkte vor produktiver Exponierung absichern.
-- Quellenprovenienz fuer RAG-Antworten.
-- Download-basierter DWZ-Import statt deaktivierter tokenisierter
-  Schnittstellen.
+- CaiLama-kompatibler API-Vertrag: `/v1/search` liefert native `hits` und
+  normalisierte `items`/`results`; `/v1/context` liefert `context_blocks` sowie
+  kompatible `context`/`sources`.
+- Docker-Defaults: expliziter `MEILI_MASTER_KEY`, expliziter `MEILI_API_KEY`,
+  lokale Port-Bindings und optionaler `ADMIN_SERVICE_TOKEN`.
+- Crawler-Quellenpolitik, Robots- und Rate-Limit-Tests.
+- Search-Observability und Goldsets.
+- Einheitliche Job-Orchestrierung mit CaiLama-Queue/Training.
 - Optionale semantische Retrieval-Schicht nur mit Eval-Datensatz.
 
 Grenzen:
@@ -222,6 +226,10 @@ Vertrag:
 - Search liefert strukturierte Such- und Kontextantworten.
 - CaiLama normalisiert Resultate ueber einen SearchAdapter.
 - Quellenprovenienz bleibt sichtbar.
+- `/v1/search` ist kanonisch `POST`, bleibt fuer einfache Clients aber auch
+  als `GET` kompatibel. JSON-Felder `query`/`limit` werden akzeptiert.
+- `/v1/context` akzeptiert Query-Parameter oder JSON und liefert kompatible
+  Felder fuer RAG-Verbraucher.
 - Browserbasierte Suche ist nur Fallback.
 
 ### Master -> Unter-Repos
@@ -242,17 +250,20 @@ Vertrag:
 
 Jetzt:
 
-- Search-Auth-Hardening in CaiLama-Search.
-- Interner SearchAdapter in CaiLama.
+- CaiLama-DB-Hybridpfad planen und implementieren.
+- CaiLama Search/DWZ/RAG-Integration als Standardpfad fertigstellen.
+- Router-Streaming-Fehlerbehandlung und Config-Hot-Reload klaeren.
+- Search-Crawler-Quellenpolitik testen.
 
 Danach:
 
-- PTG-MVP/Folgehaertung in CaiLama.
-- DWZ-Identity-Linking zwischen CaiLama und CaiLama-Search.
+- PTG Phase 2 und Folgehaertung in CaiLama.
+- DWZ-Identity-Linking in Store/CLI und Training integrieren.
+- Search- und PTG-Observability definieren.
 
 Spaeter:
 
-- RAG-gestuetzte Analysepakete.
+- RAG-Analysepakete produktnah in Researcher-/Analyst-Flows nutzen.
 - Einheitliche Job-Orchestrierung fuer Import, Crawl, Game-Analyse, PTG und
   Reindex.
 

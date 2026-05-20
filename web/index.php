@@ -140,8 +140,8 @@
               <h3>CaiLama</h3>
               <p>Schachanalyse, Training, Profile, Agent-CLI, PGN, Stockfish, DGT-nahe Workflows.</p>
               <ul>
-                <li>Personalisierter Trainingsgenerator und Folgehaertung.</li>
-                <li>SearchAdapter als Standardpfad vor Web-Fallback.</li>
+                <li>DB-Hybridpfad: native DB, Webspace-API und Backup-Betrieb.</li>
+                <li>PTG Phase 2, SearchAdapter, DWZ und RAG als Standardpfade.</li>
                 <li>LLM-Rollen ueber Router-Aliase.</li>
               </ul>
             </div>
@@ -153,8 +153,8 @@
               <h3>CaiLama-LLM-Router</h3>
               <p>OpenAI-kompatible Modellzugriffe, Backends, Aliase, Fallbacks und JSONL-Betriebsdaten.</p>
               <ul>
-                <li>Backend-Routing und Cooldown-Verhalten.</li>
-                <li>Rollen-Aliase fuer CaiLama und Kimi.</li>
+                <li>Streaming-Fehlerbehandlung und Config-Hot-Reload klaeren.</li>
+                <li>Backend-spezifische Modellnamen je Alias testen.</li>
                 <li>Keine Schachproduktlogik im Router.</li>
               </ul>
             </div>
@@ -166,7 +166,7 @@
               <h3>CaiLama-Search</h3>
               <p>FastAPI, Meilisearch, DWZ, Crawler, Quellen, Kontext-API und spaeter semantisches Retrieval.</p>
               <ul>
-                <li>Meilisearch-Key-Management und Admin-Haertung.</li>
+                <li>Explizite Meili-Keys, Admin-Token und lokale Docker-Bindings.</li>
                 <li>Vertrag fuer <code>/v1/search</code>, <code>/v1/context</code>, <code>/v1/dwz/*</code>.</li>
                 <li>Quellenprovenienz fuer RAG-Antworten.</li>
               </ul>
@@ -196,19 +196,19 @@
         <div class="section-head">
           <h2>Naechste Plattformstufe.</h2>
           <p>
-            Der Fokus liegt auf Integrationsdisziplin: Search sicher machen,
-            CaiLama daran anbinden, Training personalisieren und erst danach
-            breiter ausbauen.
+            Der Fokus liegt auf Integrationsdisziplin: DB-Zugriff sauber
+            schneiden, Search als Standardpfad nutzen, Training personalisieren
+            und erst danach breiter ausbauen.
           </p>
         </div>
         <div class="timeline">
           <article class="step">
             <strong>Jetzt</strong>
-            <p>Search-Auth-Hardening und interner SearchAdapter.</p>
+            <p>DB-Hybrid, Search/DWZ/RAG-Standardpfad, Router-Streaming, Search-Quellenpolitik.</p>
           </article>
           <article class="step">
             <strong>Danach</strong>
-            <p>PTG-Folgehaertung und DWZ-Identity-Linking.</p>
+            <p>PTG Phase 2, DWZ-Identity-Linking, Search- und PTG-Observability.</p>
           </article>
           <article class="step">
             <strong>Spaeter</strong>
