@@ -106,7 +106,7 @@
             <ul class="rich-list">
               <li>Crawler-Whitelists, Robots-Gruppen und Source-Policy sind getestet.</li>
               <li>Quellen-CRUD, Robots-Validierung und Reindex-Tracking sind abgesichert.</li>
-              <li>Search-Goldsets und Observability vorbereiten.</li>
+              <li>Search-Goldsets fuer Recall und Qualitaet vorbereiten.</li>
             </ul>
           </article>
         </div>
@@ -125,6 +125,7 @@
             <h3>PTG Phase 2 und Folgehaertung</h3>
             <ul class="rich-list">
               <li>Importierte Partien in Feature-Signale ueberfuehren.</li>
+              <li>Classify/analyze-Stufen live gegen den Router verifizieren.</li>
               <li>Schwaechenprofil und Kartenqueue nachvollziehbar ableiten.</li>
               <li>Review-Ergebnisse in Schwierigkeit, Prioritaet und Wiederholung zurueckfuehren.</li>
               <li>Datenschutz fuer Leistungsprofile klaeren.</li>

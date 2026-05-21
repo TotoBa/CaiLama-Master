@@ -104,8 +104,9 @@ Aktueller Fokus:
 
 - DB-Hybridpfad vorbereiten: lokale MariaDB/MySQL, fachliche Webspace-API und
   spaetere Provider-Datenbank als konfigurierbare Zugriffsarten.
-- PTG Phase 2: Queue-Einspeisung ist im PTG-Kommando angebunden; direkte
-  classify/analyze-Trifecta bleibt offen.
+- PTG Phase 2: Queue-Einspeisung ist im PTG-Kommando angebunden;
+  `--run-llm-stages` verdrahtet die bestehende classify/analyze-Trifecta
+  explizit vor der Kartengenerierung.
 - Fehler-/Mustertaxonomie fuer personalisiertes Training.
 - Interne Search-Anbindung ist Standardpfad fuer `web_search` und
   `search_dwz`; Recherchefragen schlagen `search_rag` vor.
@@ -193,7 +194,8 @@ Aktueller Fokus:
   lokale Port-Bindings und optionaler `ADMIN_SERVICE_TOKEN`.
 - Crawler-Quellenpolitik, Robots-Gruppen, Source-Validierung und
   Reindex-Tracking sind offline getestet.
-- Search-Observability und Goldsets.
+- Privacy-safe Search-Observability ueber `/v1/observability/search`;
+  Goldsets bleiben offen.
 - Einheitliche Job-Orchestrierung mit CaiLama-Queue/Training.
 - Optionale semantische Retrieval-Schicht nur mit Eval-Datensatz.
 
@@ -276,12 +278,12 @@ Jetzt:
 - CaiLama-DB-Hybridpfad planen und implementieren.
 - CaiLama DB-API-Client und Hybridkonfiguration implementieren.
 - DWZ-Identity-Linking in Store/CLI und RAG-Provenienz fertigstellen.
-- Search-Observability und Goldsets definieren.
+- Search-Goldsets fuer Recall und Qualitaet definieren.
 
 Danach:
 
-- PTG Phase 2 und Folgehaertung in CaiLama.
-- PTG classify/analyze-Trifecta direkt an personalisierte Karten anbinden.
+- PTG-Live-Verifikation mit bewusst gestartetem Router und Folgehaertung in
+  CaiLama.
 - Einheitliche Job-Orchestrierung vorbereiten.
 
 Spaeter:

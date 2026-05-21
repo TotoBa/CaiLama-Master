@@ -62,7 +62,7 @@
           <article class="card">
             <span class="tag copper">Laufend</span>
             <h3>PTG und DB-Hybrid</h3>
-            <p>PTG Phase 2 schliesst Queue und Analyse an; DB-Zugriff soll zwischen nativ, API und hybrid waehlbar werden.</p>
+            <p>PTG Phase 2 verbindet Queue und optional classify/analyze vor der Kartengenerierung; DB-Zugriff soll zwischen nativ, API und hybrid waehlbar werden.</p>
           </article>
           <article class="card">
             <span class="tag blue">Integration</span>
@@ -148,8 +148,8 @@
           </article>
           <article class="card">
             <span class="tag copper">Ausbau</span>
-            <h3>Quellenpolitik</h3>
-            <p>Crawler-Whitelists, Robots-Gruppen, Source-Validierung und Reindex-Tracking sind getestet; Observability und Goldsets folgen.</p>
+            <h3>Observability</h3>
+            <p>Crawler-Whitelists, Robots-Gruppen, Source-Validierung und Reindex-Tracking sind getestet; privacy-safe Suchmetriken sind vorbereitet, Goldsets folgen.</p>
           </article>
         </div>
       </div>

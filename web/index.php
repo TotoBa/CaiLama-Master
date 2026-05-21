@@ -143,7 +143,7 @@
               <p>Schachanalyse, Training, Profile, Agent-CLI, PGN, Stockfish, DGT-nahe Workflows.</p>
               <ul>
                 <li>DB-Hybridpfad: native DB, Webspace-API und Backup-Betrieb.</li>
-                <li>PTG-Queue ist angebunden; SearchAdapter ist Standard fuer Web/DWZ.</li>
+                <li>PTG-Queue und optionale classify/analyze-Stufen sind angebunden.</li>
                 <li>LLM-Rollen ueber Router-Aliase.</li>
               </ul>
             </div>
@@ -170,7 +170,7 @@
               <ul>
                 <li>Explizite Meili-Keys, Admin-Token und lokale Docker-Bindings.</li>
                 <li>Vertrag fuer <code>/v1/search</code>, <code>/v1/context</code>, <code>/v1/dwz/*</code>.</li>
-                <li>Crawler-/Robots-Quellenpolitik ist getestet; Observability folgt.</li>
+                <li>Crawler-/Robots-Quellenpolitik ist getestet; Observability ist admin-geschuetzt vorbereitet.</li>
               </ul>
             </div>
             <a href="projects.php#search">Details</a>
@@ -206,11 +206,11 @@
         <div class="timeline">
           <article class="step">
             <strong>Jetzt</strong>
-            <p>DB-Hybrid-Client, DWZ-Identity-Linking, RAG-Provenienz und Search-Observability.</p>
+            <p>DB-Hybrid-Client, DWZ-Identity-Linking, RAG-Provenienz und Search-Goldsets.</p>
           </article>
           <article class="step">
             <strong>Danach</strong>
-            <p>PTG classify/analyze-Trifecta, Job-Orchestrierung und Goldsets.</p>
+            <p>PTG-Live-Verifikation, Job-Orchestrierung und Qualitaets-Goldsets.</p>
           </article>
           <article class="step">
             <strong>Spaeter</strong>

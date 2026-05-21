@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "generated_for": "CaiLama ecosystem documentation",
-  "last_reviewed": "2026-05-20",
+  "last_reviewed": "2026-05-21",
   "canonical_url": "https://cailama.org/",
   "language": "de",
   "summary": {
@@ -56,7 +56,7 @@
       ],
       "current_focus": [
         "DB hybrid access through native MariaDB/MySQL, webspace API and hybrid mode",
-        "PTG queue enqueue is wired; classify/analyze trifecta remains open",
+        "PTG queue enqueue is wired; optional --run-llm-stages connects classify/analyze before personalized card generation",
         "internal SearchAdapter is standard path for web_search and search_dwz",
         "search_rag is suggested for research/source questions",
         "DWZ identity linking store and CLI integration",
@@ -97,6 +97,7 @@
         "optional config hot reload through runtime.reload_config_on_request",
         "validated backend-specific alias model mapping",
         "JSON and Prometheus-compatible metrics output",
+        "cooldown metrics count only actual backend cooldown transitions",
         "mypy src is clean"
       ],
       "constraints": [
@@ -117,6 +118,7 @@
         "/readyz",
         "/v1/search",
         "/v1/context",
+        "/v1/observability/search",
         "/v1/dwz/search",
         "/v1/dwz/player/{pkz}",
         "/v1/doc/{id}",
@@ -128,7 +130,7 @@
         "explicit Meilisearch master key and dedicated API key in Docker defaults",
         "admin service token via environment or localhost fallback",
         "crawler source policy, robots groups, source validation and reindex tracking are tested",
-        "search observability and goldsets",
+        "privacy-safe search observability endpoint is available; goldsets remain next",
         "job orchestration with CaiLama queue and training",
         "optional semantic retrieval with evaluation data"
       ],
@@ -194,10 +196,10 @@
     "now": [
       "CaiLama DB API client and hybrid configuration",
       "DWZ identity linking and RAG provenance",
-      "Search observability and goldsets"
+      "Search goldsets for recall and quality"
     ],
     "next": [
-      "PTG classify/analyze trifecta linked to personalized cards",
+      "PTG live verification and follow-up hardening for personalized cards",
       "Unified job orchestration for CaiLama and Search"
     ],
     "later": [

@@ -114,7 +114,8 @@ Ziel-Repos: alle Unter-Repos
 Koordinationspunkte:
 
 - Router-KPIs fuer Fallbacks, Cooldowns, Alias-Nutzung und Latenzen.
-- Search-KPIs fuer Suchqualitaet, Indexfrische, Fehlerquoten und Goldsets.
+- Search-KPIs fuer Suchqualitaet, Indexfrische und Fehlerquoten sind als
+  privacy-safe Grundlage angebunden; Goldsets bleiben offen.
 - PTG-KPIs fuer Kartenqualitaet, Review-Erfolg und Wiederholungswirkung.
 - Keine Prompt-, Response- oder Secret-Inhalte loggen.
 

@@ -42,6 +42,8 @@ Relevante Endpunkte:
 - `POST /v1/search` als kanonischer Suchvertrag; `GET /v1/search?q=...` bleibt
   fuer einfache Clients kompatibel.
 - `POST /v1/context`
+- `GET /v1/observability/search` als admin-geschuetzte, privacy-safe
+  Suchmetriken- und Quellenfrische-Uebersicht.
 - `/v1/dwz/search`
 - `/v1/dwz/player/{pkz}`
 

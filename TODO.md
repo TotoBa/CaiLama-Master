@@ -42,11 +42,11 @@ Vor Arbeitsbeginn lesen:
   `scripts/update-runtime-projects.sh` fuer Router/Search/CaiLama nutzen und
   dokumentieren, ob Dienste aus Runtime-Ordnern gestartet wurden.
 - [ ] Roadmap regelmaessig aus den Unterrepo-`TODO.md`-Dateien abgleichen:
-  CaiLama = DB-Hybrid, PTG classify/analyze-Trifecta, DWZ-Identity-Linking,
-  RAG-Provenienz; Router = Folge-Observability nach erledigtem
-  Streaming/Hot-Reload/backend_models/mypy; Search = Observability,
-  Job-Orchestrierung und semantisches Retrieval nach erledigter
-  Crawler-Quellenpolitik.
+  CaiLama = DB-Hybrid, PTG-Live-Verifikation, DWZ-Identity-Linking,
+  RAG-Provenienz; Router = Folge-Observability nach geklaerten
+  Cooldown-Metriken; Search = Goldsets, Job-Orchestrierung und semantisches
+  Retrieval nach erledigter Crawler-Quellenpolitik und Observability-
+  Grundlage.
 
 ## Kimi-Handoff
 
