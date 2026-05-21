@@ -45,7 +45,7 @@
         <div class="timeline">
           <article class="step">
             <strong>Jetzt</strong>
-            <p>DB-Hybrid, Search/DWZ/RAG-Standardpfad, Router-Streaming, Search-Quellenpolitik.</p>
+            <p>DB-Hybrid, Search/DWZ/RAG-Standardpfad und Search-Ausbau; Router bleibt ohne neuen Auftrag pausiert.</p>
           </article>
           <article class="step">
             <strong>Danach</strong>
@@ -67,7 +67,7 @@
       <div class="section-inner">
         <div class="section-head">
           <h2>Jetzt.</h2>
-          <p>Die naechsten Schritte liegen bei DB-Hybrid, Provenienz und Metriken.</p>
+          <p>Die naechsten Schritte liegen bei DB-Hybrid, Provenienz und Search-Qualitaet.</p>
         </div>
         <div class="grid-2">
           <article class="card">
@@ -92,8 +92,9 @@
           </article>
           <article class="card">
             <span class="tag blue">Router</span>
-            <h3>Folgehaertung</h3>
+            <h3>Pausiert</h3>
             <ul class="rich-list">
+              <li>Keine neue Router-Arbeit ohne neuen Nutzerauftrag starten.</li>
               <li>Streaming-Fehlerbehandlung fuer <code>stream: true</code> ist getestet.</li>
               <li>Config-Hot-Reload ist optional verfuegbar.</li>
               <li>Backend-spezifisches Modell-Mapping per Alias ist abgesichert.</li>
@@ -102,11 +103,12 @@
           </article>
           <article class="card">
             <span class="tag copper">CaiLama-Search</span>
-            <h3>Quellenpolitik</h3>
+            <h3>Search-Ausbau</h3>
             <ul class="rich-list">
               <li>Crawler-Whitelists, Robots-Gruppen und Source-Policy sind getestet.</li>
               <li>Quellen-CRUD, Robots-Validierung und Reindex-Tracking sind abgesichert.</li>
               <li>Search-Goldsets fuer Recall und Qualitaet vorbereiten.</li>
+              <li>API-Qualitaet, Job-Orchestrierung und semantisches Retrieval gezielt vorbereiten.</li>
             </ul>
           </article>
         </div>

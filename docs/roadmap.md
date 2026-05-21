@@ -32,12 +32,14 @@ Koordinationspunkte:
 - Umgesetzt: `web_search` und `search_dwz` nutzen `SearchAdapter`; Recherche-
   und Quellenfragen schlagen `search_rag` vor.
 
-### Router-Folgehaertung
+### Router-Status: keine aktive Folgearbeit
 
 Ziel-Repo: `TotoBa/CaiLama-LLM-Router`
 
 Koordinationspunkte:
 
+- Aktueller Stand: keine neue Router-Aufgabe starten, solange kein neuer
+  Nutzerauftrag vorliegt.
 - Streaming-Fehlerbehandlung fuer `stream: true` ist als finaler SSE-Fehler
   getestet.
 - Config-Hot-Reload ist optional ueber `runtime.reload_config_on_request`.
@@ -53,6 +55,8 @@ Koordinationspunkte:
 - Crawler-Quellenpolitik, Robots-Parser und Rate-Limits testen.
 - Quellen-CRUD, Robots-Validierung und Reindex-Tracking sind abgesichert.
 - Goldsets fuer Suchqualitaet vorbereiten.
+- Aktueller Ausbau-Fokus liegt auf Search, damit CaiLama mit Search/DWZ/RAG
+  weiter integriert werden kann.
 
 ## Danach
 
@@ -109,11 +113,12 @@ Koordinationspunkte:
 
 ### Observability
 
-Ziel-Repos: alle Unter-Repos
+Ziel-Repos: `TotoBa/CaiLama`, `TotoBa/CaiLama-Search`
 
 Koordinationspunkte:
 
-- Router-KPIs fuer Fallbacks, Cooldowns, Alias-Nutzung und Latenzen.
+- Router-KPIs fuer Fallbacks, Cooldowns, Alias-Nutzung und Latenzen sind fuer
+  den aktuellen Stand ausreichend; keine neue Router-Arbeit ohne Auftrag.
 - Search-KPIs fuer Suchqualitaet, Indexfrische und Fehlerquoten sind als
   privacy-safe Grundlage angebunden; Goldsets bleiben offen.
 - PTG-KPIs fuer Kartenqualitaet, Review-Erfolg und Wiederholungswirkung.

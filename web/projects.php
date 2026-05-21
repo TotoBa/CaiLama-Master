@@ -106,7 +106,7 @@
           <article class="card">
             <span class="tag red">Fallback</span>
             <h3>Folgehaertung</h3>
-            <p>Streaming-Fehler, Config-Hot-Reload, backend-spezifische Modellnamen und <code>mypy src</code> sind umgesetzt und getestet.</p>
+            <p>Streaming-Fehler, Config-Hot-Reload, backend-spezifische Modellnamen und <code>mypy src</code> sind umgesetzt und getestet; neue Router-Arbeit startet nur mit neuem Auftrag.</p>
           </article>
           <article class="card">
             <span class="tag blue">Logging</span>

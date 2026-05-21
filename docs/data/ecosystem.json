@@ -98,7 +98,8 @@
         "validated backend-specific alias model mapping",
         "JSON and Prometheus-compatible metrics output",
         "cooldown metrics count only actual backend cooldown transitions",
-        "mypy src is clean"
+        "mypy src is clean",
+        "no active follow-up work should be started without a new user request"
       ],
       "constraints": [
         "No chess product logic in the router.",
@@ -130,7 +131,8 @@
         "explicit Meilisearch master key and dedicated API key in Docker defaults",
         "admin service token via environment or localhost fallback",
         "crawler source policy, robots groups, source validation and reindex tracking are tested",
-        "privacy-safe search observability endpoint is available; goldsets remain next",
+        "privacy-safe search observability endpoint is available",
+        "current expansion focus is Search quality: goldsets, API quality, job orchestration and optional semantic retrieval",
         "job orchestration with CaiLama queue and training",
         "optional semantic retrieval with evaluation data"
       ],
@@ -196,7 +198,8 @@
     "now": [
       "CaiLama DB API client and hybrid configuration",
       "DWZ identity linking and RAG provenance",
-      "Search goldsets for recall and quality"
+      "Search expansion for recall, quality and CaiLama integration",
+      "Router is paused unless a new user request targets it"
     ],
     "next": [
       "PTG live verification and follow-up hardening for personalized cards",

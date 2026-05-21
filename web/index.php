@@ -153,7 +153,7 @@
             <div>
               <span class="tag copper">Router</span>
               <h3>CaiLama-LLM-Router</h3>
-              <p>OpenAI-kompatible Modellzugriffe, Backends, Aliase, Fallbacks und JSONL-Betriebsdaten.</p>
+              <p>OpenAI-kompatible Modellzugriffe, Backends, Aliase, Fallbacks und JSONL-Betriebsdaten; aktuell ohne neue Folgearbeit.</p>
               <ul>
                 <li>Streaming-Fehler, Config-Hot-Reload und Backend-Modellmapping sind getestet.</li>
                 <li><code>mypy src</code> ist bereinigt.</li>

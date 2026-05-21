@@ -278,7 +278,10 @@ Jetzt:
 - CaiLama-DB-Hybridpfad planen und implementieren.
 - CaiLama DB-API-Client und Hybridkonfiguration implementieren.
 - DWZ-Identity-Linking in Store/CLI und RAG-Provenienz fertigstellen.
-- Search-Goldsets fuer Recall und Qualitaet definieren.
+- Router bleibt ohne neue Folgearbeit, solange kein neuer Nutzerauftrag
+  vorliegt.
+- Search als aktuellen Ausbau-Fokus vorantreiben: Goldsets, API-Qualitaet,
+  Job-Orchestrierung und spaeter semantisches Retrieval.
 
 Danach:
 
@@ -294,7 +297,8 @@ Spaeter:
 
 Ausbau:
 
-- Observability/KPIs fuer Router, Search und PTG.
+- Observability/KPIs fuer Search und PTG; Router-KPIs gelten aktuell als
+  ausreichend.
 - Optionale semantische Retrieval-Schicht in CaiLama-Search.
 
 ## Qualitaetsregeln
@@ -304,7 +308,7 @@ Ausbau:
 - Keine stillen Fehler oder Schein-Erfolge.
 - Tests fuer Kernmodule und Smoke-Tests fuer CLI/API.
 - PGN-Ausgabe validieren.
-- Router-Fallbacks testen.
+- Router-Fallbacks nur bei Router-Auftrag erneut testen.
 - Datenbankzugriffe testen.
 - Doku aktuell halten.
 - Keine Secrets in Doku, Code oder Beispielen.

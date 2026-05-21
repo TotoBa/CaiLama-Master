@@ -43,10 +43,10 @@ Vor Arbeitsbeginn lesen:
   dokumentieren, ob Dienste aus Runtime-Ordnern gestartet wurden.
 - [ ] Roadmap regelmaessig aus den Unterrepo-`TODO.md`-Dateien abgleichen:
   CaiLama = DB-Hybrid, PTG-Live-Verifikation, DWZ-Identity-Linking,
-  RAG-Provenienz; Router = Folge-Observability nach geklaerten
-  Cooldown-Metriken; Search = Goldsets, Job-Orchestrierung und semantisches
-  Retrieval nach erledigter Crawler-Quellenpolitik und Observability-
-  Grundlage.
+  RAG-Provenienz; Router = aktuell keine aktive Folgearbeit ohne neuen
+  Nutzerauftrag; Search = aktueller Ausbau-Fokus mit Goldsets,
+  Job-Orchestrierung, API-Qualitaet und semantischem Retrieval nach erledigter
+  Crawler-Quellenpolitik und Observability-Grundlage.
 
 ## Kimi-Handoff
 
