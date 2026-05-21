@@ -15,6 +15,8 @@ Human-/LLM-Referenz:
 - <https://cailama.org/llms.txt>
 - <https://cailama.org/ecosystem-reference.md>
 - <https://cailama.org/data/ecosystem.json>
+- <https://cailama.org/robots.txt>
+- <https://cailama.org/sitemap.xml>
 
 Dieses Repository ist kein Monorepo und enthaelt keinen produktiven Code der
 Unterprojekte.
@@ -48,14 +50,15 @@ Es werden keine Submodules verwendet.
 
 ## Repositories
 
-- `TotoBa/CaiLama-Master` - Koordination, Status, Plaene und lokale
-  Orchestrierungspruefungen.
-- `TotoBa/CaiLama` - Hauptsystem fuer Schachanalyse, Training, Profile,
-  Agent-CLI und produktnahe Workflows.
-- `TotoBa/CaiLama-LLM-Router` - OpenAI-kompatibler LLM-Router fuer Modellzugriff,
-  Aliase, Backends und Fallbacks.
-- `TotoBa/CaiLama-Search` - Such-, Index-, DWZ- und RAG-Dienst auf Basis von
-  Meilisearch und FastAPI.
+- [`TotoBa/CaiLama-Master`](https://github.com/TotoBa/CaiLama-Master) -
+  Koordination, Status, Plaene und lokale Orchestrierungspruefungen.
+- [`TotoBa/CaiLama`](https://github.com/TotoBa/CaiLama) - Hauptsystem fuer
+  Schachanalyse, Training, Profile, Agent-CLI und produktnahe Workflows.
+- [`TotoBa/CaiLama-LLM-Router`](https://github.com/TotoBa/CaiLama-LLM-Router) -
+  OpenAI-kompatibler LLM-Router fuer Modellzugriff, Aliase, Backends und
+  Fallbacks.
+- [`TotoBa/CaiLama-Search`](https://github.com/TotoBa/CaiLama-Search) - Such-,
+  Index-, DWZ- und RAG-Dienst auf Basis von Meilisearch und FastAPI.
 
 ## Zweck
 

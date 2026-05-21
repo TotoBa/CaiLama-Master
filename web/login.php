@@ -58,7 +58,9 @@ function h(string $value): string
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="CaiLama Login">
+  <meta name="robots" content="noindex,follow">
   <title>CaiLama - Login</title>
+  <link rel="canonical" href="https://cailama.org/login.php">
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
 </head>

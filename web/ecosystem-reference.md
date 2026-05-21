@@ -59,6 +59,7 @@ Rolle:
 - Human-Webseite unter `https://cailama.org/`.
 - LLM-freundliche Referenzen unter `llms.txt`,
   `ecosystem-reference.md` und `data/ecosystem.json`.
+- Suchmaschinen-Einstieg ueber `robots.txt` und `sitemap.xml`.
 - PHP-Login-/Session-Shell und Webspace-API-Vorbereitung ohne versionierte
   Credentials.
 - Roadmap und Cross-Repo-Koordination.
@@ -312,3 +313,5 @@ Ausbau:
 - `web/data/ecosystem.json`: ausgelieferte Maschinenreferenz auf der Webseite.
 - `web/llms.txt`: LLM-Einstiegspunkt fuer `https://cailama.org/`.
 - `web/ecosystem-reference.md`: ausgelieferte LLM-freundliche Markdown-Version.
+- `web/robots.txt`: Crawler-Regeln mit Sitemap-Verweis.
+- `web/sitemap.xml`: kanonische XML-Sitemap fuer oeffentliche URLs.

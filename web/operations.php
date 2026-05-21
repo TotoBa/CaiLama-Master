@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Betrieb, Website-Deployment und Qualitaetsregeln des CaiLama-Master-Repositories.">
   <title>CaiLama - Betrieb</title>
+  <link rel="canonical" href="https://cailama.org/operations.php">
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
 </head>
@@ -82,6 +83,21 @@ bash scripts/check-ecosystem.sh</code></pre>
     <section>
       <div class="section-inner split">
         <div class="section-head">
+          <h2>Googlebot.</h2>
+          <p>
+            Die oeffentliche Website liefert eine kanonische Sitemap aus und
+            verweist darauf in <code>robots.txt</code>. Login-, Konto- und
+            API-Pfade sind nicht fuer die Suchindexierung vorgesehen.
+          </p>
+        </div>
+        <pre><code>https://cailama.org/robots.txt
+https://cailama.org/sitemap.xml</code></pre>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="section-inner split">
+        <div class="section-head">
           <h2>Pflichtchecks.</h2>
           <p>Diese Checks sichern die Master-Grenzen und das Web-Deployment.</p>
         </div>
@@ -95,7 +111,7 @@ git diff --check</code></pre>
       </div>
     </section>
 
-    <section class="band">
+    <section>
       <div class="section-inner">
         <div class="section-head">
           <h2>Master-Dokumentation.</h2>

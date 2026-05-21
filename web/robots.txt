@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /api_app/
+Disallow: /account.php
+Disallow: /logout.php
+
+Sitemap: https://cailama.org/sitemap.xml

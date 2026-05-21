@@ -222,6 +222,10 @@
       "https://cailama.org/llms.txt",
       "https://cailama.org/ecosystem-reference.md",
       "https://cailama.org/data/ecosystem.json"
+    ],
+    "crawler_resources": [
+      "https://cailama.org/robots.txt",
+      "https://cailama.org/sitemap.xml"
     ]
   }
 }

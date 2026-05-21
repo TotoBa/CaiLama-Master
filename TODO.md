@@ -20,6 +20,11 @@ Vor Arbeitsbeginn lesen:
 
 ## Naechster Arbeitsschritt
 
+- [x] Googlebot-Grundlage fuer die Website bereitstellen: `robots.txt`,
+  `sitemap.xml`, kanonische URLs, `noindex` fuer Login-/Konto-Seiten,
+  Deployment- und Check-Dokumentation. Indexierungsanstoß erfolgt ueber
+  Sitemap-Verweis in `robots.txt`; Search-Console-Einreichung bleibt ein
+  manueller Schritt mit verifizierter Property.
 - [ ] CaiLama-DB-Hybrid koordinieren: native MariaDB/MySQL, fachliche Webspace-
   API und Hybridbetrieb in Master-Doku/Website nachziehen, sobald die
   Umsetzung in `TotoBa/CaiLama` beginnt. Master-Seite: Login-/Session-Shell,

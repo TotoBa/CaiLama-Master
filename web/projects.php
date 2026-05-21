@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Detailuebersicht der CaiLama-Repositories und ihrer aktuellen Aufgaben.">
   <title>CaiLama - Projekte</title>
+  <link rel="canonical" href="https://cailama.org/projects.php">
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
 </head>

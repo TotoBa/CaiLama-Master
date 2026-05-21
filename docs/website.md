@@ -33,6 +33,8 @@ web/reference.php             # Human-/LLM-Referenzseite
 web/login.php                 # Login-Formular mit Session-Schutz
 web/account.php               # geschuetzter Konto-Stub
 web/logout.php                # CSRF-geschuetzter Logout
+web/robots.txt                # Crawler-Regeln mit Sitemap-Verweis
+web/sitemap.xml               # Canonical XML-Sitemap fuer Suchmaschinen
 web/api/public/index.php      # vorbereiteter API-Frontcontroller
 web/api_app/                  # interne API-Skelettstruktur ohne Secrets
 web/api_app/config.local.sample.php
@@ -131,6 +133,36 @@ Erwartung:
 - `https://cailama.org/llms.txt` ist erreichbar.
 - `https://cailama.org/ecosystem-reference.md` ist erreichbar.
 - `https://cailama.org/data/ecosystem.json` ist erreichbar und valides JSON.
+- `https://cailama.org/robots.txt` ist erreichbar und verweist auf
+  `https://cailama.org/sitemap.xml`.
+- `https://cailama.org/sitemap.xml` ist erreichbar, valides XML und enthaelt
+  nur kanonische HTTPS-URLs.
+
+## Googlebot und Indexierung
+
+Die Website stellt fuer Suchmaschinen bereit:
+
+```text
+https://cailama.org/robots.txt
+https://cailama.org/sitemap.xml
+```
+
+`robots.txt` erlaubt die oeffentlichen Seiten, verweist auf die Sitemap und
+schliesst API-, interne App- und Sitzungsendpunkte aus. Die Sitemap enthaelt nur
+kanonische HTTPS-URLs der oeffentlichen Dokumentationsseiten und maschinenlesbar
+auslieferbaren Referenzen. Login- und Konto-Seiten gehoeren nicht in die
+Sitemap; sie tragen zusaetzlich `noindex`.
+
+Indexierung wird sauber ueber die Sitemap-Erkennung in `robots.txt` und ueber
+Google Search Console angestossen. Der alte Sitemap-Ping-Endpunkt wird nicht
+verwendet, weil Google HTTP-Pings auf diesen Endpunkt nicht mehr sinnvoll
+verarbeitet. Fuer den manuellen Schritt in Search Console:
+
+```text
+Property: https://cailama.org/
+Sitemap: https://cailama.org/sitemap.xml
+URL-Pruefung: https://cailama.org/
+```
 
 ## Webspace-API
 

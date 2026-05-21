@@ -10,6 +10,7 @@
   <meta property="og:url" content="https://cailama.org/">
   <meta property="og:image" content="https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png">
   <title>CaiLama - Schachtraining als System</title>
+  <link rel="canonical" href="https://cailama.org/">
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
 </head>

@@ -98,8 +98,10 @@ required_files=(
   "web/logout.php"
   "web/operations.php"
   "web/projects.php"
+  "web/robots.txt"
   "web/reference.php"
   "web/roadmap.php"
+  "web/sitemap.xml"
 )
 
 for path in "${required_files[@]}"; do
@@ -121,6 +123,37 @@ if cmp -s "docs/data/ecosystem.json" "web/data/ecosystem.json"; then
   echo "OK: machine-readable JSON is synced between docs/ and web/"
 else
   echo "ERROR: docs/data/ecosystem.json differs from web/data/ecosystem.json"
+  exit 1
+fi
+
+python3 - <<'PY'
+import sys
+import xml.etree.ElementTree as ET
+
+root = ET.parse("web/sitemap.xml").getroot()
+namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+urls = [
+    loc.text
+    for loc in root.findall("sm:url/sm:loc", namespace)
+    if loc.text is not None
+]
+if not urls:
+    print("ERROR: web/sitemap.xml contains no URLs")
+    sys.exit(1)
+for url in urls:
+    if not url.startswith("https://cailama.org/"):
+        print(f"ERROR: sitemap URL is not canonical: {url}")
+        sys.exit(1)
+if "https://cailama.org/" not in urls:
+    print("ERROR: sitemap misses https://cailama.org/")
+    sys.exit(1)
+PY
+echo "OK: sitemap.xml is valid and uses canonical URLs"
+
+if grep -Fxq "Sitemap: https://cailama.org/sitemap.xml" "web/robots.txt"; then
+  echo "OK: robots.txt references the sitemap"
+else
+  echo "ERROR: robots.txt does not reference the sitemap"
   exit 1
 fi
 

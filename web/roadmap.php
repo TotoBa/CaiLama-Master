@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Roadmap und naechste Integrationsschritte fuer das CaiLama-Oekosystem.">
   <title>CaiLama - Roadmap</title>
+  <link rel="canonical" href="https://cailama.org/roadmap.php">
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
 </head>
