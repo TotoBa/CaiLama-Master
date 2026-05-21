@@ -157,31 +157,14 @@ else
   exit 1
 fi
 
-web_target="${CAILAMA_WEB_TARGET:-/srv/cailama-web/public}"
 if [[ "${CAILAMA_CHECK_DEPLOYED_WEBSITE:-0}" == "1" ]]; then
-  if [[ -d "$web_target" ]]; then
-    deployed_mismatch=0
-    while IFS= read -r -d '' source; do
-      relative="${source#web/}"
-      case "$relative" in
-        api_app/config.local.php|api_app/config.local.*.php)
-          continue
-          ;;
-      esac
-      deployed="$web_target/$relative"
-      if [[ ! -f "$deployed" ]] || ! cmp -s "$source" "$deployed"; then
-        echo "WARN: deployed website differs for $relative"
-        deployed_mismatch=1
-      fi
-    done < <(find web -type f -print0)
-    if [[ "$deployed_mismatch" -eq 0 ]]; then
-      echo "OK: deployed website matches web/"
-    fi
-  else
-    echo "WARN: web target does not exist: $web_target"
-  fi
+  curl -fsS --max-time 8 "https://cailama.org/" >/dev/null
+  curl -fsS --max-time 8 "https://cailama.org/robots.txt" | grep -Fxq "Sitemap: https://cailama.org/sitemap.xml"
+  curl -fsS --max-time 8 "https://cailama.org/sitemap.xml" | grep -Fq "https://cailama.org/"
+  curl -fsS --max-time 8 "https://cailama.org/data/ecosystem.json" | python3 -m json.tool >/dev/null
+  echo "OK: deployed website responds over HTTPS with robots, sitemap and JSON"
 else
-  echo "SKIP: deployed website compare disabled; set CAILAMA_CHECK_DEPLOYED_WEBSITE=1 to enable"
+  echo "SKIP: live website HTTP check disabled; set CAILAMA_CHECK_DEPLOYED_WEBSITE=1 to enable"
 fi
 echo
 

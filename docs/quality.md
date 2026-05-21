@@ -20,13 +20,17 @@ cmp -s docs/data/ecosystem.json web/data/ecosystem.json
 git diff --check
 ```
 
-Der Website-Deploy-Vergleich ist im Standardlauf deaktiviert, damit ein nicht
-erreichbarer oder stale Webspace-Mount den reinen Repo-Check nicht blockiert.
-Bewusster Live-Vergleich:
+Der Live-Website-Check ist im Standardlauf deaktiviert, damit der reine
+Repo-Check keine Runtime- oder Webspace-Abhaengigkeit hat. Bewusster
+HTTPS-Live-Check ohne Mount-Zugriff:
 
 ```bash
 CAILAMA_CHECK_DEPLOYED_WEBSITE=1 bash scripts/check-ecosystem.sh
 ```
+
+Das Website-Deploy-Skript nutzt fuer das Standard-Live-Ziel HTTPS-Hashes fuer
+statische oeffentliche Dateien statt eines direkten bytegenauen Readbacks ueber
+den Webspace-Mount.
 
 ## Master-Index-Regeln
 

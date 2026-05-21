@@ -106,12 +106,21 @@ Das Skript:
 2. synchronisiert `web/` in den angegebenen PHP-Webspace,
 3. entfernt dort Dateien, die nicht mehr in `web/` existieren,
 4. schuetzt die echte, ignorierte `web/api_app/config.local.php` vor Loeschung,
-5. vergleicht jede ausgelieferte versionierte Datei bytegenau mit der Quelle.
+5. prueft beim Standard-Live-Ziel ausgewaehlte oeffentliche Dateien per
+   SHA-256 ueber HTTPS und ruft die oeffentlichen PHP-Seiten kurz ab.
 
-Der Standard-Ecosystem-Check beruehrt den Live-Webspace nicht. Wenn der
-Webspace bewusst gemountet und erreichbar ist, kann der Deploy-Vergleich mit
-`CAILAMA_CHECK_DEPLOYED_WEBSITE=1 bash scripts/check-ecosystem.sh` aktiviert
-werden.
+Der Standard-Ecosystem-Check beruehrt den Live-Webspace nicht. Mit
+`CAILAMA_CHECK_DEPLOYED_WEBSITE=1 bash scripts/check-ecosystem.sh` wird nur ein
+HTTPS-Live-Check gegen die oeffentliche Seite ausgefuehrt; der Check greift
+nicht direkt auf den Webspace-Mount zu.
+
+Deploy-Verifikation:
+
+- Standard fuer das Live-Ziel: `CAILAMA_DEPLOY_VERIFY=http-hash`.
+- Explizit aus: `CAILAMA_DEPLOY_VERIFY=none scripts/deploy-website.sh`.
+- Direkter Zielpfad-Hash nur bewusst: `CAILAMA_DEPLOY_VERIFY=target-hash
+  scripts/deploy-website.sh`. Dieser Modus liest den Webspace-Mount und ist
+  nicht fuer stale oder instabile Mounts gedacht.
 
 ## Reproduzierbare Pruefung
 
