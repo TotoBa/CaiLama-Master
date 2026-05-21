@@ -149,7 +149,7 @@
           <article class="card">
             <span class="tag copper">Ausbau</span>
             <h3>Observability</h3>
-            <p>Crawler-Whitelists, Robots-Gruppen, Source-Validierung und Reindex-Tracking sind getestet; privacy-safe Suchmetriken sind vorbereitet, Goldsets folgen.</p>
+            <p>Crawler-Whitelists, Robots-Gruppen, Source-Validierung und Reindex-Tracking sind getestet; privacy-safe Suchmetriken und synthetische Goldsets sind vorbereitet.</p>
           </article>
         </div>
       </div>

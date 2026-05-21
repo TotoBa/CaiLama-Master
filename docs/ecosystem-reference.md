@@ -194,8 +194,9 @@ Aktueller Fokus:
   lokale Port-Bindings und optionaler `ADMIN_SERVICE_TOKEN`.
 - Crawler-Quellenpolitik, Robots-Gruppen, Source-Validierung und
   Reindex-Tracking sind offline getestet.
-- Privacy-safe Search-Observability ueber `/v1/observability/search`;
-  Goldsets bleiben offen.
+- Privacy-safe Search-Observability ueber `/v1/observability/search`.
+- Synthetische Search-Goldsets fuer Suchvertrag, DWZ-Suche und RAG-Kontext
+  sind versioniert und per CLI validierbar.
 - Einheitliche Job-Orchestrierung mit CaiLama-Queue/Training.
 - Optionale semantische Retrieval-Schicht nur mit Eval-Datensatz.
 
@@ -280,8 +281,8 @@ Jetzt:
 - DWZ-Identity-Linking in Store/CLI und RAG-Provenienz fertigstellen.
 - Router bleibt ohne neue Folgearbeit, solange kein neuer Nutzerauftrag
   vorliegt.
-- Search als aktuellen Ausbau-Fokus vorantreiben: Goldsets, API-Qualitaet,
-  Job-Orchestrierung und spaeter semantisches Retrieval.
+- Search als aktuellen Ausbau-Fokus vorantreiben: Goldset-Testindex-Seeding,
+  API-Qualitaet, Job-Orchestrierung und spaeter semantisches Retrieval.
 
 Danach:
 

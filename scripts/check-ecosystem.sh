@@ -157,27 +157,31 @@ else
   exit 1
 fi
 
-web_target="/srv/cailama-web/public"
-if [[ -d "$web_target" ]]; then
-  deployed_mismatch=0
-  while IFS= read -r -d '' source; do
-    relative="${source#web/}"
-    case "$relative" in
-      api_app/config.local.php|api_app/config.local.*.php)
-        continue
-        ;;
-    esac
-    deployed="$web_target/$relative"
-    if [[ ! -f "$deployed" ]] || ! cmp -s "$source" "$deployed"; then
-      echo "WARN: deployed website differs for $relative"
-      deployed_mismatch=1
+web_target="${CAILAMA_WEB_TARGET:-/srv/cailama-web/public}"
+if [[ "${CAILAMA_CHECK_DEPLOYED_WEBSITE:-0}" == "1" ]]; then
+  if [[ -d "$web_target" ]]; then
+    deployed_mismatch=0
+    while IFS= read -r -d '' source; do
+      relative="${source#web/}"
+      case "$relative" in
+        api_app/config.local.php|api_app/config.local.*.php)
+          continue
+          ;;
+      esac
+      deployed="$web_target/$relative"
+      if [[ ! -f "$deployed" ]] || ! cmp -s "$source" "$deployed"; then
+        echo "WARN: deployed website differs for $relative"
+        deployed_mismatch=1
+      fi
+    done < <(find web -type f -print0)
+    if [[ "$deployed_mismatch" -eq 0 ]]; then
+      echo "OK: deployed website matches web/"
     fi
-  done < <(find web -type f -print0)
-  if [[ "$deployed_mismatch" -eq 0 ]]; then
-    echo "OK: deployed website matches web/"
+  else
+    echo "WARN: web target does not exist: $web_target"
   fi
 else
-  echo "WARN: web target does not exist: $web_target"
+  echo "SKIP: deployed website compare disabled; set CAILAMA_CHECK_DEPLOYED_WEBSITE=1 to enable"
 fi
 echo
 

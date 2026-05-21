@@ -20,6 +20,14 @@ cmp -s docs/data/ecosystem.json web/data/ecosystem.json
 git diff --check
 ```
 
+Der Website-Deploy-Vergleich ist im Standardlauf deaktiviert, damit ein nicht
+erreichbarer oder stale Webspace-Mount den reinen Repo-Check nicht blockiert.
+Bewusster Live-Vergleich:
+
+```bash
+CAILAMA_CHECK_DEPLOYED_WEBSITE=1 bash scripts/check-ecosystem.sh
+```
+
 ## Master-Index-Regeln
 
 Der Master-Index darf nicht enthalten:

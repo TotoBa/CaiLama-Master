@@ -108,6 +108,11 @@ Das Skript:
 4. schuetzt die echte, ignorierte `web/api_app/config.local.php` vor Loeschung,
 5. vergleicht jede ausgelieferte versionierte Datei bytegenau mit der Quelle.
 
+Der Standard-Ecosystem-Check beruehrt den Live-Webspace nicht. Wenn der
+Webspace bewusst gemountet und erreichbar ist, kann der Deploy-Vergleich mit
+`CAILAMA_CHECK_DEPLOYED_WEBSITE=1 bash scripts/check-ecosystem.sh` aktiviert
+werden.
+
 ## Reproduzierbare Pruefung
 
 Nach jeder Website-Aenderung:

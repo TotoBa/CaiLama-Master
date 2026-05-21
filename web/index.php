@@ -206,11 +206,11 @@
         <div class="timeline">
           <article class="step">
             <strong>Jetzt</strong>
-            <p>DB-Hybrid-Client, DWZ-Identity-Linking, RAG-Provenienz und Search-Goldsets.</p>
+            <p>DB-Hybrid-Client, DWZ-Identity-Linking, RAG-Provenienz und Search-Testindex-Seeding.</p>
           </article>
           <article class="step">
             <strong>Danach</strong>
-            <p>PTG-Live-Verifikation, Job-Orchestrierung und Qualitaets-Goldsets.</p>
+            <p>PTG-Live-Verifikation, Job-Orchestrierung und Search-Qualitaetsmessung.</p>
           </article>
           <article class="step">
             <strong>Spaeter</strong>

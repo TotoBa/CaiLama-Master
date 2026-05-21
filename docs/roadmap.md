@@ -54,7 +54,10 @@ Koordinationspunkte:
 
 - Crawler-Quellenpolitik, Robots-Parser und Rate-Limits testen.
 - Quellen-CRUD, Robots-Validierung und Reindex-Tracking sind abgesichert.
-- Goldsets fuer Suchqualitaet vorbereiten.
+- Synthetische Goldsets fuer Suchvertrag, DWZ-Suche und RAG-Kontext sind
+  versioniert und per CLI validierbar.
+- Naechster Search-Fokus: Goldset-Seeding fuer isolierte Testindizes und
+  einheitliche Job-Orchestrierung.
 - Aktueller Ausbau-Fokus liegt auf Search, damit CaiLama mit Search/DWZ/RAG
   weiter integriert werden kann.
 
@@ -120,7 +123,7 @@ Koordinationspunkte:
 - Router-KPIs fuer Fallbacks, Cooldowns, Alias-Nutzung und Latenzen sind fuer
   den aktuellen Stand ausreichend; keine neue Router-Arbeit ohne Auftrag.
 - Search-KPIs fuer Suchqualitaet, Indexfrische und Fehlerquoten sind als
-  privacy-safe Grundlage angebunden; Goldsets bleiben offen.
+  privacy-safe Grundlage angebunden; synthetische Goldsets sind vorbereitet.
 - PTG-KPIs fuer Kartenqualitaet, Review-Erfolg und Wiederholungswirkung.
 - Keine Prompt-, Response- oder Secret-Inhalte loggen.
 
