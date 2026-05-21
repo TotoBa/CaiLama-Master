@@ -108,7 +108,8 @@
               <li>Crawler-Whitelists, Robots-Gruppen und Source-Policy sind getestet.</li>
               <li>Quellen-CRUD, Robots-Validierung und Reindex-Tracking sind abgesichert.</li>
               <li>Synthetische Goldsets fuer Suche, DWZ und RAG-Kontext sind vorbereitet.</li>
-              <li>Goldset-Testindex-Seeding, API-Qualitaet, Job-Orchestrierung und semantisches Retrieval gezielt vorbereiten.</li>
+              <li>Goldset-Testindex-Seeding ist localhost-geschuetzt vorbereitet.</li>
+              <li>Goldset-E2E-Smoke, API-Qualitaet, Job-Orchestrierung und semantisches Retrieval gezielt vorbereiten.</li>
             </ul>
           </article>
         </div>

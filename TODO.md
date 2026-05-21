@@ -44,10 +44,10 @@ Vor Arbeitsbeginn lesen:
 - [ ] Roadmap regelmaessig aus den Unterrepo-`TODO.md`-Dateien abgleichen:
   CaiLama = DB-Hybrid, PTG-Live-Verifikation, DWZ-Identity-Linking,
   RAG-Provenienz; Router = aktuell keine aktive Folgearbeit ohne neuen
-  Nutzerauftrag; Search = aktueller Ausbau-Fokus mit Goldset-Testindex-
-  Seeding, Job-Orchestrierung, API-Qualitaet und semantischem Retrieval nach
-  erledigter Crawler-Quellenpolitik, Observability-Grundlage und
-  synthetischen Goldsets.
+  Nutzerauftrag; Search = aktueller Ausbau-Fokus mit Goldset-E2E-Smoke,
+  Job-Orchestrierung, API-Qualitaet und semantischem Retrieval nach erledigter
+  Crawler-Quellenpolitik, Observability-Grundlage, synthetischen Goldsets und
+  localhost-geschuetztem Testindex-Seeding.
 
 ## Kimi-Handoff
 

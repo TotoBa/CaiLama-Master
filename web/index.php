@@ -206,7 +206,7 @@
         <div class="timeline">
           <article class="step">
             <strong>Jetzt</strong>
-            <p>DB-Hybrid-Client, DWZ-Identity-Linking, RAG-Provenienz und Search-Testindex-Seeding.</p>
+            <p>DB-Hybrid-Client, DWZ-Identity-Linking, RAG-Provenienz und Search-E2E-Smoke.</p>
           </article>
           <article class="step">
             <strong>Danach</strong>

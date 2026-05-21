@@ -197,6 +197,8 @@ Aktueller Fokus:
 - Privacy-safe Search-Observability ueber `/v1/observability/search`.
 - Synthetische Search-Goldsets fuer Suchvertrag, DWZ-Suche und RAG-Kontext
   sind versioniert und per CLI validierbar.
+- Goldset-Testindex-Seeding ist ueber einen localhost-geschuetzten CLI-Pfad
+  fuer isolierte Test-Meilisearch-Instanzen vorbereitet.
 - Einheitliche Job-Orchestrierung mit CaiLama-Queue/Training.
 - Optionale semantische Retrieval-Schicht nur mit Eval-Datensatz.
 
@@ -281,7 +283,7 @@ Jetzt:
 - DWZ-Identity-Linking in Store/CLI und RAG-Provenienz fertigstellen.
 - Router bleibt ohne neue Folgearbeit, solange kein neuer Nutzerauftrag
   vorliegt.
-- Search als aktuellen Ausbau-Fokus vorantreiben: Goldset-Testindex-Seeding,
+- Search als aktuellen Ausbau-Fokus vorantreiben: Goldset-End-to-End-Smoke,
   API-Qualitaet, Job-Orchestrierung und spaeter semantisches Retrieval.
 
 Danach:

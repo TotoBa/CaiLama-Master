@@ -133,7 +133,8 @@
         "crawler source policy, robots groups, source validation and reindex tracking are tested",
         "privacy-safe search observability endpoint is available",
         "synthetic goldsets for search contract, DWZ search and RAG context are versioned and CLI-validated",
-        "current expansion focus is Search quality: goldset test-index seeding, API quality, job orchestration and optional semantic retrieval",
+        "localhost-protected goldset seeding for isolated test Meilisearch instances is available",
+        "current expansion focus is Search quality: goldset end-to-end smoke, API quality, job orchestration and optional semantic retrieval",
         "job orchestration with CaiLama queue and training",
         "optional semantic retrieval with evaluation data"
       ],
@@ -199,7 +200,7 @@
     "now": [
       "CaiLama DB API client and hybrid configuration",
       "DWZ identity linking and RAG provenance",
-      "Search expansion for recall, quality and CaiLama integration after versioned synthetic goldsets",
+      "Search expansion for recall, quality and CaiLama integration after versioned synthetic goldsets and test-index seeding",
       "Router is paused unless a new user request targets it"
     ],
     "next": [
