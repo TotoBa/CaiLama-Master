@@ -48,7 +48,7 @@
             PHP-Webspace ausgeliefert. Versionierte Quelle ist <code>web/</code>.
           </p>
         </div>
-        <pre><code>scripts/deploy-website.sh &lt;webspace-public-dir&gt;
+        <pre><code>scripts/deploy-website.sh
 curl -I -L https://cailama.org/
 bash scripts/check-ecosystem.sh</code></pre>
       </div>

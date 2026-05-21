@@ -34,12 +34,20 @@ Doku festgeschrieben.
 Deployment:
 
 ```bash
-scripts/deploy-website.sh <webspace-public-dir>
+scripts/deploy-website.sh
 ```
 
-Das Skript synchronisiert den kompletten Inhalt von `web/`, also PHP-Seiten,
-Stylesheet, `llms.txt`, `ecosystem-reference.md` und
-`data/ecosystem.json`.
+Das Skript nutzt im Live-Betrieb natives SFTP. Die Zielkonfiguration liegt
+lokal ausserhalb des Repos, zum Beispiel in
+`~/.config/cailama/web-deploy.env`, oder wird per Umgebungsvariablen gesetzt.
+Fuer lokale Tests kann ein lokaler Zielpfad uebergeben werden:
+
+```bash
+scripts/deploy-website.sh <local-public-dir>
+```
+
+Deployt wird der komplette Inhalt von `web/`, also PHP-Seiten, Stylesheet,
+`llms.txt`, `ecosystem-reference.md` und `data/ecosystem.json`.
 
 Die URL `https://cailama.org/` wurde am 2026-05-20 per `curl -I -L` mit
 `HTTP/2 200` verifiziert.

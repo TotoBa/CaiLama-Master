@@ -80,13 +80,41 @@ Hintergrund sonst verschwindet. Das sichtbare Hero-Logo bleibt unverfaelscht.
 ## Webspace
 
 Der Live-Webspace-Pfad ist host-spezifisch und wird nicht in der offiziellen
-Doku festgeschrieben. Das Deployment-Skript kann lokal mit einem expliziten
-Zielpfad aufgerufen werden.
+Doku festgeschrieben. Das Deployment-Skript nutzt fuer Live-Deployment natives
+SFTP. Ziel, Remote-Verzeichnis und optionale SSH-/SFTP-Parameter kommen aus
+einer lokalen, nicht versionierten Konfiguration oder aus Umgebungsvariablen.
+
+Lokale Operator-Konfiguration:
+
+```text
+~/.config/cailama/web-deploy.env
+```
+
+Unterstuetzte Variablen:
+
+```bash
+CAILAMA_WEB_DEPLOY_METHOD=sftp
+CAILAMA_WEB_SFTP_TARGET=<sftp-user-and-host>
+CAILAMA_WEB_SFTP_REMOTE_DIR=<remote-public-dir>
+CAILAMA_WEB_SFTP_IP_VERSION=4
+CAILAMA_WEB_SFTP_PORT=<optional-port>
+CAILAMA_WEB_SFTP_IDENTITY_FILE=<optional-key-file>
+CAILAMA_WEB_SFTP_CONFIG=<optional-ssh-config>
+CAILAMA_WEB_SFTP_KNOWN_HOSTS_FILE=<optional-known-hosts-file>
+CAILAMA_WEB_SFTP_STRICT_HOST_KEY_CHECKING=accept-new
+CAILAMA_WEB_SFTP_CONNECT_TIMEOUT=20
+CAILAMA_WEB_SFTP_PASSWORD_FILE=<optional-local-secret-file>
+CAILAMA_PUBLIC_URL=https://cailama.org
+```
+
+Diese Datei und eine optionale Passwortdatei duerfen keine Vorlage fuer Commits
+sein und gehoeren nicht ins Repo. Fuer lokale Tests kann das Skript weiterhin
+mit einem expliziten lokalen Zielpfad aufgerufen werden.
 
 ## Reproduzierbares Deployment
 
-Die Website hat keinen Build-Schritt. Deployment ist ein synchronisierter
-Kopiervorgang von `web/` in den PHP-Webspace.
+Die Website hat keinen Build-Schritt. Live-Deployment ist ein nativer
+SFTP-Upload von `web/` in den PHP-Webspace.
 
 Standardbefehl:
 
@@ -94,17 +122,17 @@ Standardbefehl:
 scripts/deploy-website.sh
 ```
 
-Expliziter Zielpfad:
+Expliziter lokaler Test-Zielpfad:
 
 ```bash
-scripts/deploy-website.sh <webspace-public-dir>
+scripts/deploy-website.sh <local-public-dir>
 ```
 
 Das Skript:
 
 1. ermittelt das Git-Root,
-2. synchronisiert `web/` in den angegebenen PHP-Webspace,
-3. entfernt dort Dateien, die nicht mehr in `web/` existieren,
+2. laedt `web/` per OpenSSH-`sftp` in das konfigurierte Remote-Verzeichnis,
+3. entfernt stale Dateien anhand eines SFTP-Deploy-Manifests,
 4. schuetzt die echte, ignorierte `web/api_app/config.local.php` vor Loeschung,
 5. prueft beim Standard-Live-Ziel ausgewaehlte oeffentliche Dateien per
    SHA-256 ueber HTTPS und ruft die oeffentlichen PHP-Seiten kurz ab.
@@ -116,11 +144,11 @@ nicht direkt auf den Webspace-Mount zu.
 
 Deploy-Verifikation:
 
-- Standard fuer das Live-Ziel: `CAILAMA_DEPLOY_VERIFY=http-hash`.
+- Standard fuer SFTP-Live-Deployment: `CAILAMA_DEPLOY_VERIFY=http-hash`.
 - Explizit aus: `CAILAMA_DEPLOY_VERIFY=none scripts/deploy-website.sh`.
-- Direkter Zielpfad-Hash nur bewusst: `CAILAMA_DEPLOY_VERIFY=target-hash
-  scripts/deploy-website.sh`. Dieser Modus liest den Webspace-Mount und ist
-  nicht fuer stale oder instabile Mounts gedacht.
+- Direkter Zielpfad-Hash nur fuer lokale Testziele: `CAILAMA_DEPLOY_VERIFY=target-hash
+  scripts/deploy-website.sh <local-public-dir>`. Dieser Modus liest keinen
+  Live-Webspace-Mount.
 
 ## Reproduzierbare Pruefung
 

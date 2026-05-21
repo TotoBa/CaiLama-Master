@@ -28,9 +28,9 @@ HTTPS-Live-Check ohne Mount-Zugriff:
 CAILAMA_CHECK_DEPLOYED_WEBSITE=1 bash scripts/check-ecosystem.sh
 ```
 
-Das Website-Deploy-Skript nutzt fuer das Standard-Live-Ziel HTTPS-Hashes fuer
-statische oeffentliche Dateien statt eines direkten bytegenauen Readbacks ueber
-den Webspace-Mount.
+Das Website-Deploy-Skript nutzt fuer das Live-Ziel natives SFTP und prueft
+danach statische oeffentliche Dateien per HTTPS-Hash. Es liest keinen
+Webspace-Mount.
 
 ## Master-Index-Regeln
 
