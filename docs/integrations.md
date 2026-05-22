@@ -47,6 +47,20 @@ Relevante Endpunkte:
 - `/v1/dwz/search`
 - `/v1/dwz/player/{pkz}`
 
+#### Response-Vertrag
+
+Fuer CaiLama-kompatible Konsumenten liefern die Endpunkte folgende
+normalisierte Felder:
+
+- `POST /v1/search` und `GET /v1/search` enthalten
+  - `hits` als native Meilisearch-Treffer,
+  - `items` oder `results` als normalisierte Trefferliste,
+  - `query` als wiederholte Suchanfrage.
+- `POST /v1/context` enthaelt
+  - `context_blocks` als strukturierte RAG-Bloecke,
+  - `context` oder `sources` als kompatible Verbraucherfelder,
+  - `query` als wiederholte Kontextanfrage.
+
 Zu klaerende bzw. laufend zu pruefende Punkte:
 
 - SearchAdapter in CaiLama als Standardpfad vor browserbasierter Websuche.

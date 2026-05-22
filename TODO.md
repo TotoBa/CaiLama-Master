@@ -57,7 +57,9 @@ Vor Arbeitsbeginn lesen:
   Provider-Schema-Setup erfolgreich sein kann.
 - [ ] CaiLama-Search-Vertrag weiter pruefen: `POST /v1/search`,
   kompatibles `GET /v1/search`, `POST /v1/context`, `items`/`results`,
-  `context`/`sources` und DWZ-Endpunkte in Doku und Website synchron halten.
+  `context`/`sources` und DWZ-Endpunkte **in `docs/integrations.md` als
+  Response-Vertrag ergaenzt**; Website (`ecosystem-reference.md` und
+  `ecosystem.json`) sind synchron.
 - [ ] Kimi-CLI-Ecosystem-Skill nach erstem realen Kimi-Lauf pruefen:
   `skills/kimi-cli-cailama-ecosystem/SKILL.md` bei Bedarf schaerfen, ohne
   lokale Secrets oder Runtime-Pfade aufzunehmen. Der Skill ist lokal in den
