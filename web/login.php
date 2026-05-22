@@ -40,9 +40,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 exit;
             }
             $session->recordLoginFailure((int) ($config['auth']['attempt_window_seconds'] ?? 600));
-            $error = 'E-Mail oder Passwort ist ungueltig.';
+            $error = 'E-Mail oder Passwort ist ungültig.';
         } catch (Throwable) {
-            $error = 'Der Login ist vorbereitet, aber noch nicht konfiguriert.';
+            $error = 'Der Login ist aktuell nicht verfügbar.';
         }
     }
 }
