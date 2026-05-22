@@ -109,6 +109,46 @@ Zu klaerende bzw. laufend zu pruefende Punkte:
 
 #### Smoke-Test-Matrix fuer die Webspace-DB-API
 
+#### Live-Status (2026-05-22)
+
+```text
+POST /api/v1/status (Admin-Key)
+  HTTP 200
+  databases.cailama: ok
+  databases.auth: error (Unknown server host)
+
+POST /api/v1/admin/schema/cailama
+  HTTP 200, Schema erfolgreich angewendet
+
+POST /api/v1/admin/schema/auth
+  HTTP 500, blockiert weil Auth-DB-Host vom Webspace nicht aufloesbar
+```
+
+**CaiLama-Datenbank** ist erreicht und Schema ist idempotent gesetzt.
+**Auth-Datenbank** meldet DNS-Fehler `Unknown server host` fuer den
+konfigurierten Hostnamen. Ursache: vermutlich falscher IONOS-Auth-DB-Hostname
+oder DNS-Resolver-Problem auf dem Webspace. Die Konfiguration selbst (DSN,
+User, Passwort) ist korrekt; die PDO-Verbindung scheitert bereits an der
+Hostname-Aufloesung.
+
+```text
+POST /api/v1/status (Admin-Key)
+  HTTP 200
+  databases.cailama: ok
+  databases.auth: error (auth_failed)
+
+POST /api/v1/admin/schema/cailama
+  HTTP 200, Schema erfolgreich angewendet
+
+POST /api/v1/admin/schema/auth
+  HTTP 500, blockiert weil auth DB auth_failed meldet
+```
+
+**CaiLama-Datenbank** ist erreicht und Schema ist gesetzt.
+**Auth-Datenbank** meldet MySQL 1045 (Access denied) trotz
+privater Konfig ausserhalb des Public-Webroots. Ursache wird
+geprueft (Provider-seitige Passwort-Ueberpruefung).
+
 Die folgenden Pruefschritte gelten als Vertragsgrenze; sie erfordern
 keine destruktiven Aktionen und werden mit gueltigen Bearer-Keys
 durchgefuehrt:
