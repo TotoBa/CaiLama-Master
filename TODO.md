@@ -49,13 +49,15 @@ Vor Arbeitsbeginn lesen:
     `databases.cailama: ok`, `databases.auth: error`.
   - `POST /api/v1/admin/schema/cailama`: **HTTP 200, Schema erfolgreich**
     angewendet (2 Statements).
-  - `POST /api/v1/admin/schema/auth`: HTTP 500, blockiert weil Auth-DB-Host
-    `db5020512585.hosting-data.io` vom Webspace aus nicht aufloesbar ist
-    (DNS `Unknown server host`). CaiLama-DB-Host `db5020503872.hosting-data.io`
-    ist erreichbar.
-  - **Blocker:** Entweder falscher Auth-DB-Hostname oder IONOS-DNS-Problem.
-    Der Webspace muss den Auth-DB-Host erreichen koennen; lokal ist der Host
-    nicht testbar.
+  - `POST /api/v1/admin/schema/auth`: HTTP 500, blockiert weil Auth-DB
+    `auth_failed` meldet (MySQL 1045: Access denied for user).
+    CaiLama-DB-Host ist erreichbar.
+  - **Blocker:** IONOS-Passwort `4R_UFTZgjyNbDjjm` fuer `dbu1288786` an
+    `db5020512585.hosting-data.io` wird vom Webspace nicht akzeptiert.
+    Mogliche Ursachen: Passwort ist falsch, DB-User hat keine Berechtigungen
+    fuer die DB, oder IONOS erlaubt keine gleichzeitige Verbindung zu zwei
+    getrennten DBs vom Webspace aus. Passwort wurde am 2026-05-22 ueber
+    `--write-configs --deploy-private` neu geschrieben.
   - no-key/body/file-Import-Smokes in `docs/integrations.md` dokumentiert.
   - danach: minimale fachliche CaiLama-Read-/Write-Endpunkte.
 - [x] CaiLama-Search-Vertrag weiter pruefen: `POST /v1/search`,
