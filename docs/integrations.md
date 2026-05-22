@@ -93,6 +93,30 @@ Zu klaerende bzw. laufend zu pruefende Punkte:
   `cailama-private/api/config.local.php` abgelegt; alte Public-Konfigdateien
   werden beim Private-Deploy entfernt.
 
+#### Smoke-Test-Matrix fuer die Webspace-DB-API
+
+Die folgenden Pruefschritte gelten als Vertragsgrenze; sie erfordern
+keine destruktiven Aktionen und werden mit gueltigen Bearer-Keys
+durchgefuehrt:
+
+| Endpunkt | Bedingung | Erwartetes Ergebnis |
+|---|---|---|
+| `POST /api/v1/status` | Ohne Bearer-Key | HTTP 401, `unauthorized` |
+| `POST /api/v1/status` | Mit falscher Key | HTTP 401, `unauthorized` |
+| `POST /api/v1/status` | Mit gueltigem Key, Scope `status:read` | HTTP 200, Status-JSON |
+| `POST /api/v1/status` | Mit Key, aber Query-Parameter | HTTP 400, `query_not_allowed` |
+| `POST /api/v1/status` | Mit Key, aber Request-Body | HTTP 400, `body_not_allowed` |
+| `POST /api/v1/imports/cailama/append` | Ohne Key | HTTP 401, `unauthorized` |
+| `POST /api/v1/imports/cailama/append` | Mit Key, aber Body | HTTP 400, `body_not_allowed` |
+| `POST /api/v1/imports/cailama/append` | Mit Key, ohne Datei | HTTP 409, `no_import_file` |
+| `POST /api/v1/imports/cailama/reset` | Ohne `db_import:reset`-Scope | HTTP 401, `unauthorized` |
+| `POST /api/v1/admin/schema/auth` | Ohne `admin`-Scope | HTTP 401, `unauthorized` |
+| `POST /api/v1/admin/schema/cailama` | Ohne `admin`-Scope | HTTP 401, `unauthorized` |
+
+Die Import-Endpunkte akzeptieren weder Query-Parameter noch Request-Body;
+der zu verarbeitende Dump liegt serverseitig vor. Nach erfolgreichem
+Import wird die Datei geloescht.
+
 ### Search-Goldsets -> isolierte Testinstanz
 
 Ziel: CaiLama-Search kann Suchvertrag, DWZ-Suche und RAG-Kontext gegen

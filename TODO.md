@@ -46,10 +46,11 @@ Vor Arbeitsbeginn lesen:
 - [ ] Webspace-DB-API live-testfaehig fertigstellen: private Provider-Konfig
   deployen, Provider-Schemas ueber `POST /api/v1/admin/schema/auth` und
   `POST /api/v1/admin/schema/cailama` setzen, `POST /api/v1/status` nur mit
-  Bearer-Key pruefen, no-key/no-body/no-file-Import-Smokes dokumentieren und
-  danach die minimalen fachlichen CaiLama-Read-/Write-Endpunkte als naechsten
-  Kimi-Schritt schneiden. Keine grossen Daten ueber API-Body; Bulk-Import
-  bleibt SFTP in den privaten Webspace-Root plus geschuetzter Import-Endpunkt.
+  Bearer-Key pruefen, **no-key/no-body/no-file-Import-Smokes in
+  `docs/integrations.md` dokumentiert**, danach die minimalen fachlichen
+  CaiLama-Read-/Write-Endpunkte als naechsten Kimi-Schritt schneiden. Keine
+  grossen Daten ueber API-Body; Bulk-Import bleibt SFTP in den privaten
+  Webspace-Root plus geschuetzter Import-Endpunkt.
   Live-Stand 2026-05-22: API-Code und private Konfig sind deployed,
   `pdo_mysql` ist verfuegbar, Login-DB meldet `auth_failed`; das IONOS-
   Passwort muss sicher per privater Passwortdatei nachgezogen werden, bevor
