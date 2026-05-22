@@ -60,11 +60,12 @@ Vor Arbeitsbeginn lesen:
   `context`/`sources` und DWZ-Endpunkte **in `docs/integrations.md` als
   Response-Vertrag ergaenzt**; Website (`ecosystem-reference.md` und
   `ecosystem.json`) sind synchron.
-- [ ] Kimi-CLI-Ecosystem-Skill nach erstem realen Kimi-Lauf pruefen:
-  `skills/kimi-cli-cailama-ecosystem/SKILL.md` bei Bedarf schaerfen, ohne
-  lokale Secrets oder Runtime-Pfade aufzunehmen. Der Skill ist lokal in den
-  Kimi-Skills-Ordner deployt und am 2026-05-22 gegen die versionierte Quelle
-  abgeglichen; die versionierte Quelle bleibt der Master-Stand.
+- [ ] Kimi-CLI-Ecosystem-Skill nach erstem realen Kimi-Lauf geprueft und
+  geschaerft: `skills/kimi-cli-cailama-ecosystem/SKILL.md` enthaelt jetzt
+  explizite Initialisierungspruefungen (`pwd`, `git rev-parse`,
+  `git status --short`, `git check-ignore`) und Abschlusspruefungen
+  (`git diff --check`, `bash scripts/check-ecosystem.sh`) im Working Loop.
+  Keine Secrets oder Runtime-Pfade.
 - [ ] Runtime-Aktualisierung nach groesseren Unterrepo-Releases pruefen:
   `scripts/update-runtime-projects.sh` fuer Router/Search/CaiLama nutzen und
   dokumentieren, ob Dienste aus Runtime-Ordnern gestartet wurden.

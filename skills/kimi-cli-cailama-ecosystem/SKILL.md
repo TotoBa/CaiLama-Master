@@ -47,15 +47,20 @@ current repo `TODO.md` unless it is small enough to fix immediately.
 
 ## Working Loop
 
-1. Identify the current repository and read its `AGENTS.md`.
-2. Read `README.md`, `TODO.md` and the relevant local docs/tests.
-3. Read the public ecosystem docs listed above.
-4. Summarize the repo-local task in one or two sentences.
-5. Make the smallest coherent implementation change.
-6. Run targeted offline tests and `git diff --check`.
-7. Update `TODO.md` only for the changed task and immediate follow-ups.
-8. Commit and push the current repository before starting the next TODO step
-   when the active handoff asks for stepwise commits.
+1. Identify the current repository with `pwd` and `git rev-parse --show-toplevel`.
+2. Read its `AGENTS.md`.
+3. Read `README.md`, `TODO.md` and the relevant local docs/tests.
+4. Run `git status --short` and confirm the repository is clean before changes.
+5. In `CaiLama-Master` confirm the three sub-repos are ignored with
+   `git check-ignore -v CaiLama CaiLama-LLM-Router CaiLama-Search`.
+6. Read the public ecosystem docs listed above.
+7. Summarize the repo-local task in one or two sentences.
+8. Make the smallest coherent implementation change.
+9. Run targeted offline tests, `git diff --check`, and in `CaiLama-Master`
+   also `bash scripts/check-ecosystem.sh`.
+10. Update `TODO.md` only for the changed task and immediate follow-ups.
+11. Commit and push the current repository before starting the next TODO step
+    when the active handoff asks for stepwise commits.
 
 ## Standard Prompt
 
