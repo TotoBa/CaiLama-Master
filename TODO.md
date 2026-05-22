@@ -65,6 +65,7 @@ Vor Arbeitsbeginn lesen:
   explizite Initialisierungspruefungen (`pwd`, `git rev-parse`,
   `git status --short`, `git check-ignore`) und Abschlusspruefungen
   (`git diff --check`, `bash scripts/check-ecosystem.sh`) im Working Loop.
+  Versionierte Quelle und lokale Kimi-Skill-Datei sind synchron deployt.
   Keine Secrets oder Runtime-Pfade.
 - [ ] Runtime-Aktualisierung nach groesseren Unterrepo-Releases pruefen:
   `scripts/update-runtime-projects.sh` fuer Router/Search/CaiLama nutzen und

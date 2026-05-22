@@ -68,3 +68,14 @@ uvicorn cailama.search_backend.api:app --host 127.0.0.1 --port 8080
 
 Ports koennen fuer Search ueber `CAILAMA_SEARCH_HOST` und
 `CAILAMA_SEARCH_PORT` ueberschrieben werden.
+
+## Status der Runtime-Nutzung
+
+- Router: Wird aus der Runtime-Kopie betrieben (entweder ueber
+  `llm-router.service` oder manuell aus dem Runtime-Ordner).
+- Search: Wird bei Bedarf aus der Runtime-Kopie gestartet.
+- CaiLama: Runtime-Kopie wird fuer isolierte Tests und Entwicklungslaeufe
+  verwendet, nicht als dauerhaft laufender Dienst.
+
+Die Runtime-Ordner enthalten keine `.git`-Verzeichnisse; das wird beim
+Synchronisieren durch `update-runtime-projects.sh` erzwungen.
