@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "generated_for": "CaiLama ecosystem documentation",
-  "last_reviewed": "2026-05-21",
+  "last_reviewed": "2026-05-22",
   "canonical_url": "https://cailama.org/",
   "language": "de",
   "summary": {
@@ -55,8 +55,11 @@
         "hardware"
       ],
       "current_focus": [
-        "DB hybrid access through native MariaDB/MySQL, webspace API and hybrid mode",
-        "PTG queue enqueue is wired; optional --run-llm-stages connects classify/analyze before personalized card generation",
+                "DB hybrid access is configurable through database.access_mode values native, api and hybrid",
+                "bounded Webspace DB API status client uses protected POST /api/v1/status without SQL-over-HTTP or secret output",
+                "provider-side dump import is available through no-query/no-body append/reset endpoints that process a configured server-side .sql or .sql.gz file",
+                "provider database schemas are applied through protected PHP admin endpoints on the webspace, not through local provider DB access",
+                "PTG queue enqueue is wired; optional --run-llm-stages connects classify/analyze before personalized card generation",
         "internal SearchAdapter is standard path for web_search and search_dwz",
         "search_rag is suggested for research/source questions",
         "DWZ identity linking store and CLI integration",
@@ -134,7 +137,8 @@
         "privacy-safe search observability endpoint is available",
         "synthetic goldsets for search contract, DWZ search and RAG context are versioned and CLI-validated",
         "localhost-protected goldset seeding for isolated test Meilisearch instances is available",
-        "current expansion focus is Search quality: goldset end-to-end smoke, API quality, job orchestration and optional semantic retrieval",
+        "goldset end-to-end smoke is automated through a local Docker Meilisearch instance, synthetic seeding and a scheduler-disabled API subprocess",
+        "current expansion focus is Search quality: API quality, job orchestration and optional semantic retrieval",
         "job orchestration with CaiLama queue and training",
         "optional semantic retrieval with evaluation data"
       ],
@@ -176,16 +180,30 @@
     {
       "from": "CaiLama",
       "to": "CaiLama-Master web API",
-      "purpose": "future provider database access through a narrow PHP API and website login through a separate auth database",
+      "purpose": "provider database access through a narrow PHP API, server-side CaiLama dump imports and website login through a separate auth database",
       "paths": [
-        "/api/v1/status",
-        "/login.php",
+                "POST /api/v1/status",
+                "POST /api/v1/imports/cailama/append",
+                "POST /api/v1/imports/cailama/reset",
+                "POST /api/v1/admin/schema/auth",
+                "POST /api/v1/admin/schema/cailama",
+                "POST /api/v1/admin/schema/all",
+                "/login.php",
         "/account.php"
       ],
       "contract_notes": [
         "No SQL-over-HTTP endpoints.",
-        "Real credentials belong only in ignored web/api_app/config.local.php.",
+                "Real credentials belong only in private webspace config outside /public.",
         "databases.auth and databases.cailama are separate PDO configurations.",
+                "Status requires POST /api/v1/status with a Bearer token scope; there is no public GET status with API or database details.",
+                "The import endpoints accept no query parameters and no request body; authentication is through a Bearer token scope.",
+                "Provider schema endpoints accept no query parameters and no request body; authentication requires the admin scope.",
+                "Status, append import, reset import and admin use separate keys/scopes.",
+        "Reset import requires db_import:reset or admin.",
+        "Real webspace config is deployed outside the public webroot under cailama-private/api/config.local.php.",
+        "Large dump data is uploaded out-of-band to a non-public webspace folder and processed from the configured server-side file.",
+        "Missing import files are rejected and successfully imported files are deleted.",
+        "Reset imports require an explicit local allow_reset setting.",
         "web/api_app/config.local.sample.php is a placeholder template only."
       ]
     },
@@ -198,9 +216,9 @@
   ],
   "roadmap": {
     "now": [
-      "CaiLama DB API client and hybrid configuration",
+      "CaiLama DB hybrid hardening after configurable native/api/hybrid access, bounded API status client and server-side provider dump import endpoints",
       "DWZ identity linking and RAG provenance",
-      "Search expansion for recall, quality and CaiLama integration after versioned synthetic goldsets and test-index seeding",
+      "Search expansion for recall, quality and CaiLama integration after versioned synthetic goldsets, test-index seeding and automated E2E smoke",
       "Router is paused unless a new user request targets it"
     ],
     "next": [

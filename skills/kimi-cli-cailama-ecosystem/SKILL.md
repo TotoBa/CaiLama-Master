@@ -54,7 +54,8 @@ current repo `TODO.md` unless it is small enough to fix immediately.
 5. Make the smallest coherent implementation change.
 6. Run targeted offline tests and `git diff --check`.
 7. Update `TODO.md` only for the changed task and immediate follow-ups.
-8. Commit and push in the current repository when instructed by the user.
+8. Commit and push the current repository before starting the next TODO step
+   when the active handoff asks for stepwise commits.
 
 ## Standard Prompt
 
@@ -70,10 +71,12 @@ Kimi-CLI-CaiLama-Ecosystem-Skill:
 3. Lies nur die fuer den ersten offenen TODO-Punkt relevanten lokalen Module,
    Docs und Tests.
 
-Arbeite dann den ersten offenen Punkt in TODO.md ab. Keine Secrets lesen oder
+Arbeite dann die offenen Punkte in TODO.md von oben nach unten ab. Pro Schritt
+genau eine kleine, testbare Aenderung machen. Keine Secrets lesen oder
 ausgeben, keine Live-Dienste kontaktieren, keine separaten Handoff-Dateien
 anlegen. Erledigte TODOs nur markieren, nicht loeschen, ausser der Nutzer
-fordert eine Bereinigung ausdruecklich an. Nach der Aenderung gezielt offline
-testen, TODO.md aktualisieren, git diff --check und git status --short
-ausfuehren, dann committen und pushen, wenn der Nutzer das verlangt.
+fordert eine Bereinigung ausdruecklich an. Nach jeder erledigten Aufgabe
+gezielt offline testen, TODO.md aktualisieren, git diff --check und git status
+--short ausfuehren, dann committen und pushen, bevor der naechste Schritt
+begonnen wird.
 ```

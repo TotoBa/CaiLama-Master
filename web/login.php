@@ -27,7 +27,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         (int) ($config['auth']['max_attempts_per_session'] ?? 5),
         (int) ($config['auth']['attempt_window_seconds'] ?? 600),
     )) {
-        $error = 'Zu viele Anmeldeversuche. Bitte spaeter erneut versuchen.';
+        $error = 'Zu viele Anmeldeversuche. Bitte später erneut versuchen.';
     } else {
         try {
             $pdo = ConnectionFactory::fromConfig($config, 'auth');
@@ -87,7 +87,7 @@ function h(string $value): string
       <div class="page-hero-inner">
         <p class="eyebrow">CaiLama Konto</p>
         <h1>Login</h1>
-        <p class="page-lead">Sitzung fuer geschuetzte CaiLama-Webfunktionen.</p>
+        <p class="page-lead">Sitzung für geschützte CaiLama-Webfunktionen.</p>
       </div>
     </section>
 

@@ -3,20 +3,20 @@
 Zielgruppe: Menschen, Codex, Kimi und andere LLM-Agenten, die schnell den
 aktuellen Systemzuschnitt verstehen muessen.
 
-Stand: 2026-05-20.
+Stand: 2026-05-22.
 
 ## Kurzfassung
 
-CaiLama ist ein Schachanalyse-, Trainings- und Automatisierungs-Oekosystem.
+CaiLama ist ein Schachanalyse-, Trainings- und Automatisierungs-Ökosystem.
 Es besteht aus vier Repositories mit klarer Trennung:
 
 - `TotoBa/CaiLama-Master`: Gesamt-Doku, Webseite, Roadmap, Status,
   Orchestrierung und lokale Checks.
-- `TotoBa/CaiLama`: Hauptsystem fuer Schachanalyse, Training, Profile,
+- `TotoBa/CaiLama`: Hauptsystem für Schachanalyse, Training, Profile,
   Agent-CLI, PGN/Stockfish und DGT-nahe Workflows.
-- `TotoBa/CaiLama-LLM-Router`: eigenstaendiger OpenAI-kompatibler Router fuer
+- `TotoBa/CaiLama-LLM-Router`: eigenständiger OpenAI-kompatibler Router für
   LLM-Backends, Modell-Aliase, Policies und Fallbacks.
-- `TotoBa/CaiLama-Search`: eigenstaendiger Such-, DWZ- und RAG-Dienst mit
+- `TotoBa/CaiLama-Search`: eigenständiger Such-, DWZ- und RAG-Dienst mit
   FastAPI, Meilisearch, Crawlern und Importpfaden.
 
 Der Master ist kein Monorepo und kein Runtime-Repo. Die drei Unter-Repos sind
@@ -28,16 +28,16 @@ Aktuelle Namen:
 
 - `CaiLama-Master`: Koordination der Projekte und Webseite.
 - `CaiLama`: Hauptprojekt, historisch aus DGT-Chesstrainer entstanden.
-- `CaiLama-LLM-Router`: generischer lokaler/cloudfaehiger LLM-Router.
-- `CaiLama-Search`: schachspezifisches Such-/Indexsystem fuer Webseiten,
-  DWZ-/Spielerdaten und spaeter RAG-Kontext.
+- `CaiLama-LLM-Router`: generischer lokaler/cloudfähiger LLM-Router.
+- `CaiLama-Search`: schachspezifisches Such-/Indexsystem für Webseiten,
+  DWZ-/Spielerdaten und später RAG-Kontext.
 
 Alte Namen duerfen nur als historische Referenz verwendet werden.
 
 ## Zielbild
 
 CaiLama soll ein praxistaugliches Schachtrainingssystem werden, das folgende
-Aufgaben ausfuehrt:
+Aufgaben ausführt:
 
 - PGNs importieren.
 - Hauptvarianten extrahieren.
@@ -55,13 +55,13 @@ Aufgaben ausfuehrt:
 
 Rolle:
 
-- Gesamt-Doku des Oekosystems.
+- Gesamt-Doku des Ökosystems.
 - Human-Webseite unter `https://cailama.org/`.
 - LLM-freundliche Referenzen unter `llms.txt`,
   `ecosystem-reference.md` und `data/ecosystem.json`.
-- Suchmaschinen-Einstieg ueber `robots.txt` und `sitemap.xml`.
-- PHP-Login-/Session-Shell und Webspace-API-Vorbereitung ohne versionierte
-  Credentials.
+- Suchmaschinen-Einstieg über `robots.txt` und `sitemap.xml`.
+- PHP-Login-/Session-Shell, Webspace-API-Status und kontrollierter
+  serverseitiger CaiLama-Dump-Import ohne versionierte Credentials.
 - Roadmap und Cross-Repo-Koordination.
 - Lokale Checks ohne Schreibzugriffe in Unter-Repos.
 
@@ -82,7 +82,7 @@ Verboten:
 
 Rolle:
 
-- Hauptsystem fuer Analyse, Training und Nutzerfluss.
+- Hauptsystem für Analyse, Training und Nutzerfluss.
 - Agentische CLI, Slash-Commands, Tools und Rollen.
 - PGN-I/O, Stockfish-Pipeline, statische Brettwahrheit, Datenbank,
   Spielerprofile, Plattformimporte, Knowledge/OCR, Queue, Training und
@@ -102,13 +102,21 @@ Wichtige Modulgruppen:
 
 Aktueller Fokus:
 
-- DB-Hybridpfad vorbereiten: lokale MariaDB/MySQL, fachliche Webspace-API und
-  spaetere Provider-Datenbank als konfigurierbare Zugriffsarten.
+- DB-Hybridpfad ist im Grundschnitt umgesetzt: `database.access_mode` wählt
+  `native`, `api` oder `hybrid`; API-Metadaten bleiben secretfrei und der
+  DB-API-Statusclient fragt per geschütztem `POST /api/v1/status` nur
+  fachliche Statusdaten ab.
+- Provider-seitiger Dump-Import ist in der Webspace-API vorbereitet:
+  `append` und `reset` verarbeiten nur eine serverseitig abgelegte `.sql`- oder
+  `.sql.gz`-Datei; der Request selbst enthält ausser Bearer-Key keine Daten.
+- Provider-seitiges Schema-Setup läuft über admin-geschützte PHP-Endpunkte
+  auf dem Webspace; lokale MySQL-Zugriffe auf Provider-DBs sind nicht der
+  Betriebsweg.
 - PTG Phase 2: Queue-Einspeisung ist im PTG-Kommando angebunden;
   `--run-llm-stages` verdrahtet die bestehende classify/analyze-Trifecta
   explizit vor der Kartengenerierung.
-- Fehler-/Mustertaxonomie fuer personalisiertes Training.
-- Interne Search-Anbindung ist Standardpfad fuer `web_search` und
+- Fehler-/Mustertaxonomie für personalisiertes Training.
+- Interne Search-Anbindung ist Standardpfad für `web_search` und
   `search_dwz`; Recherchefragen schlagen `search_rag` vor.
 - DWZ-Identity-Linking in Store und CLI integrieren.
 - RAG-Analysepakete in Researcher-/Analyst-Promptflows einhaengen.
@@ -124,7 +132,7 @@ Grenzen:
 
 Rolle:
 
-- OpenAI-kompatible API fuer Modellzugriff.
+- OpenAI-kompatible API für Modellzugriff.
 - Modell-Aliase und Routing-Policies.
 - Backend-Fallback, Round-Robin, Cooldowns und Fehlerweitergabe.
 - Kimi-CLI- und CaiLama-kompatible Modellschicht.
@@ -150,10 +158,10 @@ Relevante CaiLama-Rollen/Aliase:
 
 Aktueller Fokus:
 
-- Streaming-Fehlerbehandlung fuer `stream: true`-Flows ist als finaler
+- Streaming-Fehlerbehandlung für `stream: true`-Flows ist als finaler
   SSE-Fehlerchunk dokumentiert und getestet.
-- Optionales Config-Hot-Reload ist ueber `runtime.reload_config_on_request`
-  verfuegbar.
+- Optionales Config-Hot-Reload ist über `runtime.reload_config_on_request`
+  verfügbar.
 - Backend-spezifisches Modell-Mapping per Alias ist validiert.
 - `/metrics` kann JSON oder Prometheus-Text liefern.
 - `mypy src` ist bereinigt.
@@ -170,7 +178,7 @@ Rolle:
 
 - Such-, DWZ- und RAG-Dienst.
 - FastAPI-Zugriffsschicht.
-- Meilisearch-Indizes fuer Webseiten, Chunks und DWZ-Spielerdaten.
+- Meilisearch-Indizes für Webseiten, Chunks und DWZ-Spielerdaten.
 - Crawler, Quellenlisten und DWZ-Importpfade.
 
 Wichtige Endpunkte:
@@ -194,11 +202,14 @@ Aktueller Fokus:
   lokale Port-Bindings und optionaler `ADMIN_SERVICE_TOKEN`.
 - Crawler-Quellenpolitik, Robots-Gruppen, Source-Validierung und
   Reindex-Tracking sind offline getestet.
-- Privacy-safe Search-Observability ueber `/v1/observability/search`.
-- Synthetische Search-Goldsets fuer Suchvertrag, DWZ-Suche und RAG-Kontext
+- Privacy-safe Search-Observability über `/v1/observability/search`.
+- Synthetische Search-Goldsets für Suchvertrag, DWZ-Suche und RAG-Kontext
   sind versioniert und per CLI validierbar.
-- Goldset-Testindex-Seeding ist ueber einen localhost-geschuetzten CLI-Pfad
-  fuer isolierte Test-Meilisearch-Instanzen vorbereitet.
+- Goldset-Testindex-Seeding ist über einen localhost-geschützten CLI-Pfad
+  für isolierte Test-Meilisearch-Instanzen vorbereitet.
+- Goldset-End-to-End-Smoke ist automatisiert: `goldsets smoke` startet eine
+  temporaere lokale Meilisearch-Testinstanz, seedet synthetische Fixtures,
+  startet die API mit deaktiviertem Scheduler und führt die Goldsets aus.
 - Einheitliche Job-Orchestrierung mit CaiLama-Queue/Training.
 - Optionale semantische Retrieval-Schicht nur mit Eval-Datensatz.
 
@@ -215,14 +226,14 @@ Grenzen:
 
 Zweck:
 
-- LLM-Zugriff ueber OpenAI-kompatible Endpunkte.
+- LLM-Zugriff über OpenAI-kompatible Endpunkte.
 - Rollenbasierte Modellwahl.
 - Fallbacks ohne Produktlogik in CaiLama zu duplizieren.
 
 Vertrag:
 
 - CaiLama kennt logische Rollen.
-- Router loest Rollen/Aliase auf Provider-Modelle und Backends auf.
+- Router löst Rollen/Aliase auf Provider-Modelle und Backends auf.
 - Router loggt keine Prompt-/Response-Inhalte standardmaessig.
 
 ### CaiLama -> CaiLama-Search
@@ -230,34 +241,52 @@ Vertrag:
 Zweck:
 
 - kontrollierte Suche statt fragiler Browser-Websuche.
-- RAG-Kontext fuer Researcher/Analyst.
-- DWZ-Daten fuer Profile und Training.
+- RAG-Kontext für Researcher/Analyst.
+- DWZ-Daten für Profile und Training.
 
 Vertrag:
 
 - Search liefert strukturierte Such- und Kontextantworten.
-- CaiLama normalisiert Resultate ueber einen SearchAdapter.
+- CaiLama normalisiert Resultate über einen SearchAdapter.
 - Quellenprovenienz bleibt sichtbar.
-- `/v1/search` ist kanonisch `POST`, bleibt fuer einfache Clients aber auch
+- `/v1/search` ist kanonisch `POST`, bleibt für einfache Clients aber auch
   als `GET` kompatibel. JSON-Felder `query`/`limit` werden akzeptiert.
 - `/v1/context` akzeptiert Query-Parameter oder JSON und liefert kompatible
-  Felder fuer RAG-Verbraucher.
+  Felder für RAG-Verbraucher.
 - Browserbasierte Suche ist nur Fallback.
 
 ### CaiLama -> Webspace-DB-API
 
 Zweck:
 
-- Fachlicher DB-Zugriff ueber HTTPS statt direkter Provider-DB-Exposition.
+- Fachlicher DB-Zugriff über HTTPS statt direkter Provider-DB-Exposition.
 - Wahl zwischen lokaler DB, Provider-API und Hybridbetrieb vorbereiten.
-- Login/Session der Website ueber eine getrennte Auth-Datenbank abbilden.
+- Login/Session der Website über eine getrennte Auth-Datenbank abbilden.
 
 Vertrag:
 
 - Keine SQL-over-HTTP-Endpunkte.
-- Echte DB-Zugangsdaten stehen nur in der ignorierten
-  `web/api_app/config.local.php`.
+- Echte DB-Zugangsdaten stehen nur in der privaten Webspace-Konfiguration
+  ausserhalb von `/public`.
 - `databases.auth` und `databases.cailama` sind getrennte PDO-Verbindungen.
+- `POST /api/v1/status` ist der geschützte Statuspfad; ohne gueltigen
+  Bearer-Key liefert die API keine API- oder DB-Details.
+- `POST /api/v1/imports/cailama/append` fuegt Daten aus der konfigurierten
+  serverseitigen Dump-Datei hinzu.
+- `POST /api/v1/imports/cailama/reset` setzt die CaiLama-Datenbank nur dann
+  zurück, wenn `allow_reset` lokal bewusst aktiviert wurde.
+- `POST /api/v1/admin/schema/auth`,
+  `POST /api/v1/admin/schema/cailama` und
+  `POST /api/v1/admin/schema/all` setzen die Provider-Schemas als kurze
+  Admin-Aktion über PHP.
+- Import- und Schema-Endpunkte akzeptieren keine Query-Parameter und keinen
+  Request-Body.
+  Wenn keine konfigurierte Importdatei vorhanden ist, wird der Import
+  abgelehnt; nach erfolgreichem Import wird die Datei gelöscht.
+- Status, Append-Import, Reset-Import und Admin nutzen getrennte Keys/Scopes;
+  Reset benoetigt `db_import:reset` oder `admin`.
+- Echte Webspace-Konfiguration liegt ausserhalb des Public-Webroots unter
+  `cailama-private/api/config.local.php`.
 - `web/api_app/config.local.sample.php` ist nur Vorlage.
 
 ### Master -> Unter-Repos
@@ -266,50 +295,53 @@ Zweck:
 
 - Dokumentieren.
 - Koordinieren.
-- Pruefen.
+- Prüfen.
 
 Vertrag:
 
 - Master nimmt keine Unter-Repo-Dateien auf.
 - Master schreibt nicht in Unter-Repos.
-- Master enthaelt keine Secrets und keine Runtime-Logik.
+- Master enthält keine Secrets und keine Runtime-Logik.
 
 ## Roadmap
 
 Jetzt:
 
-- CaiLama-DB-Hybridpfad planen und implementieren.
-- CaiLama DB-API-Client und Hybridkonfiguration implementieren.
+- CaiLama-DB-Hybridpfad weiter härten: native/API/hybrid ist konfigurierbar,
+  der fachliche API-Statuspfad ist angebunden und Provider-Dump-Importe laufen
+  serverseitig über `append`/`reset`; fachliche Read-/Write-Endpunkte bleiben
+  Folgearbeit.
 - DWZ-Identity-Linking in Store/CLI und RAG-Provenienz fertigstellen.
 - Router bleibt ohne neue Folgearbeit, solange kein neuer Nutzerauftrag
   vorliegt.
-- Search als aktuellen Ausbau-Fokus vorantreiben: Goldset-End-to-End-Smoke,
-  API-Qualitaet, Job-Orchestrierung und spaeter semantisches Retrieval.
+- Search als aktuellen Ausbau-Fokus vorantreiben: Goldset-End-to-End-Smoke ist
+  automatisiert; nächste Punkte sind API-Qualität, Job-Orchestrierung und
+  später semantisches Retrieval.
 
 Danach:
 
-- PTG-Live-Verifikation mit bewusst gestartetem Router und Folgehaertung in
+- PTG-Live-Verifikation mit bewusst gestartetem Router und Folgehärtung in
   CaiLama.
 - Einheitliche Job-Orchestrierung vorbereiten.
 
-Spaeter:
+Später:
 
 - RAG-Analysepakete produktnah in Researcher-/Analyst-Flows nutzen.
-- Einheitliche Job-Orchestrierung fuer Import, Crawl, Game-Analyse, PTG und
+- Einheitliche Job-Orchestrierung für Import, Crawl, Game-Analyse, PTG und
   Reindex.
 
 Ausbau:
 
-- Observability/KPIs fuer Search und PTG; Router-KPIs gelten aktuell als
+- Observability/KPIs für Search und PTG; Router-KPIs gelten aktuell als
   ausreichend.
 - Optionale semantische Retrieval-Schicht in CaiLama-Search.
 
-## Qualitaetsregeln
+## Qualitätsregeln
 
-- Erst Stand pruefen, dann aendern.
-- Keine Aussagen ueber Repo-Zustaende erfinden.
+- Erst Stand prüfen, dann ändern.
+- Keine Aussagen über Repo-Zustände erfinden.
 - Keine stillen Fehler oder Schein-Erfolge.
-- Tests fuer Kernmodule und Smoke-Tests fuer CLI/API.
+- Tests für Kernmodule und Smoke-Tests für CLI/API.
 - PGN-Ausgabe validieren.
 - Router-Fallbacks nur bei Router-Auftrag erneut testen.
 - Datenbankzugriffe testen.
@@ -320,7 +352,7 @@ Ausbau:
 
 - `docs/data/ecosystem.json`: versionierte Maschinenreferenz im Master.
 - `web/data/ecosystem.json`: ausgelieferte Maschinenreferenz auf der Webseite.
-- `web/llms.txt`: LLM-Einstiegspunkt fuer `https://cailama.org/`.
+- `web/llms.txt`: LLM-Einstiegspunkt für `https://cailama.org/`.
 - `web/ecosystem-reference.md`: ausgelieferte LLM-freundliche Markdown-Version.
 - `web/robots.txt`: Crawler-Regeln mit Sitemap-Verweis.
-- `web/sitemap.xml`: kanonische XML-Sitemap fuer oeffentliche URLs.
+- `web/sitemap.xml`: kanonische XML-Sitemap für öffentliche URLs.

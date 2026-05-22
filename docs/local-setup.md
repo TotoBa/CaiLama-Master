@@ -52,6 +52,36 @@ Deployt wird der komplette Inhalt von `web/`, also PHP-Seiten, Stylesheet,
 Die URL `https://cailama.org/` wurde am 2026-05-20 per `curl -I -L` mit
 `HTTP/2 200` verifiziert.
 
+Die Webspace-API liest echte DB-Zugaenge, API-Token-Hashes und das
+Import-Drop-Verzeichnis aus einer privaten Konfig ausserhalb des oeffentlichen
+Document Roots. Auf dem Webspace ist `/public` der oeffentliche Bereich; echte
+Konfig und Import-Drop liegen im privaten Webspace-Root, zum Beispiel
+`/cailama-private/api/config.local.php` und `/cailama-imports`. Aus
+`/public/api_app/` werden diese Pfade relativ ueber `../../...` erreicht.
+Grosse CaiLama-Dumps werden per SFTP in den privaten Import-Ordner gelegt und
+danach per no-query/no-body-Import-Endpunkt verarbeitet.
+
+Provider-Datenbanken werden nicht direkt vom lokalen Rechner aus eingerichtet.
+Das Setup-Skript legt lokale Schemas mit dem lokalen MySQL-Client an; Provider-
+Schemas setzt es ueber geschuetzte `POST /api/v1/admin/schema/...`-Endpunkte
+in der PHP-API, weil die Provider-DB nur vom Webspace aus bearbeitet werden
+soll.
+
+Wiederholbare Hilfen:
+
+```bash
+scripts/generate-web-api-keys.sh
+scripts/setup-webspace-db-api.sh --source <private-db-config> --all --allow-reset
+scripts/setup-webspace-db-api.sh --set-provider-login-password-file <private-password-file> --write-configs --deploy-private
+scripts/setup-webspace-db-api.sh --setup-databases provider-auth
+scripts/setup-webspace-db-api.sh --setup-databases provider-cailama
+```
+
+Nach dem ersten Normalisierungslauf kann `setup-webspace-db-api.sh --all` die
+private `databases.ini` wiederverwenden. Die Skripte schreiben echte Secrets
+nur in private lokale Konfigdateien und in die private Webspace-Konfiguration.
+Versionierte Dateien enthalten nur Struktur, Variablennamen und Platzhalter.
+
 ## Runtime-Ordner
 
 Laufende Dienste und testbare Kopien werden ausserhalb des Master-Repos in

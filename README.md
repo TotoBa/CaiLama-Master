@@ -98,11 +98,19 @@ Dieses Repo dient dazu:
   repo-uebergreifenden Kontext aus Website und Online-Doku ohne Secret-Zugriff.
 - `web/` - PHP-basierte Human-/LLM-Dokumentationswebsite und vorbereitete
   Webspace-API-Fassade fuer `https://cailama.org/`, inklusive Login-/Session-
-  Shell ohne versionierte Credentials.
+  Shell, geschuetztem POST-Statuspfad und kontrolliertem serverseitigem
+  CaiLama-Dump-Import sowie admin-geschuetztem Provider-Schema-Setup ohne
+  versionierte Credentials.
 - `web/api_app/config.local.sample.php` - Vorlage fuer die echte, ignorierte
-  Webspace-Konfiguration mit separater Auth- und CaiLama-Datenbank.
+  Webspace-Konfiguration mit separater Auth- und CaiLama-Datenbank,
+  API-Token-Hash und Import-Drop-Konfiguration.
 - `scripts/check-ecosystem.sh` - lokale Statuspruefung ohne Schreibzugriffe.
 - `scripts/deploy-website.sh` - reproduzierbares Deployment von `web/`.
+- `scripts/generate-web-api-keys.sh` - idempotenter Generator fuer private
+  Webspace-API-Keys ohne Ausgabe der Key-Werte.
+- `scripts/setup-webspace-db-api.sh` - wiederholbares Setup fuer private
+  DB-Konfiguration, Webspace-API-Konfig, SFTP-Deploy der privaten Konfig,
+  lokale DB-Schemaanlage und providerseitige Schemaanlage ueber die PHP-API.
 
 ## Sicherheitsregel
 

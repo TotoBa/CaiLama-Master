@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Betrieb, Website-Deployment und Qualitaetsregeln des CaiLama-Master-Repositories.">
+  <meta name="description" content="Betrieb, Website-Deployment und Qualitätsregeln des CaiLama-Master-Repositories.">
   <title>CaiLama - Betrieb</title>
   <link rel="canonical" href="https://cailama.org/operations.php">
   <link rel="stylesheet" href="assets/styles.css">
@@ -66,15 +66,23 @@ bash scripts/check-ecosystem.sh</code></pre>
           </article>
           <article class="card">
             <h3>Keine Secrets</h3>
-            <p>Keine <code>.env</code>, Tokens, API-Keys, Zertifikate, Passwoerter oder lokalen Credential-Werte im Master.</p>
+            <p>Keine <code>.env</code>, Tokens, API-Keys, Zertifikate, Passwörter oder lokalen Credential-Werte im Master.</p>
           </article>
           <article class="card">
             <h3>Keine Runtime</h3>
-            <p>Der Master koordiniert, dokumentiert und prueft. Produktive Logik gehoert in die Ziel-Repos.</p>
+            <p>Der Master koordiniert, dokumentiert und prüft. Produktive Logik gehört in die Ziel-Repos.</p>
           </article>
           <article class="card">
             <h3>Login-Konfig</h3>
-            <p>Die Website liest echte Auth- und CaiLama-DB-Zugaenge nur aus der ignorierten <code>config.local.php</code>.</p>
+            <p>Die Website liest echte Auth- und CaiLama-DB-Zugänge nur aus der ignorierten <code>config.local.php</code>.</p>
+          </article>
+          <article class="card">
+            <h3>DB-Import</h3>
+            <p>Grosse Dumps werden per SFTP in einen nicht öffentlichen Webspace-Ordner gelegt; die API verarbeitet nur die konfigurierte Datei und löscht sie nach Erfolg.</p>
+          </article>
+          <article class="card">
+            <h3>Private API-Konfig</h3>
+            <p>DB-Zugänge und Token-Hashes liegen ausserhalb des Public-Webroots; Status, Append, Reset und Schema-Setup nutzen getrennte Keys/Scopes.</p>
           </article>
         </div>
       </div>
@@ -85,9 +93,9 @@ bash scripts/check-ecosystem.sh</code></pre>
         <div class="section-head">
           <h2>Googlebot.</h2>
           <p>
-            Die oeffentliche Website liefert eine kanonische Sitemap aus und
+            Die öffentliche Website liefert eine kanonische Sitemap aus und
             verweist darauf in <code>robots.txt</code>. Login-, Konto- und
-            API-Pfade sind nicht fuer die Suchindexierung vorgesehen.
+            API-Pfade sind nicht für die Suchindexierung vorgesehen.
           </p>
         </div>
         <pre><code>https://cailama.org/robots.txt
@@ -115,7 +123,7 @@ git diff --check</code></pre>
       <div class="section-inner">
         <div class="section-head">
           <h2>Master-Dokumentation.</h2>
-          <p>Die Markdown- und JSON-Doku bleibt die Quellwahrheit fuer Regeln und LLM-Kontext; die Website ist die lesbare Ausgabe.</p>
+          <p>Die Markdown- und JSON-Doku bleibt die Quellwahrheit für Regeln und LLM-Kontext; die Website ist die lesbare Ausgabe.</p>
         </div>
         <div class="grid-3">
           <article class="doc-card">
@@ -128,7 +136,7 @@ git diff --check</code></pre>
           </article>
           <article class="doc-card">
             <h3>docs/quality.md</h3>
-            <p>Index-Regeln, Statusdateien, TODO-Konsistenz und Inhaltspruefung.</p>
+            <p>Index-Regeln, Statusdateien, TODO-Konsistenz und Inhaltsprüfung.</p>
           </article>
           <article class="doc-card">
             <h3>docs/local-setup.md</h3>
@@ -144,11 +152,11 @@ git diff --check</code></pre>
           </article>
           <article class="doc-card">
             <h3>skills/kimi-cli-cailama-ecosystem</h3>
-            <p>Kimi-CLI-Skill fuer Website- und Online-Doku-Kontext ohne Secret- oder Live-Zugriff.</p>
+            <p>Kimi-CLI-Skill für Website- und Online-Doku-Kontext ohne Secret- oder Live-Zugriff; lokal für Kimi verfügbar und gegen die Master-Quelle abgeglichen.</p>
           </article>
           <article class="doc-card">
             <h3>docs/ecosystem-reference.md</h3>
-            <p>LLM-freundliche Gesamtreferenz fuer alle Repositories, Schnittstellen und Regeln.</p>
+            <p>LLM-freundliche Gesamtreferenz für alle Repositories, Schnittstellen und Regeln.</p>
           </article>
           <article class="doc-card">
             <h3>docs/data/ecosystem.json</h3>

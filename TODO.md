@@ -25,19 +25,43 @@ Vor Arbeitsbeginn lesen:
   Deployment- und Check-Dokumentation. Indexierungsanstoß erfolgt ueber
   Sitemap-Verweis in `robots.txt`; Search-Console-Einreichung bleibt ein
   manueller Schritt mit verifizierter Property.
-- [ ] CaiLama-DB-Hybrid koordinieren: native MariaDB/MySQL, fachliche Webspace-
+- [x] CaiLama-DB-Hybrid koordinieren: native MariaDB/MySQL, fachliche Webspace-
   API und Hybridbetrieb in Master-Doku/Website nachziehen, sobald die
   Umsetzung in `TotoBa/CaiLama` beginnt. Master-Seite: Login-/Session-Shell,
   getrennte `auth`-/`cailama`-PDO-Konfiguration und Schema-Vorlagen sind
   vorbereitet; echte Provider-Credentials bleiben in ignorierter
-  `web/api_app/config.local.php`.
+  privater Webspace-Konfiguration ausserhalb von `/public`. `TotoBa/CaiLama`
+  konfiguriert jetzt
+  `database.access_mode = native|api|hybrid`, API-Metadaten ohne Secrets und
+  einen begrenzten DB-API-Statusclient per geschuetztem `POST /api/v1/status`.
+  Die Webspace-API stellt jetzt no-query/no-body-Import-Endpunkte fuer
+  serverseitig hochgeladene `.sql`-/`.sql.gz`-Dumps bereit; fehlende
+  Importdateien werden abgelehnt und erfolgreich verarbeitete Dateien
+  geloescht. Provider-Schemas werden ueber admin-geschuetzte PHP-Endpunkte im
+  Webspace gesetzt, weil die Provider-DBs nur von dort bearbeitet werden
+  sollen. Private Webspace-Konfig und API-Keys liegen ausserhalb des
+  Public-Webroots; lokale DB-Schemas sind angelegt. Offen bleibt die
+  Live-Verifikation beider Provider-DB-Verbindungen nach Private-Config-Deploy
+  und Schema-Setup.
+- [ ] Webspace-DB-API live-testfaehig fertigstellen: private Provider-Konfig
+  deployen, Provider-Schemas ueber `POST /api/v1/admin/schema/auth` und
+  `POST /api/v1/admin/schema/cailama` setzen, `POST /api/v1/status` nur mit
+  Bearer-Key pruefen, no-key/no-body/no-file-Import-Smokes dokumentieren und
+  danach die minimalen fachlichen CaiLama-Read-/Write-Endpunkte als naechsten
+  Kimi-Schritt schneiden. Keine grossen Daten ueber API-Body; Bulk-Import
+  bleibt SFTP in den privaten Webspace-Root plus geschuetzter Import-Endpunkt.
+  Live-Stand 2026-05-22: API-Code und private Konfig sind deployed,
+  `pdo_mysql` ist verfuegbar, Login-DB meldet `auth_failed`; das IONOS-
+  Passwort muss sicher per privater Passwortdatei nachgezogen werden, bevor
+  Provider-Schema-Setup erfolgreich sein kann.
 - [ ] CaiLama-Search-Vertrag weiter pruefen: `POST /v1/search`,
   kompatibles `GET /v1/search`, `POST /v1/context`, `items`/`results`,
   `context`/`sources` und DWZ-Endpunkte in Doku und Website synchron halten.
 - [ ] Kimi-CLI-Ecosystem-Skill nach erstem realen Kimi-Lauf pruefen:
   `skills/kimi-cli-cailama-ecosystem/SKILL.md` bei Bedarf schaerfen, ohne
   lokale Secrets oder Runtime-Pfade aufzunehmen. Der Skill ist lokal in den
-  Kimi-Skills-Ordner deployt; die versionierte Quelle bleibt der Master-Stand.
+  Kimi-Skills-Ordner deployt und am 2026-05-22 gegen die versionierte Quelle
+  abgeglichen; die versionierte Quelle bleibt der Master-Stand.
 - [ ] Runtime-Aktualisierung nach groesseren Unterrepo-Releases pruefen:
   `scripts/update-runtime-projects.sh` fuer Router/Search/CaiLama nutzen und
   dokumentieren, ob Dienste aus Runtime-Ordnern gestartet wurden.
@@ -46,8 +70,8 @@ Vor Arbeitsbeginn lesen:
   RAG-Provenienz; Router = aktuell keine aktive Folgearbeit ohne neuen
   Nutzerauftrag; Search = aktueller Ausbau-Fokus mit Goldset-E2E-Smoke,
   Job-Orchestrierung, API-Qualitaet und semantischem Retrieval nach erledigter
-  Crawler-Quellenpolitik, Observability-Grundlage, synthetischen Goldsets und
-  localhost-geschuetztem Testindex-Seeding.
+  Crawler-Quellenpolitik, Observability-Grundlage, synthetischen Goldsets,
+  localhost-geschuetztem Testindex-Seeding und automatisiertem Smoke-Befehl.
 
 ## Kimi-Handoff
 
@@ -62,8 +86,10 @@ Website oder LLM-Doku betrifft, lies zusaetzlich docs/website.md,
 docs/ecosystem-reference.md, docs/data/ecosystem.json und die betroffenen
 Dateien unter web/.
 
-Arbeite danach ausschliesslich den ersten offenen Punkt in TODO.md ab. Keine
-Secrets, lokalen Pfade oder produktiven Zugangsdaten aufnehmen. Keine
+Arbeite danach die offenen Punkte in TODO.md von oben nach unten ab. Pro
+Schritt nur eine kleine, nachvollziehbare Aufgabe bearbeiten: Kontext lesen,
+umsetzen, gezielt pruefen, TODO/Doku aktualisieren, dann committen und pushen.
+Keine Secrets, lokalen Pfade oder produktiven Zugangsdaten aufnehmen. Keine
 Unterrepo-Dateien im Master committen. Erledigte TODO-Punkte nicht loeschen,
 ausser der Nutzer fordert diese Bereinigung ausdruecklich an. TODO ist nicht
 gleich Handoff.
@@ -74,8 +100,8 @@ Nach jeder Aenderung:
 3. git check-ignore -v CaiLama CaiLama-LLM-Router CaiLama-Search ausfuehren.
 4. bash scripts/check-ecosystem.sh ausfuehren.
 5. git status --short ausfuehren.
-6. Commit und Push im Master-Repository ausfuehren, wenn der Nutzer das
-   verlangt.
+6. Commit und Push im Master-Repository ausfuehren, bevor der naechste TODO-
+   Schritt begonnen wird.
 ```
 
 ## Master-Arbeitsregeln

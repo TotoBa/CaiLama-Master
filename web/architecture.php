@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Architektur, Datenfluesse und Schnittstellen des CaiLama-Oekosystems.">
+  <meta name="description" content="Architektur, Datenflüsse und Schnittstellen des CaiLama-Ökosystems.">
   <title>CaiLama - Architektur</title>
   <link rel="canonical" href="https://cailama.org/architecture.php">
   <link rel="stylesheet" href="assets/styles.css">
@@ -31,10 +31,10 @@
     <section class="page-hero">
       <div class="page-hero-inner">
         <p class="eyebrow">Systemkarte</p>
-        <h1>Klare Grenzen, klare Fluesse.</h1>
+        <h1>Klare Grenzen, klare Flüsse.</h1>
         <p class="page-lead">
           CaiLama bleibt Produktkern. Router und Search bleiben getrennte
-          Dienste. Der Master dokumentiert und prueft, koppelt aber keine
+          Dienste. Der Master dokumentiert und prüft, koppelt aber keine
           Runtime-Komponenten.
         </p>
       </div>
@@ -44,7 +44,7 @@
       <div class="section-inner">
         <div class="section-head">
           <h2>Hauptfluss.</h2>
-          <p>Die Richtung ist bewusst einfach: CaiLama konsumiert Router und Search. Beide Dienste bleiben eigenstaendig deploybar.</p>
+          <p>Die Richtung ist bewusst einfach: CaiLama konsumiert Router und Search. Beide Dienste bleiben eigenständig deploybar.</p>
         </div>
         <div class="diagram">
           <div class="flow">
@@ -70,8 +70,8 @@
     <section class="band">
       <div class="section-inner">
         <div class="section-head">
-          <h2>Vertraege.</h2>
-          <p>Die wichtigsten Schnittstellen sind stabil genug, um die naechsten Integrationen zu planen.</p>
+          <h2>Verträge.</h2>
+          <p>Die wichtigsten Schnittstellen sind stabil genug, um die nächsten Integrationen zu planen.</p>
         </div>
         <div class="table-wrap">
           <table>
@@ -95,8 +95,8 @@
               </tr>
               <tr>
                 <td>CaiLama → Webspace-DB-API</td>
-                <td><code>/api/v1/status</code> vorbereitet; fachliche DB-Endpunkte folgen.</td>
-                <td>Konfiguration waehlt native, API oder hybrid. Keine SQL-over-HTTP-API und keine Secrets im Master.</td>
+                <td><code>POST /api/v1/status</code>, <code>POST /api/v1/imports/cailama/append</code>, <code>POST /api/v1/imports/cailama/reset</code>, <code>POST /api/v1/admin/schema/*</code></td>
+                <td>Status, Import und Schema-Setup nur mit Bearer-Key, ohne Query oder Body. Fehlende Dump-Datei wird abgelehnt, erfolgreiche Importe löschen die Datei.</td>
               </tr>
               <tr>
                 <td>Master → alle</td>
@@ -122,7 +122,7 @@
           </article>
           <article class="step">
             <strong>2. Analyse</strong>
-            <p>Stockfish, Heuristiksignale, Fehlerklassen und Schwaechenprofil.</p>
+            <p>Stockfish, Heuristiksignale, Fehlerklassen und Schwächenprofil.</p>
           </article>
           <article class="step">
             <strong>3. Training</strong>
@@ -130,7 +130,7 @@
           </article>
           <article class="step">
             <strong>4. Feedback</strong>
-            <p>Review-Resultate in Prioritaet, Schwierigkeit und Wiederholung zurueckfuehren.</p>
+            <p>Review-Resultate in Priorität, Schwierigkeit und Wiederholung zurückführen.</p>
           </article>
         </div>
       </div>
@@ -148,7 +148,7 @@
           </article>
           <article class="card">
             <h3>HTTP/API-Kopplung</h3>
-            <p>Dienste werden ueber klare Endpunkte verbunden, nicht hart ineinander verwoben.</p>
+            <p>Dienste werden über klare Endpunkte verbunden, nicht hart ineinander verwoben.</p>
           </article>
           <article class="card">
             <h3>Konfiguration getrennt</h3>

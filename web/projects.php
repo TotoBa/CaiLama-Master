@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Detailuebersicht der CaiLama-Repositories und ihrer aktuellen Aufgaben.">
+  <meta name="description" content="Detailübersicht der CaiLama-Repositories und ihrer aktuellen Aufgaben.">
   <title>CaiLama - Projekte</title>
   <link rel="canonical" href="https://cailama.org/projects.php">
   <link rel="stylesheet" href="assets/styles.css">
@@ -44,7 +44,7 @@
         <div class="section-head">
           <h2>CaiLama</h2>
           <p>
-            Das Hauptsystem ist der reifste Teil des Oekosystems. Es verbindet
+            Das Hauptsystem ist der reifste Teil des Ökosystems. Es verbindet
             PGN-I/O, statische Brettwahrheit, Stockfish-Pipeline,
             Spielerprofile, Plattformimporte, Training, Agent-CLI und
             DGT-nahe Workflows.
@@ -62,12 +62,12 @@
           <article class="card">
             <span class="tag copper">Laufend</span>
             <h3>PTG und DB-Hybrid</h3>
-            <p>PTG Phase 2 verbindet Queue und optional classify/analyze vor der Kartengenerierung; DB-Zugriff soll zwischen nativ, API und hybrid waehlbar werden.</p>
+            <p>PTG Phase 2 verbindet Queue und optional classify/analyze vor der Kartengenerierung; DB-Zugriff soll zwischen nativ, API und hybrid wählbar werden.</p>
           </article>
           <article class="card">
             <span class="tag blue">Integration</span>
             <h3>SearchAdapter</h3>
-            <p>Interne Suche, Kontext, RAG und DWZ laufen zuerst ueber CaiLama-Search; Browser-Websuche bleibt Fallback.</p>
+            <p>Interne Suche, Kontext, RAG und DWZ laufen zuerst über CaiLama-Search; Browser-Websuche bleibt Fallback.</p>
           </article>
           <article class="card">
             <span class="tag red">Datenschutz</span>
@@ -84,8 +84,8 @@
           <h2>CaiLama-LLM-Router</h2>
           <p>
             Der Router kapselt lokale und entfernte Modellbackends hinter
-            OpenAI-kompatiblen Endpunkten. Er entscheidet nicht ueber
-            Schachfachlogik, sondern ueber Modellzugriff, Aliase, Fallbacks
+            OpenAI-kompatiblen Endpunkten. Er entscheidet nicht über
+            Schachfachlogik, sondern über Modellzugriff, Aliase, Fallbacks
             und Betriebsverhalten.
           </p>
           <div class="button-row">
@@ -105,13 +105,13 @@
           </article>
           <article class="card">
             <span class="tag red">Fallback</span>
-            <h3>Folgehaertung</h3>
+            <h3>Folgehärtung</h3>
             <p>Streaming-Fehler, Config-Hot-Reload, backend-spezifische Modellnamen und <code>mypy src</code> sind umgesetzt und getestet; neue Router-Arbeit startet nur mit neuem Auftrag.</p>
           </article>
           <article class="card">
             <span class="tag blue">Logging</span>
             <h3>Privacy-safe</h3>
-            <p>JSONL-Diagnostik soll Latenzen und Backend-Zustaende erfassen, aber keine Prompt-/Response-Inhalte loggen.</p>
+            <p>JSONL-Diagnostik soll Latenzen und Backend-Zustände erfassen, aber keine Prompt-/Response-Inhalte loggen.</p>
           </article>
         </div>
       </div>
@@ -124,7 +124,7 @@
           <p>
             CaiLama-Search ist der Such-, DWZ- und RAG-Dienst. Er stellt eine
             kontrollierte Alternative zu allgemeinem Webscraping bereit und
-            wird zum Wissenskontext fuer Analyse- und Research-Rollen.
+            wird zum Wissenskontext für Analyse- und Research-Rollen.
           </p>
           <div class="button-row">
             <a class="button light" href="https://github.com/TotoBa/CaiLama-Search">Repository</a>
@@ -139,12 +139,12 @@
           <article class="card">
             <span class="tag blue">Kontext</span>
             <h3>RAG-Vertrag</h3>
-            <p><code>/v1/search</code> liefert normalisierte Items; <code>/v1/context</code> liefert Kontextbloecke plus kompatible Quellen.</p>
+            <p><code>/v1/search</code> liefert normalisierte Items; <code>/v1/context</code> liefert Kontextblöcke plus kompatible Quellen.</p>
           </article>
           <article class="card">
             <span class="tag">DWZ</span>
             <h3>Download-basierter Import</h3>
-            <p>Der DWZ-Pfad setzt auf oeffentliche Downloads und Cache-Strategie, nicht auf deaktivierte tokenisierte Schnittstellen.</p>
+            <p>Der DWZ-Pfad setzt auf öffentliche Downloads und Cache-Strategie, nicht auf deaktivierte tokenisierte Schnittstellen.</p>
           </article>
           <article class="card">
             <span class="tag copper">Ausbau</span>
@@ -161,7 +161,7 @@
           <h2>CaiLama-Master</h2>
           <p>
             Der Master ist Koordination, Webseite und Status. Er bleibt leicht,
-            ignoriert die Unter-Repos und enthaelt keine Runtime-Logik.
+            ignoriert die Unter-Repos und enthält keine Runtime-Logik.
           </p>
           <div class="button-row">
             <a class="button light" href="https://github.com/TotoBa/CaiLama-Master">Repository</a>
@@ -174,9 +174,9 @@
             <p>Die Website ist die lesbare Master-Doku: Projektstand, Architektur, Roadmap und Betrieb.</p>
           </article>
           <article class="card">
-            <span class="tag">Pruefung</span>
+            <span class="tag">Prüfung</span>
             <h3>Checkskript</h3>
-            <p><code>scripts/check-ecosystem.sh</code> prueft Unter-Repos, Ignore-Regeln, Pflichtdateien und Web-Deployment.</p>
+            <p><code>scripts/check-ecosystem.sh</code> prüft Unter-Repos, Ignore-Regeln, Pflichtdateien und Web-Deployment.</p>
           </article>
         </div>
       </div>

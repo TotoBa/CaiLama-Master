@@ -14,6 +14,11 @@ final class Router
         $this->routes['GET'][$path] = [$controller, $method];
     }
 
+    public function post(string $path, string $controller, string $method): void
+    {
+        $this->routes['POST'][$path] = [$controller, $method];
+    }
+
     public function dispatch(Request $request, array $config): Response
     {
         $route = $this->routes[$request->method][$request->path] ?? null;

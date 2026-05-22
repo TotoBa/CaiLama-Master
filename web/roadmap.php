@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Roadmap und naechste Integrationsschritte fuer das CaiLama-Oekosystem.">
+  <meta name="description" content="Roadmap und nächste Integrationsschritte für das CaiLama-Ökosystem.">
   <title>CaiLama - Roadmap</title>
   <link rel="canonical" href="https://cailama.org/roadmap.php">
   <link rel="stylesheet" href="assets/styles.css">
@@ -31,11 +31,12 @@
     <section class="page-hero">
       <div class="page-hero-inner">
         <p class="eyebrow">Priorisierung</p>
-        <h1>Erst haerten, dann personalisieren.</h1>
+        <h1>Erst härten, dann personalisieren.</h1>
         <p class="page-lead">
           Die Roadmap folgt dem Statusplan: DB-Zugriff und Search-Vertrag
-          sauber schneiden, CaiLama daran anbinden, personalisiertes Training
-          schliessen und danach RAG, Jobs und Observability ausbauen.
+          sind im Grundschnitt angebunden, CaiLama wird daran weiter gehärtet,
+          personalisiertes Training wird geschlossen und danach RAG, Jobs und
+          Observability ausgebaut.
         </p>
       </div>
     </section>
@@ -45,14 +46,14 @@
         <div class="timeline">
           <article class="step">
             <strong>Jetzt</strong>
-            <p>DB-Hybrid, Search/DWZ/RAG-Standardpfad und Search-Ausbau; Router bleibt ohne neuen Auftrag pausiert.</p>
+            <p>DB-Hybrid ist konfigurierbar, Search/DWZ/RAG ist Standardpfad und Search-Ausbau läuft weiter; Router bleibt ohne neuen Auftrag pausiert.</p>
           </article>
           <article class="step">
             <strong>Danach</strong>
             <p>PTG Phase 2, DWZ-Identity-Linking, Search- und PTG-Observability.</p>
           </article>
           <article class="step">
-            <strong>Spaeter</strong>
+            <strong>Später</strong>
             <p>RAG-Analysepakete, einheitliche Job-Orchestrierung.</p>
           </article>
           <article class="step">
@@ -67,17 +68,23 @@
       <div class="section-inner">
         <div class="section-head">
           <h2>Jetzt.</h2>
-          <p>Die naechsten Schritte liegen bei DB-Hybrid, Provenienz und Search-Qualitaet.</p>
+          <p>Die nächsten Schritte liegen bei DB-Hybrid, Provenienz und Search-Qualität.</p>
         </div>
         <div class="grid-2">
           <article class="card">
             <span class="tag red">CaiLama</span>
             <h3>DB-Hybrid</h3>
             <ul class="rich-list">
-              <li>Konfigurationsmodus fuer <code>native</code>, <code>api</code> und <code>hybrid</code> definieren.</li>
+              <li><code>database.access_mode</code> für <code>native</code>, <code>api</code> und <code>hybrid</code> ist definiert.</li>
               <li>Lokale MariaDB/MySQL als Aufbau- und Backup-Pfad erhalten.</li>
-              <li>Provider-Datenbank ueber fachliche Webspace-API anbinden.</li>
-              <li>Keine generische SQL-over-HTTP-API einfuehren.</li>
+              <li>Fachlicher DB-API-Statusclient nutzt geschütztes <code>POST /api/v1/status</code> ohne SQL-over-HTTP oder Secret-Ausgabe.</li>
+              <li>Webspace-API verarbeitet serverseitig hochgeladene <code>.sql</code>/<code>.sql.gz</code>-Dumps über no-query/no-body-Import-Endpunkte.</li>
+              <li>Fehlende Importdateien werden abgelehnt; erfolgreiche Importe löschen die Dump-Datei.</li>
+              <li>Private Webspace-Konfig liegt ausserhalb des Public-Webroots; Status, Append, Reset und Admin-Schema-Setup haben getrennte Keys.</li>
+              <li>Provider-Schemas werden über geschützte PHP-Endpunkte im Webspace gesetzt, nicht über direkten lokalen Provider-DB-Zugriff.</li>
+              <li>Live-Verifikation wartet auf das korrekt privat nachgezogene IONOS-Passwort; <code>pdo_mysql</code> ist auf dem Webspace verfügbar.</li>
+              <li>Keine generische SQL-over-HTTP-API einführen.</li>
+              <li>Fachliche Read-/Write-Endpunkte und Hybrid-Sync bleiben Folgearbeit.</li>
             </ul>
           </article>
           <article class="card">
@@ -95,8 +102,8 @@
             <h3>Pausiert</h3>
             <ul class="rich-list">
               <li>Keine neue Router-Arbeit ohne neuen Nutzerauftrag starten.</li>
-              <li>Streaming-Fehlerbehandlung fuer <code>stream: true</code> ist getestet.</li>
-              <li>Config-Hot-Reload ist optional verfuegbar.</li>
+              <li>Streaming-Fehlerbehandlung für <code>stream: true</code> ist getestet.</li>
+              <li>Config-Hot-Reload ist optional verfügbar.</li>
               <li>Backend-spezifisches Modell-Mapping per Alias ist abgesichert.</li>
               <li><code>mypy src</code> ist bereinigt.</li>
             </ul>
@@ -107,9 +114,10 @@
             <ul class="rich-list">
               <li>Crawler-Whitelists, Robots-Gruppen und Source-Policy sind getestet.</li>
               <li>Quellen-CRUD, Robots-Validierung und Reindex-Tracking sind abgesichert.</li>
-              <li>Synthetische Goldsets fuer Suche, DWZ und RAG-Kontext sind vorbereitet.</li>
-              <li>Goldset-Testindex-Seeding ist localhost-geschuetzt vorbereitet.</li>
-              <li>Goldset-E2E-Smoke, API-Qualitaet, Job-Orchestrierung und semantisches Retrieval gezielt vorbereiten.</li>
+              <li>Synthetische Goldsets für Suche, DWZ und RAG-Kontext sind vorbereitet.</li>
+              <li>Goldset-Testindex-Seeding ist localhost-geschützt vorbereitet.</li>
+              <li><code>goldsets smoke</code> automatisiert Test-Meili, synthetisches Seeding, API-Start ohne Scheduler und Goldset-Run.</li>
+              <li>API-Qualität, Job-Orchestrierung und semantisches Retrieval gezielt vorbereiten.</li>
             </ul>
           </article>
         </div>
@@ -125,22 +133,22 @@
         <div class="grid-2">
           <article class="card">
             <span class="tag copper">CaiLama</span>
-            <h3>PTG Phase 2 und Folgehaertung</h3>
+            <h3>PTG Phase 2 und Folgehärtung</h3>
             <ul class="rich-list">
-              <li>Importierte Partien in Feature-Signale ueberfuehren.</li>
+              <li>Importierte Partien in Feature-Signale überführen.</li>
               <li>Classify/analyze-Stufen live gegen den Router verifizieren.</li>
-              <li>Schwaechenprofil und Kartenqueue nachvollziehbar ableiten.</li>
-              <li>Review-Ergebnisse in Schwierigkeit, Prioritaet und Wiederholung zurueckfuehren.</li>
-              <li>Datenschutz fuer Leistungsprofile klaeren.</li>
+              <li>Schwächenprofil und Kartenqueue nachvollziehbar ableiten.</li>
+              <li>Review-Ergebnisse in Schwierigkeit, Priorität und Wiederholung zurückführen.</li>
+              <li>Datenschutz für Leistungsprofile klären.</li>
             </ul>
           </article>
           <article class="card">
             <span class="tag blue">CaiLama + Search</span>
             <h3>DWZ-Identity-Linking</h3>
             <ul class="rich-list">
-              <li>Plattformprofile mit DWZ-Treffern verknuepfen.</li>
-              <li>Mehrdeutige Treffer manuell bestaetigen lassen.</li>
-              <li>Vereins-, Verbands- und Rating-Kontext fuer Training nutzen.</li>
+              <li>Plattformprofile mit DWZ-Treffern verknüpfen.</li>
+              <li>Mehrdeutige Treffer manuell bestätigen lassen.</li>
+              <li>Vereins-, Verbands- und Rating-Kontext für Training nutzen.</li>
               <li>PII-Minimierung und Export-/Retention-Regeln dokumentieren.</li>
             </ul>
           </article>
@@ -151,13 +159,13 @@
     <section class="band">
       <div class="section-inner">
         <div class="section-head">
-          <h2>Spaeter und Ausbau.</h2>
+          <h2>Später und Ausbau.</h2>
           <p>Breitere Plattformfeatures kommen, wenn DB-Hybrid, SearchAdapter und PTG stabil sind.</p>
         </div>
         <div class="grid-3">
           <article class="card">
             <h3>RAG-Analysepakete</h3>
-            <p>Researcher/Analyst-Rollen mit Search-Kontext fuer Dossiers, Gegnerprofile und evidenzbasierte Berichte.</p>
+            <p>Researcher/Analyst-Rollen mit Search-Kontext für Dossiers, Gegnerprofile und evidenzbasierte Berichte.</p>
           </article>
           <article class="card">
             <h3>Unified Job Layer</h3>
@@ -165,11 +173,11 @@
           </article>
           <article class="card">
             <h3>Observability</h3>
-            <p>Privacy-safe KPIs fuer Router, Search und Training, ohne Prompt-/Response- oder Secret-Inhalte.</p>
+            <p>Privacy-safe KPIs für Router, Search und Training, ohne Prompt-/Response- oder Secret-Inhalte.</p>
           </article>
           <article class="card">
             <h3>Semantisches Retrieval</h3>
-            <p>Embedding/Reranking nur mit Eval-Datensatz und Fallback ueber bestehendem Meili-Lexikalindex.</p>
+            <p>Embedding/Reranking nur mit Eval-Datensatz und Fallback über bestehendem Meili-Lexikalindex.</p>
           </article>
           <article class="card">
             <h3>Quellenpolitik</h3>
@@ -187,7 +195,7 @@
   <footer class="footer">
     <div class="section-inner">
       <span>CaiLama-Roadmap</span>
-      <a href="operations.php">Betrieb und Qualitaet</a>
+      <a href="operations.php">Betrieb und Qualität</a>
     </div>
   </footer>
 </body>

@@ -37,6 +37,7 @@ web/robots.txt                # Crawler-Regeln mit Sitemap-Verweis
 web/sitemap.xml               # Canonical XML-Sitemap fuer Suchmaschinen
 web/api/public/index.php      # vorbereiteter API-Frontcontroller
 web/api_app/                  # interne API-Skelettstruktur ohne Secrets
+web/api_app/Controllers/      # Status-, Import- und Admin-Schema-Controller
 web/api_app/config.local.sample.php
 web/assets/styles.css          # Gemeinsames Styling
 web/llms.txt                   # LLM-Einstiegspunkt
@@ -210,37 +211,102 @@ URL-Pruefung: https://cailama.org/
 
 Die DB-API ist als kleine PHP-Fassade vorbereitet. Sie ist kein generischer
 SQL-Proxy und enthaelt keine produktiven Datenbankzugangsdaten. Der aktuelle
-Stand stellt Struktur, neutralen Status, Login-/Session-Shell und zwei getrennte
-PDO-Konfigurationen bereit:
+Stand stellt geschuetzten Status, Login-/Session-Shell, zwei getrennte
+PDO-Konfigurationen, kontrollierte CaiLama-Import-Endpunkte und geschuetzte
+Schema-Setup-Endpunkte fuer den Provider bereit:
 
 ```text
-/api/v1/status
+POST /api/v1/status
+POST /api/v1/imports/cailama/append
+POST /api/v1/imports/cailama/reset
+POST /api/v1/admin/schema/auth
+POST /api/v1/admin/schema/cailama
+POST /api/v1/admin/schema/all
 /login.php
 /account.php
 ```
 
+Status-, Import- und Schema-Endpunkte nehmen weder Query-Parameter noch
+Nutzdaten im Request-Body an. Gesendet wird nur ein Bearer-Key mit passendem
+Scope: `status:read` fuer Status, `db_import:write` fuer Append-Import,
+`db_import:reset` fuer Reset-Import oder `admin` fuer Schema-Setup und
+Admin-Aktionen. Ohne gueltigen Key liefert die API keine API-, DB-, Schema-
+oder Importdetails. Der Import-Modus wird ueber den Pfad gewaehlt: `append`
+fuegt erlaubte Insert-Daten in die bestehende CaiLama-Datenbank ein; `reset`
+ist nur aktiv, wenn `allow_reset` in der lokalen Konfiguration bewusst gesetzt
+wurde.
+
+Grosse Uebertragungen laufen nicht ueber HTTP-Request-Body. Der Dump wird per
+SFTP in einen nicht oeffentlich erreichbaren Webspace-Ordner gelegt. Die API
+verarbeitet nur den in `config.local.php` fest konfigurierten Dateinamen,
+standardmaessig eine `.sql`- oder `.sql.gz`-Datei. Wenn keine Datei vorhanden
+ist, wird der Import mit `no_import_file` abgelehnt. Nach erfolgreichem Import
+wird die Datei geloescht; ein fehlgeschlagener Cleanup wird als eigener Fehler
+gemeldet, damit keine Importdatei versehentlich liegen bleibt.
+
 Die versionierte `web/api_app/config.php` enthaelt sichere Defaults. Die echte
-Provider-Konfiguration gehoert in `web/api_app/config.local.php` und bleibt
-gitignoriert. Als Vorlage dient:
+Provider-Konfiguration gehoert nicht in den oeffentlichen Document Root. Auf
+dem Webspace liegt `/public` im oeffentlichen Bereich; private Konfiguration
+und Import-Drop liegen als Sibling-Ordner im Webspace-Root. Die API sucht aus
+`/public/api_app/` zuerst diese private Konfig:
 
 ```text
-web/api_app/config.local.sample.php
+../../cailama-private/api/config.local.php
 ```
+
+Nur als lokale Legacy-/Fallback-Variante wird noch
+`web/api_app/config.local.php` unterstuetzt; diese Datei bleibt gitignoriert und
+wird beim Private-Deploy aus dem Public-Webspace entfernt. Als secretfreie
+Vorlage dient `web/api_app/config.local.sample.php`.
+
+Das wiederholbare Setup laeuft ueber:
+
+```bash
+scripts/generate-web-api-keys.sh
+scripts/setup-webspace-db-api.sh --source <private-db-config> --all --allow-reset
+scripts/setup-webspace-db-api.sh --set-provider-login-password-file <private-password-file> --write-configs --deploy-private
+```
+
+Nach dem ersten Normalisierungslauf kann das Setup ohne `--source` wiederholt
+werden; dann nutzt es die private `databases.ini`. Der Setup-Pfad erzeugt
+lokale private Dateien mit restriktiven Rechten unter
+`~/.config/cailama`, schreibt die PHP-Konfig fuer den Webspace, legt
+MySQL-Defaults fuer lokale Setup-Skripte an und laedt die private PHP-Konfig
+per SFTP in einen nicht oeffentlichen Webspace-Ordner. Lokale Schemas werden
+mit dem lokalen MySQL-Client angelegt. Provider-Schemas werden bewusst nicht
+von lokalem MySQL aus angefasst, sondern ueber die geschuetzten PHP-Endpunkte
+im Webspace gesetzt, weil die Provider-DB nur vom Webspace aus erreichbar sein
+soll.
 
 Die Konfiguration trennt:
 
-- `databases.auth`: Provider-Datenbank fuer Website-Login und Sessions.
-- `databases.cailama`: separate CaiLama-Datenbank fuer spaetere Fachlogik.
+- `databases.auth`: Provider-Datenbank fuer Website-Login und Sessions
+  (`Login`, 2 GB beim Provider).
+- `databases.cailama`: separate CaiLama-Datenbank fuer Fachdaten und
+  Dump-Importe (2 GB beim Provider).
 
 Der Login nutzt PHP-Sessions mit `HttpOnly`, `SameSite=Lax`, HTTPS-abhaengigem
 Secure-Cookie, CSRF-Token, einfachem Session-basiertem Versuchslimit und
 `password_verify()` gegen Passwort-Hashes aus der Auth-Datenbank. Die
 SQL-Vorlagen liegen unter `web/api_app/schema/`.
 
-API-Key-Pruefung, Scopes, Rate-Limits und fachliche Read-/Write-Endpunkte
-werden erst mit lokaler Hosting-Konfiguration und separater Secret-Datei
-verdrahtet. Keine produktiven Keys, DB-Passwoerter oder Hoster-Zugangsdaten
-werden in `web/`, `docs/` oder Beispiele geschrieben.
+API-Key-Pruefung und Scopes sind als Hash-basierte Bearer-Token-Pruefung
+verdrahtet. Es gibt getrennte Keys fuer Status, Append-Import, Reset-Import und
+Admin. Auf dem Server liegen nur Hashes; die Klartext-Keys bleiben in privaten
+lokalen Client-Konfigdateien. Es gibt keinen oeffentlichen GET-Status mit
+DB-Information. Fachliche Read-/Write-Endpunkte jenseits Status und Dump-Import
+bleiben Folgearbeit. Keine produktiven Keys, DB-Passwoerter oder
+Hoster-Zugangsdaten werden in `web/`, `docs/` oder Beispiele geschrieben.
+
+Aktueller Betriebsstatus am 2026-05-22: lokale Login- und CaiLama-Schemas sind
+angelegt. Provider-Schemaanlage und Provider-Verbindungschecks laufen ueber
+die Webspace-API. Der IONOS-Login-DB-Eintrag wird ausschliesslich in der
+privaten lokalen Konfig und der privaten Webspace-Konfig korrigiert; echte
+Host-, User- oder Passwortwerte werden nicht in Doku oder Repo geschrieben.
+Live ist `pdo_mysql` verfuegbar, aber die Login-DB meldet noch
+`auth_failed`; das fehlende oder abweichende IONOS-Passwort wird ueber eine
+private Passwortdatei in die lokale Privatkonfig uebernommen und danach erneut
+in den privaten Webspace deployed.
 
 Der Umsetzungsplan liegt unter `docs/db-api.plan.md`.
 

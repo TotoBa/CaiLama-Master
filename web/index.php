@@ -40,7 +40,7 @@
           <h1>CaiLama</h1>
           <p class="lead">
             CaiLama ist ein praxistaugliches Schachanalyse-, Trainings- und
-            Automatisierungs-Oekosystem. Es verbindet PGNs, Stockfish,
+            Automatisierungs-Ökosystem. Es verbindet PGNs, Stockfish,
             LLM-Kommentierung, DGT-Board-Training, Wissenssuche,
             Spielerprofile und langfristige Trainingsentwicklung.
           </p>
@@ -59,7 +59,7 @@
         <div class="section-head">
           <h2>Aktueller Stand.</h2>
           <p>
-            Das Oekosystem besteht aus einem reifen Kernsystem und zwei
+            Das Ökosystem besteht aus einem reifen Kernsystem und zwei
             spezialisierten Diensten. Der Master haelt Roadmap, Webseite,
             Status und Cross-Repo-Regeln zusammen.
           </p>
@@ -91,7 +91,7 @@
           <h2>Was CaiLama leisten soll.</h2>
           <p>
             Das System soll nicht nur Fragen beantworten, sondern aktiv
-            Analyse- und Trainingsaufgaben ausfuehren.
+            Analyse- und Trainingsaufgaben ausführen.
           </p>
         </div>
         <div class="grid-3">
@@ -118,7 +118,7 @@
             <h3>Search und RAG</h3>
             <p>
               Schachspezifische Quellen, DWZ-Daten, eigene Analysen und
-              Trainingsmaterialien als kontrollierten Kontext fuer Rollen wie
+              Trainingsmaterialien als kontrollierten Kontext für Rollen wie
               Researcher und Analyst bereitstellen.
             </p>
           </article>
@@ -129,10 +129,10 @@
     <section>
       <div class="section-inner">
         <div class="section-head">
-          <h2>Repo-Uebersicht.</h2>
+          <h2>Repo-Übersicht.</h2>
           <p>
             Kein Monorepo: Jedes Repository hat einen eigenen Zweck. Die
-            Kopplung laeuft ueber dokumentierte Schnittstellen.
+            Kopplung läuft über dokumentierte Schnittstellen.
           </p>
         </div>
         <div class="grid-2">
@@ -144,7 +144,7 @@
               <ul>
                 <li>DB-Hybridpfad: native DB, Webspace-API und Backup-Betrieb.</li>
                 <li>PTG-Queue und optionale classify/analyze-Stufen sind angebunden.</li>
-                <li>LLM-Rollen ueber Router-Aliase.</li>
+                <li>LLM-Rollen über Router-Aliase.</li>
               </ul>
             </div>
             <a href="projects.php#cailama">Details</a>
@@ -166,11 +166,11 @@
             <div>
               <span class="tag red">Search</span>
               <h3>CaiLama-Search</h3>
-              <p>FastAPI, Meilisearch, DWZ, Crawler, Quellen, Kontext-API und spaeter semantisches Retrieval.</p>
+              <p>FastAPI, Meilisearch, DWZ, Crawler, Quellen, Kontext-API und später semantisches Retrieval.</p>
               <ul>
                 <li>Explizite Meili-Keys, Admin-Token und lokale Docker-Bindings.</li>
-                <li>Vertrag fuer <code>/v1/search</code>, <code>/v1/context</code>, <code>/v1/dwz/*</code>.</li>
-                <li>Crawler-/Robots-Quellenpolitik ist getestet; Observability ist admin-geschuetzt vorbereitet.</li>
+                <li>Vertrag für <code>/v1/search</code>, <code>/v1/context</code>, <code>/v1/dwz/*</code>.</li>
+                <li>Crawler-/Robots-Quellenpolitik ist getestet; Observability ist admin-geschützt vorbereitet.</li>
               </ul>
             </div>
             <a href="projects.php#search">Details</a>
@@ -196,7 +196,7 @@
     <section class="band">
       <div class="section-inner">
         <div class="section-head">
-          <h2>Naechste Plattformstufe.</h2>
+          <h2>Nächste Plattformstufe.</h2>
           <p>
             Der Fokus liegt auf Integrationsdisziplin: DB-Zugriff sauber
             schneiden, Search als Standardpfad nutzen, Training personalisieren
@@ -210,10 +210,10 @@
           </article>
           <article class="step">
             <strong>Danach</strong>
-            <p>PTG-Live-Verifikation, Job-Orchestrierung und Search-Qualitaetsmessung.</p>
+            <p>PTG-Live-Verifikation, Job-Orchestrierung und Search-Qualitätsmessung.</p>
           </article>
           <article class="step">
-            <strong>Spaeter</strong>
+            <strong>Später</strong>
             <p>RAG-Analysepakete und einheitliche Job-Orchestrierung.</p>
           </article>
           <article class="step">
@@ -229,7 +229,7 @@
         <div class="section-head">
           <h2>Human und LLM-freundlich.</h2>
           <p>
-            Die Master-Doku dokumentiert das gesamte Oekosystem. Menschen lesen
+            Die Master-Doku dokumentiert das gesamte Ökosystem. Menschen lesen
             die HTML-Seiten; Agenten und LLMs nutzen <code>llms.txt</code>,
             <code>ecosystem-reference.md</code> und <code>data/ecosystem.json</code>.
           </p>
@@ -238,16 +238,16 @@
           <article class="doc-card">
             <h3>Human-Version</h3>
             <p>Projektseiten, Architektur, Roadmap und Betrieb als einheitliche Website.</p>
-            <p><a href="reference.php">Referenz oeffnen</a></p>
+            <p><a href="reference.php">Referenz öffnen</a></p>
           </article>
           <article class="doc-card">
             <h3>LLM-Markdown</h3>
-            <p>Kompakte Gesamtreferenz fuer Codex, Kimi und andere Agenten.</p>
+            <p>Kompakte Gesamtreferenz für Codex, Kimi und andere Agenten.</p>
             <p><a href="ecosystem-reference.md">ecosystem-reference.md</a></p>
           </article>
           <article class="doc-card">
             <h3>Maschinenlesbar</h3>
-            <p>Strukturierte JSON-Quelle fuer Tools, Validierung und Automatisierung.</p>
+            <p>Strukturierte JSON-Quelle für Tools, Validierung und Automatisierung.</p>
             <p><a href="data/ecosystem.json">data/ecosystem.json</a></p>
           </article>
         </div>

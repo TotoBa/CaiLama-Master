@@ -19,6 +19,7 @@ final class Response
 
     public function send(): void
     {
+        header_remove('X-Powered-By');
         http_response_code($this->status);
         header('Content-Type: application/json; charset=utf-8');
         header('X-Content-Type-Options: nosniff');

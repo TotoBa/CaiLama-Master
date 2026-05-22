@@ -58,18 +58,54 @@ Zu klaerende bzw. laufend zu pruefende Punkte:
 
 ### CaiLama -> Webspace-DB-API
 
-Ziel: CaiLama soll kuenftig zwischen nativem MariaDB/MySQL-Zugriff,
-fachlicher Webspace-API und Hybridbetrieb waehlen koennen.
+Ziel: CaiLama kann zwischen nativem MariaDB/MySQL-Zugriff, fachlicher
+Webspace-API und Hybridbetrieb waehlen.
 
 Zu klaerende bzw. laufend zu pruefende Punkte:
 
-- Konfiguration in CaiLama fuer `native`, `api` und `hybrid` definieren.
+- Konfiguration in CaiLama fuer `database.access_mode = native|api|hybrid`
+  ist definiert.
+- Ein begrenzter DB-API-Statusclient prueft per `POST /api/v1/status` nur mit
+  Bearer-Key fachliche Statusdaten und gibt keine Credentials aus.
+- Provider-seitige Import-Endpunkte sind bereitgestellt:
+  `POST /api/v1/imports/cailama/append` und
+  `POST /api/v1/imports/cailama/reset`.
+- Provider-seitige Schema-Setup-Endpunkte sind als kurze Admin-Aktionen
+  bereitgestellt: `POST /api/v1/admin/schema/auth`,
+  `POST /api/v1/admin/schema/cailama` und
+  `POST /api/v1/admin/schema/all`.
+- Append und Reset haben getrennte Scopes: `db_import:write` fuer Append,
+  `db_import:reset` fuer Reset, `admin` fuer beide.
+- Import- und Schema-Endpunkte erhalten keine Query-Parameter und keinen
+  Request-Body; nur der Bearer-Key wird gesendet. Die zu verarbeitende `.sql`-
+  oder `.sql.gz`-Datei liegt serverseitig in einem nicht oeffentlich
+  erreichbaren Webspace-Ordner.
+- Wenn keine konfigurierte Importdatei vorhanden ist, wird der Import
+  abgelehnt. Nach erfolgreichem Import wird die Datei geloescht.
 - Lokale DB als Aufbau- und Backup-Pfad erhalten.
-- Provider-Datenbank nur ueber fachliche PHP-Fassade anbinden.
+- Provider-Datenbank nur ueber fachliche PHP-Fassade anbinden; direkte lokale
+  Provider-DB-Setup-Laeufe sind nicht der Betriebsweg.
 - Website-Login nutzt eine getrennte Auth-Datenbank; CaiLama-Fachdaten bleiben
   in einer separaten Datenbank und werden ueber eigene DSN-Konfiguration
   angebunden.
 - Keine SQL-over-HTTP-API und keine DB-Secrets im Master.
+- Private Webspace-Konfiguration wird ausserhalb des Public-Webroots unter
+  `cailama-private/api/config.local.php` abgelegt; alte Public-Konfigdateien
+  werden beim Private-Deploy entfernt.
+
+### Search-Goldsets -> isolierte Testinstanz
+
+Ziel: CaiLama-Search kann Suchvertrag, DWZ-Suche und RAG-Kontext gegen
+synthetische Daten end-to-end pruefen, ohne Produktivdaten oder Live-Crawls zu
+beruehren.
+
+Zu klaerende bzw. laufend zu pruefende Punkte:
+
+- `goldsets smoke` startet bei bewusster Ausfuehrung eine lokale
+  Docker-Meilisearch-Testinstanz auf `127.0.0.1`.
+- Der Smoke seedet nur synthetische Goldset-Fixtures.
+- Die Search-API startet mit deaktiviertem Scheduler auf einem lokalen Testport.
+- Der ephemere Test-Key wird nicht ausgegeben und nicht versioniert.
 
 ### CaiLama-Master -> Unter-Repos
 

@@ -44,7 +44,7 @@ Das wäre gefährlich, schwer auditierbar und bei einem API-Key-Leak praktisch T
 **Stattdessen bauen:**
 
 ```http
-GET  /api/v1/status
+POST /api/v1/status
 GET  /api/v1/players/{id}
 GET  /api/v1/games/{id}
 POST /api/v1/games
@@ -122,6 +122,8 @@ Beispiel-Scopes:
 ```json
 [
   "status:read",
+  "db_import:write",
+  "db_import:reset",
   "players:read",
   "games:read",
   "games:write",
@@ -129,6 +131,13 @@ Beispiel-Scopes:
   "admin:keys"
 ]
 ```
+
+Aktueller Webspace-API-Schnitt nutzt getrennte Key-Szenarien:
+
+- Status-Key: `status:read`
+- Append-Import-Key: `db_import:write`
+- Reset-Import-Key: `db_import:reset`
+- Admin-Key: `status:read`, `db_import:write`, `db_import:reset`, `admin`
 
 Dann prüft jeder Endpoint:
 
@@ -298,14 +307,37 @@ webspace/
 Aktueller Master-Stand:
 
 - `web/api_app/config.php` enthaelt nur Defaults.
-- `web/api_app/config.local.sample.php` ist die Vorlage fuer die echte,
-  gitignorierte `config.local.php`.
+- `web/api_app/config.local.sample.php` ist nur eine secretfreie Vorlage.
+- Die echte Webspace-Konfiguration liegt ausserhalb des Public-Webroots unter
+  `cailama-private/api/config.local.php`.
 - `databases.auth` verbindet die Provider-Datenbank fuer Website-Login.
 - `databases.cailama` verbindet die getrennte CaiLama-Fachdatenbank.
+- Der Provider stellt zwei getrennte Datenbanken mit je 2 GB bereit:
+  `Login` fuer Website-Daten und eine eigene CaiLama-Datenbank fuer
+  Fachdaten.
 - `web/login.php`, `web/account.php` und `web/logout.php` bilden die
   Session-Shell.
+- `POST /api/v1/status` liefert geschuetzten neutralen Status. Ohne gueltigen
+  Bearer-Key liefert die API keine API- oder DB-Details.
+- `POST /api/v1/imports/cailama/append` und
+  `POST /api/v1/imports/cailama/reset` verarbeiten nur die lokal konfigurierte
+  serverseitige Dump-Datei. Der Request enthaelt keine Query-Parameter und
+  keinen Body; gesendet wird nur ein Bearer-Key mit passendem Scope.
+- Reset benoetigt `db_import:reset` oder `admin`; der normale Append-Key reicht
+  dafuer nicht.
+- `POST /api/v1/admin/schema/auth`,
+  `POST /api/v1/admin/schema/cailama` und
+  `POST /api/v1/admin/schema/all` sind kurze, admin-geschuetzte PHP-Aktionen
+  zur Schemaanlage auf dem Provider. Auch sie akzeptieren keine Query-
+  Parameter und keinen Body.
+- Grosse Uebertragungen laufen per SFTP in einen nicht oeffentlich
+  erreichbaren Webspace-Ordner. Wenn keine Datei vorhanden ist, wird der Import
+  abgelehnt; nach erfolgreichem Import wird die Datei geloescht.
 - `web/api_app/schema/auth-login.sql` und
   `web/api_app/schema/cailama-data.sql` enthalten neutrale Schema-Vorlagen.
+- Provider-Schemas werden ueber die PHP-API im Webspace gesetzt, weil die
+  Provider-Datenbanken nur von dort bearbeitet werden sollen. Lokale MySQL-
+  Setup-Laeufe gelten nur fuer lokale DBs.
 
 Ideal ist: `api_app/` und `secrets/` liegen **außerhalb des öffentlich erreichbaren Document Root**.
 
@@ -379,9 +411,12 @@ So kannst du später breaking changes sauber als `/api/v2/...` einführen.
 
 ## 11. Minimaler Endpoint-Schnitt
 
-### `GET /api/v1/status`
+### `POST /api/v1/status`
 
 Zweck: API erreichbar, DB erreichbar.
+
+Der Endpoint akzeptiert weder Query-Parameter noch Request-Body. Der API-Key
+wird ausschliesslich als Bearer-Key im Header gesendet.
 
 Antwort:
 
@@ -398,6 +433,83 @@ Scope:
 
 ```text
 status:read
+```
+
+### `POST /api/v1/imports/cailama/append`
+
+Zweck: Einen bereits serverseitig abgelegten `.sql`- oder `.sql.gz`-Dump in die
+bestehende CaiLama-Datenbank einspielen. Der Endpoint akzeptiert weder
+Query-Parameter noch Request-Body; Dateiname und Drop-Verzeichnis kommen aus
+`config.local.php`.
+
+Scope:
+
+```text
+db_import:write
+```
+
+Fehler:
+
+```text
+no_import_file
+body_not_allowed
+```
+
+Nach erfolgreichem Import wird die Dump-Datei geloescht.
+
+### `POST /api/v1/imports/cailama/reset`
+
+Zweck: Die CaiLama-Datenbank zuruecksetzen und danach den konfigurierten Dump
+einspielen. Dieser Endpoint ist nur verfuegbar, wenn `allow_reset` lokal
+bewusst aktiviert wurde. Auch hier werden keine Query-Parameter und kein
+Request-Body akzeptiert.
+
+Scope:
+
+```text
+db_import:reset
+```
+
+Nach erfolgreichem Import wird die Dump-Datei geloescht.
+
+### `POST /api/v1/admin/schema/auth`
+
+Zweck: Das Login-/Website-Schema in der getrennten Provider-Auth-Datenbank
+idempotent anlegen. Dieser Endpoint ist nur fuer Setup/Ops gedacht und nutzt
+das fest versionierte Schema `web/api_app/schema/auth-login.sql`.
+
+Scope:
+
+```text
+admin
+```
+
+Der Endpoint akzeptiert weder Query-Parameter noch Request-Body.
+
+### `POST /api/v1/admin/schema/cailama`
+
+Zweck: Das CaiLama-Fachdaten-Schema in der getrennten Provider-CaiLama-
+Datenbank idempotent anlegen. Dieser Endpoint nutzt das fest versionierte
+Schema `web/api_app/schema/cailama-data.sql`.
+
+Scope:
+
+```text
+admin
+```
+
+Der Endpoint akzeptiert weder Query-Parameter noch Request-Body.
+
+### `POST /api/v1/admin/schema/all`
+
+Zweck: Beide Provider-Schemas nacheinander ueber die PHP-API setzen. Fuer
+wiederholbare Skriptlaeufe sind auch die Einzelziele sinnvoll, damit ein Fehler
+in einer DB die andere DB nicht unklar laesst.
+
+Scope:
+
+```text
+admin
 ```
 
 ### `GET /api/v1/players/{id}`
@@ -554,11 +666,11 @@ Deployment:
 
 ```text
 1. Code per SFTP hochladen
-2. secrets/api.env auf Webspace manuell anlegen
+2. Private Webspace-Konfig ausserhalb von /public deployen
 3. Rechte setzen, soweit Hoster erlaubt
-4. DB-Schema importieren
-5. ersten API-Key erzeugen
-6. /api/v1/status testen
+4. DB-Schema ueber geschuetzte PHP-Admin-Endpunkte setzen
+5. API-Keys lokal generieren und nur Hashes auf den Server schreiben
+6. POST /api/v1/status testen
 ```
 
 ---
@@ -640,7 +752,7 @@ Ziel: API erreichbar, Key-Prüfung, DB-Verbindung, Status-Endpoint.
 Umfang:
 
 ```text
-/api/v1/status
+POST /api/v1/status
 PDO-Verbindung
 .env-Konfiguration
 API-Key-Tabelle

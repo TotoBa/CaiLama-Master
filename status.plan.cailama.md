@@ -1,25 +1,40 @@
 # Status und Ausbaupfade des CaiLama-Ökosystems
 
-## Aktualisierung 2026-05-20
+## Aktualisierung 2026-05-22
 
-Dieser Abschnitt ersetzt die operativen Prioritäten der ursprünglichen Analyse,
-ohne die historische Bewertung darunter umzuschreiben.
+Dieser Abschnitt aktualisiert die operative Prioritaet nach dem DB-Hybrid- und
+Goldset-Smoke-Schnitt, ohne die historische Bewertung darunter umzuschreiben.
 
 - `TotoBa/CaiLama`: PTG Phase 1, SearchAdapter-Grundlage und RAG-Tooling sind
-  vorhanden. Offen sind jetzt DB-Hybrid (`native`/`api`/`hybrid`), Search/DWZ
-  als Standardpfad, PTG Phase 2, DWZ-Store/CLI-Integration und
-  RAG-Promptflow-Anschluss.
+  vorhanden. DB-Hybrid ist im Grundschnitt ueber `database.access_mode =
+  native|api|hybrid`, API-Metadaten und einen begrenzten DB-API-Statusclient
+  per geschuetztem `POST /api/v1/status` angebunden. Die Webspace-API stellt
+  providerseitig no-query/no-body-Endpunkte fuer serverseitig abgelegte
+  CaiLama-Dumps bereit: `append` fuer Hinzufuegen und optional aktivierbares
+  `reset` fuer DB-Reset. Fehlende Importdateien werden abgelehnt; erfolgreiche
+  Importe loeschen die Dump-Datei. Provider-Schemaanlage laeuft als kurze,
+  admin-geschuetzte PHP-Aktion im Webspace, weil die Provider-DBs nur von dort
+  bearbeitet werden sollen. Offen sind jetzt fachliche
+  DB-API-Read-/Write-Endpunkte, Live-Verifikation beider Provider-DB-
+  Verbindungen, Search/DWZ-Folgehaertung, PTG-Live-Verifikation,
+  DWZ-Store/CLI-Integration und RAG-Promptflow-Anschluss.
 - `TotoBa/CaiLama-LLM-Router`: Fallbacks, Aliase, Config-Checks und
   privacy-safe JSON-Metriken sind umgesetzt. Offen sind
   Streaming-Fehlervertrag, optionales Config-Hot-Reload, backend-spezifische
   Modellnamen je Alias und `mypy`-Bereinigung.
 - `TotoBa/CaiLama-Search`: Key-Rotation, Admin-Auth, Read/Admin-Trennung,
   Docker-Key-Defaults und der CaiLama-kompatible API-Vertrag sind umgesetzt.
-  Offen sind Crawler-Quellenpolitik-Tests, Search-Observability,
-  Job-Orchestrierung und optionale semantische Retrieval-Schicht.
+  Crawler-Quellenpolitik-Tests, Search-Observability, synthetische Goldsets,
+  localhost-geschuetztes Testindex-Seeding und der automatisierte
+  `goldsets smoke`-Pfad sind umgesetzt. Offen sind Job-Orchestrierung,
+  API-Qualitaet und optionale semantische Retrieval-Schicht.
 - `TotoBa/CaiLama-Master`: Website, PHP-Webspace-Skelett, HTTPS-Redirect-Regeln,
   Runtime-Update-Skript und Kimi-CLI-Ecosystem-Skill sind die aktuelle
-  Koordinationsbasis.
+  Koordinationsbasis. Der Kimi-CLI-Ecosystem-Skill ist lokal im Kimi-Skill-
+  Ordner verfuegbar und gegen die versionierte Master-Quelle abgeglichen. Die
+  Webspace-API ist als POST-only Status-/Import-/Schema-Fassade deployed;
+  live ist `pdo_mysql` verfuegbar, aber die Provider-Login-DB meldet noch
+  `auth_failed`, bis das korrekte IONOS-Passwort privat nachgezogen wurde.
 
 ## Executive Summary
 

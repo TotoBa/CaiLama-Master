@@ -41,6 +41,8 @@ Koordinationssicht.
 - Pflegt die statische Webseite fuer `https://cailama.org/` unter `web/`.
 - Liefert die Human-Doku als HTML und die LLM-/Maschinenreferenz als
   `llms.txt`, `ecosystem-reference.md` und `data/ecosystem.json` aus.
+- Stellt eine kleine PHP-Webspace-Fassade fuer Status, Login-Shell und
+  kontrollierte serverseitige CaiLama-Dump-Importe bereit.
 - Enthaelt keine produktive Laufzeitlogik.
 - Enthaelt keine Secrets.
 
@@ -72,6 +74,9 @@ Koordinationssicht.
 - `CaiLama -> CaiLama-LLM-Router`: CaiLama ruft den Router fuer LLM-Zugriff auf.
 - `CaiLama -> CaiLama-Search`: CaiLama ruft Search fuer Suche, Kontext und DWZ
   auf.
+- `CaiLama -> Webspace-DB-API`: CaiLama kann Status pruefen, grosse
+  Provider-DB-Importe ueber serverseitig hochgeladene Dump-Dateien anstossen
+  und Provider-Schemas ueber geschuetzte PHP-Admin-Aktionen setzen.
 - `CaiLama-Master -> alle Repos`: nur Dokumentation, Koordination und lokale
   Statuspruefung.
 
