@@ -55,12 +55,12 @@ Vor Arbeitsbeginn lesen:
   `pdo_mysql` ist verfuegbar, Login-DB meldet `auth_failed`; das IONOS-
   Passwort muss sicher per privater Passwortdatei nachgezogen werden, bevor
   Provider-Schema-Setup erfolgreich sein kann.
-- [ ] CaiLama-Search-Vertrag weiter pruefen: `POST /v1/search`,
+- [x] CaiLama-Search-Vertrag weiter pruefen: `POST /v1/search`,
   kompatibles `GET /v1/search`, `POST /v1/context`, `items`/`results`,
   `context`/`sources` und DWZ-Endpunkte **in `docs/integrations.md` als
   Response-Vertrag ergaenzt**; Website (`ecosystem-reference.md` und
   `ecosystem.json`) sind synchron.
-- [ ] Kimi-CLI-Ecosystem-Skill nach erstem realen Kimi-Lauf geprueft und
+- [x] Kimi-CLI-Ecosystem-Skill nach erstem realen Kimi-Lauf geprueft und
   geschaerft: `skills/kimi-cli-cailama-ecosystem/SKILL.md` enthaelt jetzt
   explizite Initialisierungspruefungen (`pwd`, `git rev-parse`,
   `git status --short`, `git check-ignore`) und Abschlusspruefungen
@@ -71,12 +71,14 @@ Vor Arbeitsbeginn lesen:
   `scripts/update-runtime-projects.sh` fuer Router/Search/CaiLama nutzen und
   dokumentieren, ob Dienste aus Runtime-Ordnern gestartet wurden.
 - [ ] Roadmap regelmaessig aus den Unterrepo-`TODO.md`-Dateien abgleichen:
-  CaiLama = DB-Hybrid, PTG-Live-Verifikation, DWZ-Identity-Linking,
-  RAG-Provenienz; Router = aktuell keine aktive Folgearbeit ohne neuen
-  Nutzerauftrag; Search = aktueller Ausbau-Fokus mit Goldset-E2E-Smoke,
-  Job-Orchestrierung, API-Qualitaet und semantischem Retrieval nach erledigter
-  Crawler-Quellenpolitik, Observability-Grundlage, synthetischen Goldsets,
-  localhost-geschuetztem Testindex-Seeding und automatisiertem Smoke-Befehl.
+  **CaiLama** = PTG-Live-Verifikation (blockiert bis DB-API live),
+  PTG-Review-Rückfluss, PTG-Scoring, PTG-Taxonomie, PTG-Kartentypen,
+  Datenschutz/Export, RAG-Provenienz, Lichess-Ratings, UnifiedRatingProfile,
+  Job-Orchestrierung, PTG-Observability.
+  **Router** = Backend-API-Key-Weitergabe, Token-/Usage-Metriken,
+  `llm-router usage` Diagnosebefehl.
+  **Search** = Semantic-Retrieval-Plan, Search-Qualitätsbaseline,
+  CaiLama/Search-Jobvertrag.
 
 ## Kimi-Handoff
 
