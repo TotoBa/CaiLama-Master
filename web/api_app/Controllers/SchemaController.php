@@ -12,11 +12,6 @@ use RuntimeException;
 
 final class SchemaController
 {
-    public function auth(Request $request, array $config): Response
-    {
-        return $this->apply($request, $config, ['auth']);
-    }
-
     public function cailama(Request $request, array $config): Response
     {
         return $this->apply($request, $config, ['cailama']);
@@ -24,7 +19,7 @@ final class SchemaController
 
     public function all(Request $request, array $config): Response
     {
-        return $this->apply($request, $config, ['auth', 'cailama']);
+        return $this->apply($request, $config, ['cailama']);
     }
 
     private function apply(Request $request, array $config, array $targets): Response
@@ -63,7 +58,6 @@ final class SchemaController
     private function schemaPath(string $target): string
     {
         return match ($target) {
-            'auth' => __DIR__ . '/../schema/auth-login.sql',
             'cailama' => __DIR__ . '/../schema/cailama-data.sql',
             default => throw new RuntimeException('Unknown schema target.'),
         };

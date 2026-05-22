@@ -211,15 +211,14 @@ URL-Pruefung: https://cailama.org/
 
 Die DB-API ist als kleine PHP-Fassade vorbereitet. Sie ist kein generischer
 SQL-Proxy und enthaelt keine produktiven Datenbankzugangsdaten. Der aktuelle
-Stand stellt geschuetzten Status, Login-/Session-Shell, zwei getrennte
-PDO-Konfigurationen, kontrollierte CaiLama-Import-Endpunkte und geschuetzte
+Stand stellt geschuetzten Status, Login-/Session-Shell, eine einzige
+PDO-Konfiguration fuer den Shared-Hosting-Betrieb, kontrollierte CaiLama-Import-Endpunkte und geschuetzte
 Schema-Setup-Endpunkte fuer den Provider bereit:
 
 ```text
 POST /api/v1/status
 POST /api/v1/imports/cailama/append
 POST /api/v1/imports/cailama/reset
-POST /api/v1/admin/schema/auth
 POST /api/v1/admin/schema/cailama
 POST /api/v1/admin/schema/all
 /login.php
@@ -264,7 +263,6 @@ Das wiederholbare Setup laeuft ueber:
 ```bash
 scripts/generate-web-api-keys.sh
 scripts/setup-webspace-db-api.sh --source <private-db-config> --all --allow-reset
-scripts/setup-webspace-db-api.sh --set-provider-login-password-file <private-password-file> --write-configs --deploy-private
 ```
 
 Nach dem ersten Normalisierungslauf kann das Setup ohne `--source` wiederholt
@@ -278,12 +276,10 @@ von lokalem MySQL aus angefasst, sondern ueber die geschuetzten PHP-Endpunkte
 im Webspace gesetzt, weil die Provider-DB nur vom Webspace aus erreichbar sein
 soll.
 
-Die Konfiguration trennt:
+Die Konfiguration besteht aus einer einzigen Datenbank:
 
-- `databases.auth`: Provider-Datenbank fuer Website-Login und Sessions
-  (`Login`, 2 GB beim Provider).
-- `databases.cailama`: separate CaiLama-Datenbank fuer Fachdaten und
-  Dump-Importe (2 GB beim Provider).
+- `databases.cailama`: Provider-Datenbank fuer Login/Users, Anwendungsdaten
+  und Schema-Management (2 GB beim Provider).
 
 Der Login nutzt PHP-Sessions mit `HttpOnly`, `SameSite=Lax`, HTTPS-abhaengigem
 Secure-Cookie, CSRF-Token, einfachem Session-basiertem Versuchslimit und

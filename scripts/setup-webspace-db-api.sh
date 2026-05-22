@@ -18,14 +18,10 @@ do_deploy_private=0
 do_setup_databases=0
 setup_target="all"
 do_retire_source=0
-set_provider_login_database=""
-set_provider_main_database=""
-set_provider_login_host=""
-set_provider_main_host=""
-set_provider_login_user=""
-set_provider_main_user=""
-set_provider_login_password_file=""
-set_provider_main_password_file=""
+set_provider_database=""
+set_provider_host=""
+set_provider_user=""
+set_provider_password_file=""
 
 usage() {
   cat <<'USAGE'
@@ -34,15 +30,16 @@ Usage:
   scripts/setup-webspace-db-api.sh --source PATH --normalize
   scripts/setup-webspace-db-api.sh --generate-keys --write-configs
   scripts/setup-webspace-db-api.sh --deploy-private
-  scripts/setup-webspace-db-api.sh --setup-databases [local|provider|provider-auth|provider-cailama|all]
-  scripts/setup-webspace-db-api.sh --set-provider-login-database NAME
-  scripts/setup-webspace-db-api.sh --set-provider-main-database NAME
-  scripts/setup-webspace-db-api.sh --set-provider-login-host HOST
-  scripts/setup-webspace-db-api.sh --set-provider-main-host HOST
-  scripts/setup-webspace-db-api.sh --set-provider-login-user USER
-  scripts/setup-webspace-db-api.sh --set-provider-main-user USER
-  scripts/setup-webspace-db-api.sh --set-provider-login-password-file PATH
-  scripts/setup-webspace-db-api.sh --set-provider-main-password-file PATH
+  scripts/setup-webspace-db-api.sh --setup-databases [local|provider|all]
+  scripts/setup-webspace-db-api.sh --set-provider-database NAME
+  scripts/setup-webspace-db-api.sh --set-provider-host HOST
+  scripts/setup-webspace-db-api.sh --set-provider-user USER
+  scripts/setup-webspace-db-api.sh --set-provider-password-file PATH
+
+Single-database mode (v0.6.0+):
+  One DB per PHP process. Login/users tables live in the same database as
+  application data. The --setup-databases option no longer has provider-auth
+  or provider-cailama sub-targets.
 
 The script keeps secrets out of the repository. Real config files are written
 below ~/.config/cailama by default and the server config is uploaded to a
@@ -50,7 +47,7 @@ non-public webspace directory.
 
 Local schemas are applied with the local MySQL client. Provider schemas are
 applied through protected POST endpoints in the PHP API on the webspace,
-because the provider databases are only reachable from there.
+because the provider database is only reachable from there.
 
 Environment:
   CAILAMA_PRIVATE_CONFIG_DIR      default: ~/.config/cailama
@@ -84,7 +81,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     --setup-databases)
       do_setup_databases=1
-      if [[ "${2:-}" =~ ^(local|provider|provider-auth|provider-cailama|all)$ ]]; then
+      if [[ "${2:-}" =~ ^(local|provider|all)$ ]]; then
         setup_target="$2"
         shift
       fi
@@ -95,36 +92,20 @@ while [[ $# -gt 0 ]]; do
     --retire-source)
       do_retire_source=1
       ;;
-    --set-provider-login-database)
-      set_provider_login_database="${2:-}"
+    --set-provider-database)
+      set_provider_database="${2:-}"
       shift
       ;;
-    --set-provider-main-database)
-      set_provider_main_database="${2:-}"
+    --set-provider-host)
+      set_provider_host="${2:-}"
       shift
       ;;
-    --set-provider-login-host)
-      set_provider_login_host="${2:-}"
+    --set-provider-user)
+      set_provider_user="${2:-}"
       shift
       ;;
-    --set-provider-main-host)
-      set_provider_main_host="${2:-}"
-      shift
-      ;;
-    --set-provider-login-user)
-      set_provider_login_user="${2:-}"
-      shift
-      ;;
-    --set-provider-main-user)
-      set_provider_main_user="${2:-}"
-      shift
-      ;;
-    --set-provider-login-password-file)
-      set_provider_login_password_file="${2:-}"
-      shift
-      ;;
-    --set-provider-main-password-file)
-      set_provider_main_password_file="${2:-}"
+    --set-provider-password-file)
+      set_provider_password_file="${2:-}"
       shift
       ;;
     --all)
@@ -147,7 +128,7 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
-if [[ "$do_normalize$do_generate_keys$do_write_configs$do_deploy_private$do_setup_databases$do_retire_source" == "000000" && -z "$set_provider_login_database" && -z "$set_provider_main_database" && -z "$set_provider_login_host" && -z "$set_provider_main_host" && -z "$set_provider_login_user" && -z "$set_provider_main_user" && -z "$set_provider_login_password_file" && -z "$set_provider_main_password_file" ]]; then
+if [[ "$do_normalize$do_generate_keys$do_write_configs$do_deploy_private$do_setup_databases$do_retire_source" == "000000" && -z "$set_provider_database" && -z "$set_provider_host" && -z "$set_provider_user" && -z "$set_provider_password_file" ]]; then
   usage >&2
   exit 2
 fi
@@ -182,7 +163,7 @@ normalize_config() {
     exit 2
   fi
   require_file "$source_config" "source database config"
-  if grep -q '^\[lokal\]' "$source_config" && grep -q '^\[provider_main\]' "$source_config"; then
+  if grep -q '^\[lokal\]' "$source_config" && grep -q '^\[provider\]' "$source_config"; then
     if [[ "$source_config" != "$database_ini" ]]; then
       cp "$source_config" "$database_ini"
       chmod 600 "$database_ini" 2>/dev/null || true
@@ -198,7 +179,7 @@ normalize_config() {
     function clean_value(string $value): string {
         $value = trim($value);
         if ((str_starts_with($value, "\"") && str_ends_with($value, "\"")) ||
-            (str_starts_with($value, "'\''") && str_ends_with($value, "'\''"))) {
+            (str_starts_with($value, "\x27") && str_ends_with($value, "\x27"))) {
             $value = substr($value, 1, -1);
         }
         return $value;
@@ -237,9 +218,8 @@ normalize_config() {
         fail_msg("cannot parse database config line");
     }
     $required = [
-        "lokal" => ["host", "user", "password", "db_main", "db_login"],
-        "provider_main" => ["host", "user", "password", "database"],
-        "provider_login" => ["host", "user", "password", "database"],
+        "lokal" => ["host", "user", "password", "database"],
+        "provider" => ["host", "user", "password", "database"],
     ];
     foreach ($required as $section => $keys) {
         if (!isset($sections[$section])) {
@@ -252,7 +232,7 @@ normalize_config() {
         }
     }
     $out = ["# CaiLama database config. Do not commit or publish.", ""];
-    foreach (["lokal", "provider_main", "provider_login"] as $section) {
+    foreach (["lokal", "provider"] as $section) {
         $out[] = "[" . $section . "]";
         foreach ($sections[$section] as $key => $value) {
             $out[] = $key . " = " . ini_value($value);
@@ -275,62 +255,40 @@ generate_keys() {
 
 set_database_overrides() {
   require_file "$database_ini" "normalized database config"
-  if [[ -z "$set_provider_login_database" && -z "$set_provider_main_database" && -z "$set_provider_login_host" && -z "$set_provider_main_host" && -z "$set_provider_login_user" && -z "$set_provider_main_user" && -z "$set_provider_login_password_file" && -z "$set_provider_main_password_file" ]]; then
+  if [[ -z "$set_provider_database" && -z "$set_provider_host" && -z "$set_provider_user" && -z "$set_provider_password_file" ]]; then
     return 0
   fi
-  [[ -n "$set_provider_login_password_file" ]] && require_file "$set_provider_login_password_file" "provider login password file"
-  [[ -n "$set_provider_main_password_file" ]] && require_file "$set_provider_main_password_file" "provider main password file"
+  [[ -n "$set_provider_password_file" ]] && require_file "$set_provider_password_file" "provider password file"
   php -r '
     function quote_ini(string $value): string {
         return "\"" . str_replace(["\\", "\""], ["\\\\", "\\\""], $value) . "\"";
     }
     $path = $argv[1];
-    $loginDatabase = $argv[2];
-    $mainDatabase = $argv[3];
-    $loginHost = $argv[4];
-    $mainHost = $argv[5];
-    $loginUser = $argv[6];
-    $mainUser = $argv[7];
-    $loginPasswordFile = $argv[8];
-    $mainPasswordFile = $argv[9];
+    $db  = $argv[2];
+    $host = $argv[3];
+    $user = $argv[4];
+    $pwFile = $argv[5];
     $ini = parse_ini_file($path, true, INI_SCANNER_RAW);
     if (!is_array($ini)) {
         fwrite(STDERR, "ERROR: cannot read normalized database config\n");
         exit(2);
     }
-    if ($loginDatabase !== "") {
-        $ini["provider_login"]["database"] = $loginDatabase;
+    if ($db !== "") {
+        $ini["provider"]["database"] = $db;
     }
-    if ($mainDatabase !== "") {
-        $ini["provider_main"]["database"] = $mainDatabase;
+    if ($host !== "") {
+        $ini["provider"]["host"] = $host;
     }
-    if ($loginHost !== "") {
-        $ini["provider_login"]["host"] = $loginHost;
+    if ($user !== "") {
+        $ini["provider"]["user"] = $user;
     }
-    if ($mainHost !== "") {
-        $ini["provider_main"]["host"] = $mainHost;
-    }
-    if ($loginUser !== "") {
-        $ini["provider_login"]["user"] = $loginUser;
-    }
-    if ($mainUser !== "") {
-        $ini["provider_main"]["user"] = $mainUser;
-    }
-    if ($loginPasswordFile !== "") {
-        $password = trim((string) file_get_contents($loginPasswordFile));
+    if ($pwFile !== "") {
+        $password = trim((string) file_get_contents($pwFile));
         if ($password === "") {
-            fwrite(STDERR, "ERROR: provider login password file is empty\n");
+            fwrite(STDERR, "ERROR: provider password file is empty\n");
             exit(2);
         }
-        $ini["provider_login"]["password"] = $password;
-    }
-    if ($mainPasswordFile !== "") {
-        $password = trim((string) file_get_contents($mainPasswordFile));
-        if ($password === "") {
-            fwrite(STDERR, "ERROR: provider main password file is empty\n");
-            exit(2);
-        }
-        $ini["provider_main"]["password"] = $password;
+        $ini["provider"]["password"] = $password;
     }
     $out = ["# CaiLama database config. Do not commit or publish.", ""];
     foreach ($ini as $section => $values) {
@@ -344,7 +302,7 @@ set_database_overrides() {
     file_put_contents($tmp, implode(PHP_EOL, $out));
     chmod($tmp, 0600);
     rename($tmp, $path);
-  ' "$database_ini" "$set_provider_login_database" "$set_provider_main_database" "$set_provider_login_host" "$set_provider_main_host" "$set_provider_login_user" "$set_provider_main_user" "$set_provider_login_password_file" "$set_provider_main_password_file"
+  ' "$database_ini" "$set_provider_database" "$set_provider_host" "$set_provider_user" "$set_provider_password_file"
   chmod 600 "$database_ini" 2>/dev/null || true
   echo "OK: private database config overrides applied."
 }
@@ -384,43 +342,25 @@ write_configs() {
     exit 2
   fi
 
-  local local_host local_user local_pass local_main_db local_login_db
-  local provider_main_host provider_main_user provider_main_pass provider_main_db
-  local provider_login_host provider_login_user provider_login_pass provider_login_db
+  local local_host local_user local_pass local_db
+  local provider_host provider_user provider_pass provider_db
   local_host="$(ini_get lokal host)"
   local_user="$(ini_get lokal user)"
   local_pass="$(ini_get lokal password)"
-  local_main_db="$(ini_get lokal db_main)"
-  local_login_db="$(ini_get lokal db_login)"
-  provider_main_host="$(ini_get provider_main host)"
-  provider_main_user="$(ini_get provider_main user)"
-  provider_main_pass="$(ini_get provider_main password)"
-  provider_main_db="$(ini_get provider_main database)"
-  provider_login_host="$(ini_get provider_login host)"
-  provider_login_user="$(ini_get provider_login user)"
-  provider_login_pass="$(ini_get provider_login password)"
-  provider_login_db="$(ini_get provider_login database)"
-  if [[ -n "${CAILAMA_PROVIDER_MAIN_DATABASE:-}" ]]; then
-    provider_main_db="$CAILAMA_PROVIDER_MAIN_DATABASE"
-  fi
-  if [[ -n "${CAILAMA_PROVIDER_LOGIN_DATABASE:-}" ]]; then
-    provider_login_db="$CAILAMA_PROVIDER_LOGIN_DATABASE"
+  local_db="$(ini_get lokal database)"
+  provider_host="$(ini_get provider host)"
+  provider_user="$(ini_get provider user)"
+  provider_pass="$(ini_get provider password)"
+  provider_db="$(ini_get provider database)"
+  if [[ -n "${CAILAMA_PROVIDER_DATABASE:-}" ]]; then
+    provider_db="$CAILAMA_PROVIDER_DATABASE"
   fi
   if [[ -n "${CAILAMA_PROVIDER_PHP_HOST:-}" ]]; then
-    provider_main_host="$CAILAMA_PROVIDER_PHP_HOST"
-    provider_login_host="$CAILAMA_PROVIDER_PHP_HOST"
-  fi
-  if [[ -n "${CAILAMA_PROVIDER_MAIN_PHP_HOST:-}" ]]; then
-    provider_main_host="$CAILAMA_PROVIDER_MAIN_PHP_HOST"
-  fi
-  if [[ -n "${CAILAMA_PROVIDER_LOGIN_PHP_HOST:-}" ]]; then
-    provider_login_host="$CAILAMA_PROVIDER_LOGIN_PHP_HOST"
+    provider_host="$CAILAMA_PROVIDER_PHP_HOST"
   fi
 
   write_mysql_cnf local-main "$local_host" "$local_user" "$local_pass"
-  write_mysql_cnf local-login "$local_host" "$local_user" "$local_pass"
-  write_mysql_cnf provider-main "$provider_main_host" "$provider_main_user" "$provider_main_pass"
-  write_mysql_cnf provider-login "$provider_login_host" "$provider_login_user" "$provider_login_pass"
+  write_mysql_cnf provider-main "$provider_host" "$provider_user" "$provider_pass"
 
   php -r '
     $target = $argv[1];
@@ -445,22 +385,17 @@ write_configs() {
         ],
         "auth" => ["enabled" => true],
         "databases" => [
-            "auth" => [
-                "enabled" => true,
-                "dsn" => "mysql:host=" . $values["provider_login_host"] . ";dbname=" . $values["provider_login_db"] . ";charset=utf8mb4",
-                "user" => $values["provider_login_user"],
-                "password" => $values["provider_login_pass"],
-            ],
             "cailama" => [
                 "enabled" => true,
-                "dsn" => "mysql:host=" . $values["provider_main_host"] . ";dbname=" . $values["provider_main_db"] . ";charset=utf8mb4",
-                "user" => $values["provider_main_user"],
-                "password" => $values["provider_main_pass"],
+                "dsn" => "mysql:host=" . $values["provider_host"] . ";dbname=" . $values["provider_db"] . ";charset=utf8mb4",
+                "user" => $values["provider_user"],
+                "password" => $values["provider_pass"],
             ],
         ],
     ];
     $body = "<?php\n";
     $body .= "declare(strict_types=1);\n\n";
+    $body .= "# Single-database mode: login/users and app data share one DB.\n";
     $body .= "return " . $export($config) . ";\n";
     $tmp = $target . ".tmp";
     file_put_contents($tmp, $body);
@@ -472,21 +407,16 @@ write_configs() {
       "import_hash" => $argv[2],
       "reset_hash" => $argv[3],
       "admin_hash" => $argv[4],
-      "provider_main_host" => $argv[5],
-      "provider_main_user" => $argv[6],
-      "provider_main_pass" => $argv[7],
-      "provider_main_db" => $argv[8],
-      "provider_login_host" => $argv[9],
-      "provider_login_user" => $argv[10],
-      "provider_login_pass" => $argv[11],
-      "provider_login_db" => $argv[12],
+      "provider_host" => $argv[5],
+      "provider_user" => $argv[6],
+      "provider_pass" => $argv[7],
+      "provider_db" => $argv[8],
     ], JSON_UNESCAPED_SLASHES);' \
       "$(sha256_token "$status_key")" \
       "$(sha256_token "$import_key")" \
       "$(sha256_token "$reset_key")" \
       "$(sha256_token "$admin_key")" \
-      "$provider_main_host" "$provider_main_user" "$provider_main_pass" "$provider_main_db" \
-      "$provider_login_host" "$provider_login_user" "$provider_login_pass" "$provider_login_db"
+      "$provider_host" "$provider_user" "$provider_pass" "$provider_db"
   )"
   chmod 600 "$server_config" 2>/dev/null || true
 
@@ -607,32 +537,20 @@ mysql_create_database_if_possible() {
 
 setup_databases() {
   require_file "$database_ini" "normalized database config"
-  local local_main_db local_login_db
-  local_main_db="$(ini_get lokal db_main)"
-  local_login_db="$(ini_get lokal db_login)"
+  local local_db
+  local_db="$(ini_get lokal database)"
 
   case "$setup_target" in
     local|all)
-      mysql_create_database_if_possible "$mysql_dir/local-login.cnf" "$local_login_db" 1
-      mysql_run "$mysql_dir/local-login.cnf" "$local_login_db" "$root/web/api_app/schema/auth-login.sql" 1
-      mysql_create_database_if_possible "$mysql_dir/local-main.cnf" "$local_main_db" 1
-      mysql_run "$mysql_dir/local-main.cnf" "$local_main_db" "$root/web/api_app/schema/cailama-data.sql" 1
-      echo "OK: local database schemas applied."
+      mysql_create_database_if_possible "$mysql_dir/local-main.cnf" "$local_db" 1
+      mysql_run "$mysql_dir/local-main.cnf" "$local_db" "$root/web/api_app/schema/cailama-data.sql" 1
+      echo "OK: local database schema applied."
       ;;
   esac
   case "$setup_target" in
     provider|all)
-      apply_provider_schema_api auth
-      apply_provider_schema_api cailama
-      echo "OK: provider database schemas applied through Webspace API."
-      ;;
-    provider-auth)
-      apply_provider_schema_api auth
-      echo "OK: provider auth database schema applied through Webspace API."
-      ;;
-    provider-cailama)
-      apply_provider_schema_api cailama
-      echo "OK: provider CaiLama database schema applied through Webspace API."
+      apply_provider_schema_api all
+      echo "OK: provider database schema applied through Webspace API."
       ;;
   esac
 }

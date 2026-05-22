@@ -85,8 +85,7 @@ Zu klaerende bzw. laufend zu pruefende Punkte:
   `POST /api/v1/imports/cailama/append` und
   `POST /api/v1/imports/cailama/reset`.
 - Provider-seitige Schema-Setup-Endpunkte sind als kurze Admin-Aktionen
-  bereitgestellt: `POST /api/v1/admin/schema/auth`,
-  `POST /api/v1/admin/schema/cailama` und
+  bereitgestellt: `POST /api/v1/admin/schema/cailama` und
   `POST /api/v1/admin/schema/all`.
 - Append und Reset haben getrennte Scopes: `db_import:write` fuer Append,
   `db_import:reset` fuer Reset, `admin` fuer beide.
@@ -99,9 +98,12 @@ Zu klaerende bzw. laufend zu pruefende Punkte:
 - Lokale DB als Aufbau- und Backup-Pfad erhalten.
 - Provider-Datenbank nur ueber fachliche PHP-Fassade anbinden; direkte lokale
   Provider-DB-Setup-Laeufe sind nicht der Betriebsweg.
-- Website-Login nutzt eine getrennte Auth-Datenbank; CaiLama-Fachdaten bleiben
-  in einer separaten Datenbank und werden ueber eigene DSN-Konfiguration
-  angebunden.
+- Website-Login und CaiLama-Fachdaten nutzen dieselbe Datenbank
+  (single-database mode). IONOS shared hosting kann offenbar nur einen
+  DB-Host pro PHP-Prozess aufloesen, daher liegt alles in einer DB.
+- Website-Login trennt die Tabellen logisch (z.B. `web_users`) von den
+  Fachdaten; eine strikte Trennung auf Datenbank-Ebene ist technisch
+  nicht moeglich.
 - Keine SQL-over-HTTP-API und keine DB-Secrets im Master.
 - Private Webspace-Konfiguration wird ausserhalb des Public-Webroots unter
   `cailama-private/api/config.local.php` abgelegt; alte Public-Konfigdateien
@@ -115,39 +117,30 @@ Zu klaerende bzw. laufend zu pruefende Punkte:
 POST /api/v1/status (Admin-Key)
   HTTP 200
   databases.cailama: ok
-  databases.auth: error (Unknown server host)
 
 POST /api/v1/admin/schema/cailama
   HTTP 200, Schema erfolgreich angewendet
-
-POST /api/v1/admin/schema/auth
-  HTTP 500, blockiert weil Auth-DB-Host vom Webspace nicht aufloesbar
 ```
 
-**CaiLama-Datenbank** ist erreicht und Schema ist idempotent gesetzt.
-**Auth-Datenbank** meldet DNS-Fehler `Unknown server host` fuer den
-konfigurierten Hostnamen. Ursache: vermutlich falscher IONOS-Auth-DB-Hostname
-oder DNS-Resolver-Problem auf dem Webspace. Die Konfiguration selbst (DSN,
-User, Passwort) ist korrekt; die PDO-Verbindung scheitert bereits an der
-Hostname-Aufloesung.
+**Single-database mode:** IONOS shared hosting kann den zweiten DB-Host
+`db5020512585.hosting-data.io` nicht aufloesen (Unknown server host).
+Daher wurde `auth-login.sql` in `cailama-data.sql` ueberfuehrt;
+`web_users`, `cailama_schema_meta` und zukuenftige Fachtabellen
+leben gemeinsam in der CaiLama-Datenbank auf
+`dbs15699616@db5020503872.hosting-data.io`.
 
 ```text
 POST /api/v1/status (Admin-Key)
   HTTP 200
   databases.cailama: ok
-  databases.auth: error (auth_failed)
 
 POST /api/v1/admin/schema/cailama
   HTTP 200, Schema erfolgreich angewendet
-
-POST /api/v1/admin/schema/auth
-  HTTP 500, blockiert weil auth DB auth_failed meldet
 ```
 
-**CaiLama-Datenbank** ist erreicht und Schema ist gesetzt.
-**Auth-Datenbank** meldet MySQL 1045 (Access denied) trotz
-privater Konfig ausserhalb des Public-Webroots. Ursache wird
-geprueft (Provider-seitige Passwort-Ueberpruefung).
+**Single-database mode** (nach Migration): `auth-login.sql` wurde in
+`cailama-data.sql` ueberfuehrt; `web_users` und Fachtabellen leben
+in derselben Datenbank.
 
 Die folgenden Pruefschritte gelten als Vertragsgrenze; sie erfordern
 keine destruktiven Aktionen und werden mit gueltigen Bearer-Keys
@@ -164,8 +157,8 @@ durchgefuehrt:
 | `POST /api/v1/imports/cailama/append` | Mit Key, aber Body | HTTP 400, `body_not_allowed` |
 | `POST /api/v1/imports/cailama/append` | Mit Key, ohne Datei | HTTP 409, `no_import_file` |
 | `POST /api/v1/imports/cailama/reset` | Ohne `db_import:reset`-Scope | HTTP 401, `unauthorized` |
-| `POST /api/v1/admin/schema/auth` | Ohne `admin`-Scope | HTTP 401, `unauthorized` |
 | `POST /api/v1/admin/schema/cailama` | Ohne `admin`-Scope | HTTP 401, `unauthorized` |
+| `POST /api/v1/admin/schema/all` | Ohne `admin`-Scope | HTTP 401, `unauthorized` |
 
 Die Import-Endpunkte akzeptieren weder Query-Parameter noch Request-Body;
 der zu verarbeitende Dump liegt serverseitig vor. Nach erfolgreichem

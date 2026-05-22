@@ -30,7 +30,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $error = 'Zu viele Anmeldeversuche. Bitte später erneut versuchen.';
     } else {
         try {
-            $pdo = ConnectionFactory::fromConfig($config, 'auth');
+            $pdo = ConnectionFactory::fromConfig($config, 'cailama');
             $auth = new AuthService($pdo, $config['auth'] ?? []);
             $user = $auth->authenticate($email, $password);
             if ($user !== null) {

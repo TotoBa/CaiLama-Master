@@ -72,9 +72,8 @@ Wiederholbare Hilfen:
 ```bash
 scripts/generate-web-api-keys.sh
 scripts/setup-webspace-db-api.sh --source <private-db-config> --all --allow-reset
-scripts/setup-webspace-db-api.sh --set-provider-login-password-file <private-password-file> --write-configs --deploy-private
-scripts/setup-webspace-db-api.sh --setup-databases provider-auth
-scripts/setup-webspace-db-api.sh --setup-databases provider-cailama
+scripts/setup-webspace-db-api.sh --set-provider-password-file <private-password-file> --write-configs --deploy-private
+scripts/setup-webspace-db-api.sh --setup-databases all
 ```
 
 Nach dem ersten Normalisierungslauf kann `setup-webspace-db-api.sh --all` die

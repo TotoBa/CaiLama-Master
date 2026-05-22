@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 $config = [
     'api_name' => 'cailama-db-api',
-    'version' => '0.4.0',
+    'version' => '0.5.0',
     'debug' => false,
     'max_body_bytes' => 1048576,
     'cors_allowed_origins' => [],
@@ -47,13 +47,6 @@ $config = [
         'attempt_window_seconds' => 600,
     ],
     'databases' => [
-        'auth' => [
-            'enabled' => false,
-            'dsn' => '',
-            'user' => '',
-            'password' => '',
-            'options' => [],
-        ],
         'cailama' => [
             'enabled' => false,
             'dsn' => '',

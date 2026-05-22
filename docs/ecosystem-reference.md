@@ -268,15 +268,15 @@ Vertrag:
 - Keine SQL-over-HTTP-Endpunkte.
 - Echte DB-Zugangsdaten stehen nur in der privaten Webspace-Konfiguration
   ausserhalb von `/public`.
-- `databases.auth` und `databases.cailama` sind getrennte PDO-Verbindungen.
+- `databases.cailama` ist die einzige PDO-Verbindung (Single-DB-Mode).
 - `POST /api/v1/status` ist der geschützte Statuspfad; ohne gueltigen
   Bearer-Key liefert die API keine API- oder DB-Details.
 - `POST /api/v1/imports/cailama/append` fuegt Daten aus der konfigurierten
   serverseitigen Dump-Datei hinzu.
 - `POST /api/v1/imports/cailama/reset` setzt die CaiLama-Datenbank nur dann
   zurück, wenn `allow_reset` lokal bewusst aktiviert wurde.
-- `POST /api/v1/admin/schema/auth`,
-  `POST /api/v1/admin/schema/cailama` und
+- `POST /api/v1/admin/schema/cailama` und
+  `POST /api/v1/admin/schema/all` wenden das Schema über die API an.
   `POST /api/v1/admin/schema/all` setzen die Provider-Schemas als kurze
   Admin-Aktion über PHP.
 - Import- und Schema-Endpunkte akzeptieren keine Query-Parameter und keinen

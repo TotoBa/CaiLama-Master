@@ -14,7 +14,6 @@ $router = new Router();
 $router->post('/api/v1/status', StatusController::class, 'show');
 $router->post('/api/v1/imports/cailama/append', ImportController::class, 'append');
 $router->post('/api/v1/imports/cailama/reset', ImportController::class, 'reset');
-$router->post('/api/v1/admin/schema/auth', SchemaController::class, 'auth');
 $router->post('/api/v1/admin/schema/cailama', SchemaController::class, 'cailama');
 $router->post('/api/v1/admin/schema/all', SchemaController::class, 'all');
 

@@ -87,7 +87,6 @@ required_files=(
   "web/api_app/init.php"
   "web/api_app/Response.php"
   "web/api_app/Router.php"
-  "web/api_app/schema/auth-login.sql"
   "web/api_app/schema/cailama-data.sql"
   "web/architecture.php"
   "web/data/ecosystem.json"

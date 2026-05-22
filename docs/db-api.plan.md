@@ -310,11 +310,11 @@ Aktueller Master-Stand:
 - `web/api_app/config.local.sample.php` ist nur eine secretfreie Vorlage.
 - Die echte Webspace-Konfiguration liegt ausserhalb des Public-Webroots unter
   `cailama-private/api/config.local.php`.
-- `databases.auth` verbindet die Provider-Datenbank fuer Website-Login.
-- `databases.cailama` verbindet die getrennte CaiLama-Fachdatenbank.
-- Der Provider stellt zwei getrennte Datenbanken mit je 2 GB bereit:
-  `Login` fuer Website-Daten und eine eigene CaiLama-Datenbank fuer
-  Fachdaten.
+- `databases.cailama` verbindet die Provider-Datenbank.
+- Die login- und fachlichen Tabellen leben in derselben Datenbank (single-database
+  mode), da IONOS shared hosting offenbar nur einen DB-Host pro PHP-Prozess
+  auflösen kann (Error 2005 bei Versuch einer zweiten Verbindung).
+- Login/Authentifizierung erfolgt über dieselbe `cailama`-Datenbank.
 - `web/login.php`, `web/account.php` und `web/logout.php` bilden die
   Session-Shell.
 - `POST /api/v1/status` liefert geschuetzten neutralen Status. Ohne gueltigen
@@ -333,8 +333,8 @@ Aktueller Master-Stand:
 - Grosse Uebertragungen laufen per SFTP in einen nicht oeffentlich
   erreichbaren Webspace-Ordner. Wenn keine Datei vorhanden ist, wird der Import
   abgelehnt; nach erfolgreichem Import wird die Datei geloescht.
-- `web/api_app/schema/auth-login.sql` und
-  `web/api_app/schema/cailama-data.sql` enthalten neutrale Schema-Vorlagen.
+- `web/api_app/schema/cailama-data.sql` enthaelt die neutrale Schema-Vorlage
+  (application tables + web_users fuer das Login-System).
 - Provider-Schemas werden ueber die PHP-API im Webspace gesetzt, weil die
   Provider-Datenbanken nur von dort bearbeitet werden sollen. Lokale MySQL-
   Setup-Laeufe gelten nur fuer lokale DBs.
@@ -472,24 +472,10 @@ db_import:reset
 
 Nach erfolgreichem Import wird die Dump-Datei geloescht.
 
-### `POST /api/v1/admin/schema/auth`
-
-Zweck: Das Login-/Website-Schema in der getrennten Provider-Auth-Datenbank
-idempotent anlegen. Dieser Endpoint ist nur fuer Setup/Ops gedacht und nutzt
-das fest versionierte Schema `web/api_app/schema/auth-login.sql`.
-
-Scope:
-
-```text
-admin
-```
-
-Der Endpoint akzeptiert weder Query-Parameter noch Request-Body.
-
 ### `POST /api/v1/admin/schema/cailama`
 
-Zweck: Das CaiLama-Fachdaten-Schema in der getrennten Provider-CaiLama-
-Datenbank idempotent anlegen. Dieser Endpoint nutzt das fest versionierte
+Zweck: Das CaiLama-Anwendungsschema (inkl.
+`web_users`-Login-Tabelle) in der Provider-Datenbank idempotent anlegen. Dieser Endpoint nutzt das fest versionierte
 Schema `web/api_app/schema/cailama-data.sql`.
 
 Scope:
@@ -502,9 +488,9 @@ Der Endpoint akzeptiert weder Query-Parameter noch Request-Body.
 
 ### `POST /api/v1/admin/schema/all`
 
-Zweck: Beide Provider-Schemas nacheinander ueber die PHP-API setzen. Fuer
-wiederholbare Skriptlaeufe sind auch die Einzelziele sinnvoll, damit ein Fehler
-in einer DB die andere DB nicht unklar laesst.
+Zweck: Das CaiLama-Schema ueber die PHP-API anwenden. Aequivalent zu
+`schema/cailama`. Die Route ist fuer Skripte gedacht, die den Namen `all`
+wiederholend verwenden.
 
 Scope:
 

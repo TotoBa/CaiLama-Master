@@ -66,11 +66,7 @@ function h(string $value): string
               <dd><?= h((string) ($user['email'] ?? '')) ?></dd>
             </div>
             <div>
-              <dt>Auth-Datenbank</dt>
-              <dd><?= ($config['databases']['auth']['enabled'] ?? false) ? 'konfiguriert' : 'nicht konfiguriert' ?></dd>
-            </div>
-            <div>
-              <dt>CaiLama-Datenbank</dt>
+              <dt>Datenbank</dt>
               <dd><?= ($config['databases']['cailama']['enabled'] ?? false) ? 'konfiguriert' : 'nicht konfiguriert' ?></dd>
             </div>
           </dl>

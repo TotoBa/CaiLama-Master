@@ -27,7 +27,6 @@ final class StatusController
             return $this->error('body_not_allowed', 'Request body is not allowed for this endpoint.', 400);
         }
 
-        $authProbe = $this->databaseProbe($config, 'auth');
         $cailamaProbe = $this->databaseProbe($config, 'cailama');
 
         return Response::json([
@@ -38,11 +37,9 @@ final class StatusController
                 'pdo_mysql' => in_array('mysql', \PDO::getAvailableDrivers(), true) ? 'available' : 'missing',
             ],
             'databases' => [
-                'auth' => $authProbe['status'],
                 'cailama' => $cailamaProbe['status'],
             ],
             'diagnostics' => [
-                'auth' => $authProbe['diagnostic'],
                 'cailama' => $cailamaProbe['diagnostic'],
             ],
         ]);
