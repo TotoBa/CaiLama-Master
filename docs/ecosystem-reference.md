@@ -3,7 +3,7 @@
 Zielgruppe: Menschen, Codex, Kimi und andere LLM-Agenten, die schnell den
 aktuellen Systemzuschnitt verstehen müssen.
 
-Stand: 2026-05-23 (Session 3 Update).
+Stand: 2026-05-23 (Session 4 Update).
 
 ## Kurzfassung
 
@@ -124,6 +124,17 @@ Wichtige Modulgruppen:
 
 Aktueller Fokus:
 
+**Stand 2026-05-24:**
+- Review-Gate nach erster Stockfish-Analyse: Nutzer kann Kandidaten-
+  Stellungen vor LLM-Tiefenanalyse pruefen, hinzufuegen, entfernen,
+  priorisieren oder zurueckstellen. `training/review_gate.py`
+  mit persistentem JSON-Workflow; Slash-Command `/review`.
+- Planmodus: heuristisch oder LLM-gestuetzte schrittweise Aufgabenplanung.
+  `training/plan_mode.py` mit `Plan`, `PlanStep`, persisentem JSON.
+  Slash-Command `/plan`; Skills `generate_plan`, `plan_next_step`.
+- Slash-to-Skill-Vertrag: 25 built-in Tools als manifestbasierte Skills
+  verfuegbar; jedes Kern-Feature als Tool, UI-Steuerung als Slash-Command.
+  Dokumentation in `docs/slash-tool-skill-contract.md`.
 - DB-Hybridpfad ist im Grundschnitt umgesetzt: `database.access_mode` wählt
   `native`, `api` oder `hybrid`; API-Metadaten bleiben secretfrei und der
   DB-API-Statusclient fragt per geschütztem `POST /api/v1/status` nur
