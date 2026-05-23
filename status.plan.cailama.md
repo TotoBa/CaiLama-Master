@@ -1,26 +1,39 @@
 # Status und Ausbaupfade des CaiLama-Ökosystems
 
-## Aktualisierung 2026-05-23
+## Aktualisierung 2026-05-23 (Session 2 — nach CardType/Search-Fixes/Lizenz)
 
-Dieser Abschnitt ergaenzt den Stand nach Runtime-Update und PTG-Artefakt-
-Scheibe, ohne die historische Analyse darunter umzuschreiben.
+Dieser Abschnitt ergaenzt den Stand nach der zweiten Kimi-Arbeitssession,
+ohne die historische Analyse darunter umzuschreiben.
 
-- `TotoBa/CaiLama`: Die offline/deterministische PTG-Produktloop-Scheibe ist
-  umgesetzt und getestet. `run_ptg_pipeline` erzeugt pro profilierter Partie
-  `source.pgn`, `annotated.pgn`, `training.json` und `quality_gates.json`.
-  Die Quality-Gates pruefen PGN-Roundtrip, annotierten PGN-Roundtrip, legale
-  Zuege, illegale Plies und Grounding-Zaehler. Die CLI meldet Sessions,
-  Schluesselstellungen und Artefaktpfade. Verifikation: `1441 passed`,
-  `40 skipped`; gezielt PTG `13 passed`.
-- Offen in CaiLama bleiben bewusst live- oder integrationsnahe Folgepunkte:
-  PTG-Live-Verifikation gegen den Router, DGT-/Agent-naher Abruf der
-  Artefakte, Review-Rueckfluss in Priorisierung, deterministisches Scoring,
-  Taxonomie/Kartentypen, Datenschutz/Export und OCR/FEN-Gates ohne geratene
-  FENs.
-- `TotoBa/CaiLama-Master`: Produktpositionierung, Benchmark-Doku, Roadmap,
-  Website und LLM-Referenz werden auf diesen PTG-Stand nachgezogen. PTG-
-  `quality_gates.json` ist die erste konkrete Messquelle fuer den spaeteren
-  Master-Benchmark-Rahmen; der repo-uebergreifende Exportvertrag bleibt offen.
+- `TotoBa/CaiLama`:
+  - CardType-Auswertung in `show_training_card`, `list_training_cards` und
+    `generate_personalized_training` umgesetzt (Agent-Tools + Manifest).
+  - `CardType` und `MistakePattern` aus `training.__init__` exportiert.
+  - `repertoire_drift` setzt `CardType.OPENING_DRIFT`; `board_chain` akzeptiert
+    optionalen `card_type`.
+  - `docs/privacy-training-data.md`: Retention, Export, PII-Minimierung.
+  - `docs/job-contract-cailama.md`: Queue-Vertrag mit CaiLama-Search.
+  - `docs/data-eval-contract-llm-training.md`: Daten-/Eval-Trennung fuer LLM.
+  - Alle Tests gruen: Agent 259 passed, Training 247 passed.
+  - Commits: `a8a3ad4`, `5dbe66e`, `60a9f20`.
+- `TotoBa/CaiLama-Search`:
+  - `semantic_search()`: `hybrid`-Parameter entfernt (Konflikt mit
+    userProvided `vector` in Meilisearch 1.13). `filter_expr`-Passthrough.
+  - Multi-Index-Response normalisiert (wie Single-Index-Pfad).
+  - Goldset-Live-Test: beide Modi Pass-Rate 1.0 (9/9).
+  - Benchmark-Vergleich aktualisiert. README nachgezogen.
+  - Commits: `8e5a14e`, `90997a5`, `e8139b0`.
+- `TotoBa/CaiLama-LLM-Router`: Alle Punkte erledigt (vorherige Session).
+  Keine neuen Änderungen.
+- `TotoBa/CaiLama-Master`: TODO und Roadmap aktualisiert.
+- **Alle vier Repos**: AGPL-3.0-or-later LICENSE + CONTRIBUTING.md (DCO).
+  Commits pro Repo: `d59e8ac`–`c946d87` (CaiLama/Search) / `f20ee54`–`f2372dd`
+  (Router) / `a15d275`–`2272f25` (Master).
+
+Offen (bewusste Folgearbeit):
+- CaiLama: PTG-Live-Verifikation, OCR/FEN-Gates, PTG-Observability.
+- CaiLama-Search: DWZ-Staging-Test, semantische Freigabeentscheidung.
+- CaiLama-Master: Benchmark-Rahmen, LLM-Training-Roadmap.
 
 ## Aktualisierung 2026-05-22
 
