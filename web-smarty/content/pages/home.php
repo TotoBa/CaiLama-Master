@@ -22,12 +22,12 @@ return [
     ],
     'timeline' => [
         ['title' => '1. Import', 'text' => 'PGN oder Plattformpartie aufnehmen und gültige Ausgangsdaten sichern.'],
-        ['title' => '2. Analyse', 'text' => 'Stockfish, Brettwahrheit und Heuristiksignale statt ungeprüfter Modellbehauptungen.'],
+        ['title' => '2. Analyse', 'text' => 'Stockfish, Brettwahrheit, Legal-Move-Tags und Heuristiksignale statt ungeprüfter Modellbehauptungen.'],
         ['title' => '3. Aufgaben', 'text' => 'Schlüsselstellungen, Gewichtungen, Trainingsfragen, Karten, kommentierte PGN und Trainings-JSON erzeugen.'],
         ['title' => '4. Coach', 'text' => 'Eine konkrete Trainingseinheit erst bei Bedarf auswählen, mit Unicode-Brett anzeigen und bei verbundenem DGT-Brett zum Aufstellen auffordern.'],
     ],
     'capabilities' => [
-        ['title' => 'PGN und Analyse', 'text' => 'Partien werden verarbeitet, mit Stockfish- und Heuristiksignalen angereichert und als gültige Artefakte erhalten.'],
+        ['title' => 'PGN und Analyse', 'text' => 'Partien werden verarbeitet, mit Stockfish, Brettwahrheit, Legal-Move-Tags und Heuristiksignalen angereichert und als gültige Artefakte erhalten.'],
         ['title' => 'Schlüsselstellungen', 'text' => 'Aus kritischen Momenten entstehen gewichtete Trainingspositionen statt bloßer Fließtext-Kommentare.'],
         ['title' => 'Trainingskarten', 'text' => 'Fehler, Muster, Kartentypen und Prioritäten werden strukturiert und für Wiederholung vorbereitet.'],
         ['title' => 'Review-Rückfluss', 'text' => 'Gelöste und ungelöste Karten beeinflussen spätere Trainingsauswahl und Coach-Sitzungen.'],

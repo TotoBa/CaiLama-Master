@@ -113,7 +113,7 @@ Rolle:
 Wichtige Modulgruppen:
 
 - `analysis`: Stockfish-Pipeline, Zugqualität, Sharpness, PGN-Annotation.
-- `chess_eval`: Brettfakten ohne Engine.
+- `chess_eval`: Brettfakten ohne Engine, inklusive Legal-Move-Tags.
 - `database`: SQLObject-Store, Migrationen, MariaDB/SQLite-Testpfade.
 - `player_profile`: Profile, Plattformaccounts, importierte Partien,
   Rating-Aggregation.
@@ -138,6 +138,13 @@ Aktueller Fokus:
   persistente JSON-Jobs und synchron wartbarer Abbruch sind vorhanden.
 - Modellrollen-Benchmark-Events: secretfreie Dauer- und Token-Metriken können
   aus Agent-Läufen für das geschützte Website-Feedback exportiert werden.
+- Legal-Move-/Brettwahrheit: `BoardTruth` klassifiziert alle legalen Züge
+  enginefrei mit Mehrfach-Tags (`quiet`, `check`, `promotion`,
+  `development`, `protects_piece`, `double_attack`, `triple_attack`,
+  `discovery_attack`, `moves_out_of_attack`). Das Agent-Tool
+  `evaluate_legal_moves` gibt jetzt eine strukturierte Stockfish-Auswertung
+  mit UCI/SAN, Score aus Sicht des Ziehers, Engine-Rang, Tags und
+  Qualitätsband zurück.
 - Slash-to-Skill-Vertrag: 25 built-in Tools als manifestbasierte Skills
   verfügbar; jedes Kern-Feature als Tool, UI-Steuerung als Slash-Command.
   Dokumentation in `docs/slash-tool-skill-contract.md`.
@@ -165,8 +172,8 @@ Aktueller Fokus:
   `search_dwz`; Recherchefragen schlagen `search_rag` vor.
 - DWZ-Identity-Linking in Store und CLI integrieren.
 - RAG-Analysepakete in Researcher-/Analyst-Promptflows einhängen.
-- PGN-zu-Trainingsaufgabe-Loop weiter härten: Review-Gate-Console-Flow mit
-  Unicode-Brett, Plan-Kaskade in AgentLoop, Live-Router-Verifikation,
+- PGN-zu-Trainingsaufgabe-Loop weiter härten: PTG-Live-Verifikation,
+  Legal-Move-Details in weitere Review-/Coach-/Benchmark-Artefakte einhängen,
   Datenschutz und OCR/FEN-spezifische Qualitätsgates.
 - Modellrollen-Benchmarks sollen Dauer, Input-/Thinking-/Output-Tokens,
   Qualitätsurteile, Aufgabenlösung, Logikfehler und A/B-Präferenzen für PTG,
@@ -282,8 +289,9 @@ Aktueller Fokus:
   filter+hybrid-500er und Multi-Index-Response sind behoben, beide Modi
   erreichen Pass-Rate 1.0. `semantic.enabled=false` bleibt Default, bis ein
   größeres Eval einen produktiven Nutzen belegt.
-- DWZ-Staging-Test: Offline-Tests decken Parse, Import und Header-Validierung ab;
-  Live-Download bleibt manueller Schritt.
+- DWZ-Staging-Test: `dwz_staging.py` validiert lokale DSB-CSV-ZIP-Artefakte
+  offline ohne Import, Netzwerk oder Meilisearch-Mutation. Live-Download und
+  echter Import bleiben bewusste manuelle Schritte.
 
 Grenzen:
 
@@ -392,21 +400,23 @@ Jetzt:
   Folgearbeit.
 - Trainingsfokus schärfen: CaiLama liefert Trainingsarbeit und reproduzierbare
   Artefakte, nicht Social- oder Plattformfunktionen.
-- DWZ-Identity-Linking in Store/CLI und RAG-Provenienz fertigstellen.
+- RAG-Provenienz in allen Antwortformaten fertigstellen; DWZ-Identity-Linking
+  in Store/CLI ist umgesetzt.
 - Router-Infrastrukturwelle ist abgeschlossen: Backend-API-Key-Weitergabe,
   privacy-safe Token-/Usage-Metriken, `llm-router usage`, Benchmark-Export
   und generische Endpoint-Pfade sind umgesetzt.
-- Search als aktuellen Ausbau-Fokus vorantreiben: lexical-vs-hybrid ist
-  benchmarkbar dokumentiert; offen sind die daraus sichtbaren API-Bugs und
-  die Freigabeentscheidung für Hybrid.
+- Search als aktuellen Ausbau-Fokus weiter messen: lexical-vs-hybrid ist
+  benchmarkbar dokumentiert, Filter-/Multi-Index-Bugs und DWZ-Staging sind
+  erledigt; offen bleibt die Freigabeentscheidung für Hybrid auf größerem Eval.
 - Modellrollen-Hypothese als Benchmark validieren: geschütztes Website-
   Feedback erfasst Laufzeit, Tokenwerte, Qualität, Aufgabenlösung,
   Logikfehler und A/B-Präferenz.
 
 Danach:
 
-- PTG-Live-Verifikation nur bewusst gegen den Router; danach CardType in
-  Agent-/Board-Flows, weitere Qualitätsgates und Datenschutz/Export härten.
+- PTG-Live-Verifikation nur bewusst gegen den Router; danach Legal-Move-
+  Details, weitere Qualitätsgates und Datenschutz/Export in die Produktpfade
+  einhängen.
 - Einheitliche Job-Orchestrierung vorbereiten.
 - Benchmark-Rahmen im Master weiter ausbauen, Website-Feedback mit Router- und
   CaiLama-Metriken verbinden und Ergebnisse repo-übergreifend dokumentieren.

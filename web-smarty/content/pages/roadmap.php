@@ -20,9 +20,9 @@ return [
             'tag' => 'CaiLama',
             'title' => 'Produktloop härten',
             'items' => [
-                'Review-Gate in der interaktiven Console mit Unicode-Brett pro Kandidat und finalem Submit abrunden.',
-                'Plan-Kaskade in AgentLoop integrieren, damit bestätigte Pläne die Ausführung steuern.',
                 'PTG-Live-Verifikation bewusst gegen Router prüfen und Ergebnisse in Benchmarks zurückführen.',
+                'Legal-Move-Details in Review-/Coach-/Benchmark-Artefakte einhängen.',
+                'RAG-Provenienz in allen Antwortformaten sichtbar halten.',
                 'OCR/FEN-Gates ohne geratene FENs weiter härten.',
                 'Qualitätsgates über PTG hinaus vereinheitlichen.',
             ],
@@ -45,7 +45,7 @@ return [
             'items' => [
                 'Quellenformat überall vereinheitlichen.',
                 'Antworten mit Titel, Quelle/URL, Stand/Freshness, Verwendet-für und Unsicherheit ausgeben.',
-                'DWZ-Staging-Test bewusst verifizieren.',
+                'DWZ-Staging ist offline verifiziert; echte Live-Importe bleiben zustimmungspflichtig.',
                 'Hybrid bleibt trotz behobener Korrektheitsfehler bis zur Produktentscheidung default-off.',
             ],
         ],

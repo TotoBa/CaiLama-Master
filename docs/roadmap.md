@@ -115,8 +115,9 @@ Koordinationspunkte:
 - Umgesetzt: Docker-faehiger Vergleich `lexical` gegen `hybrid` und
   Ergebnisbericht fuer den Master; filter+hybrid-500er und Multi-Index-
   Normalisierung sind behoben, beide Modi erreichen Pass-Rate 1.0.
-- Naechster Search-Fokus: DWZ-Staging-Verifikation und Entscheidung, ob
-  Hybrid auf groesserem Eval produktiv freigegeben wird.
+- Naechster Search-Fokus: Entscheidung, ob Hybrid auf groesserem Eval
+  produktiv freigegeben wird. DWZ-Staging-Verifikation ist offline erledigt;
+  echter Live-Import bleibt zustimmungspflichtig.
 
 ## Danach
 
@@ -144,15 +145,17 @@ Koordinationspunkte:
 - Umgesetzt: Review-Gate-Grundlage nach erster Stockfish-Analyse, Planmodus,
   Hintergrund-Agenten fuer lange Aufgaben und secretfreie
   Modellrollen-Benchmark-Events.
-- Offen: Review-Gate in der interaktiven Console abrunden: Unicode-Brett pro
-  Kandidat, Nutzerentscheidung komfortabel sammeln und finaler Submit vor
-  LLM-Tiefenanalyse.
-- Offen: Plan-Kaskade in `AgentLoop` integrieren, sodass bestaetigte Plaene
-  die Ausfuehrung steuern.
+- Umgesetzt: Review-Gate-Console-Flow mit Unicode-Brett pro Kandidat und
+  finalem Submit vor LLM-Tiefenanalyse.
+- Umgesetzt: Plan-Kaskade in `AgentLoop`, sodass bestaetigte Plaene den
+  naechsten Schritt deterministisch ansteuern.
+- Umgesetzt: BoardTruth- und Stockfish-Legal-Move-Ausgabe mit Mehrfach-Tags
+  und Produkt-Qualitaetsbaendern.
 - Offen: PTG-Live-Verifikation bewusst gegen Router pruefen und die
   Ergebnisse in Master-Benchmarks beziehungsweise geschuetztes Website-
   Feedback rueckfuehren.
-- Offen: erweiterte Qualitaetsgates ueber PTG hinaus.
+- Offen: Legal-Move-Details in weitere Review-/Coach-/Benchmark-Artefakte
+  einhaengen und erweiterte Qualitaetsgates ueber PTG hinaus aufbauen.
 - Datenschutz fuer personenbezogene Leistungsprofile klaeren.
 
 ### DWZ-Identity-Linking

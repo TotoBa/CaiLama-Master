@@ -9,7 +9,7 @@ ambitionierte Spieler, Trainer und ernsthafte Selbstlerner.
 Vom PGN zur persoenlichen Trainingsaufgabe:
 
 1. Partie importieren.
-2. Stockfish- und Heuristiksignale erzeugen.
+2. Stockfish-, Brettwahrheit-, Legal-Move- und Heuristiksignale erzeugen.
 3. menschlich verstaendliche, aber engine-geerdete Kommentare ergaenzen.
 4. drei bis sieben Schluesselstellungen extrahieren.
 5. Fehlerarten und wiederkehrende Muster klassifizieren.
@@ -24,9 +24,12 @@ Vom PGN zur persoenlichen Trainingsaufgabe:
 Stand 2026-05-23: Die offline/deterministische PTG-Scheibe erzeugt bereits
 `source.pgn`, `annotated.pgn`, `training.json` und `quality_gates.json`.
 Agent-/DGT-naher Kartenabruf, `card_id`-Durchstich, CardType/Muster und
-Review-Stats in der Trainingspriorisierung sind umgesetzt. Offen bleiben der
-neue Schnitt von gewichteten Trainingspositionen zu kurzlebigen Coach-Sessions,
-PTG-LLM-Resilienz, OCR/FEN-Gates, breitere Qualitaetsgates und
+Review-Stats in der Trainingspriorisierung sind umgesetzt. Gewichtete
+Trainingspositionen, kurzlebige Coach-Sessions on demand, Review-Gate-
+Console, Planmodus, Hintergrund-Agenten, Benchmark-Events, PGN-/LLM-
+Resilienz und Legal-Move-/Brettwahrheit-Tags sind vorhanden. Offen bleiben
+PTG-Live-Verifikation, Legal-Move-Details in Folgeartefakten, OCR/FEN-Gates,
+RAG-Provenienz in allen Antwortformaten, breitere Qualitaetsgates und
 Datenschutz-/Export-Regeln fuer Leistungsprofile.
 
 ## Differenzierung
@@ -65,6 +68,8 @@ CaiLama darf keine ungeprueften LLM-Behauptungen als Schachwahrheit ausgeben.
 Alle produktnahen Analyse- und Trainingspfade brauchen:
 
 - legale Zuege und Brettzustandspruefung,
+- Legal-Move-Tags und Stockfish-Qualitaetsbaender dort, wo alle Kandidaten
+  einer Stellung verglichen werden,
 - PGN-Roundtrip oder explizite Fehler,
 - annotierter PGN-Roundtrip fuer produktnahe Kommentare,
 - Stockfish- oder Heuristik-Grounding fuer Bewertungen,

@@ -33,8 +33,8 @@ return [
             'summary' => 'Schachanalyse, Training, Profile, Agent-CLI, PGN, Stockfish, OCR/Knowledge und DGT-nahe Workflows.',
             'points' => [
                 'PTG erzeugt valide Artefakte, Trainingskarten, Kartentypen, Muster und erklärbare Priorität.',
-                'Gewichtete Trainingspositionen, Coach-Sitzung on demand, Review-Gate, Planmodus, Hintergrund-Agenten und Benchmark-Events sind vorhanden.',
-                'Offen sind der Review-Gate-Console-Flow, die Plan-Kaskade im AgentLoop, PTG-Live-Verifikation und erweiterte OCR/FEN-Qualitätsgates.',
+                'Gewichtete Trainingspositionen, Coach-Sitzung on demand, Review-Gate-Console, Plan-Kaskade, Hintergrund-Agenten, Benchmark-Events und Legal-Move-Tags sind vorhanden.',
+                'Offen sind PTG-Live-Verifikation, Legal-Move-Details in Folgeartefakten, RAG-Provenienz in allen Antwortformaten und erweiterte OCR/FEN-Qualitätsgates.',
             ],
         ],
         [
@@ -58,7 +58,7 @@ return [
             'points' => [
                 'Lexical-vs-Hybrid-Benchmark liegt vor; semantic.enabled bleibt default false.',
                 'Filter+Hybrid und Multi-Index-Response sind behoben; beide Modi erreichen Pass-Rate 1.0.',
-                'Offen sind DWZ-Staging-Verifikation und Freigabeentscheidung für Hybrid auf größerem Eval.',
+                'DWZ-Staging ist offline verifiziert; offen bleibt die Freigabeentscheidung für Hybrid auf größerem Eval.',
             ],
         ],
         [
@@ -75,8 +75,8 @@ return [
         ],
     ],
     'next' => [
-        ['title' => 'Jetzt', 'text' => 'Review-Gate in der Console abrunden, Plan-Kaskade in AgentLoop integrieren, PTG live prüfen und OCR/FEN-Gates weiter härten.'],
-        ['title' => 'Danach', 'text' => 'Search-DWZ-Staging, semantische Freigabe auf größerem Eval, Datenschutz/Export und Qualitätsgates über PTG hinaus.'],
+        ['title' => 'Jetzt', 'text' => 'PTG live prüfen, Legal-Move-Details in Folgeartefakte einhängen, RAG-Provenienz überall sichtbar halten und OCR/FEN-Gates weiter härten.'],
+        ['title' => 'Danach', 'text' => 'Semantische Freigabe auf größerem Eval, Datenschutz/Export und Qualitätsgates über PTG hinaus.'],
         ['title' => 'Später', 'text' => 'Spezialisierte Modelle erst nach Benchmark-Baseline, Datenfreigabe und Router-kompatibler Bereitstellung.'],
         ['title' => 'Betrieb', 'text' => 'Runtime und Website über secretfreie Skripte deployen, private Smarty-Abhängigkeit getrennt halten und Repos sauber für Kimi übergeben.'],
     ],

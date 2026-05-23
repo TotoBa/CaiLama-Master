@@ -7,7 +7,8 @@
     "Plan mode with heuristic or LLM-backed task planning",
     "BackgroundAgent slash workflow and benchmark event recorder",
     "Runtime deployment script hardening and secret-safe Kimi ecosystem skill",
-    "Slash-to-Skill contract: 25 built-in tools as manifest-based skills"
+    "Slash-to-Skill contract: 25 built-in tools as manifest-based skills",
+    "Structured legal-move truth and Stockfish quality bands for all legal moves"
   ],
   "canonical_url": "https://cailama.org/",
   "language": "de",
@@ -37,9 +38,9 @@
     ],
     "quality_bar": [
       "legal move and board-state validation",
-            "PGN roundtrip or explicit errors",
-            "annotated PGN roundtrip for training comments",
-            "Stockfish or heuristic grounding for evaluations",
+      "PGN roundtrip or explicit errors",
+      "annotated PGN roundtrip for training comments",
+      "Stockfish or heuristic grounding for evaluations",
       "source provenance for RAG context",
       "no guessed FEN output from OCR diagrams"
     ]
@@ -118,18 +119,20 @@
         "hardware"
       ],
       "current_focus": [
-                "DB hybrid access is configurable through database.access_mode values native, api and hybrid",
-                "bounded Webspace DB API status client uses protected POST /api/v1/status without SQL-over-HTTP or secret output",
-                "provider-side dump import is available through no-query/no-body append/reset endpoints that process a configured server-side .sql or .sql.gz file",
-                "provider database schemas are applied through protected PHP admin endpoints on the webspace, not through local provider DB access",
+        "DB hybrid access is configurable through database.access_mode values native, api and hybrid",
+        "bounded Webspace DB API status client uses protected POST /api/v1/status without SQL-over-HTTP or secret output",
+        "provider-side dump import is available through no-query/no-body append/reset endpoints that process a configured server-side .sql or .sql.gz file",
+        "provider database schemas are applied through protected PHP admin endpoints on the webspace, not through local provider DB access",
         "PTG queue enqueue is wired; optional --run-llm-stages connects classify/analyze before personalized card generation",
         "PTG product-loop artifacts are generated offline: source.pgn, annotated.pgn, training.json and quality_gates.json",
         "Agent/DGT-aware training card retrieval, ReplayPosition.card_id and review stats in training prioritization are implemented",
         "deterministic card scoring, mistake taxonomy and card types are implemented",
         "Review-Gate accepts session directories and direct review_decision.json file paths",
+        "Review-Gate console flow and AgentLoop plan cascade are implemented",
         "BackgroundAgent supports persistent slash tasks and synchronous cancellation for deterministic status/tests",
         "BenchmarkEvent/BenchmarkStore provide secret-free duration and token metrics for model-role feedback",
-        "PGN-to-training-task follow-up remains Review-Gate console flow, AgentLoop plan cascade, live router verification, privacy/export rules and OCR/FEN gates",
+        "BoardTruth and evaluate_legal_moves expose structured tags, Stockfish score, engine rank and quality band for all legal moves",
+        "PGN-to-training-task follow-up remains PTG live verification, legal-move details in downstream artifacts, privacy/export rules and OCR/FEN gates",
         "internal SearchAdapter is standard path for web_search and search_dwz",
         "search_rag is suggested for research/source questions",
         "DWZ identity linking store and CLI integration",
@@ -216,6 +219,7 @@
         "job orchestration with CaiLama queue and training",
         "benchmark metrics, master-compatible benchmark export, RAG provenance and data policy are implemented",
         "Docker-capable lexical versus hybrid benchmark comparison is documented; filter+hybrid and grouped multi-index response fixes are complete with pass rate 1.0 in both modes",
+        "DWZ staging verification is implemented as offline ZIP/CSV checks without import or network access",
         "semantic.enabled remains false by default until a larger eval shows product benefit"
       ],
       "constraints": [
@@ -299,16 +303,16 @@
       "Training workshop focus on PGN-to-training-task loop instead of social platform features",
       "PTG card retrieval and review prioritization after offline artifact generation",
       "CaiLama deterministic scoring, mistake taxonomy and card types are implemented",
-      "DWZ identity linking and RAG provenance",
+      "DWZ identity linking is implemented; RAG provenance remains a cross-format hardening task",
       "Search benchmark comparison lexical versus hybrid is documented; correctness fixes are complete and hybrid remains default-off pending product decision",
       "Router infrastructure hardening is complete with backend API key forwarding, privacy-safe usage metrics, usage CLI and benchmark export",
       "Model-role hypothesis is documented as a benchmark matrix and protected website feedback stores reusable quality data in the provider database"
     ],
     "next": [
-      "CaiLama weighted training positions, coach sessions on demand, Planmodus console workflow and PTG LLM batching/retry",
+      "CaiLama PTG live verification, legal-move details in downstream artifacts and privacy/export hardening",
       "Unified job orchestration for CaiLama and Search",
       "Benchmark framework in Master for cross-repo measurements, website feedback, router usage metrics and result documentation",
-      "Search DWZ staging verification and semantic production decision on a larger eval"
+      "Search semantic production decision on a larger eval"
     ],
     "later": [
       "RAG-assisted analysis packages",

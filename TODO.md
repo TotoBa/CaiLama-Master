@@ -152,12 +152,15 @@ Vor Arbeitsbeginn lesen:
   Checkpointing ist umgesetzt; die 21 Positionen bleiben nur Benchmark-
   Beobachtung aus drei Beispielspielen, kein globaler Default. Nutzer-
   Review-Gate, Planmodus, Hintergrund-Agenten und secretfreie
-  Modellrollen-Benchmark-Events sind als erste Version vorhanden.
-  Naechster Fokus in CaiLama: Review-Gate in der interaktiven Console mit
-  Unicode-Brett pro Kandidat und Submit vor LLM-Start abrunden (erledigt),
-  Plan-Kaskade in `AgentLoop` integrieren (erledigt), PTG-Live-Verifikation
-  bewusst gegen Router pruefen, OCR/FEN-Gates ohne geratene FENs weiter
-  haerten und Analyse-Qualitaetsgates ueber PTG hinaus ausbauen.
+  Modellrollen-Benchmark-Events sind als erste Version vorhanden. Legal-Move-
+  und Brettwahrheit ist erweitert: `BoardTruth` liefert Tags fuer alle
+  legalen Zuege; `evaluate_legal_moves` gibt strukturierte Stockfish-Details
+  mit Score, Engine-Rang, Tags und Qualitaetsband zurueck.
+  Naechster Fokus in CaiLama: PTG-Live-Verifikation bewusst gegen Router
+  pruefen, Legal-Move-Details in Review-/Coach-/Benchmark-Artefakte
+  einhaengen, OCR/FEN-Gates ohne geratene FENs weiter haerten,
+  RAG-Provenienz ueberall sichtbar halten und Analyse-Qualitaetsgates ueber
+  PTG hinaus ausbauen.
   **Router** = aktuelle Infrastrukturwelle ist abgearbeitet: Backend-API-Key-
   Weitergabe, Token-/Usage-Metriken, `llm-router usage`, benchmarkbare
   Usage-/Latenzexporte und generische `endpoint_path`-Backends sind umgesetzt;
@@ -167,9 +170,11 @@ Vor Arbeitsbeginn lesen:
   **Search** = filter+hybrid-500er und Multi-Index-Response sind
   behoben (Pass-Rate 9/9). `semantic.enabled=false` bleibt Default.
   DWZ-Staging-Verifikation ist in `CaiLama-Search` umgesetzt (dwz_staging.py
-  + tests/test_dwz_staging.py, 4 tests passing).
-  Offen bleiben semantische Freigabeentscheidung auf groesserem Eval und
-  API-/README-Pflege bei neuen Vertragsaenderungen.
+  + tests/test_dwz_staging.py, 4 Tests passing). `uv.lock` ist wie im Router
+  ignoriert, damit `uv run` keinen dreckigen Arbeitsbaum hinterlaesst.
+  Offen bleiben semantische Freigabeentscheidung auf groesserem Eval,
+  RAG-/Researcher-Kennzahlen fuer das Website-Feedback und API-/README-Pflege
+  bei neuen Vertragsaenderungen.
 
 ## Kimi-Handoff
 
@@ -208,17 +213,18 @@ weitergehen.
 Cross-Repo-Prioritaet fuer den naechsten Lauf: In CaiLama mit den offenen
 Training-/PTG-Punkten beginnen. Bereits erledigt sind gewichtete
 Trainingspositionen, on-demand Coach-Session, PGN-/LLM-Resilienz,
-Review-Gate-Grundlage, Planmodus, Hintergrund-Agent und Benchmark-Event-
-Recorder. Offen ist die Abrundung: Review-Gate in der interaktiven Console
-mit Unicode-Brett pro Kandidat und finalem Submit vor LLM-Start; Plan-Kaskade
-in AgentLoop; PTG-Live-Verifikation gegen bewusst gestarteten Router;
-OCR/FEN-Gates ohne geratene FENs; Analyse-Qualitaetsgates ueber PTG hinaus.
-Die 21 Positionen aus dem Benchmark sind nur Beobachtung aus drei
-Beispielpartien. Danach Search nur fuer DWZ-Staging und semantische
-Freigabeentscheidung, Router nur bei neuem Alias-/Benchmark-/Live-Smoke-
-Auftrag. Runtime- und Website-Deploys nur ausfuehren, wenn sie beauftragt
-sind; dabei den Ecosystem-Skill nutzen und keine lokalen Operator-Secrets
-anzeigen oder dokumentieren.
+Review-Gate-Grundlage und Console-Flow, Planmodus und Plan-Kaskade,
+Hintergrund-Agent, Benchmark-Event-Recorder sowie strukturierte Legal-Move-/
+Brettwahrheit-Ausgabe. Offen ist die Abrundung: PTG-Live-Verifikation gegen
+bewusst gestarteten Router; Legal-Move-Details in Review-/Coach-/Benchmark-
+Artefakte einhaengen; OCR/FEN-Gates ohne geratene FENs; RAG-Provenienz in
+allen Antwortformaten; Analyse-Qualitaetsgates ueber PTG hinaus. Die 21
+Positionen aus dem Benchmark sind nur Beobachtung aus drei Beispielpartien.
+Danach Search nur fuer semantische Freigabeentscheidung und RAG-/Researcher-
+Kennzahlen, Router nur bei neuem Alias-/Benchmark-/Live-Smoke-Auftrag.
+Runtime- und Website-Deploys nur ausfuehren, wenn sie beauftragt sind; dabei
+den Ecosystem-Skill nutzen und keine lokalen Operator-Secrets anzeigen oder
+dokumentieren.
 
 **Update 2026-05-23:** PGN-/LLM-Pipeline ist gehärtet: `run_llm_call` mit
 Retry/Backoff/Timeout, `checkpoint_writer` in `classify_moves` und

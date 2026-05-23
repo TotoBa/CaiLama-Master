@@ -44,6 +44,11 @@ in diese Koordination.
 
 - PGN-Validitaet nach Annotation.
 - Anteil legal validierter Zuege und Stellungen.
+- Legal-Move-Tags und Stockfish-Qualitaetsbaender pro Stellung:
+  `quiet`, `check`, `promotion`, `development`, `protects_piece`,
+  `double_attack`, `triple_attack`, `discovery_attack`,
+  `moves_out_of_attack` plus `loosing-blunder`, `blunder`, `mistake`,
+  `ungenau`, `okay`, `good`, `stark`, `brilliant`.
 - Zahl und Qualitaet extrahierter Schluesselstellungen.
 - Anteil gueltiger PTG-Sessions aus `quality_gates.json`.
 - Grounding-Zaehler fuer Board, Engine, Klassifikation und Analyse.
@@ -127,11 +132,15 @@ Ein Ergebnis enthaelt mindestens:
   Schluesselstellungen, 13 Trainingskarten und 3/3 gueltigen PTG-Sessions.
   Die 21 Schluesselstellungen sind ein Ergebnis dieser Drei-Spiele-Baseline,
   keine allgemeine Obergrenze.
-  Der Live-LLM-Pfad ist noch nicht produktionsreif, weil der bisherige
-  pro-Zug-Loop 464 Router-Calls erzeugt und keine Retry-/Timeout-Resilienz
-  besitzt. Folgearbeit: alle Zuege klassifizieren, die pro Lauf priorisierten
-  Schluesselstellungen tief analysieren, gewichtete Trainingspositionen
-  erzeugen und konkrete Coach-Sessions erst on demand bilden.
+  Seit dem Folgestand sind Retry/Timeout/Checkpointing, gewichtete
+  Trainingspositionen, Coach-Session on demand, Review-Gate, Planmodus,
+  Hintergrund-Agenten, Benchmark-Events und strukturierte Legal-Move-
+  Klassifikation vorhanden. Offen bleiben die bewusste PTG-Live-Verifikation,
+  automatische Metrik-Uebernahme in das Website-Feedback und weitere
+  Analyse-Qualitaetsgates.
+- `docs/benchmark-results/2026-05-23.ocr-live-baseline.md`:
+  OCR-Live-Benchmark mit 6 PDFs, 23 Diagrammen, 1686 Textzeichen, 6/6 Gates
+  passed und 0% FEN-False-Positive-Rate. FENs werden weiterhin nicht geraten.
 
 ## Spezialisiertes LLM-Training
 
