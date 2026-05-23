@@ -145,10 +145,10 @@ Vor Arbeitsbeginn lesen:
   Review-Gate, Planmodus, Hintergrund-Agenten und secretfreie
   Modellrollen-Benchmark-Events sind als erste Version vorhanden.
   Naechster Fokus in CaiLama: Review-Gate in der interaktiven Console mit
-  Unicode-Brett pro Kandidat und Submit vor LLM-Start abrunden, Plan-Kaskade
-  in `AgentLoop` integrieren, PTG-Live-Verifikation bewusst gegen Router
-  pruefen, OCR/FEN-Gates ohne geratene FENs weiter haerten und
-  Analyse-Qualitaetsgates ueber PTG hinaus ausbauen.
+  Unicode-Brett pro Kandidat und Submit vor LLM-Start abrunden (erledigt),
+  Plan-Kaskade in `AgentLoop` integrieren (erledigt), PTG-Live-Verifikation
+  bewusst gegen Router pruefen, OCR/FEN-Gates ohne geratene FENs weiter
+  haerten und Analyse-Qualitaetsgates ueber PTG hinaus ausbauen.
   **Router** = aktuelle Infrastrukturwelle ist abgearbeitet: Backend-API-Key-
   Weitergabe, Token-/Usage-Metriken, `llm-router usage`, benchmarkbare
   Usage-/Latenzexporte und generische `endpoint_path`-Backends sind umgesetzt;
