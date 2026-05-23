@@ -64,12 +64,12 @@ Vor Arbeitsbeginn lesen:
   Stand 2026-05-23: PTG erzeugt offline `source.pgn`, `annotated.pgn`,
   `training.json` und `quality_gates.json`. Offen bleiben DGT-naher Abruf,
   Review-Priorisierung und Live-Router-Smoke.
-- [x] Website-Struktur auf Produktfokus als Startseite umstellen:
-  `web/index.php` ist die Produktfokus-/Trainingswerkstatt-Seite,
+- [x] Website-Struktur auf Trainingsfokus als Startseite umstellen:
+  `web/index.php` ist die Trainingsfokus-/Trainingswerkstatt-Seite,
   die bisherige Status-Startseite liegt als `web/status.php`. Navigation,
   Sitemap, `llms.txt`, `docs/website.md`, `docs/data/ecosystem.json` und
   `scripts/check-ecosystem.sh` sind auf `status.php` statt eine separate
-  Produktfokus-URL ausgerichtet.
+  Trainingsfokus-URL ausgerichtet.
 - [x] CaiLama-Search-Vertrag weiter pruefen: `POST /v1/search`,
   kompatibles `GET /v1/search`, `POST /v1/context`, `items`/`results`,
   `context`/`sources` und DWZ-Endpunkte **in `docs/integrations.md` als
@@ -131,7 +131,7 @@ docs/product-positioning.md, docs/benchmarks.md, status.plan.cailama.md und
 master-repo-orchestration.plan.md. Wenn die Aufgabe Website oder LLM-Doku
 betrifft, lies zusaetzlich docs/website.md, docs/ecosystem-reference.md,
 docs/data/ecosystem.json und die betroffenen Dateien unter web/. Beachte:
-web/index.php ist die Produktfokus-Startseite; der bisherige Status der
+web/index.php ist die Trainingsfokus-Startseite; der bisherige Status der
 Startseite liegt unter web/status.php.
 
 Arbeite danach die offenen Punkte in TODO.md von oben nach unten ab. Pro

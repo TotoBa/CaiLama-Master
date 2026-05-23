@@ -27,7 +27,7 @@ Scheibe, ohne die historische Analyse darunter umzuschreiben.
 Dieser Abschnitt aktualisiert die operative Prioritaet nach dem DB-Hybrid- und
 Goldset-Smoke-Schnitt, ohne die historische Bewertung darunter umzuschreiben.
 
-- Produktfokus 2026-05-22: CaiLama wird als Trainingswerkstatt positioniert.
+- Trainingsfokus 2026-05-22: CaiLama wird als Trainingswerkstatt positioniert.
   Der priorisierte Loop ist PGN-Import, Stockfish-/Heuristik-Grounding,
   drei bis sieben Schluesselstellungen, Trainingsfragen/-karten, gueltige
   PGN- und Trainings-JSON-Artefakte, CLI-/DGT-nahe Wiederholung und

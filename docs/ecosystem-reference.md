@@ -344,7 +344,7 @@ Jetzt:
   der fachliche API-Statuspfad ist angebunden und Provider-Dump-Importe laufen
   serverseitig über `append`/`reset`; fachliche Read-/Write-Endpunkte bleiben
   Folgearbeit.
-- Produktfokus schärfen: CaiLama liefert Trainingsarbeit und reproduzierbare
+- Trainingsfokus schärfen: CaiLama liefert Trainingsarbeit und reproduzierbare
   Artefakte, nicht Social- oder Plattformfunktionen.
 - DWZ-Identity-Linking in Store/CLI und RAG-Provenienz fertigstellen.
 - Router-Infrastrukturwelle fortsetzen: Backend-API-Key-Weitergabe ist
@@ -391,7 +391,7 @@ Ausbau:
 ## Maschinenlesbare Quellen
 
 - `docs/data/ecosystem.json`: versionierte Maschinenreferenz im Master.
-- `docs/product-positioning.md`: Produktfokus, Zielgruppe, Kernloop und
+- `docs/product-positioning.md`: Trainingsfokus, Zielgruppe, Kernloop und
   Qualitätsgrenzen.
 - `docs/benchmarks.md`: Master-Rahmen für repo-übergreifende Benchmarks.
 - `docs/benchmark-results/README.md`: Formatregeln für spätere

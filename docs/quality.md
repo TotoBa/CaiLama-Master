@@ -20,7 +20,7 @@ cmp -s docs/data/ecosystem.json web/data/ecosystem.json
 git diff --check
 ```
 
-Bei Produktfokus- oder Website-Aenderungen zusaetzlich pruefen, dass
+Bei Trainingsfokus- oder Website-Aenderungen zusaetzlich pruefen, dass
 externe Vergleichsnotizen nur als abgeleitete Anforderungen einfliessen.
 Konkrete Fremdproduktnamen aus solchen Notizen werden nicht in Repository,
 Website, Sitemap, JSON oder LLM-Referenz uebernommen.

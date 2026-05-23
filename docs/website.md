@@ -24,7 +24,7 @@ web/
 Wichtige Dateien:
 
 ```text
-web/index.php                 # Startseite mit Produktfokus
+web/index.php                 # Startseite mit Trainingsfokus
 web/status.php                # Status- und Repo-Übersicht
 web/projects.php              # Projekt- und Repo-Details
 web/architecture.php          # Architektur und Schnittstellen

@@ -32,7 +32,7 @@
     <section class="hero">
       <div class="hero-inner hero-grid">
         <div>
-          <p class="eyebrow">Produktfokus</p>
+          <p class="eyebrow">Deine Analyse. Deine Daten. Dein Training.</p>
           <h1>Vom PGN zur Trainingsaufgabe.</h1>
           <p class="lead">
             CaiLama ist als Trainingswerkstatt für ambitionierte Spieler,

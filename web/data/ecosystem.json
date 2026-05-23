@@ -268,7 +268,7 @@
   "roadmap": {
     "now": [
       "CaiLama DB hybrid hardening after configurable native/api/hybrid access, bounded API status client, single-database webspace mode and server-side provider dump import endpoints",
-      "Product focus on PGN-to-training-task loop instead of social platform features",
+      "Training workshop focus on PGN-to-training-task loop instead of social platform features",
       "DWZ identity linking and RAG provenance",
       "Search expansion for recall, quality and CaiLama integration after versioned synthetic goldsets, test-index seeding, automated E2E smoke and optional semantic retrieval",
       "Router infrastructure hardening: backend API key forwarding is implemented; privacy-safe usage metrics and optional usage CLI remain open"

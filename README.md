@@ -91,7 +91,7 @@ Dieses Repo dient dazu:
   Secrets.
 - `docs/integrations.md` - Cross-Repo-Schnittstellen, Rollen, Endpunkte und
   Smoke-Test-Grenzen.
-- `docs/product-positioning.md` - Produktfokus: Trainingswerkstatt,
+- `docs/product-positioning.md` - Trainingsfokus: Trainingswerkstatt,
   PGN-zu-Trainingsaufgabe-Loop, Zielgruppe und Qualitaetsgrenzen.
 - `docs/benchmarks.md` - Master-Rahmen fuer repo-uebergreifende Benchmarks
   ohne Secrets oder private Rohdaten.

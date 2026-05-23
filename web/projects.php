@@ -172,7 +172,7 @@
           <article class="card">
             <span class="tag moss">Webseite</span>
             <h3>cailama.org</h3>
-            <p>Die Website ist die lesbare Master-Doku: Produktfokus, Status, Architektur, Roadmap und Betrieb.</p>
+            <p>Die Website ist die lesbare Master-Doku: Trainingsfokus, Status, Architektur, Roadmap und Betrieb.</p>
           </article>
           <article class="card">
             <span class="tag">Prüfung</span>
@@ -185,7 +185,7 @@
             <p>Der Master hält Ergebnisformat, Datenschutzgrenzen und Vergleichbarkeit für Search, Router, PTG und OCR/FEN zusammen.</p>
           </article>
           <article class="card">
-            <span class="tag copper">Produktfokus</span>
+            <span class="tag copper">Deine Analyse. Deine Daten. Dein Training.</span>
             <h3>Trainingswerkstatt</h3>
             <p>Die Koordination priorisiert den Weg von PGN und Analyse zu Schlüsselstellungen, Karten und Review-Rückfluss.</p>
           </article>

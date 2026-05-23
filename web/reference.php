@@ -60,7 +60,7 @@
           </article>
           <article class="doc-card">
             <h3>Startseite</h3>
-            <p>Produktfokus, Kernloop, Nicht-Ziele und Differenzierung.</p>
+            <p>Trainingsfokus, Kernloop, Nicht-Ziele und Differenzierung.</p>
             <p><a href="index.php">index.php</a></p>
           </article>
           <article class="doc-card">

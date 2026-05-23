@@ -137,7 +137,7 @@ git diff --check</code></pre>
           </article>
           <article class="doc-card">
             <h3>docs/product-positioning.md</h3>
-            <p>Produktfokus, PGN-zu-Trainingsaufgabe-Loop, Nicht-Ziele und Qualitätsgrenzen.</p>
+            <p>Trainingsfokus, PGN-zu-Trainingsaufgabe-Loop, Nicht-Ziele und Qualitätsgrenzen.</p>
           </article>
           <article class="doc-card">
             <h3>docs/benchmarks.md</h3>
