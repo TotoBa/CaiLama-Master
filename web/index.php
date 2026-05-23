@@ -29,20 +29,28 @@
   </header>
 
   <main>
-    <section class="page-hero">
-      <div class="page-hero-inner">
-        <p class="eyebrow">Produktfokus</p>
-        <h1>Vom PGN zur Trainingsaufgabe.</h1>
-        <p class="page-lead">
-          CaiLama ist als Trainingswerkstatt für ambitionierte Spieler,
-          Trainer und ernsthafte Selbstlerner positioniert. Der Wert liegt
-          nicht in Social-Features, sondern in nachvollziehbarer Analyse,
-          wiederholbarem Training und langfristigem Feedback.
-        </p>
+    <section class="hero">
+      <div class="hero-inner hero-grid">
+        <div>
+          <p class="eyebrow">Produktfokus</p>
+          <h1>Vom PGN zur Trainingsaufgabe.</h1>
+          <p class="lead">
+            CaiLama ist als Trainingswerkstatt für ambitionierte Spieler,
+            Trainer und ernsthafte Selbstlerner positioniert. Der Wert liegt
+            nicht in Social-Features, sondern in nachvollziehbarer Analyse,
+            wiederholbarem Training und langfristigem Feedback.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#kernloop">Kernloop ansehen</a>
+            <a class="button" href="projects.php">Projektstand</a>
+            <a class="button" href="https://github.com/TotoBa/CaiLama">GitHub</a>
+          </div>
+        </div>
+        <img class="hero-logo" src="https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png" alt="CaiLama Logo">
       </div>
     </section>
 
-    <section>
+    <section id="kernloop">
       <div class="section-inner">
         <div class="section-head">
           <h2>Kernloop.</h2>
@@ -123,6 +131,7 @@
     <div class="section-inner">
       <span>CaiLama</span>
       <a href="roadmap.php">Roadmap</a>
+      <a href="mailto:info@cailama.org">Kontakt</a>
     </div>
   </footer>
 </body>

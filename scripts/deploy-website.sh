@@ -297,6 +297,44 @@ deploy_sftp() {
   echo "Deployed web/ to SFTP target $CAILAMA_WEB_SFTP_TARGET"
 }
 
+reset_remote_php_cache() {
+  if [[ "$deploy_method" != "sftp" ]]; then
+    return
+  fi
+
+  local tmp_dir reset_name reset_file upload_batch delete_batch output
+  tmp_dir="$(mktemp -d)"
+  reset_name=".cailama-opcache-reset-$(date +%s)-$$.php"
+  reset_file="$tmp_dir/$reset_name"
+  upload_batch="$tmp_dir/opcache-reset-upload.sftp"
+  delete_batch="$tmp_dir/opcache-reset-delete.sftp"
+
+  cat > "$reset_file" <<'PHP'
+<?php
+header('Content-Type: text/plain; charset=UTF-8');
+if (function_exists('opcache_reset')) {
+    echo opcache_reset() ? "opcache_reset=ok\n" : "opcache_reset=failed\n";
+} else {
+    echo "opcache_reset=unavailable\n";
+}
+PHP
+
+  printf "put -p %s %s\n" \
+    "$(sftp_quote "$reset_file")" \
+    "$(sftp_quote "$(remote_path "$reset_name")")" > "$upload_batch"
+  sftp_batch "$upload_batch" >/dev/null
+
+  output="$(curl -fsS --max-time 12 "$public_url/$reset_name")"
+  if [[ "$output" == "opcache_reset=failed" ]]; then
+    echo "ERROR: remote PHP opcache reset failed" >&2
+    exit 1
+  fi
+
+  printf -- "-rm %s\n" "$(sftp_quote "$(remote_path "$reset_name")")" > "$delete_batch"
+  sftp_batch "$delete_batch" >/dev/null || true
+  rm -rf "$tmp_dir"
+}
+
 verify_deploy() {
   local local_target="${1:-}"
 
@@ -316,6 +354,7 @@ verify_deploy() {
     echo "SKIP: deploy verification disabled"
     ;;
   http-hash)
+    reset_remote_php_cache
     static_files=(
       "index.php"
       "status.php"

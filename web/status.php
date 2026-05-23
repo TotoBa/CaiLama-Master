@@ -34,24 +34,14 @@
   </header>
 
   <main>
-    <section class="hero">
-      <div class="hero-inner hero-grid">
-        <div>
-          <p class="eyebrow">Schachtraining, Analyse und lokale Modellinfrastruktur</p>
-          <h1>CaiLama</h1>
-          <p class="lead">
-            CaiLama ist ein praxistaugliches Schachanalyse-, Trainings- und
-            Automatisierungs-Ökosystem. Es verbindet PGNs, Stockfish,
-            LLM-Kommentierung, DGT-Board-Training, Wissenssuche,
-            Spielerprofile und langfristige Trainingsentwicklung.
-          </p>
-          <div class="hero-actions">
-            <a class="button primary" href="projects.php">Projektstand ansehen</a>
-            <a class="button" href="architecture.php">Architektur verstehen</a>
-            <a class="button" href="https://github.com/TotoBa/CaiLama">GitHub</a>
-          </div>
-        </div>
-        <img class="hero-logo" src="https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png" alt="CaiLama Logo">
+    <section class="page-hero">
+      <div class="page-hero-inner">
+        <p class="eyebrow">Status</p>
+        <h1>Projektstand und Repo-Übersicht.</h1>
+        <p class="page-lead">
+          Diese Unterseite bündelt den aktuellen Stand des Ökosystems,
+          aktive Integrationslinien und die wichtigsten Dokumentationspfade.
+        </p>
       </div>
     </section>
 
@@ -261,6 +251,7 @@
     <div class="section-inner">
       <span>CaiLama-Status</span>
       <a href="https://github.com/TotoBa/CaiLama-Master">Master-Repository</a>
+      <a href="mailto:info@cailama.org">Kontakt</a>
     </div>
   </footer>
 </body>

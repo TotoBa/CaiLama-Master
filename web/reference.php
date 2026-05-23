@@ -139,6 +139,7 @@ https://cailama.org/data/ecosystem.json</code></pre>
     <div class="section-inner">
       <span>CaiLama-Referenz</span>
       <a href="index.php">Start</a>
+      <a href="mailto:info@cailama.org">Kontakt</a>
     </div>
   </footer>
 </body>

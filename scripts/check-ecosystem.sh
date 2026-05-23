@@ -115,6 +115,25 @@ for path in "${required_files[@]}"; do
 done
 echo "OK: required master files exist"
 
+footer_pages=(
+  "web/account.php"
+  "web/architecture.php"
+  "web/index.php"
+  "web/login.php"
+  "web/operations.php"
+  "web/projects.php"
+  "web/reference.php"
+  "web/roadmap.php"
+  "web/status.php"
+)
+for path in "${footer_pages[@]}"; do
+  if ! grep -Fq 'href="mailto:info@cailama.org"' "$path"; then
+    echo "ERROR: footer contact link is missing in $path"
+    exit 1
+  fi
+done
+echo "OK: public page footers include the contact link"
+
 blocked_product_page="positioning"".php"
 if [[ -e "web/$blocked_product_page" ]]; then
   echo "ERROR: web/$blocked_product_page must not exist; product focus belongs to web/index.php"

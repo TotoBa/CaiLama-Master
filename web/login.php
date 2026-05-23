@@ -113,6 +113,7 @@ function h(string $value): string
     <div class="section-inner">
       <span>CaiLama - Schachtraining als System</span>
       <a href="https://github.com/TotoBa/CaiLama-Master">Master-Repository</a>
+      <a href="mailto:info@cailama.org">Kontakt</a>
     </div>
   </footer>
 </body>

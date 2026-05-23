@@ -168,6 +168,7 @@
     <div class="section-inner">
       <span>CaiLama-Architektur</span>
       <a href="roadmap.php">Roadmap</a>
+      <a href="mailto:info@cailama.org">Kontakt</a>
     </div>
   </footer>
 </body>

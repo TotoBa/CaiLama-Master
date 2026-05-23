@@ -209,6 +209,7 @@
     <div class="section-inner">
       <span>CaiLama-Roadmap</span>
       <a href="operations.php">Betrieb und Qualität</a>
+      <a href="mailto:info@cailama.org">Kontakt</a>
     </div>
   </footer>
 </body>

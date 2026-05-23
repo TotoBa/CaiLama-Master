@@ -198,6 +198,7 @@
     <div class="section-inner">
       <span>CaiLama-Projekte</span>
       <a href="index.php">Start</a>
+      <a href="mailto:info@cailama.org">Kontakt</a>
     </div>
   </footer>
 </body>

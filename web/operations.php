@@ -180,6 +180,7 @@ git diff --check</code></pre>
     <div class="section-inner">
       <span>CaiLama-Betrieb</span>
       <a href="index.php">Start</a>
+      <a href="mailto:info@cailama.org">Kontakt</a>
     </div>
   </footer>
 </body>

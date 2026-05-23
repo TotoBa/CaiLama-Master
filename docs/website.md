@@ -72,6 +72,8 @@ Synchronisationsregel:
 - Sichtbare deutsche Webseitentexte verwenden echte Umlaute und `ß`, keine
   Umschreibungen wie `ae`, `oe`, `ue` oder `ss`, sofern es sich nicht um Code,
   URLs, Dateinamen, API-Felder oder andere technische Bezeichner handelt.
+- Sichtbare Seiten führen im Footer einen Kontakt-Link auf
+  `mailto:info@cailama.org`.
 
 Die Seite nutzt das vorhandene CaiLama-Logo direkt aus dem Haupt-Repository:
 
