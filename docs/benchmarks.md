@@ -140,3 +140,24 @@ Vor einer Modellanpassung muessen Trainingsdaten, Evaldaten, Datenschutz,
 Lizenzlage und Zielmetriken geklaert sein. Ein spezialisiertes Modell darf nur
 ueber den Router eingebunden werden und muss gegen die gleiche Benchmark-
 Familie antreten wie generische Modelle.
+
+## Offline-Benchmark-Smoke
+
+`scripts/run_benchmark_smoke.py` (vom Master aus aufrufbar, kein Live-
+Dienst, keine Secrets) prueft in einem Lauf, dass die Benchmark-Module aller
+drei Repos importierbar und mit synthetischen Daten funktionsfaehig sind:
+
+- **CaiLama PTG**: `scan_ptg_sessions` → `build_ptg_benchmark_summary` →
+  `export_benchmark_json`.
+- **CaiLama Events**: `BenchmarkStore.record` → `summary` → `export_json`.
+- **Search**: `load_goldsets` + `validate_goldset` + `summarize_goldsets`.
+- **Router**: `RequestMetrics.record_request` → `snapshot` JSON.
+
+Aufruf:
+
+```bash
+python3 scripts/run_benchmark_smoke.py
+```
+
+`scripts/check-ecosystem.sh` fuehrt den Smoke automatisch als letzten Schritt
+aus.  Er liefert nur Pass/Fail; keine lokalen Pfade, keine Live-Queries.
