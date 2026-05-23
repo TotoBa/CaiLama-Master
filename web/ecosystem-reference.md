@@ -3,7 +3,7 @@
 Zielgruppe: Menschen, Codex, Kimi und andere LLM-Agenten, die schnell den
 aktuellen Systemzuschnitt verstehen müssen.
 
-Stand: 2026-05-23.
+Stand: 2026-05-23 (Session 3 Update).
 
 ## Kurzfassung
 
@@ -256,8 +256,10 @@ Aktueller Fokus:
   Recall@5/10 bleibt in beiden Modi 1.0; Hybrid verbessert MRR, senkt aber
   wegen filter+hybrid-Fehlern die Pass-Rate. `semantic.enabled=false` bleibt
   empfohlen.
-- Offen bleiben filter+hybrid-500er, gruppierte DWZ-Response-Felder und ein
-  DWZ-Import-Test mit Staging-Daten.
+- filter+hybrid-500er und Multi-Index-Response sind behoben (Pass-Rate 1.0).
+  `semantic.enabled=false` bleibt Default.
+- DWZ-Staging-Test: Offline-Tests decken Parse, Import und Header-Validierung ab;
+  Live-Download bleibt manueller Schritt.
 
 Grenzen:
 

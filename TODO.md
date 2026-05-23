@@ -126,7 +126,7 @@ Vor Arbeitsbeginn lesen:
   neue Router-Arbeit erst bei Live-Smoke-, Benchmark- oder Backend-Auftrag.
   **Search** = filter+hybrid-500er und Multi-Index-Response sind
   behoben (Pass-Rate 9/9). `semantic.enabled=false` bleibt Default.
-  Offen sind DWZ-Staging-Test und API-/README-Nachzug.
+  Offen sind DWZ-Staging-Test (offline abgedeckt, Live-Download manuell) und API-/README-Nachzug.
 
 ## Kimi-Handoff
 

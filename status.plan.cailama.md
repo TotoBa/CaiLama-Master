@@ -1,39 +1,32 @@
 # Status und Ausbaupfade des CaiLama-Ökosystems
 
-## Aktualisierung 2026-05-23 (Session 2 — nach CardType/Search-Fixes/Lizenz)
+## Aktualisierung 2026-05-23 (Session 3 — PTG-Live-Verifikation, Doku+Deploy)
 
-Dieser Abschnitt ergaenzt den Stand nach der zweiten Kimi-Arbeitssession,
+Dieser Abschnitt ergaenzt den Stand nach der dritten Kimi-Arbeitssession,
 ohne die historische Analyse darunter umzuschreiben.
 
 - `TotoBa/CaiLama`:
-  - CardType-Auswertung in `show_training_card`, `list_training_cards` und
-    `generate_personalized_training` umgesetzt (Agent-Tools + Manifest).
-  - `CardType` und `MistakePattern` aus `training.__init__` exportiert.
-  - `repertoire_drift` setzt `CardType.OPENING_DRIFT`; `board_chain` akzeptiert
-    optionalen `card_type`.
-  - `docs/privacy-training-data.md`: Retention, Export, PII-Minimierung.
-  - `docs/job-contract-cailama.md`: Queue-Vertrag mit CaiLama-Search.
-  - `docs/data-eval-contract-llm-training.md`: Daten-/Eval-Trennung fuer LLM.
-  - Alle Tests gruen: Agent 259 passed, Training 247 passed.
-  - Commits: `a8a3ad4`, `5dbe66e`, `60a9f20`.
+  - **PTG-Live-Verifikation**: 3 diverse Spiele (B18 OTB, C01 DGT Centaur,
+    C34 Lichess) aus 45 PGN-Spielen ausgewaehlt und in Profil "torsten"
+    importiert. PTG-Pipeline mit `--run-llm-stages` laeuft gegen den
+    LLM-Router (classify=chess-small/deepseek-v4-flash,
+    analyze=deepseek-v4-pro).
+  - Offline-Durchlauf (ohne LLM): 3 Spiele profiliert, 4 Decks (Taktikmotiv,
+    Planfehler, Technikfehler, Eroeffnungsdrift), 21 Schluesselstellungen,
+    alle 3 Sessions gueltig.
 - `TotoBa/CaiLama-Search`:
-  - `semantic_search()`: `hybrid`-Parameter entfernt (Konflikt mit
-    userProvided `vector` in Meilisearch 1.13). `filter_expr`-Passthrough.
-  - Multi-Index-Response normalisiert (wie Single-Index-Pfad).
-  - Goldset-Live-Test: beide Modi Pass-Rate 1.0 (9/9).
-  - Benchmark-Vergleich aktualisiert. README nachgezogen.
-  - Commits: `8e5a14e`, `90997a5`, `e8139b0`.
-- `TotoBa/CaiLama-LLM-Router`: Alle Punkte erledigt (vorherige Session).
-  Keine neuen Änderungen.
-- `TotoBa/CaiLama-Master`: TODO und Roadmap aktualisiert.
-- **Alle vier Repos**: AGPL-3.0-or-later LICENSE + CONTRIBUTING.md (DCO).
-  Commits pro Repo: `d59e8ac`–`c946d87` (CaiLama/Search) / `f20ee54`–`f2372dd`
-  (Router) / `a15d275`–`2272f25` (Master).
+  - filter+hybrid-500er und Multi-Index-Response sind behoben (Pass-Rate 1.0).
+  - DWZ-Staging-Test: 14 Offline-Tests (Parse, Import, Header-Validierung)
+    bestehen. Live-Download bleibt manueller Schritt.
+  - `semantic.enabled=false` bleibt Default.
+- `TotoBa/CaiLama-LLM-Router`: Keine Änderungen, aktiv auf Port 18080.
+- `TotoBa/CaiLama-Master`: Doku aktualisiert (ecosystem-reference.md,
+  status.plan.cailama.md).
 
 Offen (bewusste Folgearbeit):
-- CaiLama: PTG-Live-Verifikation, OCR/FEN-Gates, PTG-Observability.
-- CaiLama-Search: DWZ-Staging-Test, semantische Freigabeentscheidung.
-- CaiLama-Master: Benchmark-Rahmen, LLM-Training-Roadmap.
+- CaiLama: PTG-Ergebnisse auswerten und dokumentieren, OCR/FEN-Gates.
+- CaiLama-Search: Semantische Freigabeentscheidung.
+- CaiLama-Master: Website deployen, Runtime deployen.
 
 ## Aktualisierung 2026-05-22
 
