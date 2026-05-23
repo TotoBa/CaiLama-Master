@@ -126,8 +126,9 @@ Vor Arbeitsbeginn lesen:
   Goldset-Validierung (Search) und RequestMetrics-Roundtrip (Router).
   Das Skript wird von `scripts/check-ecosystem.sh` automatisch ausgefuehrt.
   Offen bleiben: wiederholbare Orchestrierung ueber alle Repos,
-  Router-Latenz-Livesmoke, OCR/FEN-False-Positive-Gates und groesseres
-  Search-/PTG-Eval.
+  Router-Latenz-Livesmoke und groesseres Search-/PTG-Eval.
+  OCR/FEN-False-Positive-Gate ist in CaiLama umgesetzt
+  (check_fen_false_positive, 6 Gates, Commit 8cd3ccf).
   **Update 2026-05-23:** Die Modellrollen-Hypothese ist als Benchmark-
   Matrix dokumentiert (`docs/benchmark-results/model-role-matrix.current.md`).
   Die Website besitzt die geschuetzte Seite
