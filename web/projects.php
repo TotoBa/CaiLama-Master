@@ -63,7 +63,7 @@
           <article class="card">
             <span class="tag copper">Laufend</span>
             <h3>PTG und DB-Hybrid</h3>
-            <p>PTG erzeugt offline kommentierte PGN, Trainings-JSON und Qualitätsgates; offen sind DGT-nahe Abholung, Review-Priorisierung und Live-Router-Smoke.</p>
+            <p>PTG erzeugt kommentierte PGN, Trainings-JSON und Qualitätsgates; Agent-/DGT-naher Kartenabruf und Review-Stats fließen in die Priorisierung.</p>
           </article>
           <article class="card">
             <span class="tag blue">Integration</span>
@@ -107,7 +107,7 @@
           <article class="card">
             <span class="tag red">Fallback</span>
             <h3>Folgehärtung</h3>
-            <p>Streaming-Fehler, Config-Hot-Reload, backend-spezifische Modellnamen, Backend-API-Key-Weitergabe und <code>mypy src</code> sind umgesetzt und getestet; offen sind Usage-Metriken und optionaler Usage-CLI-Befehl.</p>
+            <p>Streaming-Fehler, Hot-Reload, Backend-Mapping, Key-Weitergabe, Usage-Metriken, Usage-CLI, Benchmark-Export und <code>mypy src</code> sind umgesetzt.</p>
           </article>
           <article class="card">
             <span class="tag blue">Logging</span>
@@ -150,7 +150,7 @@
           <article class="card">
             <span class="tag copper">Ausbau</span>
             <h3>Observability</h3>
-            <p>Crawler-Whitelists, Robots-Gruppen, Source-Validierung und Reindex-Tracking sind getestet; privacy-safe Suchmetriken, synthetische Goldsets, Testindex-Seeding und optionale semantische Suche sind vorbereitet.</p>
+            <p>Crawler-Policy, Suchmetriken, synthetische Goldsets, Testindex-Seeding, Benchmark-Export und optionale semantische Suche sind vorbereitet; offen ist der Docker-Vergleich lexical/hybrid.</p>
           </article>
         </div>
       </div>
@@ -185,7 +185,7 @@
             <p>Der Master hält Ergebnisformat, Datenschutzgrenzen und Vergleichbarkeit für Search, Router, PTG und OCR/FEN zusammen.</p>
           </article>
           <article class="card">
-            <span class="tag copper">Deine Analyse. Deine Daten. Dein Training.</span>
+            <span class="tag copper">Anwendungsfall</span>
             <h3>Trainingswerkstatt</h3>
             <p>Die Koordination priorisiert den Weg von PGN und Analyse zu Schlüsselstellungen, Karten und Review-Rückfluss.</p>
           </article>

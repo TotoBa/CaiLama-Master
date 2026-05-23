@@ -47,11 +47,11 @@
         <div class="timeline">
           <article class="step">
             <strong>Jetzt</strong>
-            <p>DB-Hybrid ist konfigurierbar, Single-DB-Webspace läuft, Search/DWZ/RAG ist Standardpfad und Router bekommt eine kleine Infrastrukturhärtung.</p>
+            <p>DB-Hybrid ist konfigurierbar, Single-DB-Webspace läuft, PTG liefert Kartenabruf und Review-Priorisierung, Router liefert Benchmark-Daten.</p>
           </article>
           <article class="step">
             <strong>Danach</strong>
-            <p>PTG-Artefakte an DGT-/Review-Flows anschliessen, DWZ-Identity-Linking, Search- und PTG-Observability.</p>
+            <p>PTG-Live-Verifikation, Scoring, Taxonomie, Search-Docker-Benchmark, OCR/FEN-Gates und Job-Orchestrierung.</p>
           </article>
           <article class="step">
             <strong>Später</strong>
@@ -69,7 +69,7 @@
       <div class="section-inner">
         <div class="section-head">
           <h2>Jetzt.</h2>
-          <p>Die nächsten Schritte liegen bei DB-Hybrid, Provenienz und Search-Qualität.</p>
+          <p>Die nächsten Schritte liegen bei PTG-Folgehärtung, OCR/FEN und messbaren Benchmarks.</p>
         </div>
         <div class="grid-2">
           <article class="card">
@@ -107,7 +107,8 @@
               <li>Config-Hot-Reload ist optional verfügbar.</li>
               <li>Backend-spezifisches Modell-Mapping per Alias ist abgesichert.</li>
               <li><code>mypy src</code> ist bereinigt.</li>
-              <li>Backend-API-Key-Weitergabe ist umgesetzt; offen bleiben Usage-Metriken und optionaler Usage-CLI-Befehl.</li>
+              <li>Backend-API-Key-Weitergabe, privacy-safe Usage-Metriken, Usage-CLI, Benchmark-Export und generische Endpoint-Pfade sind umgesetzt.</li>
+              <li>Direkte Router-Folgearbeit entsteht erst aus Live-Smokes oder neuen Benchmark-Anforderungen.</li>
             </ul>
           </article>
           <article class="card">
@@ -120,7 +121,8 @@
               <li>Goldset-Testindex-Seeding ist localhost-geschützt vorbereitet.</li>
               <li><code>goldsets smoke</code> automatisiert Test-Meili, synthetisches Seeding, API-Start ohne Scheduler und Goldset-Run.</li>
               <li>Optionale semantische Retrieval-Schicht ist vorhanden, default-off und wird gegen Goldsets evaluiert.</li>
-              <li>API-Qualität, Job-Orchestrierung und Retrieval-Benchmarks gezielt nachziehen.</li>
+              <li>Recall/MRR/Zero-Hit/Latenz-Metriken, Master-kompatibler Benchmark-Export, RAG-Provenienz und Datenvertrag sind umgesetzt.</li>
+              <li>Offen bleibt der Docker-fähige Vergleich <code>lexical</code> gegen <code>hybrid</code>.</li>
             </ul>
           </article>
         </div>
@@ -141,9 +143,9 @@
               <li>Importierte Partien in Feature-Signale überführen.</li>
               <li>Classify/analyze-Stufen live gegen den Router verifizieren.</li>
               <li>Kommentierte PGN, drei bis sieben Schlüsselstellungen, Trainingsfragen, Trainings-JSON und Qualitätsgates sind offline erzeugt und getestet.</li>
-              <li>DGT-nahe Abholung der Artefakte und Review-Priorisierung als nächste Scheibe umsetzen.</li>
+              <li>Agent-/DGT-naher Kartenabruf, <code>card_id</code>-Durchstich und Review-Stats in der Priorisierung sind umgesetzt.</li>
               <li>Schwächenprofil und Kartenqueue nachvollziehbar ableiten.</li>
-              <li>Review-Ergebnisse in Schwierigkeit, Priorität und Wiederholung zurückführen.</li>
+              <li>Review-Ergebnisse weiter in Schwierigkeit, Priorität, Scoring und Wiederholung zurückführen.</li>
               <li>Datenschutz für Leistungsprofile klären.</li>
             </ul>
           </article>

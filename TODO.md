@@ -62,8 +62,11 @@ Vor Arbeitsbeginn lesen:
   Matchmaking- und Mobile-First-Funktionen bleiben Nicht-Ziele, solange dieser
   Produktloop nicht stabil und benchmarkbar ist.
   Stand 2026-05-23: PTG erzeugt offline `source.pgn`, `annotated.pgn`,
-  `training.json` und `quality_gates.json`. Offen bleiben DGT-naher Abruf,
-  Review-Priorisierung und Live-Router-Smoke.
+  `training.json` und `quality_gates.json`. Agent-/DGT-naher Kartenabruf,
+  `card_id`-Durchstich und Review-Stats in der Trainingspriorisierung sind
+  umgesetzt. Offen bleiben PTG-Live-Verifikation, deterministisches Scoring,
+  Fehler-/Mustertaxonomie, Kartentypen, OCR/FEN-Gates und Datenschutz-/Export-
+  Regeln fuer Leistungsprofile.
 - [x] Website-Struktur auf Trainingsfokus als Startseite umstellen:
   `web/index.php` ist die Trainingsfokus-/Trainingswerkstatt-Seite,
   die bisherige Status-Startseite liegt als `web/status.php`. Navigation,
@@ -97,27 +100,29 @@ Vor Arbeitsbeginn lesen:
   Testdaten aufnehmen.
   Messfamilien: Search/RAG, Router, Analyse/PTG, OCR/FEN. OCR ist aktiver
   Messbereich, nicht zurueckgestellt. PTG liefert jetzt pro Session
-  `quality_gates.json` als erste Master-kompatible Messquelle; offen ist der
-  repo-uebergreifende Export-/Ablagevertrag.
+  `quality_gates.json` und einen PTG-Benchmark-Summary-Export als erste
+  Master-kompatible Messquelle; Router und Search liefern ebenfalls
+  Benchmark-Export-Pfade. Offen ist die zentrale Ergebnisablage mit echten
+  Artefakten unter `docs/benchmark-results/`.
 - [ ] Spaeteres spezialisiertes LLM-Training als Roadmap-Hebel vorbereiten:
   erst nach Benchmark-Baseline, Datenfreigabe, sauberer Test-/Eval-/Train-
   Trennung und Datenschutzklaerung planen. Modelle werden nur ueber den
   Router-Vertrag bereitgestellt; Schachproduktlogik bleibt in CaiLama.
 - [ ] Roadmap regelmaessig aus den Unterrepo-`TODO.md`-Dateien abgleichen:
   **CaiLama** = PTG-Live-Verifikation,
-  PTG-Produktloop-Folgephase fuer DGT-nahen Abruf und Review-Priorisierung,
   PTG-Scoring, PTG-Taxonomie, PTG-Kartentypen,
   Analyse-Qualitaetsgates ueber PTG hinaus, Datenschutz/Export,
-  RAG-Provenienz, Job-Orchestrierung, PTG-Observability, Benchmark-Export,
+  RAG-Provenienz, Job-Orchestrierung, PTG-Observability,
   OCR/FEN aktiv ohne geratene FENs.
-  **Router** = Backend-API-Key-Weitergabe ist umgesetzt; offen bleiben
-  Token-/Usage-Metriken, `llm-router usage` Diagnosebefehl, benchmarkbare
-  Usage-/Latenzexporte und spaetere spezialisierte Modelle nur als generische
-  Backend-/Alias-Variante.
+  **Router** = aktuelle Infrastrukturwelle ist abgearbeitet: Backend-API-Key-
+  Weitergabe, Token-/Usage-Metriken, `llm-router usage`, benchmarkbare
+  Usage-/Latenzexporte und generische `endpoint_path`-Backends sind umgesetzt;
+  neue Router-Arbeit erst bei Live-Smoke-, Benchmark- oder Backend-Auftrag.
   **Search** = optionale semantische Retrieval-Schicht ist implementiert und
-  default-off; offen bleibt die messbare Evaluation gegen Goldset-Baseline,
-  Recall-/Latenz-Benchmark, Master-kompatibler Benchmark-Export und
-  CaiLama/Search-Jobvertrag.
+  default-off; Recall-/Latenz-Metriken, Master-kompatibler Benchmark-Export,
+  RAG-Provenienz, Datenvertrag und CaiLama/Search-Jobvertrag sind umgesetzt;
+  offen bleibt der Docker-faehige Vergleich `lexical` gegen `hybrid` mit
+  Ergebnisbericht fuer den Master.
 
 ## Kimi-Handoff
 

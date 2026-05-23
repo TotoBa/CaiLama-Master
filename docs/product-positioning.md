@@ -21,8 +21,10 @@ Vom PGN zur persoenlichen Trainingsaufgabe:
 
 Stand 2026-05-23: Die offline/deterministische PTG-Scheibe erzeugt bereits
 `source.pgn`, `annotated.pgn`, `training.json` und `quality_gates.json`.
-Offen bleiben DGT-nahe Abholung, Review-Priorisierung und Live-Router-
-Verifikation.
+Agent-/DGT-naher Kartenabruf, `card_id`-Durchstich und Review-Stats in der
+Trainingspriorisierung sind umgesetzt. Offen bleiben Live-Router-Verifikation,
+deterministisches Scoring, Taxonomie, OCR/FEN-Gates und Datenschutz-/Export-
+Regeln fuer Leistungsprofile.
 
 ## Differenzierung
 
@@ -73,7 +75,8 @@ Benchmarks gehoeren in die Master-Koordination. Sie vergleichen nicht nur
 Modelle, sondern komplette Workflows:
 
 - Search: Recall, MRR, Zero-Hit-Rate, Latenz und Quellenqualitaet.
-- Router: Latenz, Fallbacks, Fehlerverhalten und Usage-Metriken.
+- Router: Latenz, Fallbacks, Fehlerverhalten, Usage-Metriken und Benchmark-
+  Export.
 - Analyse/PTG: PGN-Validitaet, Kartenqualitaet, Redundanz,
   Fehlerklassifikation und Review-Erfolg.
 - OCR/FEN: Diagramm-Erkennung, FEN-Sicherheit und Fehlerquote.

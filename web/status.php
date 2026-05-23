@@ -134,7 +134,7 @@
               <p>Schachanalyse, Training, Profile, Agent-CLI, PGN, Stockfish, DGT-nahe Workflows.</p>
               <ul>
                 <li>DB-Hybridpfad: native DB, Webspace-API und Backup-Betrieb.</li>
-                <li>PTG-Artefakte mit kommentierter PGN, Trainings-JSON und Qualitätsgates sind offline erzeugt und getestet.</li>
+                <li>PTG-Artefakte mit kommentierter PGN, Trainings-JSON, Qualitätsgates, Kartenabruf und Review-Priorisierung sind offline erzeugt und getestet.</li>
                 <li>LLM-Rollen über Router-Aliase.</li>
               </ul>
             </div>
@@ -144,11 +144,11 @@
             <div>
               <span class="tag copper">Router</span>
               <h3>CaiLama-LLM-Router</h3>
-              <p>OpenAI-kompatible Modellzugriffe, Backends, Aliase, Fallbacks und JSONL-Betriebsdaten; aktuell mit kleiner Infrastrukturhärtung.</p>
+              <p>OpenAI-kompatible Modellzugriffe, Backends, Aliase, Fallbacks und privacy-safe Betriebsdaten.</p>
               <ul>
                 <li>Streaming-Fehler, Config-Hot-Reload und Backend-Modellmapping sind getestet.</li>
                 <li><code>mypy src</code> ist bereinigt.</li>
-                <li>Backend-API-Key-Weitergabe ist umgesetzt; Usage-Metriken bleiben nächster Infrastrukturpunkt.</li>
+                <li>Backend-API-Key-Weitergabe, Usage-Metriken, Usage-CLI und Benchmark-Export sind umgesetzt.</li>
                 <li>Keine Schachproduktlogik im Router.</li>
               </ul>
             </div>
@@ -162,7 +162,7 @@
               <ul>
                 <li>Explizite Meili-Keys, Admin-Token und lokale Docker-Bindings.</li>
                 <li>Vertrag für <code>/v1/search</code>, <code>/v1/context</code>, <code>/v1/dwz/*</code>.</li>
-                <li>Crawler-/Robots-Quellenpolitik ist getestet; Observability ist admin-geschützt vorbereitet.</li>
+                <li>Crawler-/Robots-Quellenpolitik, Observability, Goldsets, Benchmark-Export und Datenvertrag sind vorbereitet.</li>
               </ul>
             </div>
             <a href="projects.php#search">Details</a>
@@ -198,11 +198,11 @@
         <div class="timeline">
           <article class="step">
             <strong>Jetzt</strong>
-            <p>Single-DB-Webspace, DWZ-Identity-Linking, RAG-Provenienz, Router-Härtung und Search-Evaluation.</p>
+            <p>Single-DB-Webspace, PTG-Kartenabruf, Review-Priorisierung, Router-Benchmark-Export und Search-Docker-Benchmark.</p>
           </article>
           <article class="step">
             <strong>Danach</strong>
-            <p>PTG-Artefakte an DGT-/Review-Flows anschliessen, PTG-Live-Verifikation, Job-Orchestrierung und Master-geführte Benchmarks.</p>
+            <p>PTG-Live-Verifikation, Scoring, Taxonomie, Job-Orchestrierung, OCR/FEN-Gates und Master-geführte Benchmarks.</p>
           </article>
           <article class="step">
             <strong>Später</strong>

@@ -13,7 +13,6 @@
   <header class="site-header">
     <nav class="nav" aria-label="Hauptnavigation">
       <a class="brand" href="index.php">
-        <img src="https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-small.png" alt="">
         <span>CaiLama</span>
       </a>
       <div class="nav-links">
@@ -46,7 +45,6 @@
             <a class="button" href="https://github.com/TotoBa/CaiLama">GitHub</a>
           </div>
         </div>
-        <img class="hero-logo" src="https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png" alt="CaiLama Logo">
       </div>
     </section>
 

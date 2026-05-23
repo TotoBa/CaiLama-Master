@@ -35,7 +35,8 @@ in diese Koordination.
 - Fehler- und Fallback-Rate.
 - Cooldown-Verhalten.
 - Streaming-Fehlervertrag.
-- Token-/Usage-Werte, sobald die Router-Metriken sie liefern.
+- Token-/Usage-Werte aus den privacy-safe Router-Metriken.
+- Master-kompatibler Export per Router-CLI.
 
 ### Analyse und PTG
 

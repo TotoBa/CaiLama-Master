@@ -114,13 +114,13 @@ img {
 .hero::before {
   content: "";
   position: absolute;
-  inset: -10% -12%;
+  inset: -8% -18% -8% 36%;
   z-index: -2;
   background-image: url("https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png");
   background-repeat: no-repeat;
-  background-position: center 46%;
-  background-size: min(940px, 128vw);
-  opacity: 0.22;
+  background-position: center;
+  background-size: min(760px, 92vw);
+  opacity: 0.14;
   filter:
     saturate(1.08)
     brightness(1.2)
@@ -147,7 +147,7 @@ img {
 
 .hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
+  grid-template-columns: minmax(0, 840px);
   gap: 52px;
   align-items: center;
 }
@@ -618,6 +618,12 @@ tr:last-child td {
 
   .hero-grid {
     text-align: center;
+  }
+
+  .hero::before {
+    inset: 8% -42% 4% -12%;
+    background-size: min(640px, 138vw);
+    opacity: 0.1;
   }
 
   .lead,

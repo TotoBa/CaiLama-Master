@@ -69,7 +69,7 @@ Koordinationspunkte:
 - Umgesetzt: `web_search` und `search_dwz` nutzen `SearchAdapter`; Recherche-
   und Quellenfragen schlagen `search_rag` vor.
 
-### Router-Status: kleine Infrastrukturwelle
+### Router-Status: Infrastrukturwelle abgeschlossen
 
 Ziel-Repo: `TotoBa/CaiLama-LLM-Router`
 
@@ -82,8 +82,11 @@ Koordinationspunkte:
 - `mypy src` ist bereinigt.
 - Umgesetzt: Backend-API-Keys aus `api_key_env` werden an OpenAI-kompatible
   Backends weitergereicht, ohne Secrets zu loggen.
-- Offen: privacy-safe Token-/Usage-Metriken und optionaler `llm-router usage`
-  Diagnosebefehl.
+- Umgesetzt: privacy-safe Token-/Usage-Metriken, `llm-router usage`,
+  Master-kompatibler Benchmark-Export und generischer `endpoint_path` fuer
+  spaetere spezialisierte Backend-Endpoints.
+- Offen: keine direkte Router-Folgearbeit, bis Live-Smokes, Benchmark-
+  Anforderungen oder neue Backend-Profile beauftragt werden.
 
 ### Search-Quellenpolitik
 
@@ -101,9 +104,11 @@ Koordinationspunkte:
   synthetisches Seeding, API-Start mit deaktiviertem Scheduler und Goldset-Run.
 - Umgesetzt: optionale semantische Retrieval-Schicht ist implementiert,
   bleibt default-off und faellt bei Fehlern auf lexikalische Suche zurueck.
-- Naechster Search-Fokus: messbare Evaluation der optionalen semantischen
-  Schicht gegen Goldset-Baseline, Recall-/Latenz-Benchmark und
-  CaiLama/Search-Jobvertrag.
+- Umgesetzt: Recall-/MRR-/Zero-Hit-/Latenz-Metriken, Master-kompatibler
+  Benchmark-Export, RAG-Provenienz und Datenvertrag fuer spaetere
+  Modellanpassungen.
+- Naechster Search-Fokus: Docker-faehiger Vergleich `lexical` gegen `hybrid`
+  und Ablage des Ergebnisberichts fuer den Master.
 
 ## Danach
 
@@ -119,8 +124,10 @@ Koordinationspunkte:
 - Umgesetzt: offline/deterministische PTG-Artefakt-Scheibe mit
   `source.pgn`, `annotated.pgn`, drei bis sieben Schluesselstellungen,
   Trainingsfragen, `training.json`, `quality_gates.json` und CLI-Ausgabe.
-- Offen: DGT-naher Abruf der Artefakte und Review-Ergebnisse in
-  Schwierigkeit, Prioritaet und Wiederholung zurueckfuehren.
+- Umgesetzt: Agent-/DGT-naher Kartenabruf, `ReplayPosition.card_id` und
+  Review-Stats in der Trainingspriorisierung.
+- Offen: PTG-Live-Verifikation, deterministisches Scoring, Fehler-/
+  Mustertaxonomie, Kartentypen und weitere Qualitaetsgates.
 - Datenschutz fuer personenbezogene Leistungsprofile klaeren.
 
 ### DWZ-Identity-Linking
@@ -194,7 +201,7 @@ Ziel-Repos: `TotoBa/CaiLama`, `TotoBa/CaiLama-Search`
 
 Koordinationspunkte:
 
-- Router-KPIs fuer Fallbacks, Cooldowns, Alias-Nutzung, Latenzen und spaeter
+- Router-KPIs fuer Fallbacks, Cooldowns, Alias-Nutzung, Latenzen und
   Token-/Usage-Werte in den Benchmark-Rahmen aufnehmen.
 - Search-KPIs fuer Suchqualitaet, Indexfrische und Fehlerquoten sind als
   privacy-safe Grundlage angebunden; synthetische Goldsets und Testindex-

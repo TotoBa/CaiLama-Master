@@ -135,15 +135,16 @@ Aktueller Fokus:
 - PTG-Produktloop ist offline/deterministisch als Artefakt-Scheibe umgesetzt:
   pro Session entstehen `source.pgn`, `annotated.pgn`, `training.json` und
   `quality_gates.json`; die CLI meldet Schlüsselstellungen und gültige
-  Sessions. DGT-naher Abruf, Review-Priorisierung und Live-Router-Smoke
-  bleiben bewusste Folgearbeit.
+  Sessions. Agent-/DGT-naher Kartenabruf, `ReplayPosition.card_id` und
+  Review-Stats in der Trainingspriorisierung sind umgesetzt.
 - Fehler-/Mustertaxonomie für personalisiertes Training.
 - Interne Search-Anbindung ist Standardpfad für `web_search` und
   `search_dwz`; Recherchefragen schlagen `search_rag` vor.
 - DWZ-Identity-Linking in Store und CLI integrieren.
 - RAG-Analysepakete in Researcher-/Analyst-Promptflows einhängen.
-- PGN-zu-Trainingsaufgabe-Loop weiter härten: DGT-naher Abruf,
-  Review-Rückfluss, deterministisches Scoring und Benchmark-Export.
+- PGN-zu-Trainingsaufgabe-Loop weiter härten: Live-Router-Verifikation,
+  deterministisches Scoring, Fehler-/Mustertaxonomie, Kartentypen,
+  Datenschutz und OCR/FEN-spezifische Qualitätsgates.
 - OCR/FEN ist aktiv, aber FENs werden erst nach belastbarer
   Vision-/Template-Prüfung ausgegeben.
 
@@ -192,8 +193,9 @@ Aktueller Fokus:
 - Backend-spezifisches Modell-Mapping per Alias ist validiert.
 - `/metrics` kann JSON oder Prometheus-Text liefern.
 - `mypy src` ist bereinigt.
-- Backend-API-Key-Weitergabe ist umgesetzt; Usage-Metriken und optionaler
-  Diagnosebefehl bleiben offen.
+- Backend-API-Key-Weitergabe, Usage-Metriken, `llm-router usage`,
+  Master-kompatibler Benchmark-Export und generischer `endpoint_path` sind
+  umgesetzt.
 - Später können spezialisierte Modelle über denselben Router-Vertrag
   angebunden werden, aber ohne Schachproduktlogik im Router.
 
@@ -244,7 +246,10 @@ Aktueller Fokus:
 - Einheitliche Job-Orchestrierung mit CaiLama-Queue/Training.
 - Optionale semantische Retrieval-Schicht ist implementiert, default-off und
   nur nach messbarem Eval-Nutzen produktiv freizugeben.
-- Benchmark-Artefakte für Search/RAG sollen in den Master zurückfließen.
+- Recall-/MRR-/Zero-Hit-/Latenz-Metriken, Master-kompatibler Benchmark-Export,
+  RAG-Provenienz und Datenvertrag sind umgesetzt.
+- Offen bleibt der Docker-fähige Vergleich `lexical` gegen `hybrid` mit
+  Ergebnisbericht für den Master.
 
 Grenzen:
 
@@ -347,17 +352,17 @@ Jetzt:
 - Trainingsfokus schärfen: CaiLama liefert Trainingsarbeit und reproduzierbare
   Artefakte, nicht Social- oder Plattformfunktionen.
 - DWZ-Identity-Linking in Store/CLI und RAG-Provenienz fertigstellen.
-- Router-Infrastrukturwelle fortsetzen: Backend-API-Key-Weitergabe ist
-  umgesetzt; privacy-safe Token-/Usage-Metriken und optionaler
-  `llm-router usage` Diagnosebefehl bleiben offen.
+- Router-Infrastrukturwelle ist abgeschlossen: Backend-API-Key-Weitergabe,
+  privacy-safe Token-/Usage-Metriken, `llm-router usage`, Benchmark-Export
+  und generische Endpoint-Pfade sind umgesetzt.
 - Search als aktuellen Ausbau-Fokus vorantreiben: Goldset-End-to-End-Smoke und
-  optionale semantische Retrieval-Schicht sind vorhanden; nächste Punkte sind
-  Evaluation, API-Qualität, Job-Orchestrierung und Benchmarks.
+  optionale semantische Retrieval-Schicht sind vorhanden; offen ist der
+  Docker-fähige Vergleich `lexical` gegen `hybrid`.
 
 Danach:
 
-- PTG-Artefakte an DGT-/Agent-nahe Abrufpfade und Review-Priorisierung
-  anschliessen; Live-Verifikation nur bewusst gegen den Router.
+- PTG-Live-Verifikation nur bewusst gegen den Router; danach Scoring,
+  Fehler-/Mustertaxonomie, Kartentypen und weitere Qualitätsgates härten.
 - Einheitliche Job-Orchestrierung vorbereiten.
 - Benchmark-Rahmen im Master vorbereiten und Ergebnisse repo-übergreifend
   dokumentieren.
