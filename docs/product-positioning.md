@@ -13,18 +13,21 @@ Vom PGN zur persoenlichen Trainingsaufgabe:
 3. menschlich verstaendliche, aber engine-geerdete Kommentare ergaenzen.
 4. drei bis sieben Schluesselstellungen extrahieren.
 5. Fehlerarten und wiederkehrende Muster klassifizieren.
-6. Trainingsfragen und Karten erzeugen.
+6. gewichtete Trainingspositionen, Fragen und Karten erzeugen.
 7. gueltige PGN-Artefakte und Trainings-JSON speichern.
-8. Training spaeter per CLI, Agent oder DGT-nahem Brettmodus wiederholen.
+8. konkrete Coach-Session erst bei Bedarf per CLI/Agent erzeugen: passende
+   Position, Trainingsfrage, Unicode-Brett und bei angeschlossenem DGT-Brett
+   Aufstellaufforderung.
 9. Review-Ergebnisse in Prioritaet, Schwierigkeit und Wiederholung
    zurueckfuehren.
 
 Stand 2026-05-23: Die offline/deterministische PTG-Scheibe erzeugt bereits
 `source.pgn`, `annotated.pgn`, `training.json` und `quality_gates.json`.
-Agent-/DGT-naher Kartenabruf, `card_id`-Durchstich und Review-Stats in der
-Trainingspriorisierung sind umgesetzt. Offen bleiben Live-Router-Verifikation,
-deterministisches Scoring, Taxonomie, OCR/FEN-Gates und Datenschutz-/Export-
-Regeln fuer Leistungsprofile.
+Agent-/DGT-naher Kartenabruf, `card_id`-Durchstich, CardType/Muster und
+Review-Stats in der Trainingspriorisierung sind umgesetzt. Offen bleiben der
+neue Schnitt von gewichteten Trainingspositionen zu kurzlebigen Coach-Sessions,
+PTG-LLM-Resilienz, OCR/FEN-Gates, breitere Qualitaetsgates und
+Datenschutz-/Export-Regeln fuer Leistungsprofile.
 
 ## Differenzierung
 
@@ -38,6 +41,8 @@ Regeln fuer Leistungsprofile.
   Kernanalyse.
 - Benchmarks und reproduzierbare Artefakte sollen Qualitaet sichtbar machen,
   statt Modellantworten nur subjektiv zu bewerten.
+- Der Coach erzeugt Trainingseinheiten situativ aus gewichteten Positionen
+  statt dauerhaft offene Sessions auf Vorrat anzulegen.
 
 ## Zielgruppe
 
@@ -47,6 +52,7 @@ Selbstlerner, die langfristig besser trainieren wollen:
 - eigene Partien systematisch auswerten,
 - Fehler wiedererkennen,
 - Schluesselstellungen wiederholen,
+- eine Stellung am Brett aufbauen und mit Unicode-Brett gegenpruefen,
 - Trainingsfortschritt speichern,
 - Quellen und Analyseentscheidungen nachvollziehen.
 
@@ -78,7 +84,8 @@ Modelle, sondern komplette Workflows:
 - Router: Latenz, Fallbacks, Fehlerverhalten, Usage-Metriken und Benchmark-
   Export.
 - Analyse/PTG: PGN-Validitaet, Kartenqualitaet, Redundanz,
-  Fehlerklassifikation und Review-Erfolg.
+  Fehlerklassifikation, Zahl der tief analysierten Schluesselstellungen,
+  LLM-Call-Aufwand und Review-Erfolg.
 - OCR/FEN: Diagramm-Erkennung, FEN-Sicherheit und Fehlerquote.
 
 ### Spezialisiertes LLM-Training

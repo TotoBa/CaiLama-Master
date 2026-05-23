@@ -34,7 +34,7 @@ return [
             'points' => [
                 'PTG erzeugt valide Artefakte, Trainingskarten, Kartentypen, Muster und erklärbare Priorität.',
                 'Review-Daten fließen in die Trainingsauswahl zurück.',
-                'Offen bleiben Live-Verifikation, Datenschutz, Job-Vertrag, Observability und erweiterte Qualitätsgates.',
+                'Offen sind gewichtete Trainingspositionen, Coach-Sitzung on demand, Planmodus, PGN-/LLM-Optimierung und erweiterte Qualitätsgates.',
             ],
         ],
         [
@@ -57,8 +57,8 @@ return [
             'summary' => 'Search, Kontext, DWZ, Quellenverwaltung, Jobs, Goldsets, Observability und optionales semantisches Retrieval.',
             'points' => [
                 'Lexical-vs-Hybrid-Benchmark liegt vor; semantic.enabled bleibt default false.',
-                'Hybrid verbessert MRR, senkt aber Pass-Rate wegen filter+hybrid-Fehler.',
-                'Offen sind Bugfixes für filter+hybrid und gruppierte DWZ-Response-Felder.',
+                'Filter+Hybrid und Multi-Index-Response sind behoben; beide Modi erreichen Pass-Rate 1.0.',
+                'Offen sind DWZ-Staging-Verifikation und Freigabeentscheidung für Hybrid auf größerem Eval.',
             ],
         ],
         [
@@ -75,8 +75,8 @@ return [
         ],
     ],
     'next' => [
-        ['title' => 'Jetzt', 'text' => 'Website-Wartbarkeit mit Smarty, Search-Benchmark im Master, PTG-Folgepunkte und OCR/FEN-Gates.'],
-        ['title' => 'Danach', 'text' => 'PTG-Live-Verifikation, Datenschutz/Export, Job-Orchestrierung und RAG-Provenienz in allen Antwortformaten.'],
+        ['title' => 'Jetzt', 'text' => 'Gewichtete Trainingspositionen, Coach-Sitzung on demand, Planmodus, Search-/PTG-Benchmarks und OCR/FEN-Gates.'],
+        ['title' => 'Danach', 'text' => 'PTG-LLM-Resilienz, Datenschutz/Export, Job-Orchestrierung und RAG-Provenienz in allen Antwortformaten.'],
         ['title' => 'Später', 'text' => 'Spezialisierte Modelle erst nach Benchmark-Baseline, Datenfreigabe und Router-kompatibler Bereitstellung.'],
         ['title' => 'Betrieb', 'text' => 'Öffentliche Website deployen, private Smarty-Abhängigkeit getrennt halten und Repos sauber für Kimi übergeben.'],
     ],

@@ -195,8 +195,8 @@
         "optional semantic retrieval is implemented, default-off and guarded by lexical fallback",
         "job orchestration with CaiLama queue and training",
         "benchmark metrics, master-compatible benchmark export, RAG provenance and data policy are implemented",
-        "Docker-capable lexical versus hybrid benchmark comparison is documented; semantic.enabled remains false by default",
-        "filter+hybrid 500 errors and grouped DWZ response fields remain open"
+        "Docker-capable lexical versus hybrid benchmark comparison is documented; filter+hybrid and grouped multi-index response fixes are complete with pass rate 1.0 in both modes",
+        "semantic.enabled remains false by default until a larger eval shows product benefit"
       ],
       "constraints": [
         "No real Meilisearch keys, master keys, admin keys or .env files in repository files.",
@@ -277,14 +277,14 @@
       "PTG card retrieval and review prioritization after offline artifact generation",
       "CaiLama deterministic scoring, mistake taxonomy and card types are implemented",
       "DWZ identity linking and RAG provenance",
-      "Search benchmark comparison lexical versus hybrid is documented; hybrid remains default-off pending fixes",
+      "Search benchmark comparison lexical versus hybrid is documented; correctness fixes are complete and hybrid remains default-off pending product decision",
       "Router infrastructure hardening is complete with backend API key forwarding, privacy-safe usage metrics, usage CLI and benchmark export"
     ],
     "next": [
-      "PTG live verification and follow-up hardening for CardType in agent/board flows plus privacy/export rules",
+      "CaiLama weighted training positions, coach sessions on demand, Planmodus console workflow and PTG LLM batching/retry",
       "Unified job orchestration for CaiLama and Search",
       "Benchmark framework in Master for cross-repo measurements and result documentation",
-      "Search follow-up fixes for filter+hybrid and grouped DWZ response fields"
+      "Search DWZ staging verification and semantic production decision on a larger eval"
     ],
     "later": [
       "RAG-assisted analysis packages",

@@ -1,32 +1,42 @@
 # Status und Ausbaupfade des CaiLama-Ökosystems
 
-## Aktualisierung 2026-05-23 (Session 3 — PTG-Live-Verifikation, Doku+Deploy)
+## Aktualisierung 2026-05-23 (Session 4 — TODO-/Doku-Sync, Kimi gemma4)
 
-Dieser Abschnitt ergaenzt den Stand nach der dritten Kimi-Arbeitssession,
+Dieser Abschnitt ergaenzt den Stand nach der naechsten Kimi-/Codex-Pruefung,
 ohne die historische Analyse darunter umzuschreiben.
 
 - `TotoBa/CaiLama`:
-  - **PTG-Live-Verifikation**: 3 diverse Spiele (B18 OTB, C01 DGT Centaur,
-    C34 Lichess) aus 45 PGN-Spielen ausgewaehlt und in Profil "torsten"
-    importiert. PTG-Pipeline mit `--run-llm-stages` laeuft gegen den
-    LLM-Router (classify=chess-small/deepseek-v4-flash,
-    analyze=deepseek-v4-pro).
-  - Offline-Durchlauf (ohne LLM): 3 Spiele profiliert, 4 Decks (Taktikmotiv,
-    Planfehler, Technikfehler, Eroeffnungsdrift), 21 Schluesselstellungen,
-    alle 3 Sessions gueltig.
+  - Offline-Durchlauf (ohne LLM) bleibt die belastbare PTG-Baseline:
+    3 bewusst freigegebene Spiele, 4 Decks (Taktikmotiv, Planfehler,
+    Technikfehler, Eroeffnungsdrift), 21 Schluesselstellungen, 13 Karten,
+    3/3 gueltige PTG-Sessions.
+  - Die beobachteten LLM-Probleme liegen nicht in den Offline-Quality-Gates,
+    sondern im bisherigen pro-Zug-Loop: 232 Zuege erzeugen 464 Router-Calls,
+    einzelne Backend-5xx/Timeouts koennen den Lauf verlieren. Folgearbeit:
+    alle Zuege klassifizieren, nur die 21 Schluesselstellungen tief
+    analysieren, Retry/Timeout/Checkpointing einziehen.
+  - Trainingsziel geschaerft: PTG erzeugt gewichtete Trainingspositionen.
+    Konkrete Coach-Sessions entstehen in der interaktiven Console on demand,
+    zeigen immer ein Unicode-Brett, fordern bei angeschlossenem DGT-Brett zum
+    Aufstellen auf und werden eindeutig abgeschlossen oder abgebrochen.
 - `TotoBa/CaiLama-Search`:
   - filter+hybrid-500er und Multi-Index-Response sind behoben (Pass-Rate 1.0).
   - DWZ-Staging-Test: 14 Offline-Tests (Parse, Import, Header-Validierung)
     bestehen. Live-Download bleibt manueller Schritt.
   - `semantic.enabled=false` bleibt Default.
-- `TotoBa/CaiLama-LLM-Router`: Keine Änderungen, aktiv auf Port 18080.
-- `TotoBa/CaiLama-Master`: Doku aktualisiert (ecosystem-reference.md,
-  status.plan.cailama.md).
+- `TotoBa/CaiLama-LLM-Router`: Keine Code-Aenderung noetig; lokale Kimi-CLI
+  ist fuer Folgearbeit auf `gemma4:31b-cloud` gestellt.
+- `TotoBa/CaiLama-Master`: Benchmark-, Website-, TODO- und Ecosystem-Doku
+  werden auf den behobenen Search-Stand und die geschaerfte Trainingsrichtung
+  synchronisiert.
 
 Offen (bewusste Folgearbeit):
-- CaiLama: PTG-Ergebnisse auswerten und dokumentieren, OCR/FEN-Gates.
-- CaiLama-Search: Semantische Freigabeentscheidung.
-- CaiLama-Master: Website deployen, Runtime deployen.
+- CaiLama: gewichtete Trainingspositionen, Coach-Session-on-demand,
+  Planmodus-Workflow, PTG-LLM-Batching/Retry, OCR/FEN-Gates.
+- CaiLama-Search: DWZ-Staging-Test und semantische Freigabeentscheidung auf
+  groesserem Eval.
+- CaiLama-Master: Benchmarks regelmaessig einsammeln und Website/Doku nach
+  jedem Unterrepo-Lauf synchron halten.
 
 ## Aktualisierung 2026-05-22
 

@@ -23,7 +23,7 @@ return [
             'repo_url' => 'https://github.com/TotoBa/CaiLama',
             'summary' => 'CaiLama ist der Produktkern mit Partieimport, PGN-Verarbeitung, Brettwahrheit, Stockfish-Analyse, Trainingssessions, Spielerprofilen, Agent-CLI, OCR/Knowledge und DGT-nahen Workflows.',
             'status' => 'Der personalisierte Trainingsgenerator erzeugt source.pgn, annotated.pgn, training.json, quality_gates.json, Trainingskarten, Kartentypen, Muster und erklärbare Priorität. Review-Daten können die nächste Trainingsauswahl beeinflussen.',
-            'open' => 'PTG-Live-Verifikation, CardType-Auswertung in Agent-/Board-Flows, Datenschutz/Export für Leistungsprofile, Job-Orchestrierung, durchgängige Provenienz, Observability und OCR/FEN-Gates.',
+            'open' => 'Nächster Fokus: gewichtete Trainingspositionen statt automatisch offener Sessions, Coach-Sitzung on demand mit Unicode-Brett und optionaler DGT-Aufstellung, Planmodus in der Console, robuste PGN-/LLM-Pipeline und OCR/FEN-Gates.',
         ],
         [
             'id' => 'router',
@@ -42,8 +42,8 @@ return [
             'tag_class' => 'red',
             'repo_url' => 'https://github.com/TotoBa/CaiLama-Search',
             'summary' => 'CaiLama-Search ist der schachspezifische Search-, DWZ- und RAG-Dienst. Er stellt kontrollierten Kontext bereit, ohne CaiLama direkt an Meilisearch oder externe Websuche zu koppeln.',
-            'status' => 'Search-API, Context-API, DWZ-Pfade, Quellenverwaltung, Jobs, Goldsets, Observability, RAG-Provenienz, Datenvertrag, Benchmark-Export und optionale semantische Suche sind umgesetzt oder vorbereitet.',
-            'open' => 'Der lexical-vs-hybrid-Benchmark ist erledigt. Offen bleiben filter+hybrid-500er, gruppierte DWZ-Felder, DWZ-Staging-Test und die produktive Freigabeentscheidung für Hybrid.',
+            'status' => 'Search-API, Context-API, DWZ-Pfade, Quellenverwaltung, Jobs, Goldsets, Observability, RAG-Provenienz, Datenvertrag, Benchmark-Export und optionale semantische Suche sind umgesetzt oder vorbereitet. Filter+Hybrid und Multi-Index-Response sind behoben; lexical und hybrid erreichen im Goldset beide Pass-Rate 1.0.',
+            'open' => 'Offen bleiben der bewusste DWZ-Staging-Test und die produktive Freigabeentscheidung für Hybrid auf größerem Eval. semantic.enabled bleibt default false.',
         ],
         [
             'id' => 'master',
@@ -53,7 +53,7 @@ return [
             'repo_url' => 'https://github.com/TotoBa/CaiLama-Master',
             'summary' => 'Der Master ist Website, Roadmap, Status, Betrieb und Ecosystem-Dokumentation. Er enthält keine Runtime-Logik der Unterprojekte.',
             'status' => 'cailama.org läuft als PHP-Webspace mit öffentlichem Document Root und privatem Smarty-App-Bereich. LLM-Referenzen, JSON-Referenz, Sitemap, robots.txt, Deployment-Skript und Webspace-DB-API-Fassade sind vorhanden.',
-            'open' => 'Benchmark-Ergebnisse zentral ablegen, Unterrepo-Status regelmäßig synchronisieren und die Website-Inhalte datengetrieben aktuell halten.',
+            'open' => 'Benchmark-Ergebnisse zentral ablegen, Unterrepo-Status regelmäßig synchronisieren, Runtime/Webseite deployen und die Inhalte datengetrieben aktuell halten.',
         ],
     ],
 ];

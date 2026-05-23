@@ -80,9 +80,20 @@ Ein Ergebnis enthaelt mindestens:
 
 - `docs/benchmark-results/2026-05-23.search-lexical-hybrid.md`:
   CaiLama-Search-Goldsets, lexical gegen hybrid. Ergebnis: Recall@5 und
-  Recall@10 sind in beiden Modi 1.0; Hybrid verbessert MRR von 0.9167 auf
-  1.0000, senkt aber die Pass-Rate von 88.89% auf 77.78% durch einen
-  filter+hybrid-Fehler. `semantic.enabled=false` bleibt empfohlen.
+  Recall@10 sind in beiden Modi 1.0; MRR ist in beiden Modi 0.9167; die
+  Pass-Rate ist nach Filter- und Multi-Index-Fixes in beiden Modi 100%.
+  `semantic.enabled=false` bleibt empfohlen, bis ein groesseres Eval-Set
+  produktiven Nutzen belegt.
+- `docs/benchmark-results/2026-05-23.ptg-offline-baseline.md`:
+  CaiLama-PTG-Offline-Baseline mit 3 freigegebenen Spielen, 21
+  Schluesselstellungen, 13 Trainingskarten und 3/3 gueltigen PTG-Sessions.
+  Die 21 Schluesselstellungen sind ein Ergebnis dieser Drei-Spiele-Baseline,
+  keine allgemeine Obergrenze.
+  Der Live-LLM-Pfad ist noch nicht produktionsreif, weil der bisherige
+  pro-Zug-Loop 464 Router-Calls erzeugt und keine Retry-/Timeout-Resilienz
+  besitzt. Folgearbeit: alle Zuege klassifizieren, die pro Lauf priorisierten
+  Schluesselstellungen tief analysieren, gewichtete Trainingspositionen
+  erzeugen und konkrete Coach-Sessions erst on demand bilden.
 
 ## Spezialisiertes LLM-Training
 

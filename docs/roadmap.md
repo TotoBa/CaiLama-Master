@@ -15,8 +15,9 @@ Koordinationspunkte:
 - CaiLama als Trainingswerkstatt fuer ambitionierte Spieler, Trainer und
   ernsthafte Selbstlerner beschreiben.
 - Kernloop priorisieren: PGN importieren, Analyse erden,
-  Schluesselstellungen extrahieren, Trainingsfragen erzeugen, gueltige
-  Artefakte speichern und Review-Ergebnisse zurueckfuehren.
+  Schluesselstellungen extrahieren, gewichtete Trainingspositionen und
+  Trainingsfragen erzeugen, konkrete Coach-Sessions on demand starten,
+  gueltige Artefakte speichern und Review-Ergebnisse zurueckfuehren.
 - Keine Social-, Feed-, Matchmaking- oder Mobile-First-Funktionen als
   Roadmap-Schwerpunkt aufnehmen.
 - DGT-nahe Wiederholung, lokale Datenhaltung, Quellenprovenienz und
@@ -107,8 +108,11 @@ Koordinationspunkte:
 - Umgesetzt: Recall-/MRR-/Zero-Hit-/Latenz-Metriken, Master-kompatibler
   Benchmark-Export, RAG-Provenienz und Datenvertrag fuer spaetere
   Modellanpassungen.
-- Naechster Search-Fokus: Docker-faehiger Vergleich `lexical` gegen `hybrid`
-  und Ablage des Ergebnisberichts fuer den Master.
+- Umgesetzt: Docker-faehiger Vergleich `lexical` gegen `hybrid` und
+  Ergebnisbericht fuer den Master; filter+hybrid-500er und Multi-Index-
+  Normalisierung sind behoben, beide Modi erreichen Pass-Rate 1.0.
+- Naechster Search-Fokus: DWZ-Staging-Verifikation und Entscheidung, ob
+  Hybrid auf groesserem Eval produktiv freigegeben wird.
 
 ## Danach
 
@@ -126,8 +130,21 @@ Koordinationspunkte:
   Trainingsfragen, `training.json`, `quality_gates.json` und CLI-Ausgabe.
 - Umgesetzt: Agent-/DGT-naher Kartenabruf, `ReplayPosition.card_id` und
   Review-Stats in der Trainingspriorisierung.
-- Offen: PTG-Live-Verifikation, deterministisches Scoring, Fehler-/
-  Mustertaxonomie, Kartentypen und weitere Qualitaetsgates.
+- Umgesetzt: deterministisches Scoring, Fehler-/Mustertaxonomie, Kartentypen
+  und PTG-Basis-Qualitaetsgates.
+- Offen: PTG soll gewichtete Trainingspositionen statt automatisch offener
+  Sessions erzeugen. Die interaktive Coach-Console waehlt daraus eine
+  passende Position, zeigt immer ein Unicode-Brett, fordert bei verbundenem
+  DGT-Brett zum Aufstellen auf und schliesst die Session mit Folgeanalyse
+  oder Abbruch.
+- Offen: PGN-/LLM-Pipeline optimieren. Alle Zuege klassifizieren, die pro
+  Lauf priorisierten Schluesselstellungen tief analysieren, keine feste
+  21er-Grenze als Produktdefault setzen, Retry/Timeout/Checkpointing einziehen
+  und Router-Modelle ueber Rollen/Aliase waehlen.
+- Offen: Planmodus-Workflow in die interaktive Console einbinden, sodass ein
+  LLM erst einen Plan/TODO erzeugt, der Nutzer ihn bestaetigen oder anpassen
+  kann und danach erst die Ausfuehrung startet.
+- Offen: erweiterte Qualitaetsgates ueber PTG hinaus.
 - Datenschutz fuer personenbezogene Leistungsprofile klaeren.
 
 ### DWZ-Identity-Linking

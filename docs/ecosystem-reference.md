@@ -253,11 +253,10 @@ Aktueller Fokus:
 - Recall-/MRR-/Zero-Hit-/Latenz-Metriken, Master-kompatibler Benchmark-Export,
   RAG-Provenienz und Datenvertrag sind umgesetzt.
 - Docker-fähiger Vergleich `lexical` gegen `hybrid` ist dokumentiert:
-  Recall@5/10 bleibt in beiden Modi 1.0; Hybrid verbessert MRR, senkt aber
-  wegen filter+hybrid-Fehlern die Pass-Rate. `semantic.enabled=false` bleibt
-  empfohlen.
-- filter+hybrid-500er und Multi-Index-Response sind behoben (Pass-Rate 1.0).
-  `semantic.enabled=false` bleibt Default.
+  Recall@5/10 bleibt in beiden Modi 1.0; MRR ist in beiden Modi 0.9167;
+  filter+hybrid-500er und Multi-Index-Response sind behoben, beide Modi
+  erreichen Pass-Rate 1.0. `semantic.enabled=false` bleibt Default, bis ein
+  größeres Eval einen produktiven Nutzen belegt.
 - DWZ-Staging-Test: Offline-Tests decken Parse, Import und Header-Validierung ab;
   Live-Download bleibt manueller Schritt.
 

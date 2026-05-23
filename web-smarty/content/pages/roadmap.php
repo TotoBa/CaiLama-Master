@@ -20,9 +20,10 @@ return [
             'tag' => 'CaiLama',
             'title' => 'Produktloop härten',
             'items' => [
-                'PTG-Live-Verifikation mit bewusst gestartetem Router.',
-                'CardType und Muster in Agent-/DGT-nahe Trainingspfade auswerten.',
-                'CardScorer in weitere Trainingsauswahl integrieren, wenn Pipeline-Daten pro Karte verfügbar sind.',
+                'Gewichtete Trainingspositionen statt automatisch offener Sessions erzeugen.',
+                'Coach-Sitzung on demand: passende Position, Trainingsfrage, Unicode-Brett und optionale DGT-Aufstellaufforderung.',
+                'PGN-/LLM-Pipeline härten: alle Züge klassifizieren, priorisierte Schlüsselstellungen tief analysieren, Retry und Checkpoints.',
+                'Planmodus in die interaktive Console einbinden.',
                 'Qualitätsgates über PTG hinaus vereinheitlichen.',
             ],
         ],
@@ -31,7 +32,7 @@ return [
             'tag_class' => 'red',
             'title' => 'Leistungsprofile',
             'items' => [
-                'docs/privacy-training-data.md erstellen.',
+                'Vorhandenes Datenschutzkonzept in Export- und Löschpfade überführen.',
                 'Export und Löschung pro Profil vorbereiten.',
                 'Retention-Konzept für Trainings- und Review-Daten definieren.',
                 'Keine privaten Partien oder Kommentare für Modelltraining ohne ausdrückliche Freigabe verwenden.',
@@ -44,8 +45,8 @@ return [
             'items' => [
                 'Quellenformat überall vereinheitlichen.',
                 'Antworten mit Titel, Quelle/URL, Stand/Freshness, Verwendet-für und Unsicherheit ausgeben.',
-                'filter+hybrid-500er und gruppierte DWZ-Felder beheben.',
-                'Hybrid bleibt bis zur Freigabe default-off.',
+                'DWZ-Staging-Test bewusst verifizieren.',
+                'Hybrid bleibt trotz behobener Korrektheitsfehler bis zur Produktentscheidung default-off.',
             ],
         ],
         [
@@ -53,8 +54,8 @@ return [
             'tag_class' => 'copper',
             'title' => 'Master-Ablage',
             'items' => [
-                'Search-Benchmark lexical vs hybrid im Master dokumentieren.',
-                'PTG- und Router-Benchmark-Exports einsammeln.',
+                'Search-Benchmark lexical vs hybrid und PTG-Offline-Baseline im Master dokumentiert halten.',
+                'Router-Benchmark-Exports einsammeln.',
                 'OCR/FEN-False-Positive-Gates definieren.',
                 'Ergebnisformat in docs/benchmark-results/ standardisieren.',
             ],

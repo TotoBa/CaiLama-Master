@@ -108,26 +108,36 @@ Vor Arbeitsbeginn lesen:
   Messbereich, nicht zurueckgestellt. PTG liefert jetzt pro Session
   `quality_gates.json` und einen PTG-Benchmark-Summary-Export als erste
   Master-kompatible Messquelle; Router und Search liefern ebenfalls
-  Benchmark-Export-Pfade. Erster echter Master-Bericht liegt vor:
-  `docs/benchmark-results/2026-05-23.search-lexical-hybrid.md`.
+  Benchmark-Export-Pfade. Erste Master-Berichte liegen vor:
+  `docs/benchmark-results/2026-05-23.search-lexical-hybrid.md` und
+  `docs/benchmark-results/2026-05-23.ptg-offline-baseline.md`. Offen bleibt
+  die wiederholbare Orchestrierung ueber alle Repos, inklusive Router-Latenz,
+  OCR/FEN-False-Positive-Gates und groesserem Search-/PTG-Eval.
 - [ ] Spaeteres spezialisiertes LLM-Training als Roadmap-Hebel vorbereiten:
   erst nach Benchmark-Baseline, Datenfreigabe, sauberer Test-/Eval-/Train-
   Trennung und Datenschutzklaerung planen. Modelle werden nur ueber den
   Router-Vertrag bereitgestellt; Schachproduktlogik bleibt in CaiLama.
 - [ ] Roadmap regelmaessig aus den Unterrepo-`TODO.md`-Dateien abgleichen:
   **CaiLama** = CardType-Auswertung in Agent-/Board-Flows umgesetzt;
+  naechster Fokus sind gewichtete Trainingspositionen statt automatisch
+  offener Sessions, konkrete Coach-Sessions on demand mit Unicode-Brett und
+  optionaler DGT-Aufstellaufforderung, Planmodus in der interaktiven Console,
+  PGN-/PTG-LLM-Optimierung (alle Zuege klassifizieren, die pro Lauf
+  priorisierten Schluesselstellungen tief analysieren,
+  Retry/Timeout/Checkpointing; 21 war nur die Anzahl in der aktuellen
+  Drei-Spiele-Benchmark-Baseline, kein globaler Default),
   CardScorer-Einbindung in weitere Trainingsauswahl,
-  Analyse-Qualitaetsgates ueber PTG hinaus, Datenschutz/Export dokumentiert,
-  RAG-Provenienz, Job-Orchestrierung, PTG-Observability,
-  OCR/FEN aktiv ohne geratene FENs.
+  Analyse-Qualitaetsgates ueber PTG hinaus, Datenschutz/Export,
+  RAG-Provenienz, PTG-Observability, OCR/FEN aktiv ohne geratene FENs.
   **Router** = aktuelle Infrastrukturwelle ist abgearbeitet: Backend-API-Key-
   Weitergabe, Token-/Usage-Metriken, `llm-router usage`, benchmarkbare
   Usage-/Latenzexporte und generische `endpoint_path`-Backends sind umgesetzt;
-  neue Router-Arbeit erst bei Live-Smoke-, Benchmark- oder Backend-Auftrag.
+  lokale Kimi-Arbeit ist auf `gemma4:31b-cloud` konfiguriert, neue Router-Arbeit
+  erst bei Live-Smoke-, Benchmark- oder Backend-Auftrag.
   **Search** = filter+hybrid-500er und Multi-Index-Response sind
   behoben (Pass-Rate 9/9). `semantic.enabled=false` bleibt Default.
-  Offen bleiben PTG-Live-Verifikation (LLM-Stages benoetigen Batch/Retry),
-  semantische Freigabeentscheidung und API-/README-Nachzug.
+  Offen bleiben DWZ-Staging-Verifikation, semantische Freigabeentscheidung
+  auf groesserem Eval und API-/README-Pflege bei neuen Vertragsaenderungen.
 
 ## Kimi-Handoff
 
@@ -135,7 +145,9 @@ Der Master bleibt Koordination, Website und Doku. Keine Unterrepo-Dateien im
 Master tracken, keine Submodules, keine produktive Runtime-Logik.
 
 ```text
-Du arbeitest im CaiLama-Master-Repository. Lies zuerst AGENTS.md, README.md und
+Du arbeitest im CaiLama-Master-Repository. Die lokale Kimi-Konfiguration nutzt
+fuer die kommende Arbeit `gemma4:31b-cloud`; das ist ein Client-Default, kein
+produktiver CaiLama-Modellvertrag. Lies zuerst AGENTS.md, README.md und
 TODO.md vollstaendig. Lies danach docs/ecosystem-map.md, docs/orchestration.md,
 docs/product-positioning.md, docs/benchmarks.md, status.plan.cailama.md und
 master-repo-orchestration.plan.md. Wenn die Aufgabe Website oder LLM-Doku
@@ -153,6 +165,18 @@ ausser der Nutzer fordert diese Bereinigung ausdruecklich an. TODO ist nicht
 gleich Handoff. Dauerhafte Pruefpunkte wie Produktpositionierung kurz gegen
 Doku/Web abgleichen und dann zum naechsten konkret umsetzbaren offenen Punkt
 weitergehen.
+
+Cross-Repo-Prioritaet fuer den naechsten Lauf: In CaiLama mit den offenen
+Training-/PTG-Punkten beginnen. PTG soll gewichtete Trainingspositionen
+persistieren, keine automatisch offen bleibenden Sessions erzeugen. Der Coach
+waehlt in der interaktiven Console eine passende Position, zeigt immer ein
+Unicode-Brett, fordert bei verbundenem DGT-Brett zum Aufstellen auf und beendet
+die Session eindeutig mit Folgeanalyse oder Abbruch. Danach PGN-/LLM-Pipeline
+haerten: alle Zuege klassifizieren, die pro Lauf priorisierten
+Schluesselstellungen tief analysieren und keine feste 21er-Grenze als
+Produktdefault setzen. Retry/Timeout/Checkpointing ergaenzen. Search danach nur
+fuer DWZ-Staging und semantische Freigabeentscheidung; Router nur bei neuem
+Alias-/Benchmark-Auftrag.
 
 Nach jeder Aenderung:
 1. Betroffene Master-Doku oder Website knapp aktualisieren.

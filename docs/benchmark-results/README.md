@@ -20,3 +20,5 @@ Aktueller Bestand:
 
 - `2026-05-23.search-lexical-hybrid.md` - synthetischer CaiLama-Search-
   Goldset-Vergleich lexical gegen hybrid.
+- `2026-05-23.ptg-offline-baseline.md` - CaiLama-PTG-Offline-Baseline mit
+  freigegebenen PGN-Auszügen, Quality-Gates und offenen LLM-Resilienzpunkten.
