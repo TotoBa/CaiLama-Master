@@ -125,14 +125,17 @@ Vor Arbeitsbeginn lesen:
   PGN-/PTG-LLM-Optimierung (alle Zuege klassifizieren, die pro Lauf
   priorisierten Schluesselstellungen tief analysieren,
   Retry/Timeout/Checkpointing; 21 war nur die Anzahl in der aktuellen
-  Drei-Spiele-Benchmark-Baseline, kein globaler Default),
+  Drei-Spiele-Benchmark-Baseline, kein globaler Default), Nutzer-Review-Gate
+  nach erster Stockfish-Analyse fuer die manuelle Schluesselstellungs-Auswahl,
+  Hintergrund-Agenten fuer lange Analyse-/Import-/Trainingprofil-Aufgaben,
   CardScorer-Einbindung in weitere Trainingsauswahl,
   Analyse-Qualitaetsgates ueber PTG hinaus, Datenschutz/Export,
   RAG-Provenienz, PTG-Observability, OCR/FEN aktiv ohne geratene FENs.
   **Router** = aktuelle Infrastrukturwelle ist abgearbeitet: Backend-API-Key-
   Weitergabe, Token-/Usage-Metriken, `llm-router usage`, benchmarkbare
   Usage-/Latenzexporte und generische `endpoint_path`-Backends sind umgesetzt;
-  lokale Kimi-Arbeit ist auf `gemma4:31b-cloud` konfiguriert, neue Router-Arbeit
+  lokale Kimi-Arbeit ist wieder auf `kimi-k2.6:cloud` konfiguriert,
+  neue Router-Arbeit
   erst bei Live-Smoke-, Benchmark- oder Backend-Auftrag.
   **Search** = filter+hybrid-500er und Multi-Index-Response sind
   behoben (Pass-Rate 9/9). `semantic.enabled=false` bleibt Default.
@@ -146,15 +149,19 @@ Master tracken, keine Submodules, keine produktive Runtime-Logik.
 
 ```text
 Du arbeitest im CaiLama-Master-Repository. Die lokale Kimi-Konfiguration nutzt
-fuer die kommende Arbeit `gemma4:31b-cloud`; das ist ein Client-Default, kein
+fuer die kommende Arbeit `kimi-k2.6:cloud`; das ist ein Client-Default, kein
 produktiver CaiLama-Modellvertrag. Lies zuerst AGENTS.md, README.md und
-TODO.md vollstaendig. Lies danach docs/ecosystem-map.md, docs/orchestration.md,
-docs/product-positioning.md, docs/benchmarks.md, status.plan.cailama.md und
-master-repo-orchestration.plan.md. Wenn die Aufgabe Website oder LLM-Doku
-betrifft, lies zusaetzlich docs/website.md, docs/ecosystem-reference.md,
-docs/data/ecosystem.json und die betroffenen Dateien unter web/. Beachte:
-web/index.php ist die Trainingsfokus-Startseite; der bisherige Status der
-Startseite liegt unter web/status.php.
+TODO.md vollstaendig. Lies danach in allen Unterrepos ebenfalls AGENTS.md,
+TODO.md und vorhandene HANDOFF-/Plan-Dateien, damit du den Gesamtstand
+kennst. Nutze den CaiLama-Ecosystem-Skill als zusaetzliche Orientierung und
+lies die letzten Ergebnisse des Analyse-Workflows, insbesondere die aktuellen
+Benchmark- und PTG-Artefakte. Lies danach docs/ecosystem-map.md,
+docs/orchestration.md, docs/product-positioning.md, docs/benchmarks.md,
+status.plan.cailama.md und master-repo-orchestration.plan.md. Wenn die Aufgabe
+Website oder LLM-Doku betrifft, lies zusaetzlich docs/website.md,
+docs/ecosystem-reference.md, docs/data/ecosystem.json und die betroffenen
+Dateien unter web/. Beachte: web/index.php ist die Trainingsfokus-Startseite;
+der bisherige Status der Startseite liegt unter web/status.php.
 
 Arbeite danach die offenen Punkte in TODO.md von oben nach unten ab. Pro
 Schritt nur eine kleine, nachvollziehbare Aufgabe bearbeiten: Kontext lesen,
@@ -172,11 +179,21 @@ persistieren, keine automatisch offen bleibenden Sessions erzeugen. Der Coach
 waehlt in der interaktiven Console eine passende Position, zeigt immer ein
 Unicode-Brett, fordert bei verbundenem DGT-Brett zum Aufstellen auf und beendet
 die Session eindeutig mit Folgeanalyse oder Abbruch. Danach PGN-/LLM-Pipeline
-haerten: alle Zuege klassifizieren, die pro Lauf priorisierten
-Schluesselstellungen tief analysieren und keine feste 21er-Grenze als
-Produktdefault setzen. Retry/Timeout/Checkpointing ergaenzen. Search danach nur
-fuer DWZ-Staging und semantische Freigabeentscheidung; Router nur bei neuem
-Alias-/Benchmark-Auftrag.
+haerten: alle Zuege klassifizieren, nach der ersten Stockfish-Analyse ein
+Nutzer-Review-Gate fuer die Schluesselstellungs-Auswahl anbieten, vom Nutzer
+ergaenzte oder hochgestufte Stellungen in die Tiefenanalyse uebernehmen, die
+pro Lauf priorisierten Schluesselstellungen tief analysieren und keine feste
+21er-Grenze als Produktdefault setzen. Retry/Timeout/Checkpointing ergaenzen.
+Planmodus vor Ausfuehrung nutzen: Agent erstellt zuerst Plan/TODO, Nutzer kann
+pruefen und anpassen, erst danach wird gearbeitet. Hintergrund-Agenten sollen
+lange Aufgaben wie Import, Analyse, OCR/FEN-Pruefung und
+Trainingsprofil-Aktualisierung verarbeiten; bestehende Trainingspositionen
+bleiben nutzbar, waehrend neue Analysen laufen. Beispiel: Partie zu einem
+bestehenden Trainingsprofil hinzufuegen, mit vorhandenen Positionen sofort
+trainieren, nach Analyseabschluss auf Session-Abschluss oder Abbruch warten und
+danach Ergebnis, Einordnung und Integrationsvorschlag in der Console anzeigen.
+Search danach nur fuer DWZ-Staging und semantische Freigabeentscheidung; Router
+nur bei neuem Alias-/Benchmark-Auftrag.
 
 Nach jeder Aenderung:
 1. Betroffene Master-Doku oder Website knapp aktualisieren.
