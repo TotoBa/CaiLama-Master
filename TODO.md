@@ -193,6 +193,12 @@ bleiben nutzbar, waehrend neue Analysen laufen. Beispiel: Partie zu einem
 bestehenden Trainingsprofil hinzufuegen, mit vorhandenen Positionen sofort
 trainieren, nach Analyseabschluss auf Session-Abschluss oder Abbruch warten und
 danach Ergebnis, Einordnung und Integrationsvorschlag in der Console anzeigen.
+
+**Update 2026-05-23:** PGN-/LLM-Pipeline ist gehärtet: `run_llm_call` mit
+Retry/Backoff/Timeout, `checkpoint_writer` in `classify_moves` und
+`analyze_moves`, inkrementelles JSONL-Appending, `run_pipeline_trifecta` mit
+Resume-Semantik (überspringt vorhandene Plies). Neue Doku:
+`CaiLama/docs/pipeline-resilienz.md`.
 Search danach nur fuer DWZ-Staging und semantische Freigabeentscheidung; Router
 nur bei neuem Alias-/Benchmark-Auftrag.
 
