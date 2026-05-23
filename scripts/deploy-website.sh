@@ -6,8 +6,11 @@ deploy_config="${CAILAMA_WEB_DEPLOY_CONFIG:-$HOME/.config/cailama/web-deploy.env
 configurable_vars=(
   CAILAMA_WEB_DEPLOY_METHOD
   CAILAMA_WEB_LOCAL_TARGET
+  CAILAMA_WEB_LOCAL_SMARTY_TARGET
   CAILAMA_WEB_SFTP_TARGET
   CAILAMA_WEB_SFTP_REMOTE_DIR
+  CAILAMA_WEB_SFTP_REMOTE_ROOT
+  CAILAMA_WEB_SFTP_REMOTE_SMARTY_DIR
   CAILAMA_WEB_SFTP_IP_VERSION
   CAILAMA_WEB_SFTP_PORT
   CAILAMA_WEB_SFTP_IDENTITY_FILE
@@ -18,6 +21,7 @@ configurable_vars=(
   CAILAMA_WEB_SFTP_PASSWORD_FILE
   CAILAMA_PUBLIC_URL
   CAILAMA_DEPLOY_VERIFY
+  CAILAMA_DEPLOY_ALLOW_MISSING_VENDOR
 )
 saved_env_names=()
 deploy_method_from_env=0
@@ -55,18 +59,46 @@ if [[ ! -d "web" ]]; then
   echo "ERROR: web/ directory missing" >&2
   exit 1
 fi
+if [[ ! -d "web-smarty" ]]; then
+  echo "ERROR: web-smarty/ directory missing" >&2
+  exit 1
+fi
+if [[ ! -f "web-smarty/bootstrap.php" ]]; then
+  echo "ERROR: web-smarty/bootstrap.php missing" >&2
+  exit 1
+fi
+mkdir -p web-smarty/cache/smarty web-smarty/cache/templates_c
+if [[ ! -f "web-smarty/vendor/autoload.php" && "${CAILAMA_DEPLOY_ALLOW_MISSING_VENDOR:-0}" != "1" ]]; then
+  echo "ERROR: web-smarty/vendor/autoload.php missing" >&2
+  echo "Run: cd web-smarty && composer install --no-dev --optimize-autoloader" >&2
+  exit 2
+fi
 
 if [[ -n "$target_arg" && "$deploy_method_from_env" != "1" ]]; then
   deploy_method="local"
 fi
 
 if [[ -z "$deploy_method" ]]; then
+  if [[ -n "${CAILAMA_WEB_SFTP_REMOTE_ROOT:-}" ]]; then
+    CAILAMA_WEB_SFTP_REMOTE_DIR="${CAILAMA_WEB_SFTP_REMOTE_ROOT%/}/public"
+    CAILAMA_WEB_SFTP_REMOTE_SMARTY_DIR="${CAILAMA_WEB_SFTP_REMOTE_ROOT%/}/smarty"
+  fi
   if [[ -n "${CAILAMA_WEB_SFTP_TARGET:-}" && -n "${CAILAMA_WEB_SFTP_REMOTE_DIR:-}" ]]; then
     deploy_method="sftp"
   else
     echo "ERROR: no deployment target configured" >&2
     echo "Set CAILAMA_WEB_SFTP_TARGET and CAILAMA_WEB_SFTP_REMOTE_DIR, or pass a local target path." >&2
     exit 2
+  fi
+fi
+
+if [[ "$deploy_method" == "sftp" ]]; then
+  if [[ -n "${CAILAMA_WEB_SFTP_REMOTE_ROOT:-}" ]]; then
+    CAILAMA_WEB_SFTP_REMOTE_DIR="${CAILAMA_WEB_SFTP_REMOTE_ROOT%/}/public"
+    CAILAMA_WEB_SFTP_REMOTE_SMARTY_DIR="${CAILAMA_WEB_SFTP_REMOTE_ROOT%/}/smarty"
+  elif [[ -z "${CAILAMA_WEB_SFTP_REMOTE_SMARTY_DIR:-}" ]]; then
+    public_dir="${CAILAMA_WEB_SFTP_REMOTE_DIR%/}"
+    CAILAMA_WEB_SFTP_REMOTE_SMARTY_DIR="${public_dir%/*}/smarty"
   fi
 fi
 
@@ -80,6 +112,16 @@ verify_http_hash() {
   remote_hash="$(curl -fsS --max-time 12 "$public_url/$relative" | sha256sum | awk '{print $1}')"
   if [[ "$local_hash" != "$remote_hash" ]]; then
     echo "ERROR: deployed HTTP hash differs: $relative" >&2
+    exit 1
+  fi
+}
+
+verify_http_render_hash() {
+  local relative="$1" local_hash remote_hash
+  local_hash="$(php "web/$relative" | sha256sum | awk '{print $1}')"
+  remote_hash="$(curl -fsS --max-time 12 "$public_url/$relative" | sha256sum | awk '{print $1}')"
+  if [[ "$local_hash" != "$remote_hash" ]]; then
+    echo "ERROR: deployed HTTP render hash differs: $relative" >&2
     exit 1
   fi
 }
@@ -112,6 +154,26 @@ remote_path() {
   else
     printf "%s/%s" "$base" "$relative"
   fi
+}
+
+remote_path_from_base() {
+  local base="${1%/}" relative="${2:-}"
+  if [[ -z "$relative" ]]; then
+    printf "%s" "$base"
+  else
+    printf "%s/%s" "$base" "$relative"
+  fi
+}
+
+write_smarty_manifest() {
+  local manifest="$1"
+  find web-smarty \
+    -path "web-smarty/cache/smarty" -prune -o \
+    -path "web-smarty/cache/templates_c" -prune -o \
+    -name ".git*" -prune -o \
+    -type f \
+    ! -path "web-smarty/composer.lock" \
+    -printf "%P\n" | LC_ALL=C sort > "$manifest"
 }
 
 sftp_batch() {
@@ -194,14 +256,24 @@ SH
 
 deploy_local() {
   local target="$1"
+  local smarty_target="${CAILAMA_WEB_LOCAL_SMARTY_TARGET:-$(dirname "$target")/smarty}"
 
   mkdir -p "$target"
+  mkdir -p "$smarty_target/cache/smarty" "$smarty_target/cache/templates_c"
   rsync -a --delete \
     --exclude "/api_app/config.local.php" \
     --exclude "/api_app/config.local.*.php" \
     "web/" "$target/"
+  rsync -a --delete \
+    --exclude "/cache/smarty/*" \
+    --exclude "/cache/templates_c/*" \
+    --exclude "/composer.lock" \
+    --exclude ".git*/" \
+    --exclude ".git*" \
+    "web-smarty/" "$smarty_target/"
 
   echo "Deployed web/ to $target"
+  echo "Deployed web-smarty/ to $smarty_target"
 }
 
 deploy_sftp() {
@@ -297,6 +369,98 @@ deploy_sftp() {
   echo "Deployed web/ to SFTP target $CAILAMA_WEB_SFTP_TARGET"
 }
 
+deploy_smarty_sftp() {
+  if [[ -z "${CAILAMA_WEB_SFTP_TARGET:-}" || -z "${CAILAMA_WEB_SFTP_REMOTE_SMARTY_DIR:-}" ]]; then
+    echo "ERROR: SFTP private Smarty deployment requires CAILAMA_WEB_SFTP_REMOTE_SMARTY_DIR" >&2
+    exit 2
+  fi
+
+  local tmp_dir manifest previous_manifest stale_files batch upload_batch delete_batch remote_base
+  tmp_dir="$(mktemp -d)"
+  manifest="$tmp_dir/smarty-manifest"
+  previous_manifest="$tmp_dir/previous-smarty-manifest"
+  stale_files="$tmp_dir/stale-smarty-files"
+  batch="$tmp_dir/download-smarty-manifest.sftp"
+  upload_batch="$tmp_dir/upload-smarty.sftp"
+  delete_batch="$tmp_dir/delete-stale-smarty.sftp"
+  remote_base="${CAILAMA_WEB_SFTP_REMOTE_SMARTY_DIR%/}"
+
+  write_smarty_manifest "$manifest"
+
+  {
+    printf -- "-get %s %s\n" \
+      "$(sftp_quote "$(remote_path_from_base "$remote_base" ".cailama-smarty-deploy-manifest")")" \
+      "$(sftp_quote "$previous_manifest")"
+  } > "$batch"
+  sftp_batch "$batch" >/dev/null || true
+
+  if [[ -f "$previous_manifest" ]]; then
+    LC_ALL=C sort -u "$previous_manifest" > "$tmp_dir/previous-smarty-manifest.sorted"
+    comm -23 "$tmp_dir/previous-smarty-manifest.sorted" "$manifest" > "$stale_files"
+  else
+    : > "$stale_files"
+  fi
+
+  if [[ -s "$stale_files" ]]; then
+    : > "$delete_batch"
+    while IFS= read -r relative; do
+      if is_safe_relative_path "$relative"; then
+        printf -- "-rm %s\n" "$(sftp_quote "$(remote_path_from_base "$remote_base" "$relative")")" >> "$delete_batch"
+      fi
+    done < "$stale_files"
+
+    while IFS= read -r directory; do
+      if is_safe_relative_path "$directory"; then
+        printf -- "-rmdir %s\n" "$(sftp_quote "$(remote_path_from_base "$remote_base" "$directory")")" >> "$delete_batch"
+      fi
+    done < <(
+      awk -F/ '
+        NF > 1 {
+          path = ""
+          for (i = 1; i < NF; i++) {
+            path = path ? path "/" $i : $i
+            print path
+          }
+        }
+      ' "$stale_files" | LC_ALL=C sort -ur
+    )
+
+    sftp_batch "$delete_batch" >/dev/null
+  fi
+
+  {
+    printf -- "-mkdir %s\n" "$(sftp_quote "$remote_base")"
+    printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path_from_base "$remote_base" "cache")")"
+    printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path_from_base "$remote_base" "cache/smarty")")"
+    printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path_from_base "$remote_base" "cache/templates_c")")"
+    while IFS= read -r directory; do
+      printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path_from_base "$remote_base" "$directory")")"
+    done < <(
+      awk -F/ '
+        NF > 1 {
+          path = ""
+          for (i = 1; i < NF; i++) {
+            path = path ? path "/" $i : $i
+            print path
+          }
+        }
+      ' "$manifest" | LC_ALL=C sort -u
+    )
+    while IFS= read -r relative; do
+      printf "put -p %s %s\n" \
+        "$(sftp_quote "web-smarty/$relative")" \
+        "$(sftp_quote "$(remote_path_from_base "$remote_base" "$relative")")"
+    done < "$manifest"
+    printf "put -p %s %s\n" \
+      "$(sftp_quote "$manifest")" \
+      "$(sftp_quote "$(remote_path_from_base "$remote_base" ".cailama-smarty-deploy-manifest")")"
+  } > "$upload_batch"
+
+  sftp_batch "$upload_batch" >/dev/null
+  rm -rf "$tmp_dir"
+  echo "Deployed web-smarty/ to private SFTP target"
+}
+
 reset_remote_php_cache() {
   if [[ "$deploy_method" != "sftp" ]]; then
     return
@@ -355,7 +519,7 @@ verify_deploy() {
     ;;
   http-hash)
     reset_remote_php_cache
-    static_files=(
+    dynamic_pages=(
       "index.php"
       "status.php"
       "projects.php"
@@ -363,6 +527,8 @@ verify_deploy() {
       "roadmap.php"
       "operations.php"
       "reference.php"
+    )
+    static_files=(
       "robots.txt"
       "sitemap.xml"
       "llms.txt"
@@ -371,6 +537,9 @@ verify_deploy() {
       "assets/styles.css"
       "favicon.ico"
     )
+    for relative in "${dynamic_pages[@]}"; do
+      verify_http_render_hash "$relative"
+    done
     for relative in "${static_files[@]}"; do
       verify_http_hash "$relative"
     done
@@ -421,6 +590,7 @@ case "$deploy_method" in
     verify_deploy "$local_target"
     ;;
   sftp)
+    deploy_smarty_sftp
     deploy_sftp
     verify_deploy
     ;;

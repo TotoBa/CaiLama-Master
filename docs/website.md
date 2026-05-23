@@ -15,11 +15,22 @@ maschinenlesbare Dateien ausgeliefert.
 
 ## Versionierte Quellen
 
-Die Website liegt vollständig im Master-Repo unter:
+Die öffentlichen Dateien der Website liegen im Master-Repo unter:
 
 ```text
 web/
 ```
+
+Die CaiLama-eigene private Website-Schicht liegt unter:
+
+```text
+web-smarty/
+```
+
+`web/` wird nach `<webspace-root>/public/` deployt und bleibt der öffentliche
+Document Root. `web-smarty/` wird nach `<webspace-root>/smarty/` deployt und
+liegt als privater Sibling neben `public/`. Smarty-Templates, Content-Daten,
+Cache und Dependency-Dateien dürfen nicht unter `web/` liegen.
 
 Wichtige Dateien:
 
@@ -44,7 +55,16 @@ web/assets/styles.css          # Gemeinsames Styling
 web/llms.txt                   # LLM-Einstiegspunkt
 web/ecosystem-reference.md     # LLM-freundliche Markdown-Referenz
 web/data/ecosystem.json        # Maschinenlesbare JSON-Referenz
+web-smarty/bootstrap.php       # privater Website-Bootstrap
+web-smarty/content/            # versionierte Site- und Seiten-Daten
+web-smarty/templates/          # versionierte Smarty-Templates
+web-smarty/cache/              # nur .gitkeep; Laufzeitcache ignoriert
 ```
+
+Die Smarty-Library selbst wird nicht versioniert. Benötigt wird
+`smarty/smarty ^5.0`. Für lokale Render-Smokes und Deployment wird die
+Abhängigkeit in `web-smarty/vendor/` installiert; `vendor/` und
+`composer.lock` bleiben ignoriert.
 
 Die inhaltlichen Doku-Quellen im Master sind:
 
@@ -90,9 +110,22 @@ Hintergrund sonst verschwindet. Das sichtbare Hero-Logo bleibt unverfälscht.
 ## Webspace
 
 Der Live-Webspace-Pfad ist host-spezifisch und wird nicht in der offiziellen
-Doku festgeschrieben. Das Deployment-Skript nutzt für Live-Deployment natives
-SFTP. Ziel, Remote-Verzeichnis und optionale SSH-/SFTP-Parameter kommen aus
-einer lokalen, nicht versionierten Konfiguration oder aus Umgebungsvariablen.
+Doku festgeschrieben. Der Webspace ist logisch so aufgebaut:
+
+```text
+<webspace-root>/
+├── public/        # öffentlicher Document Root; Inhalt aus repo:web/
+├── smarty/        # privater Website-App-Bereich; Inhalt aus repo:web-smarty/
+└── cailama-private/
+```
+
+Öffentliche Controller unter `public/*.php` binden die private App
+serverseitig über `../smarty/bootstrap.php` ein. Für lokale Tests im Repo
+sucht `web/_private_app.php` zusätzlich `../web-smarty/bootstrap.php`.
+
+Das Deployment-Skript nutzt für Live-Deployment natives SFTP. Ziel,
+Remote-Verzeichnis und optionale SSH-/SFTP-Parameter kommen aus einer lokalen,
+nicht versionierten Konfiguration oder aus Umgebungsvariablen.
 
 Lokale Operator-Konfiguration:
 
@@ -106,6 +139,8 @@ Unterstützte Variablen:
 CAILAMA_WEB_DEPLOY_METHOD=sftp
 CAILAMA_WEB_SFTP_TARGET=<sftp-user-and-host>
 CAILAMA_WEB_SFTP_REMOTE_DIR=<remote-public-dir>
+CAILAMA_WEB_SFTP_REMOTE_ROOT=<remote-webspace-root>
+CAILAMA_WEB_SFTP_REMOTE_SMARTY_DIR=<remote-smarty-dir>
 CAILAMA_WEB_SFTP_IP_VERSION=4
 CAILAMA_WEB_SFTP_PORT=<optional-port>
 CAILAMA_WEB_SFTP_IDENTITY_FILE=<optional-key-file>
@@ -115,7 +150,12 @@ CAILAMA_WEB_SFTP_STRICT_HOST_KEY_CHECKING=accept-new
 CAILAMA_WEB_SFTP_CONNECT_TIMEOUT=20
 CAILAMA_WEB_SFTP_PASSWORD_FILE=<optional-local-secret-file>
 CAILAMA_PUBLIC_URL=https://cailama.org
+CAILAMA_DEPLOY_ALLOW_MISSING_VENDOR=0
 ```
+
+Wenn `CAILAMA_WEB_SFTP_REMOTE_ROOT` gesetzt ist, leitet das Skript daraus
+`public/` und `smarty/` ab. Wenn nur `CAILAMA_WEB_SFTP_REMOTE_DIR` gesetzt ist,
+wird der private Smarty-Zielordner als Sibling des Public-Ordners abgeleitet.
 
 Diese Datei und eine optionale Passwortdatei dürfen keine Vorlage für Commits
 sein und gehören nicht ins Repo. Für lokale Tests kann das Skript weiterhin
@@ -123,8 +163,18 @@ mit einem expliziten lokalen Zielpfad aufgerufen werden.
 
 ## Reproduzierbares Deployment
 
-Die Website hat keinen Build-Schritt. Live-Deployment ist ein nativer
-SFTP-Upload von `web/` in den PHP-Webspace.
+Die Website hat keinen Build-Schritt im Repository. Vor dem Deployment muss
+die private Dependency lokal oder in der deployenden Arbeitskopie vorhanden
+sein:
+
+```bash
+cd web-smarty
+composer install --no-dev --optimize-autoloader
+```
+
+Live-Deployment ist ein nativer SFTP-Upload von `web/` nach `public/` und
+`web-smarty/` nach `smarty/`. `web-smarty/vendor/` wird deployt, aber nicht
+versioniert.
 
 Standardbefehl:
 
@@ -141,10 +191,13 @@ scripts/deploy-website.sh <local-public-dir>
 Das Skript:
 
 1. ermittelt das Git-Root,
-2. lädt `web/` per OpenSSH-`sftp` in das konfigurierte Remote-Verzeichnis,
-3. entfernt stale Dateien anhand eines SFTP-Deploy-Manifests,
-4. schützt die echte, ignorierte `web/api_app/config.local.php` vor Löschung,
-5. prüft beim Standard-Live-Ziel die öffentlichen PHP-Dokumentationsseiten,
+2. prüft `web/`, `web-smarty/`, `web-smarty/bootstrap.php` und
+   `web-smarty/vendor/autoload.php`,
+3. lädt zuerst `web-smarty/` in den privaten Smarty-Zielordner,
+4. lädt danach `web/` per OpenSSH-`sftp` in den öffentlichen Document Root,
+5. entfernt stale Dateien anhand getrennter SFTP-Deploy-Manifeste,
+6. schützt die echte, ignorierte `web/api_app/config.local.php` vor Löschung,
+7. prüft beim Standard-Live-Ziel die gerenderten öffentlichen Seiten,
    statischen Dateien und LLM-Referenzen per SHA-256 über HTTPS.
 
 Der Standard-Ecosystem-Check berührt den Live-Webspace nicht. Mit
@@ -169,7 +222,14 @@ python3 -m json.tool docs/data/ecosystem.json >/dev/null
 python3 -m json.tool web/data/ecosystem.json >/dev/null
 cmp -s docs/ecosystem-reference.md web/ecosystem-reference.md
 cmp -s docs/data/ecosystem.json web/data/ecosystem.json
-find web -name '*.php' -print0 | xargs -0 -n1 php -l
+find web web-smarty \
+  -path 'web-smarty/vendor' -prune -o \
+  -path 'web-smarty/cache/templates_c' -prune -o \
+  -path 'web-smarty/cache/smarty' -prune -o \
+  -name '*.php' -print0 | xargs -0 -n1 php -l
+php web/index.php >/tmp/cailama-index.html
+php web/projects.php >/tmp/cailama-projects.html
+php web/status.php >/tmp/cailama-status.html
 scripts/deploy-website.sh
 bash scripts/check-ecosystem.sh
 curl -I -L --max-time 12 https://cailama.org/

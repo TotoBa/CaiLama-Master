@@ -37,6 +37,7 @@ CaiLama-Master/
 ├── TODO.md
 ├── docs/
 ├── scripts/
+├── web-smarty/
 └── web/
 ```
 
@@ -103,16 +104,18 @@ Dieses Repo dient dazu:
 - `docs/website.md` - URL, Quellpfad und Deployment-Pfad der Webseite.
 - `skills/kimi-cli-cailama-ecosystem/SKILL.md` - Kimi-CLI-Skill fuer
   repo-uebergreifenden Kontext aus Website und Online-Doku ohne Secret-Zugriff.
-- `web/` - PHP-basierte Human-/LLM-Dokumentationswebsite und vorbereitete
-  Webspace-API-Fassade fuer `https://cailama.org/`, inklusive Login-/Session-
-  Shell, geschuetztem POST-Statuspfad und kontrolliertem serverseitigem
-  CaiLama-Dump-Import sowie admin-geschuetztem Provider-Schema-Setup ohne
-  versionierte Credentials.
+- `web/` - oeffentlicher PHP-Document-Root fuer `https://cailama.org/`;
+  die Dokumentationsseiten sind duenne Controller, statische LLM-/JSON-
+  Referenzen und die vorbereitete Webspace-API-Fassade.
+- `web-smarty/` - private CaiLama-Website-Schicht mit Bootstrap, Content-Daten
+  und Smarty-Templates. Die benoetigte Dependency `smarty/smarty ^5.0` liegt
+  nur lokal/deployt unter dem ignorierten `web-smarty/vendor/`, nicht im Git.
 - `web/api_app/config.local.sample.php` - Vorlage fuer die echte, ignorierte
   Webspace-Konfiguration im Single-Database-Mode mit einer `cailama`-
   Provider-Datenbank, API-Token-Hash und Import-Drop-Konfiguration.
 - `scripts/check-ecosystem.sh` - lokale Statuspruefung ohne Schreibzugriffe.
-- `scripts/deploy-website.sh` - reproduzierbares Deployment von `web/`.
+- `scripts/deploy-website.sh` - reproduzierbares Deployment von `web/` nach
+  `public/` und `web-smarty/` in den privaten `smarty/`-Sibling.
 - `scripts/generate-web-api-keys.sh` - idempotenter Generator fuer private
   Webspace-API-Keys ohne Ausgabe der Key-Werte.
 - `scripts/setup-webspace-db-api.sh` - wiederholbares Setup fuer private

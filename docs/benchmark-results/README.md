@@ -15,3 +15,8 @@ Jedes Ergebnis muss ohne Secrets, lokale Pfade, private Rohdaten, volle
 Prompt-/Response-Logs oder ungekuerzte private Partiearchive auskommen.
 Zulaessig sind synthetische, oeffentliche, explizit freigegebene oder
 anonymisierte Daten.
+
+Aktueller Bestand:
+
+- `2026-05-23.search-lexical-hybrid.md` - synthetischer CaiLama-Search-
+  Goldset-Vergleich lexical gegen hybrid.

@@ -73,6 +73,7 @@
         "docs/benchmark-results/README.md",
         "skills/",
         "scripts/check-ecosystem.sh",
+        "web-smarty/",
         "web/api_app/config.local.sample.php",
         "web/"
       ],
@@ -109,7 +110,8 @@
         "PTG queue enqueue is wired; optional --run-llm-stages connects classify/analyze before personalized card generation",
         "PTG product-loop artifacts are generated offline: source.pgn, annotated.pgn, training.json and quality_gates.json",
         "Agent/DGT-aware training card retrieval, ReplayPosition.card_id and review stats in training prioritization are implemented",
-        "PGN-to-training-task follow-up remains live router verification, deterministic scoring, error taxonomy, card types, privacy/export rules and OCR/FEN gates",
+        "deterministic card scoring, mistake taxonomy and card types are implemented",
+        "PGN-to-training-task follow-up remains live router verification, CardType in agent/board flows, privacy/export rules and OCR/FEN gates",
         "internal SearchAdapter is standard path for web_search and search_dwz",
         "search_rag is suggested for research/source questions",
         "DWZ identity linking store and CLI integration",
@@ -193,7 +195,8 @@
         "optional semantic retrieval is implemented, default-off and guarded by lexical fallback",
         "job orchestration with CaiLama queue and training",
         "benchmark metrics, master-compatible benchmark export, RAG provenance and data policy are implemented",
-        "Docker-capable lexical versus hybrid benchmark comparison remains open"
+        "Docker-capable lexical versus hybrid benchmark comparison is documented; semantic.enabled remains false by default",
+        "filter+hybrid 500 errors and grouped DWZ response fields remain open"
       ],
       "constraints": [
         "No real Meilisearch keys, master keys, admin keys or .env files in repository files.",
@@ -272,15 +275,16 @@
       "CaiLama DB hybrid hardening after configurable native/api/hybrid access, bounded API status client, single-database webspace mode and server-side provider dump import endpoints",
       "Training workshop focus on PGN-to-training-task loop instead of social platform features",
       "PTG card retrieval and review prioritization after offline artifact generation",
+      "CaiLama deterministic scoring, mistake taxonomy and card types are implemented",
       "DWZ identity linking and RAG provenance",
-      "Search expansion for recall, quality and CaiLama integration after versioned synthetic goldsets, test-index seeding, automated E2E smoke and optional semantic retrieval",
+      "Search benchmark comparison lexical versus hybrid is documented; hybrid remains default-off pending fixes",
       "Router infrastructure hardening is complete with backend API key forwarding, privacy-safe usage metrics, usage CLI and benchmark export"
     ],
     "next": [
-      "PTG live verification and follow-up hardening for scoring, taxonomy, card types and privacy/export rules",
+      "PTG live verification and follow-up hardening for CardType in agent/board flows plus privacy/export rules",
       "Unified job orchestration for CaiLama and Search",
       "Benchmark framework in Master for cross-repo measurements and result documentation",
-      "Docker-capable lexical versus hybrid benchmark comparison in CaiLama-Search"
+      "Search follow-up fixes for filter+hybrid and grouped DWZ response fields"
     ],
     "later": [
       "RAG-assisted analysis packages",
@@ -289,7 +293,7 @@
     ],
     "expansion": [
       "privacy-safe observability and KPIs",
-      "semantic retrieval release decision in CaiLama-Search after lexical versus hybrid benchmark comparison"
+      "semantic retrieval release decision in CaiLama-Search after filter and grouped-response fixes"
     ]
   },
   "public_documentation": {

@@ -1,0 +1,9 @@
+{
+  "require": {
+    "smarty/smarty": "^5.0"
+  },
+  "config": {
+    "vendor-dir": "vendor",
+    "sort-packages": true
+  }
+}

@@ -81,6 +81,9 @@ Rolle:
 - Roadmap und Cross-Repo-Koordination.
 - Produktpositionierung und Master-geführte Benchmarks.
 - Lokale Checks ohne Schreibzugriffe in Unter-Repos.
+- Öffentliche PHP-Controller unter `web/` und privater Smarty-App-Bereich
+  unter `web-smarty/`; live als `public/` und privater Sibling `smarty/`.
+  Benötigt wird `smarty/smarty ^5.0`; die Library wird nicht versioniert.
 
 Erlaubt:
 
@@ -137,14 +140,15 @@ Aktueller Fokus:
   `quality_gates.json`; die CLI meldet Schlüsselstellungen und gültige
   Sessions. Agent-/DGT-naher Kartenabruf, `ReplayPosition.card_id` und
   Review-Stats in der Trainingspriorisierung sind umgesetzt.
-- Fehler-/Mustertaxonomie für personalisiertes Training.
+- Deterministisches Karten-Scoring, Fehler-/Mustertaxonomie und Kartentypen
+  für personalisiertes Training sind umgesetzt.
 - Interne Search-Anbindung ist Standardpfad für `web_search` und
   `search_dwz`; Recherchefragen schlagen `search_rag` vor.
 - DWZ-Identity-Linking in Store und CLI integrieren.
 - RAG-Analysepakete in Researcher-/Analyst-Promptflows einhängen.
 - PGN-zu-Trainingsaufgabe-Loop weiter härten: Live-Router-Verifikation,
-  deterministisches Scoring, Fehler-/Mustertaxonomie, Kartentypen,
-  Datenschutz und OCR/FEN-spezifische Qualitätsgates.
+  CardType-Auswertung in Agent-/Board-Flows, CardScorer-Einbindung in weitere
+  Trainingsauswahl, Datenschutz und OCR/FEN-spezifische Qualitätsgates.
 - OCR/FEN ist aktiv, aber FENs werden erst nach belastbarer
   Vision-/Template-Prüfung ausgegeben.
 
@@ -248,8 +252,12 @@ Aktueller Fokus:
   nur nach messbarem Eval-Nutzen produktiv freizugeben.
 - Recall-/MRR-/Zero-Hit-/Latenz-Metriken, Master-kompatibler Benchmark-Export,
   RAG-Provenienz und Datenvertrag sind umgesetzt.
-- Offen bleibt der Docker-fähige Vergleich `lexical` gegen `hybrid` mit
-  Ergebnisbericht für den Master.
+- Docker-fähiger Vergleich `lexical` gegen `hybrid` ist dokumentiert:
+  Recall@5/10 bleibt in beiden Modi 1.0; Hybrid verbessert MRR, senkt aber
+  wegen filter+hybrid-Fehlern die Pass-Rate. `semantic.enabled=false` bleibt
+  empfohlen.
+- Offen bleiben filter+hybrid-500er, gruppierte DWZ-Response-Felder und ein
+  DWZ-Import-Test mit Staging-Daten.
 
 Grenzen:
 
@@ -355,14 +363,14 @@ Jetzt:
 - Router-Infrastrukturwelle ist abgeschlossen: Backend-API-Key-Weitergabe,
   privacy-safe Token-/Usage-Metriken, `llm-router usage`, Benchmark-Export
   und generische Endpoint-Pfade sind umgesetzt.
-- Search als aktuellen Ausbau-Fokus vorantreiben: Goldset-End-to-End-Smoke und
-  optionale semantische Retrieval-Schicht sind vorhanden; offen ist der
-  Docker-fähige Vergleich `lexical` gegen `hybrid`.
+- Search als aktuellen Ausbau-Fokus vorantreiben: lexical-vs-hybrid ist
+  benchmarkbar dokumentiert; offen sind die daraus sichtbaren API-Bugs und
+  die Freigabeentscheidung für Hybrid.
 
 Danach:
 
-- PTG-Live-Verifikation nur bewusst gegen den Router; danach Scoring,
-  Fehler-/Mustertaxonomie, Kartentypen und weitere Qualitätsgates härten.
+- PTG-Live-Verifikation nur bewusst gegen den Router; danach CardType in
+  Agent-/Board-Flows, weitere Qualitätsgates und Datenschutz/Export härten.
 - Einheitliche Job-Orchestrierung vorbereiten.
 - Benchmark-Rahmen im Master vorbereiten und Ergebnisse repo-übergreifend
   dokumentieren.

@@ -73,6 +73,7 @@ required_files=(
   "scripts/deploy-website.sh"
   "scripts/update-runtime-projects.sh"
   "skills/kimi-cli-cailama-ecosystem/SKILL.md"
+  "web/_private_app.php"
   "web/assets/styles.css"
   "web/.htaccess"
   "web/account.php"
@@ -105,6 +106,32 @@ required_files=(
   "web/roadmap.php"
   "web/sitemap.xml"
   "web/status.php"
+  "web-smarty/README.md"
+  "web-smarty/composer.json"
+  "web-smarty/bootstrap.php"
+  "web-smarty/content/site.php"
+  "web-smarty/content/nav.php"
+  "web-smarty/content/pages/home.php"
+  "web-smarty/content/pages/status.php"
+  "web-smarty/content/pages/projects.php"
+  "web-smarty/content/pages/architecture.php"
+  "web-smarty/content/pages/roadmap.php"
+  "web-smarty/content/pages/operations.php"
+  "web-smarty/content/pages/reference.php"
+  "web-smarty/templates/layouts/base.tpl"
+  "web-smarty/templates/partials/head.tpl"
+  "web-smarty/templates/partials/nav.tpl"
+  "web-smarty/templates/partials/footer.tpl"
+  "web-smarty/templates/partials/hero.tpl"
+  "web-smarty/templates/pages/home.tpl"
+  "web-smarty/templates/pages/status.tpl"
+  "web-smarty/templates/pages/projects.tpl"
+  "web-smarty/templates/pages/architecture.tpl"
+  "web-smarty/templates/pages/roadmap.tpl"
+  "web-smarty/templates/pages/operations.tpl"
+  "web-smarty/templates/pages/reference.tpl"
+  "web-smarty/cache/smarty/.gitkeep"
+  "web-smarty/cache/templates_c/.gitkeep"
 )
 
 for path in "${required_files[@]}"; do
@@ -115,24 +142,58 @@ for path in "${required_files[@]}"; do
 done
 echo "OK: required master files exist"
 
-footer_pages=(
+footer_contact_sources=(
   "web/account.php"
-  "web/architecture.php"
-  "web/index.php"
   "web/login.php"
-  "web/operations.php"
-  "web/projects.php"
-  "web/reference.php"
-  "web/roadmap.php"
-  "web/status.php"
+  "web-smarty/templates/partials/footer.tpl"
 )
-for path in "${footer_pages[@]}"; do
-  if ! grep -Fq 'href="mailto:info@cailama.org"' "$path"; then
+for path in "${footer_contact_sources[@]}"; do
+  if ! grep -Fq 'mailto:' "$path"; then
     echo "ERROR: footer contact link is missing in $path"
     exit 1
   fi
 done
 echo "OK: public page footers include the contact link"
+
+if find web -name '*.tpl' -print | grep -q .; then
+  echo "ERROR: Smarty templates must not live under public web/"
+  exit 1
+fi
+echo "OK: no Smarty templates under public web/"
+
+if ! grep -Fq '"smarty/smarty": "^5.0"' web-smarty/composer.json; then
+  echo "ERROR: web-smarty/composer.json must document required dependency smarty/smarty ^5.0"
+  exit 1
+fi
+echo "OK: Smarty dependency version is documented"
+
+if ! find web-smarty/templates -name '*.tpl' -print | grep -q .; then
+  echo "ERROR: no Smarty templates found under web-smarty/templates"
+  exit 1
+fi
+echo "OK: Smarty templates exist"
+
+find web web-smarty \
+  -path 'web-smarty/vendor' -prune -o \
+  -path 'web-smarty/cache/templates_c' -prune -o \
+  -path 'web-smarty/cache/smarty' -prune -o \
+  -name '*.php' -print0 | xargs -0 -n1 php -l >/dev/null
+echo "OK: public and private website PHP files pass lint"
+
+if [[ -f "web-smarty/vendor/autoload.php" ]]; then
+  tmp_dir="$(mktemp -d)"
+  php web/index.php > "$tmp_dir/index.html"
+  php web/projects.php > "$tmp_dir/projects.html"
+  php web/status.php > "$tmp_dir/status.html"
+  grep -qi '<!doctype html>' "$tmp_dir/index.html"
+  grep -qi 'Vom PGN zur Trainingsaufgabe' "$tmp_dir/index.html"
+  grep -qi 'Getrennte Repos, gemeinsame Richtung' "$tmp_dir/projects.html"
+  grep -qi 'Vier Repos, ein Trainingssystem' "$tmp_dir/status.html"
+  rm -rf "$tmp_dir"
+  echo "OK: local Smarty render smokes passed"
+else
+  echo "SKIP: local Smarty render smokes require untracked web-smarty/vendor/ (smarty/smarty ^5.0)"
+fi
 
 blocked_product_page="positioning"".php"
 if [[ -e "web/$blocked_product_page" ]]; then

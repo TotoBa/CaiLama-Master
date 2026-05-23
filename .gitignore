@@ -87,6 +87,14 @@ node_modules/
 .yarn/
 coverage/
 
+# Private website dependency/runtime output
+/web-smarty/vendor/
+/web-smarty/composer.lock
+/web-smarty/cache/smarty/*
+/web-smarty/cache/templates_c/*
+!/web-smarty/cache/smarty/.gitkeep
+!/web-smarty/cache/templates_c/.gitkeep
+
 # Editor and OS files
 .vscode/
 .idea/

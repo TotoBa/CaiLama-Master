@@ -76,6 +76,14 @@ Ein Ergebnis enthaelt mindestens:
 - Bewertung.
 - offene Folgepunkte.
 
+## Vorliegende Ergebnisse
+
+- `docs/benchmark-results/2026-05-23.search-lexical-hybrid.md`:
+  CaiLama-Search-Goldsets, lexical gegen hybrid. Ergebnis: Recall@5 und
+  Recall@10 sind in beiden Modi 1.0; Hybrid verbessert MRR von 0.9167 auf
+  1.0000, senkt aber die Pass-Rate von 88.89% auf 77.78% durch einen
+  filter+hybrid-Fehler. `semantic.enabled=false` bleibt empfohlen.
+
 ## Spezialisiertes LLM-Training
 
 Spezialisiertes LLM-Training wird erst nach belastbaren Benchmarks sinnvoll.

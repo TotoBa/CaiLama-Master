@@ -73,6 +73,13 @@ Vor Arbeitsbeginn lesen:
   Sitemap, `llms.txt`, `docs/website.md`, `docs/data/ecosystem.json` und
   `scripts/check-ecosystem.sh` sind auf `status.php` statt eine separate
   Trainingsfokus-URL ausgerichtet.
+- [x] Website-Wartbarkeit auf privaten Smarty-App-Bereich umstellen:
+  Öffentliche Seiten unter `web/` sind dünne Controller; Header, Navigation,
+  Footer und Content-Blöcke liegen unter `web-smarty/`. `web/` wird nach
+  `<webspace-root>/public/` deployt, `web-smarty/` nach
+  `<webspace-root>/smarty/`. Die Smarty-Library gehört nicht ins Git; benötigt
+  wird `smarty/smarty ^5.0`, lokal/deployt unter ignoriertem
+  `web-smarty/vendor/`.
 - [x] CaiLama-Search-Vertrag weiter pruefen: `POST /v1/search`,
   kompatibles `GET /v1/search`, `POST /v1/context`, `items`/`results`,
   `context`/`sources` und DWZ-Endpunkte **in `docs/integrations.md` als
@@ -102,15 +109,16 @@ Vor Arbeitsbeginn lesen:
   Messbereich, nicht zurueckgestellt. PTG liefert jetzt pro Session
   `quality_gates.json` und einen PTG-Benchmark-Summary-Export als erste
   Master-kompatible Messquelle; Router und Search liefern ebenfalls
-  Benchmark-Export-Pfade. Offen ist die zentrale Ergebnisablage mit echten
-  Artefakten unter `docs/benchmark-results/`.
+  Benchmark-Export-Pfade. Erster echter Master-Bericht liegt vor:
+  `docs/benchmark-results/2026-05-23.search-lexical-hybrid.md`.
 - [ ] Spaeteres spezialisiertes LLM-Training als Roadmap-Hebel vorbereiten:
   erst nach Benchmark-Baseline, Datenfreigabe, sauberer Test-/Eval-/Train-
   Trennung und Datenschutzklaerung planen. Modelle werden nur ueber den
   Router-Vertrag bereitgestellt; Schachproduktlogik bleibt in CaiLama.
 - [ ] Roadmap regelmaessig aus den Unterrepo-`TODO.md`-Dateien abgleichen:
   **CaiLama** = PTG-Live-Verifikation,
-  PTG-Scoring, PTG-Taxonomie, PTG-Kartentypen,
+  CardType-Auswertung in Agent-/Board-Flows, CardScorer-Einbindung in weitere
+  Trainingsauswahl,
   Analyse-Qualitaetsgates ueber PTG hinaus, Datenschutz/Export,
   RAG-Provenienz, Job-Orchestrierung, PTG-Observability,
   OCR/FEN aktiv ohne geratene FENs.
@@ -118,11 +126,10 @@ Vor Arbeitsbeginn lesen:
   Weitergabe, Token-/Usage-Metriken, `llm-router usage`, benchmarkbare
   Usage-/Latenzexporte und generische `endpoint_path`-Backends sind umgesetzt;
   neue Router-Arbeit erst bei Live-Smoke-, Benchmark- oder Backend-Auftrag.
-  **Search** = optionale semantische Retrieval-Schicht ist implementiert und
-  default-off; Recall-/Latenz-Metriken, Master-kompatibler Benchmark-Export,
-  RAG-Provenienz, Datenvertrag und CaiLama/Search-Jobvertrag sind umgesetzt;
-  offen bleibt der Docker-faehige Vergleich `lexical` gegen `hybrid` mit
-  Ergebnisbericht fuer den Master.
+  **Search** = Docker-faehiger Vergleich `lexical` gegen `hybrid` ist
+  dokumentiert; `semantic.enabled=false` bleibt Default. Offen sind
+  filter+hybrid-500er, gruppierte DWZ-Response-Felder, DWZ-Staging-Test und
+  API-/README-Nachzug.
 
 ## Kimi-Handoff
 
