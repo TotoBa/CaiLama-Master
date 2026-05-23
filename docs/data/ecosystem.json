@@ -2,6 +2,11 @@
   "schema_version": "1.0",
   "generated_for": "CaiLama ecosystem documentation",
   "last_reviewed": "2026-05-23",
+  "features_added": [
+    "Review-Gate for key-position selection after Stockfish analysis",
+    "Plan mode with heuristic or LLM-backed task planning",
+    "Slash-to-Skill contract: 25 built-in tools as manifest-based skills"
+  ],
   "canonical_url": "https://cailama.org/",
   "language": "de",
   "summary": {
