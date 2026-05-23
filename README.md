@@ -126,3 +126,9 @@ Dieses Repo dient dazu:
 
 Keine Secrets, Tokens, API-Keys, lokalen `.env`-Dateien oder privaten
 Zugangsdaten in dieses Repository committen.
+Keine Secrets, Tokens, API-Keys, lokalen `.env`-Dateien oder privaten
+Zugangsdaten in dieses Repository committen.
+
+## Lizenz
+
+AGPL-3.0-or-later — siehe [LICENSE](./LICENSE).
