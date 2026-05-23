@@ -119,12 +119,18 @@ Vor Arbeitsbeginn lesen:
   Master-kompatible Messquelle; Router und Search liefern ebenfalls
   Benchmark-Export-Pfade. Erste Master-Berichte liegen vor:
   `docs/benchmark-results/2026-05-23.search-lexical-hybrid.md` und
-  `docs/benchmark-results/2026-05-23.ptg-offline-baseline.md`. Offen bleibt
-  die wiederholbare Orchestrierung ueber alle Repos, inklusive Router-Latenz,
-  OCR/FEN-False-Positive-Gates und groesserem Search-/PTG-Eval.
+  `docs/benchmark-results/2026-05-23.ptg-offline-baseline.md`.
+  **Update 2026-05-23:** Schritt 1 des Rahmens erledigt: `scripts/run_benchmark_smoke.py`
+  fuehrt offline, secretfreie Import-Smokes in allen drei Repos durch:
+  PTG-Benchmark-Summary (CaiLama), Benchmark-Events-Summary (CaiLama),
+  Goldset-Validierung (Search) und RequestMetrics-Roundtrip (Router).
+  Das Skript wird von `scripts/check-ecosystem.sh` automatisch ausgefuehrt.
+  Offen bleiben: wiederholbare Orchestrierung ueber alle Repos,
+  Router-Latenz-Livesmoke, OCR/FEN-False-Positive-Gates und groesseres
+  Search-/PTG-Eval.
   **Update 2026-05-23:** Die Modellrollen-Hypothese ist als Benchmark-
   Matrix dokumentiert (`docs/benchmark-results/model-role-matrix.current.md`).
-  Die Website besitzt jetzt die geschuetzte Seite
+  Die Website besitzt die geschuetzte Seite
   `/benchmark-feedback.php`; Feedback wird hinter Login in
   `cailama_model_benchmark_cases` und `cailama_model_feedback` gespeichert.
   Erfasst werden Laufzeit, Input-/Thinking-/Output-Tokens, Qualitaet,

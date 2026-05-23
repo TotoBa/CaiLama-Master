@@ -295,4 +295,15 @@ for repo in "${repos[@]}"; do
 done
 
 echo
+echo
+
+echo "-- Benchmark smoke check --"
+SCRIPT_ROOT="$(dirname "$(realpath "$0")")"
+if python3 "${SCRIPT_ROOT}/run_benchmark_smoke.py" >/dev/null 2>&1; then
+  echo "OK: benchmark smoke passed (offline, secret-free, 4 repos)"
+else
+  echo "WARN: benchmark smoke failed — check scripts/run_benchmark_smoke.py"
+fi
+
+echo
 echo "Done."
