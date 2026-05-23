@@ -1,6 +1,6 @@
 # Webseite
 
-Die oeffentliche CaiLama-Webseite ist fuer folgende URL vorgesehen:
+Die öffentliche CaiLama-Webseite ist für folgende URL vorgesehen:
 
 ```text
 https://cailama.org/
@@ -10,12 +10,12 @@ https://cailama.org/
 
 Die Webseite ist die Human-Version der Master-Gesamtdokumentation. Sie wird als
 PHP-Webspace vorbereitet, auch wenn die sichtbaren Seiten aktuell noch ohne
-dynamische Produktlogik auskommen. Zusaetzlich werden LLM-freundliche und
+dynamische Produktlogik auskommen. Zusätzlich werden LLM-freundliche und
 maschinenlesbare Dateien ausgeliefert.
 
 ## Versionierte Quellen
 
-Die Website liegt vollstaendig im Master-Repo unter:
+Die Website liegt vollständig im Master-Repo unter:
 
 ```text
 web/
@@ -24,17 +24,18 @@ web/
 Wichtige Dateien:
 
 ```text
-web/index.php                 # Startseite
+web/index.php                 # Startseite mit Produktfokus
+web/status.php                # Status- und Repo-Übersicht
 web/projects.php              # Projekt- und Repo-Details
 web/architecture.php          # Architektur und Schnittstellen
 web/roadmap.php               # Roadmap aus status.plan.cailama.md
 web/operations.php            # Betrieb, Checks, Deployment
 web/reference.php             # Human-/LLM-Referenzseite
 web/login.php                 # Login-Formular mit Session-Schutz
-web/account.php               # geschuetzter Konto-Stub
-web/logout.php                # CSRF-geschuetzter Logout
+web/account.php               # geschützter Konto-Stub
+web/logout.php                # CSRF-geschützter Logout
 web/robots.txt                # Crawler-Regeln mit Sitemap-Verweis
-web/sitemap.xml               # Canonical XML-Sitemap fuer Suchmaschinen
+web/sitemap.xml               # Canonical XML-Sitemap für Suchmaschinen
 web/api/public/index.php      # vorbereiteter API-Frontcontroller
 web/api_app/                  # interne API-Skelettstruktur ohne Secrets
 web/api_app/Controllers/      # Status-, Import- und Admin-Schema-Controller
@@ -51,6 +52,9 @@ Die inhaltlichen Doku-Quellen im Master sind:
 docs/ecosystem-reference.md
 docs/data/ecosystem.json
 docs/ecosystem-map.md
+docs/product-positioning.md
+docs/benchmarks.md
+docs/benchmark-results/README.md
 docs/integrations.md
 docs/roadmap.md
 docs/orchestration.md
@@ -64,7 +68,10 @@ Synchronisationsregel:
 - `docs/ecosystem-reference.md` muss identisch zu `web/ecosystem-reference.md`
   sein.
 - `docs/data/ecosystem.json` muss identisch zu `web/data/ecosystem.json` sein.
-- `scripts/check-ecosystem.sh` prueft diese Gleichheit.
+- `scripts/check-ecosystem.sh` prüft diese Gleichheit.
+- Sichtbare deutsche Webseitentexte verwenden echte Umlaute und `ß`, keine
+  Umschreibungen wie `ae`, `oe`, `ue` oder `ss`, sofern es sich nicht um Code,
+  URLs, Dateinamen, API-Felder oder andere technische Bezeichner handelt.
 
 Die Seite nutzt das vorhandene CaiLama-Logo direkt aus dem Haupt-Repository:
 
@@ -75,13 +82,13 @@ https://raw.githubusercontent.com/TotoBa/CaiLama/main/img/logo-big.png
 Dadurch wird die Logo-Datei nicht im Master-Repo dupliziert.
 
 Im Hero-Bereich wird das Hintergrund-Logo farbig, aber leicht aufgehellt
-gerendert, weil der dunkle `Cai`-Teil des Logos auf dem dunklen/gruenen
-Hintergrund sonst verschwindet. Das sichtbare Hero-Logo bleibt unverfaelscht.
+gerendert, weil der dunkle `Cai`-Teil des Logos auf dem dunklen/grünen
+Hintergrund sonst verschwindet. Das sichtbare Hero-Logo bleibt unverfälscht.
 
 ## Webspace
 
 Der Live-Webspace-Pfad ist host-spezifisch und wird nicht in der offiziellen
-Doku festgeschrieben. Das Deployment-Skript nutzt fuer Live-Deployment natives
+Doku festgeschrieben. Das Deployment-Skript nutzt für Live-Deployment natives
 SFTP. Ziel, Remote-Verzeichnis und optionale SSH-/SFTP-Parameter kommen aus
 einer lokalen, nicht versionierten Konfiguration oder aus Umgebungsvariablen.
 
@@ -91,7 +98,7 @@ Lokale Operator-Konfiguration:
 ~/.config/cailama/web-deploy.env
 ```
 
-Unterstuetzte Variablen:
+Unterstützte Variablen:
 
 ```bash
 CAILAMA_WEB_DEPLOY_METHOD=sftp
@@ -108,8 +115,8 @@ CAILAMA_WEB_SFTP_PASSWORD_FILE=<optional-local-secret-file>
 CAILAMA_PUBLIC_URL=https://cailama.org
 ```
 
-Diese Datei und eine optionale Passwortdatei duerfen keine Vorlage fuer Commits
-sein und gehoeren nicht ins Repo. Fuer lokale Tests kann das Skript weiterhin
+Diese Datei und eine optionale Passwortdatei dürfen keine Vorlage für Commits
+sein und gehören nicht ins Repo. Für lokale Tests kann das Skript weiterhin
 mit einem expliziten lokalen Zielpfad aufgerufen werden.
 
 ## Reproduzierbares Deployment
@@ -132,26 +139,26 @@ scripts/deploy-website.sh <local-public-dir>
 Das Skript:
 
 1. ermittelt das Git-Root,
-2. laedt `web/` per OpenSSH-`sftp` in das konfigurierte Remote-Verzeichnis,
+2. lädt `web/` per OpenSSH-`sftp` in das konfigurierte Remote-Verzeichnis,
 3. entfernt stale Dateien anhand eines SFTP-Deploy-Manifests,
-4. schuetzt die echte, ignorierte `web/api_app/config.local.php` vor Loeschung,
-5. prueft beim Standard-Live-Ziel ausgewaehlte oeffentliche Dateien per
-   SHA-256 ueber HTTPS und ruft die oeffentlichen PHP-Seiten kurz ab.
+4. schützt die echte, ignorierte `web/api_app/config.local.php` vor Löschung,
+5. prüft beim Standard-Live-Ziel ausgewählte öffentliche Dateien per
+   SHA-256 über HTTPS und ruft die öffentlichen PHP-Seiten kurz ab.
 
-Der Standard-Ecosystem-Check beruehrt den Live-Webspace nicht. Mit
+Der Standard-Ecosystem-Check berührt den Live-Webspace nicht. Mit
 `CAILAMA_CHECK_DEPLOYED_WEBSITE=1 bash scripts/check-ecosystem.sh` wird nur ein
-HTTPS-Live-Check gegen die oeffentliche Seite ausgefuehrt; der Check greift
+HTTPS-Live-Check gegen die öffentliche Seite ausgeführt; der Check greift
 nicht direkt auf den Webspace-Mount zu.
 
 Deploy-Verifikation:
 
-- Standard fuer SFTP-Live-Deployment: `CAILAMA_DEPLOY_VERIFY=http-hash`.
+- Standard für SFTP-Live-Deployment: `CAILAMA_DEPLOY_VERIFY=http-hash`.
 - Explizit aus: `CAILAMA_DEPLOY_VERIFY=none scripts/deploy-website.sh`.
-- Direkter Zielpfad-Hash nur fuer lokale Testziele: `CAILAMA_DEPLOY_VERIFY=target-hash
+- Direkter Zielpfad-Hash nur für lokale Testziele: `CAILAMA_DEPLOY_VERIFY=target-hash
   scripts/deploy-website.sh <local-public-dir>`. Dieser Modus liest keinen
   Live-Webspace-Mount.
 
-## Reproduzierbare Pruefung
+## Reproduzierbare Prüfung
 
 Nach jeder Website-Aenderung:
 
@@ -160,6 +167,7 @@ python3 -m json.tool docs/data/ecosystem.json >/dev/null
 python3 -m json.tool web/data/ecosystem.json >/dev/null
 cmp -s docs/ecosystem-reference.md web/ecosystem-reference.md
 cmp -s docs/data/ecosystem.json web/data/ecosystem.json
+find web -name '*.php' -print0 | xargs -0 -n1 php -l
 scripts/deploy-website.sh
 bash scripts/check-ecosystem.sh
 curl -I -L --max-time 12 https://cailama.org/
@@ -178,42 +186,42 @@ Erwartung:
 - `https://cailama.org/data/ecosystem.json` ist erreichbar und valides JSON.
 - `https://cailama.org/robots.txt` ist erreichbar und verweist auf
   `https://cailama.org/sitemap.xml`.
-- `https://cailama.org/sitemap.xml` ist erreichbar, valides XML und enthaelt
+- `https://cailama.org/sitemap.xml` ist erreichbar, valides XML und enthält
   nur kanonische HTTPS-URLs.
 
 ## Googlebot und Indexierung
 
-Die Website stellt fuer Suchmaschinen bereit:
+Die Website stellt für Suchmaschinen bereit:
 
 ```text
 https://cailama.org/robots.txt
 https://cailama.org/sitemap.xml
 ```
 
-`robots.txt` erlaubt die oeffentlichen Seiten, verweist auf die Sitemap und
-schliesst API-, interne App- und Sitzungsendpunkte aus. Die Sitemap enthaelt nur
-kanonische HTTPS-URLs der oeffentlichen Dokumentationsseiten und maschinenlesbar
-auslieferbaren Referenzen. Login- und Konto-Seiten gehoeren nicht in die
-Sitemap; sie tragen zusaetzlich `noindex`.
+`robots.txt` erlaubt die öffentlichen Seiten, verweist auf die Sitemap und
+schließt API-, interne App- und Sitzungsendpunkte aus. Die Sitemap enthält nur
+kanonische HTTPS-URLs der öffentlichen Dokumentationsseiten und maschinenlesbar
+auslieferbaren Referenzen. Login- und Konto-Seiten gehören nicht in die
+Sitemap; sie tragen zusätzlich `noindex`.
 
-Indexierung wird sauber ueber die Sitemap-Erkennung in `robots.txt` und ueber
+Indexierung wird sauber über die Sitemap-Erkennung in `robots.txt` und über
 Google Search Console angestossen. Der alte Sitemap-Ping-Endpunkt wird nicht
 verwendet, weil Google HTTP-Pings auf diesen Endpunkt nicht mehr sinnvoll
-verarbeitet. Fuer den manuellen Schritt in Search Console:
+verarbeitet. Für den manuellen Schritt in Search Console:
 
 ```text
 Property: https://cailama.org/
 Sitemap: https://cailama.org/sitemap.xml
-URL-Pruefung: https://cailama.org/
+URL-Prüfung: https://cailama.org/
 ```
 
 ## Webspace-API
 
 Die DB-API ist als kleine PHP-Fassade vorbereitet. Sie ist kein generischer
-SQL-Proxy und enthaelt keine produktiven Datenbankzugangsdaten. Der aktuelle
-Stand stellt geschuetzten Status, Login-/Session-Shell, eine einzige
-PDO-Konfiguration fuer den Shared-Hosting-Betrieb, kontrollierte CaiLama-Import-Endpunkte und geschuetzte
-Schema-Setup-Endpunkte fuer den Provider bereit:
+SQL-Proxy und enthält keine produktiven Datenbankzugangsdaten. Der aktuelle
+Stand stellt geschützten Status, Login-/Session-Shell, eine einzige
+PDO-Konfiguration für den Shared-Hosting-Betrieb, kontrollierte CaiLama-Import-Endpunkte und geschützte
+Schema-Setup-Endpunkte für den Provider bereit:
 
 ```text
 POST /api/v1/status
@@ -227,25 +235,25 @@ POST /api/v1/admin/schema/all
 
 Status-, Import- und Schema-Endpunkte nehmen weder Query-Parameter noch
 Nutzdaten im Request-Body an. Gesendet wird nur ein Bearer-Key mit passendem
-Scope: `status:read` fuer Status, `db_import:write` fuer Append-Import,
-`db_import:reset` fuer Reset-Import oder `admin` fuer Schema-Setup und
-Admin-Aktionen. Ohne gueltigen Key liefert die API keine API-, DB-, Schema-
-oder Importdetails. Der Import-Modus wird ueber den Pfad gewaehlt: `append`
-fuegt erlaubte Insert-Daten in die bestehende CaiLama-Datenbank ein; `reset`
+Scope: `status:read` für Status, `db_import:write` für Append-Import,
+`db_import:reset` für Reset-Import oder `admin` für Schema-Setup und
+Admin-Aktionen. Ohne gültigen Key liefert die API keine API-, DB-, Schema-
+oder Importdetails. Der Import-Modus wird über den Pfad gewählt: `append`
+fügt erlaubte Insert-Daten in die bestehende CaiLama-Datenbank ein; `reset`
 ist nur aktiv, wenn `allow_reset` in der lokalen Konfiguration bewusst gesetzt
 wurde.
 
-Grosse Uebertragungen laufen nicht ueber HTTP-Request-Body. Der Dump wird per
-SFTP in einen nicht oeffentlich erreichbaren Webspace-Ordner gelegt. Die API
+Große Übertragungen laufen nicht über HTTP-Request-Body. Der Dump wird per
+SFTP in einen nicht öffentlich erreichbaren Webspace-Ordner gelegt. Die API
 verarbeitet nur den in `config.local.php` fest konfigurierten Dateinamen,
-standardmaessig eine `.sql`- oder `.sql.gz`-Datei. Wenn keine Datei vorhanden
+standardmäßig eine `.sql`- oder `.sql.gz`-Datei. Wenn keine Datei vorhanden
 ist, wird der Import mit `no_import_file` abgelehnt. Nach erfolgreichem Import
-wird die Datei geloescht; ein fehlgeschlagener Cleanup wird als eigener Fehler
+wird die Datei gelöscht; ein fehlgeschlagener Cleanup wird als eigener Fehler
 gemeldet, damit keine Importdatei versehentlich liegen bleibt.
 
-Die versionierte `web/api_app/config.php` enthaelt sichere Defaults. Die echte
-Provider-Konfiguration gehoert nicht in den oeffentlichen Document Root. Auf
-dem Webspace liegt `/public` im oeffentlichen Bereich; private Konfiguration
+Die versionierte `web/api_app/config.php` enthält sichere Defaults. Die echte
+Provider-Konfiguration gehört nicht in den öffentlichen Document Root. Auf
+dem Webspace liegt `/public` im öffentlichen Bereich; private Konfiguration
 und Import-Drop liegen als Sibling-Ordner im Webspace-Root. Die API sucht aus
 `/public/api_app/` zuerst diese private Konfig:
 
@@ -254,11 +262,11 @@ und Import-Drop liegen als Sibling-Ordner im Webspace-Root. Die API sucht aus
 ```
 
 Nur als lokale Legacy-/Fallback-Variante wird noch
-`web/api_app/config.local.php` unterstuetzt; diese Datei bleibt gitignoriert und
+`web/api_app/config.local.php` unterstützt; diese Datei bleibt gitignoriert und
 wird beim Private-Deploy aus dem Public-Webspace entfernt. Als secretfreie
 Vorlage dient `web/api_app/config.local.sample.php`.
 
-Das wiederholbare Setup laeuft ueber:
+Das wiederholbare Setup läuft über:
 
 ```bash
 scripts/generate-web-api-keys.sh
@@ -268,41 +276,44 @@ scripts/setup-webspace-db-api.sh --source <private-db-config> --all --allow-rese
 Nach dem ersten Normalisierungslauf kann das Setup ohne `--source` wiederholt
 werden; dann nutzt es die private `databases.ini`. Der Setup-Pfad erzeugt
 lokale private Dateien mit restriktiven Rechten unter
-`~/.config/cailama`, schreibt die PHP-Konfig fuer den Webspace, legt
-MySQL-Defaults fuer lokale Setup-Skripte an und laedt die private PHP-Konfig
-per SFTP in einen nicht oeffentlichen Webspace-Ordner. Lokale Schemas werden
+`~/.config/cailama`, schreibt die PHP-Konfig für den Webspace, legt
+MySQL-Defaults für lokale Setup-Skripte an und lädt die private PHP-Konfig
+per SFTP in einen nicht öffentlichen Webspace-Ordner. Lokale Schemas werden
 mit dem lokalen MySQL-Client angelegt. Provider-Schemas werden bewusst nicht
-von lokalem MySQL aus angefasst, sondern ueber die geschuetzten PHP-Endpunkte
+von lokalem MySQL aus angefasst, sondern über die geschützten PHP-Endpunkte
 im Webspace gesetzt, weil die Provider-DB nur vom Webspace aus erreichbar sein
 soll.
 
 Die Konfiguration besteht aus einer einzigen Datenbank:
 
-- `databases.cailama`: Provider-Datenbank fuer Login/Users, Anwendungsdaten
+- `databases.cailama`: Provider-Datenbank für Login/Users, Anwendungsdaten
   und Schema-Management (2 GB beim Provider).
 
-Der Login nutzt PHP-Sessions mit `HttpOnly`, `SameSite=Lax`, HTTPS-abhaengigem
+Der Login nutzt PHP-Sessions mit `HttpOnly`, `SameSite=Lax`, HTTPS-abhängigem
 Secure-Cookie, CSRF-Token, einfachem Session-basiertem Versuchslimit und
-`password_verify()` gegen Passwort-Hashes aus der Auth-Datenbank. Die
-SQL-Vorlagen liegen unter `web/api_app/schema/`.
+`password_verify()` gegen Passwort-Hashes aus `web_users` in derselben
+`databases.cailama`-Provider-Datenbank. Die SQL-Vorlagen liegen unter
+`web/api_app/schema/`.
 
-API-Key-Pruefung und Scopes sind als Hash-basierte Bearer-Token-Pruefung
-verdrahtet. Es gibt getrennte Keys fuer Status, Append-Import, Reset-Import und
+API-Key-Prüfung und Scopes sind als Hash-basierte Bearer-Token-Prüfung
+verdrahtet. Es gibt getrennte Keys für Status, Append-Import, Reset-Import und
 Admin. Auf dem Server liegen nur Hashes; die Klartext-Keys bleiben in privaten
-lokalen Client-Konfigdateien. Es gibt keinen oeffentlichen GET-Status mit
+lokalen Client-Konfigdateien. Es gibt keinen öffentlichen GET-Status mit
 DB-Information. Fachliche Read-/Write-Endpunkte jenseits Status und Dump-Import
-bleiben Folgearbeit. Keine produktiven Keys, DB-Passwoerter oder
+bleiben Folgearbeit. Keine produktiven Keys, DB-Passwörter oder
 Hoster-Zugangsdaten werden in `web/`, `docs/` oder Beispiele geschrieben.
 
-Aktueller Betriebsstatus am 2026-05-22: lokale Login- und CaiLama-Schemas sind
-angelegt. Provider-Schemaanlage und Provider-Verbindungschecks laufen ueber
-die Webspace-API. Der IONOS-Login-DB-Eintrag wird ausschliesslich in der
-privaten lokalen Konfig und der privaten Webspace-Konfig korrigiert; echte
-Host-, User- oder Passwortwerte werden nicht in Doku oder Repo geschrieben.
-Live ist `pdo_mysql` verfuegbar, aber die Login-DB meldet noch
-`auth_failed`; das fehlende oder abweichende IONOS-Passwort wird ueber eine
-private Passwortdatei in die lokale Privatkonfig uebernommen und danach erneut
-in den privaten Webspace deployed.
+Aktueller Betriebsstatus am 2026-05-22: Single-Database-Mode ist aktiv. Die
+Provider-Schemaanlage und Provider-Verbindungschecks laufen über die
+Webspace-API; `POST /api/v1/status` meldet `databases.cailama: ok`, und
+`POST /api/v1/admin/schema/cailama` beziehungsweise
+`POST /api/v1/admin/schema/all` wenden dasselbe Schema an. Echte Host-, User-
+oder Passwortwerte werden nicht in Doku oder Repo geschrieben.
+
+Deployment-Status am 2026-05-23: `scripts/deploy-website.sh` hat `web/`
+per SFTP deployt und die öffentlichen Dateien per HTTPS-Hash verifiziert.
+`CAILAMA_CHECK_DEPLOYED_WEBSITE=1 bash scripts/check-ecosystem.sh` bestätigt
+robots, Sitemap und JSON über HTTPS.
 
 Der Umsetzungsplan liegt unter `docs/db-api.plan.md`.
 
@@ -318,9 +329,9 @@ https://cailama.org/ecosystem-reference.md
 https://cailama.org/data/ecosystem.json
 ```
 
-Damit ist die Master-Doku sowohl die Human-Version fuer Nutzer als auch die
-LLM-freundliche Nachschlagebasis fuer alle CaiLama-Repositories.
+Damit ist die Master-Doku sowohl die Human-Version für Nutzer als auch die
+LLM-freundliche Nachschlagebasis für alle CaiLama-Repositories.
 
-Die Webserver-, DNS- und TLS-Konfiguration fuer `cailama.org` liegt ausserhalb
+Die Webserver-, DNS- und TLS-Konfiguration für `cailama.org` liegt außerhalb
 dieses Repositories. Keine Zertifikate, Tokens oder Server-Secrets in dieses
 Repo schreiben.

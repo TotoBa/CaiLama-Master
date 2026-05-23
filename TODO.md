@@ -14,6 +14,7 @@ Vor Arbeitsbeginn lesen:
 
 - `AGENTS.md`, `README.md`, diese `TODO.md`.
 - `docs/ecosystem-map.md`, `docs/orchestration.md`,
+  `docs/product-positioning.md`, `docs/benchmarks.md`,
   `status.plan.cailama.md`, `master-repo-orchestration.plan.md`.
 - Bei Website-Aenderungen zusaetzlich `docs/website.md`,
   `docs/ecosystem-reference.md`, `docs/data/ecosystem.json` und `web/`.
@@ -28,7 +29,8 @@ Vor Arbeitsbeginn lesen:
 - [x] CaiLama-DB-Hybrid koordinieren: native MariaDB/MySQL, fachliche Webspace-
   API und Hybridbetrieb in Master-Doku/Website nachziehen, sobald die
   Umsetzung in `TotoBa/CaiLama` beginnt. Master-Seite: Login-/Session-Shell,
-  getrennte `auth`-/`cailama`-PDO-Konfiguration und Schema-Vorlagen sind
+  Single-Database-Providerbetrieb mit `web_users` und CaiLama-Fachtabellen in
+  derselben `databases.cailama`-PDO-Verbindung sowie Schema-Vorlage sind
   vorbereitet; echte Provider-Credentials bleiben in ignorierter
   privater Webspace-Konfiguration ausserhalb von `/public`. `TotoBa/CaiLama`
   konfiguriert jetzt
@@ -38,28 +40,36 @@ Vor Arbeitsbeginn lesen:
   serverseitig hochgeladene `.sql`-/`.sql.gz`-Dumps bereit; fehlende
   Importdateien werden abgelehnt und erfolgreich verarbeitete Dateien
   geloescht. Provider-Schemas werden ueber admin-geschuetzte PHP-Endpunkte im
-  Webspace gesetzt, weil die Provider-DBs nur von dort bearbeitet werden
+  Webspace gesetzt, weil die Provider-DB nur von dort bearbeitet werden
   sollen. Private Webspace-Konfig und API-Keys liegen ausserhalb des
-  Public-Webroots; lokale DB-Schemas sind angelegt. Offen bleibt die
-  Live-Verifikation beider Provider-DB-Verbindungen nach Private-Config-Deploy
-  und Schema-Setup.
-- [ ] Webspace-DB-API live-testfaehig fertigstellen:
-  **Live-Stand 2026-05-22:**
-  - `POST /api/v1/status` mit Admin-Key: HTTP 200,
-    `databases.cailama: ok`, `databases.auth: error`.
-  - `POST /api/v1/admin/schema/cailama`: **HTTP 200, Schema erfolgreich**
-    angewendet (2 Statements).
-  - `POST /api/v1/admin/schema/auth`: HTTP 500, blockiert weil Auth-DB
-    `auth_failed` meldet (MySQL 1045: Access denied for user).
-    CaiLama-DB-Host ist erreichbar.
-  - **Blocker:** IONOS-Passwort `4R_UFTZgjyNbDjjm` fuer `dbu1288786` an
-    `db5020512585.hosting-data.io` wird vom Webspace nicht akzeptiert.
-    Mogliche Ursachen: Passwort ist falsch, DB-User hat keine Berechtigungen
-    fuer die DB, oder IONOS erlaubt keine gleichzeitige Verbindung zu zwei
-    getrennten DBs vom Webspace aus. Passwort wurde am 2026-05-22 ueber
-    `--write-configs --deploy-private` neu geschrieben.
-  - no-key/body/file-Import-Smokes in `docs/integrations.md` dokumentiert.
-  - danach: minimale fachliche CaiLama-Read-/Write-Endpunkte.
+  Public-Webroots; lokale DB-Schemas sind angelegt.
+- [x] Webspace-DB-API live-testfaehig fertigstellen:
+  **Live-Stand 2026-05-22:** Es gibt nur noch eine Provider-Datenbank.
+  Website-Login (`web_users`) und CaiLama-Fachdaten leben gemeinsam in
+  `databases.cailama` (Single-Database-Mode), weil der Webspace keine stabile
+  zweite Provider-DB-Verbindung bereitstellt. `POST /api/v1/status` liefert mit
+  gueltigem Bearer-Key HTTP 200 und `databases.cailama: ok`.
+  `POST /api/v1/admin/schema/cailama` und
+  `POST /api/v1/admin/schema/all` wenden dasselbe Single-DB-Schema erfolgreich
+  an. Der alte separate Auth-Schema-Pfad ist entfallen.
+  no-key/body/file-Import-Smokes sind in `docs/integrations.md` dokumentiert.
+  Folgearbeit: minimale fachliche CaiLama-Read-/Write-Endpunkte.
+- [ ] Produktpositionierung als Master-Pruefpunkt dauerhaft pflegen:
+  CaiLama bleibt Trainingswerkstatt fuer ernsthafte Verbesserung. Der
+  dokumentierte Kernloop ist PGN-Import, Stockfish-/Heuristik-Grounding,
+  drei bis sieben Schluesselstellungen, Trainingsfragen/-karten, gueltige
+  PGN- und Trainings-JSON-Artefakte sowie Review-Rueckfluss. Social-, Feed-,
+  Matchmaking- und Mobile-First-Funktionen bleiben Nicht-Ziele, solange dieser
+  Produktloop nicht stabil und benchmarkbar ist.
+  Stand 2026-05-23: PTG erzeugt offline `source.pgn`, `annotated.pgn`,
+  `training.json` und `quality_gates.json`. Offen bleiben DGT-naher Abruf,
+  Review-Priorisierung und Live-Router-Smoke.
+- [x] Website-Struktur auf Produktfokus als Startseite umstellen:
+  `web/index.php` ist die Produktfokus-/Trainingswerkstatt-Seite,
+  die bisherige Status-Startseite liegt als `web/status.php`. Navigation,
+  Sitemap, `llms.txt`, `docs/website.md`, `docs/data/ecosystem.json` und
+  `scripts/check-ecosystem.sh` sind auf `status.php` statt eine separate
+  Produktfokus-URL ausgerichtet.
 - [x] CaiLama-Search-Vertrag weiter pruefen: `POST /v1/search`,
   kompatibles `GET /v1/search`, `POST /v1/context`, `items`/`results`,
   `context`/`sources` und DWZ-Endpunkte **in `docs/integrations.md` als
@@ -72,17 +82,41 @@ Vor Arbeitsbeginn lesen:
   (`git diff --check`, `bash scripts/check-ecosystem.sh`) im Working Loop.
   Versionierte Quelle und lokale Kimi-Skill-Datei sind synchron deployt.
   Keine Secrets oder Runtime-Pfade.
-- [ ] Runtime-Aktualisierung nach groesseren Unterrepo-Releases pruefen:
+- [x] Runtime-Aktualisierung nach groesseren Unterrepo-Releases pruefen:
   `scripts/update-runtime-projects.sh` fuer Router/Search/CaiLama nutzen und
   dokumentieren, ob Dienste aus Runtime-Ordnern gestartet wurden.
+  Stand 2026-05-23: `scripts/update-runtime-projects.sh --install --restart all`
+  erfolgreich; Runtime-Ordner enthalten keine `.git`-Verzeichnisse,
+  `llm-router.service` und `cailama-search.service` sind aktiv, CaiLama-
+  Runtime-Smoke erzeugt PTG-Artefakte.
+- [ ] Benchmark-Rahmen im Master vorbereiten: gemeinsame Benchmark-
+  Orchestrierung fuer CaiLama, Router und Search definieren, Ergebnisablage im
+  Master unter `docs/benchmark-results/` oder einer klar benannten
+  Benchmark-Datei planen, reproduzierbare Kommandos ohne Secrets/lokale Pfade
+  festlegen und Datenschutzregeln fuer synthetische bzw. anonymisierte
+  Testdaten aufnehmen.
+  Messfamilien: Search/RAG, Router, Analyse/PTG, OCR/FEN. OCR ist aktiver
+  Messbereich, nicht zurueckgestellt. PTG liefert jetzt pro Session
+  `quality_gates.json` als erste Master-kompatible Messquelle; offen ist der
+  repo-uebergreifende Export-/Ablagevertrag.
+- [ ] Spaeteres spezialisiertes LLM-Training als Roadmap-Hebel vorbereiten:
+  erst nach Benchmark-Baseline, Datenfreigabe, sauberer Test-/Eval-/Train-
+  Trennung und Datenschutzklaerung planen. Modelle werden nur ueber den
+  Router-Vertrag bereitgestellt; Schachproduktlogik bleibt in CaiLama.
 - [ ] Roadmap regelmaessig aus den Unterrepo-`TODO.md`-Dateien abgleichen:
-  **CaiLama** = PTG-Live-Verifikation (blockiert bis DB-API live),
-  PTG-Review-Rückfluss, PTG-Scoring, PTG-Taxonomie, PTG-Kartentypen,
-  Datenschutz/Export, RAG-Provenienz, Lichess-Ratings, UnifiedRatingProfile,
-  Job-Orchestrierung, PTG-Observability.
-  **Router** = Backend-API-Key-Weitergabe, Token-/Usage-Metriken,
-  `llm-router usage` Diagnosebefehl.
-  **Search** = Semantic-Retrieval-Plan, Search-Qualitätsbaseline,
+  **CaiLama** = PTG-Live-Verifikation,
+  PTG-Produktloop-Folgephase fuer DGT-nahen Abruf und Review-Priorisierung,
+  PTG-Scoring, PTG-Taxonomie, PTG-Kartentypen,
+  Analyse-Qualitaetsgates ueber PTG hinaus, Datenschutz/Export,
+  RAG-Provenienz, Job-Orchestrierung, PTG-Observability, Benchmark-Export,
+  OCR/FEN aktiv ohne geratene FENs.
+  **Router** = Backend-API-Key-Weitergabe ist umgesetzt; offen bleiben
+  Token-/Usage-Metriken, `llm-router usage` Diagnosebefehl, benchmarkbare
+  Usage-/Latenzexporte und spaetere spezialisierte Modelle nur als generische
+  Backend-/Alias-Variante.
+  **Search** = optionale semantische Retrieval-Schicht ist implementiert und
+  default-off; offen bleibt die messbare Evaluation gegen Goldset-Baseline,
+  Recall-/Latenz-Benchmark, Master-kompatibler Benchmark-Export und
   CaiLama/Search-Jobvertrag.
 
 ## Kimi-Handoff
@@ -93,10 +127,12 @@ Master tracken, keine Submodules, keine produktive Runtime-Logik.
 ```text
 Du arbeitest im CaiLama-Master-Repository. Lies zuerst AGENTS.md, README.md und
 TODO.md vollstaendig. Lies danach docs/ecosystem-map.md, docs/orchestration.md,
-status.plan.cailama.md und master-repo-orchestration.plan.md. Wenn die Aufgabe
-Website oder LLM-Doku betrifft, lies zusaetzlich docs/website.md,
-docs/ecosystem-reference.md, docs/data/ecosystem.json und die betroffenen
-Dateien unter web/.
+docs/product-positioning.md, docs/benchmarks.md, status.plan.cailama.md und
+master-repo-orchestration.plan.md. Wenn die Aufgabe Website oder LLM-Doku
+betrifft, lies zusaetzlich docs/website.md, docs/ecosystem-reference.md,
+docs/data/ecosystem.json und die betroffenen Dateien unter web/. Beachte:
+web/index.php ist die Produktfokus-Startseite; der bisherige Status der
+Startseite liegt unter web/status.php.
 
 Arbeite danach die offenen Punkte in TODO.md von oben nach unten ab. Pro
 Schritt nur eine kleine, nachvollziehbare Aufgabe bearbeiten: Kontext lesen,
@@ -104,7 +140,9 @@ umsetzen, gezielt pruefen, TODO/Doku aktualisieren, dann committen und pushen.
 Keine Secrets, lokalen Pfade oder produktiven Zugangsdaten aufnehmen. Keine
 Unterrepo-Dateien im Master committen. Erledigte TODO-Punkte nicht loeschen,
 ausser der Nutzer fordert diese Bereinigung ausdruecklich an. TODO ist nicht
-gleich Handoff.
+gleich Handoff. Dauerhafte Pruefpunkte wie Produktpositionierung kurz gegen
+Doku/Web abgleichen und dann zum naechsten konkret umsetzbaren offenen Punkt
+weitergehen.
 
 Nach jeder Aenderung:
 1. Betroffene Master-Doku oder Website knapp aktualisieren.

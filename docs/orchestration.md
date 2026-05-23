@@ -32,6 +32,10 @@ Die lokalen Ordner duerfen dabei nicht geloescht werden.
   Master-Repos.
 - `status.plan.cailama.md` beschreibt den aktuellen Stand und Ausbaupfade des
   Oekosystems.
+- `docs/product-positioning.md` beschreibt Zielgruppe, Produktfokus,
+  Nicht-Ziele und Qualitaetsgrenzen.
+- `docs/benchmarks.md` beschreibt den Master-Rahmen fuer repo-uebergreifende
+  Messungen und Ergebnisartefakte.
 - `hinweise.md` enthaelt allgemeine Projekthinweise fuer ChatGPT-Kontexte. Fuer
   Codex-Arbeit gelten weiterhin `AGENTS.md`, `TODO.md` und die
   aufgabenspezifischen Nutzeranweisungen.
@@ -62,7 +66,10 @@ werden. TODO ist nicht gleich Handoff; der Handoff-Abschnitt bleibt die
 operative Orientierung fuer naechste Agentenlaeufe.
 
 Die aktuelle Roadmap steht in `docs/roadmap.md`. Schnittstellen- und
-Smoke-Test-Regeln stehen in `docs/integrations.md`.
+Smoke-Test-Regeln stehen in `docs/integrations.md`. Produktfokus und
+Benchmark-Erwartungen stehen in `docs/product-positioning.md` und
+`docs/benchmarks.md` und muessen bei neuen Cross-Repo-Punkten mitgeprueft
+werden.
 
 ## Runtime-Kopien
 
@@ -83,6 +90,8 @@ Das Skript `scripts/check-ecosystem.sh` prueft lokal:
 - ob `docs/ecosystem-reference.md` und `web/ecosystem-reference.md`
   identisch sind,
 - ob `docs/data/ecosystem.json` und `web/data/ecosystem.json` identisch sind,
+- ob Produktpositionierung, Benchmark-Doku, Startseite und Statusseite als
+  Pflichtdateien vorhanden sind,
 - ob ein lokal konfigurierter Webspace den Dateien unter `web/` entspricht,
   sofern dieser Webspace existiert.
 

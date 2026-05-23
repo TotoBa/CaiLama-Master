@@ -12,6 +12,7 @@ Webseite: <https://cailama.org/>
 Human-/LLM-Referenz:
 
 - <https://cailama.org/reference.php>
+- <https://cailama.org/status.php>
 - <https://cailama.org/llms.txt>
 - <https://cailama.org/ecosystem-reference.md>
 - <https://cailama.org/data/ecosystem.json>
@@ -90,6 +91,12 @@ Dieses Repo dient dazu:
   Secrets.
 - `docs/integrations.md` - Cross-Repo-Schnittstellen, Rollen, Endpunkte und
   Smoke-Test-Grenzen.
+- `docs/product-positioning.md` - Produktfokus: Trainingswerkstatt,
+  PGN-zu-Trainingsaufgabe-Loop, Zielgruppe und Qualitaetsgrenzen.
+- `docs/benchmarks.md` - Master-Rahmen fuer repo-uebergreifende Benchmarks
+  ohne Secrets oder private Rohdaten.
+- `docs/benchmark-results/README.md` - Ablage- und Formatregeln fuer spaetere
+  Master-Benchmark-Ergebnisse.
 - `docs/roadmap.md` - Roadmap aus `status.plan.cailama.md` als pflegbare
   Master-Sicht.
 - `docs/quality.md` - Master-Checks, Index-Regeln und TODO-Konsistenz.
@@ -102,8 +109,8 @@ Dieses Repo dient dazu:
   CaiLama-Dump-Import sowie admin-geschuetztem Provider-Schema-Setup ohne
   versionierte Credentials.
 - `web/api_app/config.local.sample.php` - Vorlage fuer die echte, ignorierte
-  Webspace-Konfiguration mit separater Auth- und CaiLama-Datenbank,
-  API-Token-Hash und Import-Drop-Konfiguration.
+  Webspace-Konfiguration im Single-Database-Mode mit einer `cailama`-
+  Provider-Datenbank, API-Token-Hash und Import-Drop-Konfiguration.
 - `scripts/check-ecosystem.sh` - lokale Statuspruefung ohne Schreibzugriffe.
 - `scripts/deploy-website.sh` - reproduzierbares Deployment von `web/`.
 - `scripts/generate-web-api-keys.sh` - idempotenter Generator fuer private

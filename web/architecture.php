@@ -17,6 +17,7 @@
         <span>CaiLama</span>
       </a>
       <div class="nav-links">
+        <a href="status.php">Status</a>
         <a href="projects.php">Projekte</a>
         <a aria-current="page" href="architecture.php">Architektur</a>
         <a href="roadmap.php">Roadmap</a>
@@ -113,7 +114,7 @@
       <div class="section-inner">
         <div class="section-head">
           <h2>Analyse- und Trainingskette.</h2>
-          <p>Der aktuelle Zielpfad baut auf vorhandenen CaiLama-Modulen auf und laesst Router/Search anreichern statt dominieren.</p>
+          <p>Der aktuelle Zielpfad baut auf vorhandenen CaiLama-Modulen auf und lässt Router/Search anreichern statt dominieren.</p>
         </div>
         <div class="grid-4">
           <article class="step">
@@ -153,6 +154,10 @@
           <article class="card">
             <h3>Konfiguration getrennt</h3>
             <p>Code, Doku und Beispiele enthalten keine lokalen Credentials oder produktiven Secrets.</p>
+          </article>
+          <article class="card">
+            <h3>Messbare Qualität</h3>
+            <p>Produktnahe Analyse-, Search-, Router- und OCR/FEN-Pfade brauchen Benchmark-Artefakte statt nur subjektiver Einschätzung.</p>
           </article>
         </div>
       </div>

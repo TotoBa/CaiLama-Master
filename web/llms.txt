@@ -6,6 +6,7 @@
 ## Human documentation
 
 - Home: https://cailama.org/
+- Status: https://cailama.org/status.php
 - Projects: https://cailama.org/projects.php
 - Architecture: https://cailama.org/architecture.php
 - Roadmap: https://cailama.org/roadmap.php

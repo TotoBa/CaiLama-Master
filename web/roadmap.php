@@ -17,6 +17,7 @@
         <span>CaiLama</span>
       </a>
       <div class="nav-links">
+        <a href="status.php">Status</a>
         <a href="projects.php">Projekte</a>
         <a href="architecture.php">Architektur</a>
         <a aria-current="page" href="roadmap.php">Roadmap</a>
@@ -46,19 +47,19 @@
         <div class="timeline">
           <article class="step">
             <strong>Jetzt</strong>
-            <p>DB-Hybrid ist konfigurierbar, Search/DWZ/RAG ist Standardpfad und Search-Ausbau läuft weiter; Router bleibt ohne neuen Auftrag pausiert.</p>
+            <p>DB-Hybrid ist konfigurierbar, Single-DB-Webspace läuft, Search/DWZ/RAG ist Standardpfad und Router bekommt eine kleine Infrastrukturhärtung.</p>
           </article>
           <article class="step">
             <strong>Danach</strong>
-            <p>PTG Phase 2, DWZ-Identity-Linking, Search- und PTG-Observability.</p>
+            <p>PTG-Artefakte an DGT-/Review-Flows anschliessen, DWZ-Identity-Linking, Search- und PTG-Observability.</p>
           </article>
           <article class="step">
             <strong>Später</strong>
-            <p>RAG-Analysepakete, einheitliche Job-Orchestrierung.</p>
+            <p>RAG-Analysepakete, einheitliche Job-Orchestrierung und spezialisierte Modelle erst nach Benchmark-Baseline.</p>
           </article>
           <article class="step">
             <strong>Ausbau</strong>
-            <p>Observability, optionale semantische Retrieval-Schicht.</p>
+            <p>Benchmarks, Observability und semantische Retrieval-Evaluation.</p>
           </article>
         </div>
       </div>
@@ -80,9 +81,10 @@
               <li>Fachlicher DB-API-Statusclient nutzt geschütztes <code>POST /api/v1/status</code> ohne SQL-over-HTTP oder Secret-Ausgabe.</li>
               <li>Webspace-API verarbeitet serverseitig hochgeladene <code>.sql</code>/<code>.sql.gz</code>-Dumps über no-query/no-body-Import-Endpunkte.</li>
               <li>Fehlende Importdateien werden abgelehnt; erfolgreiche Importe löschen die Dump-Datei.</li>
-              <li>Private Webspace-Konfig liegt ausserhalb des Public-Webroots; Status, Append, Reset und Admin-Schema-Setup haben getrennte Keys.</li>
+              <li>Private Webspace-Konfig liegt außerhalb des Public-Webroots; Status, Append, Reset und Admin-Schema-Setup haben getrennte Keys.</li>
               <li>Provider-Schemas werden über geschützte PHP-Endpunkte im Webspace gesetzt, nicht über direkten lokalen Provider-DB-Zugriff.</li>
-              <li>Live-Verifikation wartet auf das korrekt privat nachgezogene IONOS-Passwort; <code>pdo_mysql</code> ist auf dem Webspace verfügbar.</li>
+              <li>Single-Database-Mode ist live: Login-Tabellen und Fachdaten liegen gemeinsam in <code>databases.cailama</code>.</li>
+              <li><code>POST /api/v1/status</code> meldet <code>databases.cailama: ok</code>; Schema-Setup läuft über die Webspace-API.</li>
               <li>Keine generische SQL-over-HTTP-API einführen.</li>
               <li>Fachliche Read-/Write-Endpunkte und Hybrid-Sync bleiben Folgearbeit.</li>
             </ul>
@@ -99,13 +101,13 @@
           </article>
           <article class="card">
             <span class="tag blue">Router</span>
-            <h3>Pausiert</h3>
+            <h3>Infrastrukturhärtung</h3>
             <ul class="rich-list">
-              <li>Keine neue Router-Arbeit ohne neuen Nutzerauftrag starten.</li>
               <li>Streaming-Fehlerbehandlung für <code>stream: true</code> ist getestet.</li>
               <li>Config-Hot-Reload ist optional verfügbar.</li>
               <li>Backend-spezifisches Modell-Mapping per Alias ist abgesichert.</li>
               <li><code>mypy src</code> ist bereinigt.</li>
+              <li>Backend-API-Key-Weitergabe ist umgesetzt; offen bleiben Usage-Metriken und optionaler Usage-CLI-Befehl.</li>
             </ul>
           </article>
           <article class="card">
@@ -117,7 +119,8 @@
               <li>Synthetische Goldsets für Suche, DWZ und RAG-Kontext sind vorbereitet.</li>
               <li>Goldset-Testindex-Seeding ist localhost-geschützt vorbereitet.</li>
               <li><code>goldsets smoke</code> automatisiert Test-Meili, synthetisches Seeding, API-Start ohne Scheduler und Goldset-Run.</li>
-              <li>API-Qualität, Job-Orchestrierung und semantisches Retrieval gezielt vorbereiten.</li>
+              <li>Optionale semantische Retrieval-Schicht ist vorhanden, default-off und wird gegen Goldsets evaluiert.</li>
+              <li>API-Qualität, Job-Orchestrierung und Retrieval-Benchmarks gezielt nachziehen.</li>
             </ul>
           </article>
         </div>
@@ -137,6 +140,8 @@
             <ul class="rich-list">
               <li>Importierte Partien in Feature-Signale überführen.</li>
               <li>Classify/analyze-Stufen live gegen den Router verifizieren.</li>
+              <li>Kommentierte PGN, drei bis sieben Schlüsselstellungen, Trainingsfragen, Trainings-JSON und Qualitätsgates sind offline erzeugt und getestet.</li>
+              <li>DGT-nahe Abholung der Artefakte und Review-Priorisierung als nächste Scheibe umsetzen.</li>
               <li>Schwächenprofil und Kartenqueue nachvollziehbar ableiten.</li>
               <li>Review-Ergebnisse in Schwierigkeit, Priorität und Wiederholung zurückführen.</li>
               <li>Datenschutz für Leistungsprofile klären.</li>
@@ -176,8 +181,12 @@
             <p>Privacy-safe KPIs für Router, Search und Training, ohne Prompt-/Response- oder Secret-Inhalte.</p>
           </article>
           <article class="card">
-            <h3>Semantisches Retrieval</h3>
-            <p>Embedding/Reranking nur mit Eval-Datensatz und Fallback über bestehendem Meili-Lexikalindex.</p>
+            <h3>Benchmarks</h3>
+            <p>Master-geführte Benchmark-Ergebnisse für Router, Search und Training mit synthetischen oder anonymisierten Daten.</p>
+          </article>
+          <article class="card">
+            <h3>Semantische Evaluation</h3>
+            <p>Default-off Hybrid-Retrieval gegen Goldset-Baseline, Recall, Latenz und Fallback über bestehendem Meili-Lexikalindex messen.</p>
           </article>
           <article class="card">
             <h3>Quellenpolitik</h3>
@@ -186,6 +195,10 @@
           <article class="card">
             <h3>Modelle benchmarken</h3>
             <p>Bestes Modell je Aufgabe statt Lieblingsmodell: router, small, large und task bewusst einsetzen.</p>
+          </article>
+          <article class="card">
+            <h3>Spezialisiertes Training</h3>
+            <p>Modellanpassungen erst nach Datenfreigabe, Eval-Trennung und Benchmark-Baseline; Bereitstellung bleibt über den Router.</p>
           </article>
         </div>
       </div>

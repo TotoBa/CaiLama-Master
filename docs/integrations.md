@@ -31,6 +31,9 @@ Zu klaerende bzw. laufend zu pruefende Punkte:
 - `/health`, `/v1/models`, `/v1/chat/completions` und `/metrics` als Smoke-
   und Observability-Pfade dokumentieren.
 - Keine Provider-Secrets im Master speichern.
+- Spaetere spezialisierte Modelle bleiben normale Router-Backends bzw.
+  Alias-Ziele. Der Router erhaelt keine Schachproduktlogik und muss gegen die
+  gleichen Latenz-, Fallback- und Usage-Benchmarks messbar bleiben.
 
 ### CaiLama -> CaiLama-Search
 
@@ -69,6 +72,29 @@ Zu klaerende bzw. laufend zu pruefende Punkte:
 - Browserbasierter Webpfad nur als expliziter Fallback.
 - Quellenprovenienz bei RAG-Antworten sichtbar halten.
 - DWZ-Identity-Linking mit Ambiguitaetsbehandlung und PII-Minimierung.
+- Search-/RAG-Ergebnisse fuer Benchmarks so exportieren, dass Recall, MRR,
+  Zero-Hit-Rate, Latenz und Quellenqualitaet im Master dokumentierbar sind,
+  ohne Rohqueries, private Texte oder Credentials zu speichern.
+
+### CaiLama -> Training/Benchmark-Artefakte
+
+Ziel: Der produktnahe Trainingsloop liefert reproduzierbare Artefakte und
+messbare Qualitaet, nicht nur freie Modellantworten.
+
+Zu klaerende bzw. laufend zu pruefende Punkte:
+
+- Importierte PGNs muessen nach Annotation validierbar bleiben.
+- Schluesselstellungen, Trainingsfragen und Karten werden als strukturierte
+  Trainings-JSON-Artefakte gespeichert.
+- PTG schreibt `quality_gates.json` mit PGN-Roundtrip, annotiertem
+  PGN-Roundtrip, legalen Zuegen, illegalen Plies und Grounding-Zaehlern.
+- PTG-Ausgaben enthalten genug Metadaten fuer Kartenqualitaet, Redundanz,
+  Fehlerklassifikation und Review-Erfolg.
+- OCR/FEN bleibt aktiver Messbereich: FENs nur ausgeben, wenn die Erkennung
+  belastbar ist; falsch-positive FENs sind harte Benchmark-Fehler.
+- Ergebniszusammenfassungen fliessen in den Master-Benchmark-Rahmen zurueck,
+  aber keine privaten Partiearchive, rohen LLM-Prompts oder vollstaendigen
+  Kommentare.
 
 ### CaiLama -> Webspace-DB-API
 
@@ -122,25 +148,11 @@ POST /api/v1/admin/schema/cailama
   HTTP 200, Schema erfolgreich angewendet
 ```
 
-**Single-database mode:** IONOS shared hosting kann den zweiten DB-Host
-`db5020512585.hosting-data.io` nicht aufloesen (Unknown server host).
-Daher wurde `auth-login.sql` in `cailama-data.sql` ueberfuehrt;
-`web_users`, `cailama_schema_meta` und zukuenftige Fachtabellen
-leben gemeinsam in der CaiLama-Datenbank auf
-`dbs15699616@db5020503872.hosting-data.io`.
-
-```text
-POST /api/v1/status (Admin-Key)
-  HTTP 200
-  databases.cailama: ok
-
-POST /api/v1/admin/schema/cailama
-  HTTP 200, Schema erfolgreich angewendet
-```
-
-**Single-database mode** (nach Migration): `auth-login.sql` wurde in
-`cailama-data.sql` ueberfuehrt; `web_users` und Fachtabellen leben
-in derselben Datenbank.
+**Single-database mode:** Der alte separate Auth-DB-Pfad ist entfallen.
+`auth-login.sql` wurde in `cailama-data.sql` ueberfuehrt; `web_users`,
+`cailama_schema_meta` und zukuenftige Fachtabellen leben gemeinsam in der
+Provider-Datenbank `databases.cailama`. Provider-Host, Nutzername und
+Passwort stehen nur in der privaten Webspace-Konfiguration.
 
 Die folgenden Pruefschritte gelten als Vertragsgrenze; sie erfordern
 keine destruktiven Aktionen und werden mit gueltigen Bearer-Keys
@@ -186,7 +198,9 @@ Der Master koppelt keine Runtime-Komponenten. Er dokumentiert:
 - betroffene Schnittstelle,
 - erwartetes Ergebnis,
 - Akzeptanzkriterien,
-- Pruefstatus.
+- Pruefstatus,
+- Benchmark-Familie und Datenschutzgrenze, falls die Arbeit produktnahe
+  Analyse-, Training-, Search- oder Router-Qualitaet beruehrt.
 
 ## Runtime-Konfiguration ohne Secrets
 

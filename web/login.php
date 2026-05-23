@@ -72,6 +72,7 @@ function h(string $value): string
         <span>CaiLama</span>
       </a>
       <div class="nav-links">
+        <a href="status.php">Status</a>
         <a href="projects.php">Projekte</a>
         <a href="architecture.php">Architektur</a>
         <a href="roadmap.php">Roadmap</a>

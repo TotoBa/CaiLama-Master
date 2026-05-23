@@ -60,9 +60,12 @@ required_files=(
   "docs/ecosystem-reference.md"
   "docs/data/ecosystem.json"
   "docs/db-api.plan.md"
+  "docs/benchmark-results/README.md"
+  "docs/benchmarks.md"
   "docs/integrations.md"
   "docs/local-setup.md"
   "docs/orchestration.md"
+  "docs/product-positioning.md"
   "docs/quality.md"
   "docs/roadmap.md"
   "docs/runtime-projects.md"
@@ -101,6 +104,7 @@ required_files=(
   "web/reference.php"
   "web/roadmap.php"
   "web/sitemap.xml"
+  "web/status.php"
 )
 
 for path in "${required_files[@]}"; do
@@ -110,6 +114,17 @@ for path in "${required_files[@]}"; do
   fi
 done
 echo "OK: required master files exist"
+
+blocked_product_page="positioning"".php"
+if [[ -e "web/$blocked_product_page" ]]; then
+  echo "ERROR: web/$blocked_product_page must not exist; product focus belongs to web/index.php"
+  exit 1
+fi
+if grep -RIn "$blocked_product_page" README.md TODO.md docs scripts web >/dev/null; then
+  echo "ERROR: references to $blocked_product_page found; use index.php or status.php"
+  exit 1
+fi
+echo "OK: product focus is the start page, no separate product-focus page references"
 
 if cmp -s "docs/ecosystem-reference.md" "web/ecosystem-reference.md"; then
   echo "OK: LLM markdown reference is synced between docs/ and web/"

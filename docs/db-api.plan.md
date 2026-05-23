@@ -325,10 +325,10 @@ Aktueller Master-Stand:
   keinen Body; gesendet wird nur ein Bearer-Key mit passendem Scope.
 - Reset benoetigt `db_import:reset` oder `admin`; der normale Append-Key reicht
   dafuer nicht.
-- `POST /api/v1/admin/schema/auth`,
-  `POST /api/v1/admin/schema/cailama` und
+- `POST /api/v1/admin/schema/cailama` und
   `POST /api/v1/admin/schema/all` sind kurze, admin-geschuetzte PHP-Aktionen
-  zur Schemaanlage auf dem Provider. Auch sie akzeptieren keine Query-
+  zur Schemaanlage auf dem Provider. Im Single-Database-Mode wenden beide das
+  gleiche Schema inklusive `web_users` an. Auch sie akzeptieren keine Query-
   Parameter und keinen Body.
 - Grosse Uebertragungen laufen per SFTP in einen nicht oeffentlich
   erreichbaren Webspace-Ordner. Wenn keine Datei vorhanden ist, wird der Import

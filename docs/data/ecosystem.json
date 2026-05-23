@@ -1,14 +1,58 @@
 {
   "schema_version": "1.0",
   "generated_for": "CaiLama ecosystem documentation",
-  "last_reviewed": "2026-05-22",
+  "last_reviewed": "2026-05-23",
   "canonical_url": "https://cailama.org/",
   "language": "de",
   "summary": {
     "name": "CaiLama",
     "type": "chess analysis, training, automation and retrieval ecosystem",
     "purpose": "PGN import, Stockfish analysis, LLM-assisted commentary, DGT-aware training, knowledge search, player development and reproducible artifacts",
-    "master_rule": "CaiLama-Master is documentation, coordination and website only; it is not a monorepo and contains no runtime implementation from subprojects."
+    "master_rule": "CaiLama-Master is documentation, coordination and website only; it is not a monorepo and contains no runtime implementation from subprojects.",
+    "positioning": "CaiLama is a training workshop for serious chess improvement: PGN to grounded analysis, key positions, training cards, review feedback and repeatable artifacts."
+  },
+  "product_positioning": {
+    "primary_audience": "club players, trainers and ambitious self-learners",
+    "core_loop": [
+      "import PGN",
+      "ground analysis with Stockfish and board facts",
+      "extract key positions",
+      "classify errors and recurring patterns",
+      "generate training questions and cards",
+      "store valid PGN and training JSON artifacts",
+      "repeat through CLI, agent or DGT-aware workflows",
+      "feed review results back into priorities"
+    ],
+    "non_goals": [
+      "consumer social feed",
+      "matchmaking platform",
+      "mobile-first chess portal clone"
+    ],
+    "quality_bar": [
+      "legal move and board-state validation",
+            "PGN roundtrip or explicit errors",
+            "annotated PGN roundtrip for training comments",
+            "Stockfish or heuristic grounding for evaluations",
+      "source provenance for RAG context",
+      "no guessed FEN output from OCR diagrams"
+    ]
+  },
+  "benchmarks": {
+    "owner": "CaiLama-Master",
+    "result_location": "docs/benchmark-results/YYYY-MM-DD.<topic>.md",
+    "families": [
+      "Search/RAG recall, MRR, zero-hit-rate, latency and source quality",
+      "Router latency, fallback behavior, error handling and usage metrics",
+      "Analysis/PTG PGN validity, key positions, card quality, redundancy and review effect",
+      "OCR/FEN recognition quality and false-positive FEN prevention"
+    ],
+    "data_rules": [
+      "no secrets, tokens, private paths or production credentials",
+      "prefer synthetic, public, explicitly approved or anonymized data",
+      "keep test, eval and later training data separated",
+      "no full private game archives or raw prompt/response logs in benchmark artifacts"
+    ],
+    "specialized_llm_training": "Later lever only after benchmark baselines, data governance, eval splits and router-compatible deployment."
   },
   "repositories": [
     {
@@ -24,6 +68,9 @@
         "AGENTS.md",
         "hinweise.md",
         "docs/",
+        "docs/product-positioning.md",
+        "docs/benchmarks.md",
+        "docs/benchmark-results/README.md",
         "skills/",
         "scripts/check-ecosystem.sh",
         "web/api_app/config.local.sample.php",
@@ -59,7 +106,9 @@
                 "bounded Webspace DB API status client uses protected POST /api/v1/status without SQL-over-HTTP or secret output",
                 "provider-side dump import is available through no-query/no-body append/reset endpoints that process a configured server-side .sql or .sql.gz file",
                 "provider database schemas are applied through protected PHP admin endpoints on the webspace, not through local provider DB access",
-                "PTG queue enqueue is wired; optional --run-llm-stages connects classify/analyze before personalized card generation",
+        "PTG queue enqueue is wired; optional --run-llm-stages connects classify/analyze before personalized card generation",
+        "PTG product-loop artifacts are generated offline: source.pgn, annotated.pgn, training.json and quality_gates.json",
+        "PGN-to-training-task follow-up remains DGT-aware artifact retrieval, review feedback, deterministic scoring and benchmark export",
         "internal SearchAdapter is standard path for web_search and search_dwz",
         "search_rag is suggested for research/source questions",
         "DWZ identity linking store and CLI integration",
@@ -102,7 +151,9 @@
         "JSON and Prometheus-compatible metrics output",
         "cooldown metrics count only actual backend cooldown transitions",
         "mypy src is clean",
-        "no active follow-up work should be started without a new user request"
+        "backend API key forwarding is implemented",
+        "privacy-safe token usage metrics and optional usage CLI remain open",
+        "specialized future models must remain behind the generic router contract"
       ],
       "constraints": [
         "No chess product logic in the router.",
@@ -138,9 +189,9 @@
         "synthetic goldsets for search contract, DWZ search and RAG context are versioned and CLI-validated",
         "localhost-protected goldset seeding for isolated test Meilisearch instances is available",
         "goldset end-to-end smoke is automated through a local Docker Meilisearch instance, synthetic seeding and a scheduler-disabled API subprocess",
-        "current expansion focus is Search quality: API quality, job orchestration and optional semantic retrieval",
+        "optional semantic retrieval is implemented, default-off and guarded by lexical fallback",
         "job orchestration with CaiLama queue and training",
-        "optional semantic retrieval with evaluation data"
+        "semantic retrieval evaluation against goldset baseline remains open"
       ],
       "constraints": [
         "No real Meilisearch keys, master keys, admin keys or .env files in repository files.",
@@ -180,12 +231,11 @@
     {
       "from": "CaiLama",
       "to": "CaiLama-Master web API",
-      "purpose": "provider database access through a narrow PHP API, server-side CaiLama dump imports and website login through a separate auth database",
+      "purpose": "provider database access through a narrow PHP API, server-side CaiLama dump imports and website login in single-database mode",
       "paths": [
                 "POST /api/v1/status",
                 "POST /api/v1/imports/cailama/append",
                 "POST /api/v1/imports/cailama/reset",
-                "POST /api/v1/admin/schema/auth",
                 "POST /api/v1/admin/schema/cailama",
                 "POST /api/v1/admin/schema/all",
                 "/login.php",
@@ -194,7 +244,8 @@
       "contract_notes": [
         "No SQL-over-HTTP endpoints.",
                 "Real credentials belong only in private webspace config outside /public.",
-        "databases.auth and databases.cailama are separate PDO configurations.",
+        "databases.cailama is the only PDO configuration in webspace single-database mode.",
+        "web_users and application tables share the provider database while remaining logically separated by table names.",
                 "Status requires POST /api/v1/status with a Bearer token scope; there is no public GET status with API or database details.",
                 "The import endpoints accept no query parameters and no request body; authentication is through a Bearer token scope.",
                 "Provider schema endpoints accept no query parameters and no request body; authentication requires the admin scope.",
@@ -216,27 +267,31 @@
   ],
   "roadmap": {
     "now": [
-      "CaiLama DB hybrid hardening after configurable native/api/hybrid access, bounded API status client and server-side provider dump import endpoints",
+      "CaiLama DB hybrid hardening after configurable native/api/hybrid access, bounded API status client, single-database webspace mode and server-side provider dump import endpoints",
+      "Product focus on PGN-to-training-task loop instead of social platform features",
       "DWZ identity linking and RAG provenance",
-      "Search expansion for recall, quality and CaiLama integration after versioned synthetic goldsets, test-index seeding and automated E2E smoke",
-      "Router is paused unless a new user request targets it"
+      "Search expansion for recall, quality and CaiLama integration after versioned synthetic goldsets, test-index seeding, automated E2E smoke and optional semantic retrieval",
+      "Router infrastructure hardening: backend API key forwarding is implemented; privacy-safe usage metrics and optional usage CLI remain open"
     ],
     "next": [
       "PTG live verification and follow-up hardening for personalized cards",
-      "Unified job orchestration for CaiLama and Search"
+      "Unified job orchestration for CaiLama and Search",
+      "Benchmark framework in Master for cross-repo measurements and result documentation"
     ],
     "later": [
       "RAG-assisted analysis packages",
-      "unified job orchestration for import, crawl, game analysis, PTG and reindex"
+      "unified job orchestration for import, crawl, game analysis, PTG and reindex",
+      "specialized LLM training only after data governance, benchmark baselines and eval splits"
     ],
     "expansion": [
       "privacy-safe observability and KPIs",
-      "optional semantic retrieval layer in CaiLama-Search"
+      "semantic retrieval evaluation in CaiLama-Search against goldset baseline"
     ]
   },
   "public_documentation": {
     "human_pages": [
       "https://cailama.org/",
+      "https://cailama.org/status.php",
       "https://cailama.org/projects.php",
       "https://cailama.org/architecture.php",
       "https://cailama.org/roadmap.php",

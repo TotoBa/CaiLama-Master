@@ -10,7 +10,7 @@ Koordinationssicht.
                  +----------------------------+
                  | TotoBa/CaiLama-Master     |
                  | Koordination, Plaene,      |
-                 | Status, Agentenregeln      |
+                 | Status, Doku, Benchmarks   |
                  +-------------+--------------+
                                |
                                | dokumentiert und prueft lokal
@@ -41,6 +41,7 @@ Koordinationssicht.
 - Pflegt die statische Webseite fuer `https://cailama.org/` unter `web/`.
 - Liefert die Human-Doku als HTML und die LLM-/Maschinenreferenz als
   `llms.txt`, `ecosystem-reference.md` und `data/ecosystem.json` aus.
+- Haelt Produktpositionierung und Master-geführte Benchmark-Regeln aktuell.
 - Stellt eine kleine PHP-Webspace-Fassade fuer Status, Login-Shell und
   kontrollierte serverseitige CaiLama-Dump-Importe bereit.
 - Enthaelt keine produktive Laufzeitlogik.
@@ -51,6 +52,8 @@ Koordinationssicht.
 - Ist das Hauptsystem des Oekosystems.
 - Verantwortet Nutzer- und Trainingsfluss, Spielerprofile, importierte Partien,
   Analyse- und Trainingsartefakte sowie Agent-/CLI-Workflows.
+- Priorisiert den PGN-zu-Trainingsaufgabe-Loop: gueltige Partieartefakte,
+  Schluesselstellungen, Trainingskarten, Wiederholung und Review-Rueckfluss.
 - Nutzt den LLM-Router fuer Modellzugriff.
 - Soll CaiLama-Search fuer kontrollierte Suche, RAG-Kontext und DWZ-Daten
   nutzen.
@@ -60,6 +63,8 @@ Koordinationssicht.
 - Kapselt LLM-Provider und lokale bzw. entfernte Backends hinter einer
   OpenAI-kompatiblen API.
 - Verantwortet Modell-Aliase, Routing-Policies, Fallbacks und Betriebschecks.
+- Stellt spaetere spezialisierte Modelle nur als generische Backend-/Alias-
+  Variante bereit; Schachproduktlogik bleibt ausserhalb des Routers.
 - Enthaelt keine CaiLama-Produktlogik.
 
 ### `TotoBa/CaiLama-Search`
@@ -68,6 +73,8 @@ Koordinationssicht.
 - Stellt Such- und Kontext-Endpunkte fuer CaiLama bereit.
 - Verwaltet Meilisearch-Indizes und zugehoerige Runtime-Konfiguration im eigenen
   Repo bzw. in der lokalen Betriebsumgebung.
+- Liefert Search-/RAG-Benchmarkdaten und Quellenprovenienz als messbare
+  Grundlage fuer Master-Auswertungen.
 
 ## Schnittstellenrichtung
 

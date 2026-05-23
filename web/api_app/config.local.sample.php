@@ -35,16 +35,9 @@ return [
         'enabled' => true,
     ],
     'databases' => [
-        'auth' => [
-            'enabled' => true,
-            // Provider database for website data ("Login"), capacity: 2 GB.
-            'dsn' => 'mysql:host=localhost;dbname=cailama_auth;charset=utf8mb4',
-            'user' => 'replace_with_provider_auth_user',
-            'password' => 'replace_with_provider_auth_password',
-        ],
         'cailama' => [
             'enabled' => true,
-            // Separate provider database for CaiLama application data, capacity: 2 GB.
+            // Single provider database for website login and CaiLama application data.
             'dsn' => 'mysql:host=localhost;dbname=cailama_data;charset=utf8mb4',
             'user' => 'replace_with_provider_cailama_user',
             'password' => 'replace_with_provider_cailama_password',

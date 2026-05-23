@@ -1,10 +1,38 @@
 # Status und Ausbaupfade des CaiLama-Ökosystems
 
+## Aktualisierung 2026-05-23
+
+Dieser Abschnitt ergaenzt den Stand nach Runtime-Update und PTG-Artefakt-
+Scheibe, ohne die historische Analyse darunter umzuschreiben.
+
+- `TotoBa/CaiLama`: Die offline/deterministische PTG-Produktloop-Scheibe ist
+  umgesetzt und getestet. `run_ptg_pipeline` erzeugt pro profilierter Partie
+  `source.pgn`, `annotated.pgn`, `training.json` und `quality_gates.json`.
+  Die Quality-Gates pruefen PGN-Roundtrip, annotierten PGN-Roundtrip, legale
+  Zuege, illegale Plies und Grounding-Zaehler. Die CLI meldet Sessions,
+  Schluesselstellungen und Artefaktpfade. Verifikation: `1441 passed`,
+  `40 skipped`; gezielt PTG `13 passed`.
+- Offen in CaiLama bleiben bewusst live- oder integrationsnahe Folgepunkte:
+  PTG-Live-Verifikation gegen den Router, DGT-/Agent-naher Abruf der
+  Artefakte, Review-Rueckfluss in Priorisierung, deterministisches Scoring,
+  Taxonomie/Kartentypen, Datenschutz/Export und OCR/FEN-Gates ohne geratene
+  FENs.
+- `TotoBa/CaiLama-Master`: Produktpositionierung, Benchmark-Doku, Roadmap,
+  Website und LLM-Referenz werden auf diesen PTG-Stand nachgezogen. PTG-
+  `quality_gates.json` ist die erste konkrete Messquelle fuer den spaeteren
+  Master-Benchmark-Rahmen; der repo-uebergreifende Exportvertrag bleibt offen.
+
 ## Aktualisierung 2026-05-22
 
 Dieser Abschnitt aktualisiert die operative Prioritaet nach dem DB-Hybrid- und
 Goldset-Smoke-Schnitt, ohne die historische Bewertung darunter umzuschreiben.
 
+- Produktfokus 2026-05-22: CaiLama wird als Trainingswerkstatt positioniert.
+  Der priorisierte Loop ist PGN-Import, Stockfish-/Heuristik-Grounding,
+  drei bis sieben Schluesselstellungen, Trainingsfragen/-karten, gueltige
+  PGN- und Trainings-JSON-Artefakte, CLI-/DGT-nahe Wiederholung und
+  Review-Rueckfluss. Social-, Feed-, Matchmaking- und Mobile-First-Funktionen
+  sind keine aktuelle Roadmap-Prioritaet.
 - `TotoBa/CaiLama`: PTG Phase 1, SearchAdapter-Grundlage und RAG-Tooling sind
   vorhanden. DB-Hybrid ist im Grundschnitt ueber `database.access_mode =
   native|api|hybrid`, API-Metadaten und einen begrenzten DB-API-Statusclient
@@ -12,29 +40,42 @@ Goldset-Smoke-Schnitt, ohne die historische Bewertung darunter umzuschreiben.
   providerseitig no-query/no-body-Endpunkte fuer serverseitig abgelegte
   CaiLama-Dumps bereit: `append` fuer Hinzufuegen und optional aktivierbares
   `reset` fuer DB-Reset. Fehlende Importdateien werden abgelehnt; erfolgreiche
-  Importe loeschen die Dump-Datei. Provider-Schemaanlage laeuft als kurze,
-  admin-geschuetzte PHP-Aktion im Webspace, weil die Provider-DBs nur von dort
-  bearbeitet werden sollen. Offen sind jetzt fachliche
-  DB-API-Read-/Write-Endpunkte, Live-Verifikation beider Provider-DB-
-  Verbindungen, Search/DWZ-Folgehaertung, PTG-Live-Verifikation,
-  DWZ-Store/CLI-Integration und RAG-Promptflow-Anschluss.
+  Importe loeschen die Dump-Datei. Die Webspace-API laeuft jetzt im
+  Single-Database-Mode: Website-Login (`web_users`) und CaiLama-Fachdaten
+  leben gemeinsam in `databases.cailama`; `POST /api/v1/status` und
+  Provider-Schemaanlage funktionieren ueber die geschuetzten PHP-Endpunkte.
+  Offen sind jetzt fachliche DB-API-Read-/Write-Endpunkte,
+  Search/DWZ-Folgehaertung, PTG-Live-Verifikation, Datenschutz/Export,
+  RAG-Provenienz in allen Antwortformaten, der harte PGN-zu-Trainingsaufgabe-
+  Slice und Benchmark-Orchestrierung.
 - `TotoBa/CaiLama-LLM-Router`: Fallbacks, Aliase, Config-Checks und
-  privacy-safe JSON-Metriken sind umgesetzt. Offen sind
-  Streaming-Fehlervertrag, optionales Config-Hot-Reload, backend-spezifische
-  Modellnamen je Alias und `mypy`-Bereinigung.
+  privacy-safe JSON-/Prometheus-Metriken sind umgesetzt. Streaming-
+  Fehlervertrag, optionales Config-Hot-Reload, backend-spezifische Modellnamen
+  je Alias und `mypy`-Bereinigung sind erledigt. Backend-API-Keys aus
+  `api_key_env` werden an OpenAI-kompatible Backends weitergereicht. Offen
+  sind privacy-safe Token-/Usage-Metriken und ein optionaler
+  `llm-router usage` Diagnosebefehl.
 - `TotoBa/CaiLama-Search`: Key-Rotation, Admin-Auth, Read/Admin-Trennung,
   Docker-Key-Defaults und der CaiLama-kompatible API-Vertrag sind umgesetzt.
   Crawler-Quellenpolitik-Tests, Search-Observability, synthetische Goldsets,
   localhost-geschuetztes Testindex-Seeding und der automatisierte
-  `goldsets smoke`-Pfad sind umgesetzt. Offen sind Job-Orchestrierung,
-  API-Qualitaet und optionale semantische Retrieval-Schicht.
+  `goldsets smoke`-Pfad sind umgesetzt. Einheitliche Job-Orchestrierung ist
+  vorbereitet. Die optionale semantische Retrieval-Schicht ist implementiert,
+  bleibt default-off und braucht vor produktiver Nutzung messbare Evaluation
+  gegen die Goldset-Baseline.
 - `TotoBa/CaiLama-Master`: Website, PHP-Webspace-Skelett, HTTPS-Redirect-Regeln,
   Runtime-Update-Skript und Kimi-CLI-Ecosystem-Skill sind die aktuelle
   Koordinationsbasis. Der Kimi-CLI-Ecosystem-Skill ist lokal im Kimi-Skill-
   Ordner verfuegbar und gegen die versionierte Master-Quelle abgeglichen. Die
-  Webspace-API ist als POST-only Status-/Import-/Schema-Fassade deployed;
-  live ist `pdo_mysql` verfuegbar, aber die Provider-Login-DB meldet noch
-  `auth_failed`, bis das korrekte IONOS-Passwort privat nachgezogen wurde.
+  Webspace-API ist als POST-only Status-/Import-/Schema-Fassade deployed und
+  im Single-Database-Mode live angebunden. Offen bleiben Runtime-
+  Aktualisierung, Benchmark-Rahmen im Master, Roadmap-Abgleich, formale
+  TODO-Konsistenz und die laufende Pflege der Produktpositionierung.
+- Benchmarks werden im Master verortet. Sie messen Search/RAG, Router,
+  Analyse/PTG und OCR/FEN gegen synthetische, anonymisierte oder explizit
+  freigegebene Daten. Spaeteres spezialisiertes LLM-Training ist ein Hebel
+  nach Benchmark-Baseline, Datenfreigabe, Eval-Trennung und Router-kompatibler
+  Bereitstellung.
 
 ## Executive Summary
 

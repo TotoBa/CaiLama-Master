@@ -17,6 +17,7 @@
         <span>CaiLama</span>
       </a>
       <div class="nav-links">
+        <a href="status.php">Status</a>
         <a aria-current="page" href="projects.php">Projekte</a>
         <a href="architecture.php">Architektur</a>
         <a href="roadmap.php">Roadmap</a>
@@ -62,7 +63,7 @@
           <article class="card">
             <span class="tag copper">Laufend</span>
             <h3>PTG und DB-Hybrid</h3>
-            <p>PTG Phase 2 verbindet Queue und optional classify/analyze vor der Kartengenerierung; DB-Zugriff soll zwischen nativ, API und hybrid wählbar werden.</p>
+            <p>PTG erzeugt offline kommentierte PGN, Trainings-JSON und Qualitätsgates; offen sind DGT-nahe Abholung, Review-Priorisierung und Live-Router-Smoke.</p>
           </article>
           <article class="card">
             <span class="tag blue">Integration</span>
@@ -72,7 +73,7 @@
           <article class="card">
             <span class="tag red">Datenschutz</span>
             <h3>Leistungsprofile</h3>
-            <p>Personalisierung braucht Retention, Export, Ambiguitaetsbehandlung und PII-Minimierung.</p>
+            <p>Personalisierung braucht Retention, Export, Ambiguitätsbehandlung und PII-Minimierung.</p>
           </article>
         </div>
       </div>
@@ -96,7 +97,7 @@
           <article class="card">
             <span class="tag copper">API</span>
             <h3>OpenAI-kompatibel</h3>
-            <p><code>/v1/chat/completions</code>, <code>/v1/models</code> und <code>/health</code> bilden die stabile Konsumoberflaeche.</p>
+            <p><code>/v1/chat/completions</code>, <code>/v1/models</code> und <code>/health</code> bilden die stabile Konsumoberfläche.</p>
           </article>
           <article class="card">
             <span class="tag">Aliase</span>
@@ -106,7 +107,7 @@
           <article class="card">
             <span class="tag red">Fallback</span>
             <h3>Folgehärtung</h3>
-            <p>Streaming-Fehler, Config-Hot-Reload, backend-spezifische Modellnamen und <code>mypy src</code> sind umgesetzt und getestet; neue Router-Arbeit startet nur mit neuem Auftrag.</p>
+            <p>Streaming-Fehler, Config-Hot-Reload, backend-spezifische Modellnamen, Backend-API-Key-Weitergabe und <code>mypy src</code> sind umgesetzt und getestet; offen sind Usage-Metriken und optionaler Usage-CLI-Befehl.</p>
           </article>
           <article class="card">
             <span class="tag blue">Logging</span>
@@ -149,7 +150,7 @@
           <article class="card">
             <span class="tag copper">Ausbau</span>
             <h3>Observability</h3>
-            <p>Crawler-Whitelists, Robots-Gruppen, Source-Validierung und Reindex-Tracking sind getestet; privacy-safe Suchmetriken, synthetische Goldsets und Testindex-Seeding sind vorbereitet.</p>
+            <p>Crawler-Whitelists, Robots-Gruppen, Source-Validierung und Reindex-Tracking sind getestet; privacy-safe Suchmetriken, synthetische Goldsets, Testindex-Seeding und optionale semantische Suche sind vorbereitet.</p>
           </article>
         </div>
       </div>
@@ -171,12 +172,22 @@
           <article class="card">
             <span class="tag moss">Webseite</span>
             <h3>cailama.org</h3>
-            <p>Die Website ist die lesbare Master-Doku: Projektstand, Architektur, Roadmap und Betrieb.</p>
+            <p>Die Website ist die lesbare Master-Doku: Produktfokus, Status, Architektur, Roadmap und Betrieb.</p>
           </article>
           <article class="card">
             <span class="tag">Prüfung</span>
             <h3>Checkskript</h3>
             <p><code>scripts/check-ecosystem.sh</code> prüft Unter-Repos, Ignore-Regeln, Pflichtdateien und Web-Deployment.</p>
+          </article>
+          <article class="card">
+            <span class="tag blue">Benchmarks</span>
+            <h3>Messrahmen</h3>
+            <p>Der Master hält Ergebnisformat, Datenschutzgrenzen und Vergleichbarkeit für Search, Router, PTG und OCR/FEN zusammen.</p>
+          </article>
+          <article class="card">
+            <span class="tag copper">Produktfokus</span>
+            <h3>Trainingswerkstatt</h3>
+            <p>Die Koordination priorisiert den Weg von PGN und Analyse zu Schlüsselstellungen, Karten und Review-Rückfluss.</p>
           </article>
         </div>
       </div>

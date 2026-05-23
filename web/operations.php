@@ -17,6 +17,7 @@
         <span>CaiLama</span>
       </a>
       <div class="nav-links">
+        <a href="status.php">Status</a>
         <a href="projects.php">Projekte</a>
         <a href="architecture.php">Architektur</a>
         <a href="roadmap.php">Roadmap</a>
@@ -74,15 +75,15 @@ bash scripts/check-ecosystem.sh</code></pre>
           </article>
           <article class="card">
             <h3>Login-Konfig</h3>
-            <p>Die Website liest echte Auth- und CaiLama-DB-Zugänge nur aus der ignorierten <code>config.local.php</code>.</p>
+            <p>Die Website liest den echten Single-DB-Zugang für Login und CaiLama-Fachdaten nur aus der ignorierten <code>config.local.php</code>.</p>
           </article>
           <article class="card">
             <h3>DB-Import</h3>
-            <p>Grosse Dumps werden per SFTP in einen nicht öffentlichen Webspace-Ordner gelegt; die API verarbeitet nur die konfigurierte Datei und löscht sie nach Erfolg.</p>
+            <p>Große Dumps werden per SFTP in einen nicht öffentlichen Webspace-Ordner gelegt; die API verarbeitet nur die konfigurierte Datei und löscht sie nach Erfolg.</p>
           </article>
           <article class="card">
             <h3>Private API-Konfig</h3>
-            <p>DB-Zugänge und Token-Hashes liegen ausserhalb des Public-Webroots; Status, Append, Reset und Schema-Setup nutzen getrennte Keys/Scopes.</p>
+            <p>DB-Zugänge und Token-Hashes liegen außerhalb des Public-Webroots; Status, Append, Reset und Schema-Setup nutzen getrennte Keys/Scopes.</p>
           </article>
         </div>
       </div>
@@ -133,6 +134,14 @@ git diff --check</code></pre>
           <article class="doc-card">
             <h3>docs/integrations.md</h3>
             <p>Schnittstellen, Rollen, Endpunkte und Smoke-Test-Grenzen.</p>
+          </article>
+          <article class="doc-card">
+            <h3>docs/product-positioning.md</h3>
+            <p>Produktfokus, PGN-zu-Trainingsaufgabe-Loop, Nicht-Ziele und Qualitätsgrenzen.</p>
+          </article>
+          <article class="doc-card">
+            <h3>docs/benchmarks.md</h3>
+            <p>Master-Rahmen für Search-, Router-, PTG- und OCR/FEN-Benchmarks; Ergebnisse liegen später unter <code>docs/benchmark-results/</code>.</p>
           </article>
           <article class="doc-card">
             <h3>docs/quality.md</h3>

@@ -20,6 +20,11 @@ cmp -s docs/data/ecosystem.json web/data/ecosystem.json
 git diff --check
 ```
 
+Bei Produktfokus- oder Website-Aenderungen zusaetzlich pruefen, dass
+externe Vergleichsnotizen nur als abgeleitete Anforderungen einfliessen.
+Konkrete Fremdproduktnamen aus solchen Notizen werden nicht in Repository,
+Website, Sitemap, JSON oder LLM-Referenz uebernommen.
+
 Der Live-Website-Check ist im Standardlauf deaktiviert, damit der reine
 Repo-Check keine Runtime- oder Webspace-Abhaengigkeit hat. Bewusster
 HTTPS-Live-Check ohne Mount-Zugriff:
@@ -89,3 +94,7 @@ Bei neuer Cross-Repo-Arbeit muessen mindestens diese Angaben vorhanden sein:
 - erwartetes Ergebnis,
 - Akzeptanzkriterien,
 - geeigneter Check.
+
+Fuer produktnahe Analyse-, Training-, Search- oder Router-Arbeit gehoert
+zusaetzlich ein messbarer Bezug in den Master-Benchmark-Rahmen: betroffene
+Benchmark-Familie, Dataset-Regel, Datenschutzgrenze und erwartete Metrik.

@@ -17,6 +17,7 @@
         <span>CaiLama</span>
       </a>
       <div class="nav-links">
+        <a href="status.php">Status</a>
         <a href="projects.php">Projekte</a>
         <a href="architecture.php">Architektur</a>
         <a href="roadmap.php">Roadmap</a>
@@ -58,6 +59,11 @@
             <p><a href="architecture.php">architecture.php</a></p>
           </article>
           <article class="doc-card">
+            <h3>Startseite</h3>
+            <p>Produktfokus, Kernloop, Nicht-Ziele und Differenzierung.</p>
+            <p><a href="index.php">index.php</a></p>
+          </article>
+          <article class="doc-card">
             <h3>Roadmap</h3>
             <p>Priorisierte Umsetzung aus dem aktuellen Statusplan.</p>
             <p><a href="roadmap.php">roadmap.php</a></p>
@@ -73,9 +79,9 @@
             <p><a href="https://github.com/TotoBa/CaiLama-Master">CaiLama-Master</a></p>
           </article>
           <article class="doc-card">
-            <h3>Website</h3>
-            <p>Diese statische Site ist unter cailama.org erreichbar.</p>
-            <p><a href="index.php">Startseite</a></p>
+            <h3>Status</h3>
+            <p>Aktueller Stand des Ökosystems mit Repo- und Plattformübersicht.</p>
+            <p><a href="status.php">status.php</a></p>
           </article>
         </div>
       </div>
