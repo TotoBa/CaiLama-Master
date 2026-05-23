@@ -64,8 +64,10 @@ Vor Arbeitsbeginn lesen:
   Stand 2026-05-23 (Update): PTG-Scoring, Fehler-/Mustertaxonomie und
   Kartentypen sind umgesetzt und in Agent-Tools, Board-Chain und Drift-Cards
   integriert. `privacy-training-data.md` ist als Datenschutz-Konzept angelegt.
-  Offen bleiben PTG-Live-Verifikation, OCR/FEN-Gates und erweiterte
-  Qualitaetsgates.
+  Update 2026-05-24: PTG-Live-Verifikation gegen Router, Legal-Move-Details
+  in Review-/Coach-/Benchmark-Artefakten, RAG-Provenienz, OCR/FEN-Gates,
+  Analyse-/Training-Qualitaetsgates sowie Profil-Export und bestaetigte
+  Profil-Loeschung sind in CaiLama umgesetzt.
 - [x] Website-Struktur auf Trainingsfokus als Startseite umstellen:
   `web/index.php` ist die Trainingsfokus-/Trainingswerkstatt-Seite,
   die bisherige Status-Startseite liegt als `web/status.php`. Navigation,
@@ -107,6 +109,10 @@ Vor Arbeitsbeginn lesen:
   Unterrepos heraus. `--install` installiert jetzt Test-/Dev-Extras
   (`CaiLama .[test]`, Router `.[dev]`, Search `.[api,dev]`), damit Runtime-
   Smokes ohne manuelles `pytest`-Nachinstallieren laufen.
+  Update 2026-05-24: Runtime wurde mit
+  `scripts/update-runtime-projects.sh --install --restart all` aus den
+  lokalen Source-Repos aktualisiert; Router `/health` und Search `/healthz`
+  antworteten lokal und beide User-Services waren aktiv.
 - [ ] Benchmark-Rahmen im Master vorbereiten: gemeinsame Benchmark-
   Orchestrierung fuer CaiLama, Router und Search definieren, Ergebnisablage im
   Master unter `docs/benchmark-results/` oder einer klar benannten
@@ -139,6 +145,12 @@ Vor Arbeitsbeginn lesen:
   Erfasst werden Laufzeit, Input-/Thinking-/Output-Tokens, Qualitaet,
   Aufgabenloesung, Logikfehler, A/B-Praeferenz und Freitext. Offen bleibt die
   automatische Uebernahme von Router-/CaiLama-Metriken in diese Tabelle.
+  **Update 2026-05-24:** CaiLama liefert jetzt PTG-Live-Verifikation,
+  Legal-Move-/Brettwahrheit-Artefakte, OCR/FEN-Validitaetsgates sowie
+  Analyse-/Training-Qualitaetsgates. CaiLama-Search liefert privacy-safe
+  RAG-/Researcher-`source_quality`-Kennzahlen fuer Benchmarkberichte. Offen
+  bleibt die wiederholbare Cross-Repo-Orchestrierung und die automatische
+  Uebernahme dieser Metriken in das Website-Feedback.
 - [ ] Spaeteres spezialisiertes LLM-Training als Roadmap-Hebel vorbereiten:
   erst nach Benchmark-Baseline, Datenfreigabe, sauberer Test-/Eval-/Train-
   Trennung und Datenschutzklaerung planen. Modelle werden nur ueber den
@@ -156,11 +168,12 @@ Vor Arbeitsbeginn lesen:
   und Brettwahrheit ist erweitert: `BoardTruth` liefert Tags fuer alle
   legalen Zuege; `evaluate_legal_moves` gibt strukturierte Stockfish-Details
   mit Score, Engine-Rang, Tags und Qualitaetsband zurueck.
-  Naechster Fokus in CaiLama: PTG-Live-Verifikation bewusst gegen Router
-  pruefen, Legal-Move-Details in Review-/Coach-/Benchmark-Artefakte
-  einhaengen, OCR/FEN-Gates ohne geratene FENs weiter haerten,
-  RAG-Provenienz ueberall sichtbar halten und Analyse-Qualitaetsgates ueber
-  PTG hinaus ausbauen.
+  CaiLama-Update 2026-05-24: PTG-Live-Verifikation, Legal-Move-/Brettwahrheit-
+  Durchreichung in Review-/Coach-/Benchmark-Artefakte, RAG-Provenienz,
+  OCR/FEN-Gates, Analyse-/Training-Qualitaetsgates und Profil-Export/
+  bestaetigte Profil-Loeschung sind umgesetzt. Offen bleiben Retention/
+  Profilbindung fuer dateibasierte Trainingskarten und Review-Historien sowie
+  die automatische Uebernahme von Benchmarkmetriken in das Website-Feedback.
   **Router** = aktuelle Infrastrukturwelle ist abgearbeitet: Backend-API-Key-
   Weitergabe, Token-/Usage-Metriken, `llm-router usage`, benchmarkbare
   Usage-/Latenzexporte und generische `endpoint_path`-Backends sind umgesetzt;
@@ -172,9 +185,12 @@ Vor Arbeitsbeginn lesen:
   DWZ-Staging-Verifikation ist in `CaiLama-Search` umgesetzt (dwz_staging.py
   + tests/test_dwz_staging.py, 4 Tests passing). `uv.lock` ist wie im Router
   ignoriert, damit `uv run` keinen dreckigen Arbeitsbaum hinterlaesst.
-  Offen bleiben semantische Freigabeentscheidung auf groesserem Eval,
-  RAG-/Researcher-Kennzahlen fuer das Website-Feedback und API-/README-Pflege
-  bei neuen Vertragsaenderungen.
+  Search-Update 2026-05-24: RAG-/Researcher-`source_quality`-Kennzahlen fuer
+  das Website-Feedback sind im Goldset-/Benchmark-Vertrag umgesetzt
+  (Provenienz-Abdeckung, Quellen pro Fall, Domain-Diversitaet als Count,
+  Freshness-Signal-Rate und Herkunftstypen; keine URLs/Domains im Export).
+  Offen bleibt die semantische Freigabeentscheidung auf groesserem Eval und
+  API-/README-Pflege bei neuen Vertragsaenderungen.
 
 ## Kimi-Handoff
 
@@ -215,13 +231,17 @@ Training-/PTG-Punkten beginnen. Bereits erledigt sind gewichtete
 Trainingspositionen, on-demand Coach-Session, PGN-/LLM-Resilienz,
 Review-Gate-Grundlage und Console-Flow, Planmodus und Plan-Kaskade,
 Hintergrund-Agent, Benchmark-Event-Recorder sowie strukturierte Legal-Move-/
-Brettwahrheit-Ausgabe. Offen ist die Abrundung: PTG-Live-Verifikation gegen
-bewusst gestarteten Router; Legal-Move-Details in Review-/Coach-/Benchmark-
-Artefakte einhaengen; OCR/FEN-Gates ohne geratene FENs; RAG-Provenienz in
-allen Antwortformaten; Analyse-Qualitaetsgates ueber PTG hinaus. Die 21
-Positionen aus dem Benchmark sind nur Beobachtung aus drei Beispielpartien.
-Danach Search nur fuer semantische Freigabeentscheidung und RAG-/Researcher-
-Kennzahlen, Router nur bei neuem Alias-/Benchmark-/Live-Smoke-Auftrag.
+Brettwahrheit-Ausgabe, PTG-Live-Verifikation gegen bewusst gestarteten Router,
+Legal-Move-/Brettwahrheit-Details in Review-/Coach-/Benchmark-Artefakten,
+OCR/FEN-Gates ohne geratene FENs, RAG-Provenienz, Analyse-/Training-
+Qualitaetsgates sowie Profil-Export und bestaetigte Profil-Loeschung. Offen
+ist die Abrundung: Retention/Profilbindung fuer dateibasierte Trainingskarten
+und Review-Historien sowie automatische Router-/CaiLama-Metrikuebernahme in
+das Website-Feedback. Die 21 Positionen aus dem Benchmark sind nur Beobachtung
+aus drei Beispielpartien. Danach Search nur fuer semantische
+Freigabeentscheidung auf groesserem Eval; RAG-/Researcher-Kennzahlen sind als
+`source_quality` im Benchmark-Vertrag umgesetzt. Router nur bei neuem Alias-/
+Benchmark-/Live-Smoke-Auftrag.
 Runtime- und Website-Deploys nur ausfuehren, wenn sie beauftragt sind; dabei
 den Ecosystem-Skill nutzen und keine lokalen Operator-Secrets anzeigen oder
 dokumentieren.

@@ -21,16 +21,19 @@ Vom PGN zur persoenlichen Trainingsaufgabe:
 9. Review-Ergebnisse in Prioritaet, Schwierigkeit und Wiederholung
    zurueckfuehren.
 
-Stand 2026-05-23: Die offline/deterministische PTG-Scheibe erzeugt bereits
+Stand 2026-05-24: Die offline/deterministische PTG-Scheibe erzeugt bereits
 `source.pgn`, `annotated.pgn`, `training.json` und `quality_gates.json`.
 Agent-/DGT-naher Kartenabruf, `card_id`-Durchstich, CardType/Muster und
 Review-Stats in der Trainingspriorisierung sind umgesetzt. Gewichtete
 Trainingspositionen, kurzlebige Coach-Sessions on demand, Review-Gate-
 Console, Planmodus, Hintergrund-Agenten, Benchmark-Events, PGN-/LLM-
-Resilienz und Legal-Move-/Brettwahrheit-Tags sind vorhanden. Offen bleiben
-PTG-Live-Verifikation, Legal-Move-Details in Folgeartefakten, OCR/FEN-Gates,
-RAG-Provenienz in allen Antwortformaten, breitere Qualitaetsgates und
-Datenschutz-/Export-Regeln fuer Leistungsprofile.
+Resilienz und Legal-Move-/Brettwahrheit-Tags sind vorhanden. PTG ist live
+gegen Router verifiziert, Legal-Move-/Brettwahrheit-Daten laufen durch
+Review-, Coach- und Benchmark-Artefakte, RAG-Provenienz wird in Agent-Prompts
+normalisiert, OCR/FEN-Gates sind gehärtet und Analyse-/Training-Gates reichen
+über PTG hinaus. Profil-Export und bestätigte Profil-Löschung sind umgesetzt;
+offen bleiben Retention/Profilbindung fuer dateibasierte Trainingskarten und
+Review-Historien sowie die produktive Rückführung von Benchmark-Feedback.
 
 ## Differenzierung
 
@@ -75,6 +78,8 @@ Alle produktnahen Analyse- und Trainingspfade brauchen:
 - Stockfish- oder Heuristik-Grounding fuer Bewertungen,
 - klare Kennzeichnung, wenn kein Engineurteil vorliegt,
 - Quellenprovenienz bei RAG-Kontext,
+- strukturierte Qualitätsgates für PTG, Stockfish-Analyse, OCR/FEN und
+  persistierte Trainingssessions,
 - keine Prompt-/Response-Rohdaten in globalen Metriken,
 - keine geratenen FENs aus OCR-Diagrammen.
 

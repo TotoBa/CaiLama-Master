@@ -391,10 +391,10 @@ Webspace-API; `POST /api/v1/status` meldet `databases.cailama: ok`, und
 `POST /api/v1/admin/schema/all` wenden dasselbe Schema an. Echte Host-, User-
 oder Passwortwerte werden nicht in Doku oder Repo geschrieben.
 
-Deployment-Status am 2026-05-23: `scripts/deploy-website.sh` hat `web/`
-per SFTP deployt und die öffentlichen Dateien per HTTPS-Hash verifiziert.
-`CAILAMA_CHECK_DEPLOYED_WEBSITE=1 bash scripts/check-ecosystem.sh` bestätigt
-robots, Sitemap und JSON über HTTPS.
+Deployment-Status am 2026-05-24: `scripts/deploy-website.sh` hat `web/` und
+den privaten Smarty-Bereich per SFTP deployt und die öffentlichen Dateien per
+HTTPS-Hash verifiziert. `CAILAMA_CHECK_DEPLOYED_WEBSITE=1 bash
+scripts/check-ecosystem.sh` bestätigt robots, Sitemap und JSON über HTTPS.
 
 Der Umsetzungsplan liegt unter `docs/db-api.plan.md`.
 

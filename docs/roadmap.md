@@ -151,12 +151,13 @@ Koordinationspunkte:
   naechsten Schritt deterministisch ansteuern.
 - Umgesetzt: BoardTruth- und Stockfish-Legal-Move-Ausgabe mit Mehrfach-Tags
   und Produkt-Qualitaetsbaendern.
-- Offen: PTG-Live-Verifikation bewusst gegen Router pruefen und die
-  Ergebnisse in Master-Benchmarks beziehungsweise geschuetztes Website-
-  Feedback rueckfuehren.
-- Offen: Legal-Move-Details in weitere Review-/Coach-/Benchmark-Artefakte
-  einhaengen und erweiterte Qualitaetsgates ueber PTG hinaus aufbauen.
-- Datenschutz fuer personenbezogene Leistungsprofile klaeren.
+- Umgesetzt: PTG-Live-Verifikation gegen Router, Legal-Move-Details in
+  Review-/Coach-/Benchmark-Artefakten, RAG-Provenienz, OCR/FEN-Gates,
+  Analyse-/Training-Qualitaetsgates ueber PTG hinaus sowie Profil-Export und
+  bestaetigte Profil-Loeschung.
+- Offen: Retention/Profilbindung fuer dateibasierte Trainingskarten und
+  Review-Historien sowie automatische Metrik-Uebernahme in das geschuetzte
+  Website-Feedback.
 
 ### DWZ-Identity-Linking
 
@@ -168,6 +169,8 @@ Koordinationspunkte:
 - Plattformprofile mit DWZ-Treffern verknuepfen.
 - Mehrdeutige Treffer manuell bestaetigen lassen.
 - PII-Minimierung und Export-/Retention-Regeln dokumentieren.
+- Profil-Export und bestaetigte Profil-Loeschung sind umgesetzt; Retention
+  fuer dateibasierte Card-/Review-Stores bleibt Folgearbeit.
 
 ## Spaeter
 

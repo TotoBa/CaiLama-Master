@@ -22,8 +22,8 @@ return [
             'tag' => 'Hauptsystem',
             'repo_url' => 'https://github.com/TotoBa/CaiLama',
             'summary' => 'CaiLama ist der Produktkern mit Partieimport, PGN-Verarbeitung, Brettwahrheit, Stockfish-Analyse, Trainingssessions, Spielerprofilen, Agent-CLI, OCR/Knowledge und DGT-nahen Workflows.',
-            'status' => 'Der personalisierte Trainingsgenerator erzeugt source.pgn, annotated.pgn, training.json, quality_gates.json, Trainingskarten, Kartentypen, Muster und erklärbare Priorität. Gewichtete Trainingspositionen, Coach-Sitzung, Review-Gate-Console, Planmodus, Plan-Kaskade, Hintergrund-Agenten, Benchmark-Events und Legal-Move-Tags sind vorhanden.',
-            'open' => 'Nächster Fokus: bewusste PTG-Live-Verifikation, Legal-Move-Details in Review-/Coach-/Benchmark-Artefakte einhängen, RAG-Provenienz überall sichtbar halten und erweiterte OCR/FEN-Qualitätsgates.',
+            'status' => 'Der personalisierte Trainingsgenerator erzeugt source.pgn, annotated.pgn, training.json, quality_gates.json, Trainingskarten, Kartentypen, Muster und erklärbare Priorität. PTG-Live-Verifikation, gewichtete Trainingspositionen, Coach-Sitzung, Review-Gate-Console, Planmodus, Plan-Kaskade, Hintergrund-Agenten, Benchmark-Events und strukturierte Legal-Move-/Brettwahrheit-Daten in Review-, Coach- und Benchmark-Artefakten sind vorhanden. RAG-Provenienz, OCR/FEN-Gates, Analyse-/Training-Gates sowie Profil-Export und Profil-Löschung sind umgesetzt.',
+            'open' => 'Nächster Fokus: Retention und Profilbindung für dateibasierte Trainingskarten und Review-Historien abschließen und Router-/CaiLama-Benchmarkmetriken automatisch in das geschützte Website-Feedback übernehmen.',
         ],
         [
             'id' => 'router',
@@ -42,7 +42,7 @@ return [
             'tag_class' => 'red',
             'repo_url' => 'https://github.com/TotoBa/CaiLama-Search',
             'summary' => 'CaiLama-Search ist der schachspezifische Search-, DWZ- und RAG-Dienst. Er stellt kontrollierten Kontext bereit, ohne CaiLama direkt an Meilisearch oder externe Websuche zu koppeln.',
-            'status' => 'Search-API, Context-API, DWZ-Pfade, Quellenverwaltung, Jobs, Goldsets, Observability, RAG-Provenienz, Datenvertrag, Benchmark-Export und optionale semantische Suche sind umgesetzt oder vorbereitet. Filter+Hybrid und Multi-Index-Response sind behoben; lexical und hybrid erreichen im Goldset beide Pass-Rate 1.0.',
+            'status' => 'Search-API, Context-API, DWZ-Pfade, Quellenverwaltung, Jobs, Goldsets, Observability, RAG-Provenienz, Source-Quality-Kennzahlen, Datenvertrag, Benchmark-Export und optionale semantische Suche sind umgesetzt oder vorbereitet. Filter+Hybrid und Multi-Index-Response sind behoben; lexical und hybrid erreichen im Goldset beide Pass-Rate 1.0.',
             'open' => 'Offen bleibt die produktive Freigabeentscheidung für Hybrid auf größerem Eval. DWZ-Staging ist offline verifiziert; semantic.enabled bleibt default false.',
         ],
         [

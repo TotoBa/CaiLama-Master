@@ -33,8 +33,8 @@ return [
             'summary' => 'Schachanalyse, Training, Profile, Agent-CLI, PGN, Stockfish, OCR/Knowledge und DGT-nahe Workflows.',
             'points' => [
                 'PTG erzeugt valide Artefakte, Trainingskarten, Kartentypen, Muster und erklärbare Priorität.',
-                'Gewichtete Trainingspositionen, Coach-Sitzung on demand, Review-Gate-Console, Plan-Kaskade, Hintergrund-Agenten, Benchmark-Events und Legal-Move-Tags sind vorhanden.',
-                'Offen sind PTG-Live-Verifikation, Legal-Move-Details in Folgeartefakten, RAG-Provenienz in allen Antwortformaten und erweiterte OCR/FEN-Qualitätsgates.',
+                'PTG-Live-Verifikation, Review-Gate, Plan-Kaskade, Hintergrund-Agenten, Benchmark-Events und Coach-Sitzung on demand sind vorhanden.',
+                'Legal-Move-/Brettwahrheit-Daten laufen durch Review-, Coach- und Benchmark-Artefakte; RAG-Provenienz, OCR/FEN-Gates, Analyse-/Training-Gates sowie Profil-Export und Profil-Löschung sind umgesetzt.',
             ],
         ],
         [
@@ -57,7 +57,7 @@ return [
             'summary' => 'Search, Kontext, DWZ, Quellenverwaltung, Jobs, Goldsets, Observability und optionales semantisches Retrieval.',
             'points' => [
                 'Lexical-vs-Hybrid-Benchmark liegt vor; semantic.enabled bleibt default false.',
-                'Filter+Hybrid und Multi-Index-Response sind behoben; beide Modi erreichen Pass-Rate 1.0.',
+                'Filter+Hybrid, Multi-Index-Response und privacy-safe RAG-/Researcher-Source-Quality-Kennzahlen sind umgesetzt.',
                 'DWZ-Staging ist offline verifiziert; offen bleibt die Freigabeentscheidung für Hybrid auf größerem Eval.',
             ],
         ],
@@ -75,8 +75,8 @@ return [
         ],
     ],
     'next' => [
-        ['title' => 'Jetzt', 'text' => 'PTG live prüfen, Legal-Move-Details in Folgeartefakte einhängen, RAG-Provenienz überall sichtbar halten und OCR/FEN-Gates weiter härten.'],
-        ['title' => 'Danach', 'text' => 'Semantische Freigabe auf größerem Eval, Datenschutz/Export und Qualitätsgates über PTG hinaus.'],
+        ['title' => 'Jetzt', 'text' => 'Retention und Profilbindung für dateibasierte Trainingskarten und Review-Historien abschließen und Benchmarkmetriken ins geschützte Feedback übernehmen.'],
+        ['title' => 'Danach', 'text' => 'Semantische Freigabe auf größerem Eval und Search/RAG-Kennzahlen weiter gegen Produktfälle messen.'],
         ['title' => 'Später', 'text' => 'Spezialisierte Modelle erst nach Benchmark-Baseline, Datenfreigabe und Router-kompatibler Bereitstellung.'],
         ['title' => 'Betrieb', 'text' => 'Runtime und Website über secretfreie Skripte deployen, private Smarty-Abhängigkeit getrennt halten und Repos sauber für Kimi übergeben.'],
     ],

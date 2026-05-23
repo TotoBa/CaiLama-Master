@@ -1,5 +1,44 @@
 # Status und Ausbaupfade des CaiLama-Ökosystems
 
+## Aktualisierung 2026-05-24 (Session 5 - CaiLama/Search-Härtung, Master-Sync)
+
+Dieser Abschnitt ergänzt den Stand nach der aktuellen Codex-Prüfung und den
+neuen Unterrepo-Commits, ohne die historische Analyse darunter umzuschreiben.
+
+- `TotoBa/CaiLama`:
+  - PTG-Live-Verifikation gegen den Router ist durchgeführt und als
+    guarded Smoke-Skript dokumentiert. Der geprüfte Lauf erzeugte
+    `training.json` Schema `1.1`, Schlüsselstellungen, Legal-Move- und
+    Brettwahrheitskontext sowie bestandene Gates.
+  - Legal-Move-/Brettwahrheit-Daten laufen jetzt durch PTG-, Review-, Coach-
+    und Benchmark-Artefakte. Neue Agenten können Tags, Qualitätsband,
+    Engine-Rang und Score strukturiert nutzen.
+  - RAG-Provenienz ist im Agent-/Researcher-Pfad normalisiert:
+    Quelle/Titel, URL oder Herkunft, Stand/Freshness, Verwendungszweck und
+    Unsicherheit werden promptfähig weitergereicht.
+  - OCR/FEN-Gates prüfen neben False-Positive-Vermeidung auch FEN-Validität;
+    unsichere Diagramm-FENs werden nicht geraten.
+  - Analyse- und Training-Qualitätsgates reichen über PTG hinaus.
+    Profil-Export und bestätigte Profil-Löschung sind umgesetzt.
+  - Verifikation: 1221 Tests bestanden, 12 übersprungen. Offen bleiben
+    Retention/Profilbindung für dateibasierte Trainingskarten und
+    Review-Historien sowie automatische Benchmarkmetriken in das
+    Website-Feedback.
+- `TotoBa/CaiLama-Search`:
+  - RAG-/Researcher-`source_quality`-Kennzahlen sind im Goldset- und
+    Benchmark-Vertrag ergänzt: Provenienz-Abdeckung, Quellen pro Fall,
+    Domain-Diversität als Count, Freshness-Signal-Rate und Herkunftstypen.
+    URLs, Domains und Snippets werden nicht in die Kennzahlen exportiert.
+  - Verifikation: 162 Tests bestanden. Offen bleibt die semantische
+    Hybrid-Freigabe auf größerem Eval.
+- `TotoBa/CaiLama-LLM-Router`:
+  - Keine neue Codearbeit in dieser Runde. Der Router bleibt nur bei
+    Live-Smoke-, Benchmark- oder Backend-/Alias-Auftrag Zielrepo.
+- `TotoBa/CaiLama-Master`:
+  - Doku, TODO, maschinenlesbare Referenz und Website werden auf diesen Stand
+    synchronisiert. Master bleibt Koordination, Website und Benchmark-Ablage,
+    nicht Runtime.
+
 ## Aktualisierung 2026-05-23 (Session 4 — TODO-/Doku-Sync, Kimi gemma4)
 
 Dieser Abschnitt ergaenzt den Stand nach der naechsten Kimi-/Codex-Pruefung,

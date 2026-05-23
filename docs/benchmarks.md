@@ -25,6 +25,9 @@ in diese Koordination.
 - MRR.
 - Zero-Hit-Rate.
 - Quellen-Diversitaet.
+- Source-Quality: Provenienz-Abdeckung, Quellen pro Fall,
+  Domain-Diversitaet als Count, Freshness-Signal-Rate und Herkunftstypen,
+  ohne URLs, Domains oder Snippets zu exportieren.
 - Antwortlatenz.
 - Speicherbedarf.
 - Vergleich `lexical` gegen optionales `hybrid`.
@@ -61,6 +64,7 @@ in diese Koordination.
 - Text-OCR-Qualitaet fuer private Buchimporte.
 - Diagramm-Erkennungsrate.
 - FEN-Ausgabe nur bei hoher Sicherheit.
+- FEN-Validitaet per regelbasierter Brettpruefung.
 - Falsch-positive FENs als harte Fehlerklasse.
 
 ### Modellrollen und Human Feedback
@@ -125,8 +129,9 @@ Ein Ergebnis enthaelt mindestens:
   CaiLama-Search-Goldsets, lexical gegen hybrid. Ergebnis: Recall@5 und
   Recall@10 sind in beiden Modi 1.0; MRR ist in beiden Modi 0.9167; die
   Pass-Rate ist nach Filter- und Multi-Index-Fixes in beiden Modi 100%.
-  `semantic.enabled=false` bleibt empfohlen, bis ein groesseres Eval-Set
-  produktiven Nutzen belegt.
+  `source_quality`-Kennzahlen fuer RAG-/Researcher-Faelle sind seit dem
+  Folgestand im Goldset-/Benchmark-Vertrag enthalten. `semantic.enabled=false`
+  bleibt empfohlen, bis ein groesseres Eval-Set produktiven Nutzen belegt.
 - `docs/benchmark-results/2026-05-23.ptg-offline-baseline.md`:
   CaiLama-PTG-Offline-Baseline mit 3 freigegebenen Spielen, 21
   Schluesselstellungen, 13 Trainingskarten und 3/3 gueltigen PTG-Sessions.
@@ -135,9 +140,10 @@ Ein Ergebnis enthaelt mindestens:
   Seit dem Folgestand sind Retry/Timeout/Checkpointing, gewichtete
   Trainingspositionen, Coach-Session on demand, Review-Gate, Planmodus,
   Hintergrund-Agenten, Benchmark-Events und strukturierte Legal-Move-
-  Klassifikation vorhanden. Offen bleiben die bewusste PTG-Live-Verifikation,
-  automatische Metrik-Uebernahme in das Website-Feedback und weitere
-  Analyse-Qualitaetsgates.
+  Klassifikation vorhanden. PTG-Live-Verifikation gegen Router,
+  Legal-Move-/Brettwahrheit-Artefakte, RAG-Provenienz, OCR/FEN-Gates,
+  Analyse-Gates und TrainingSession-Gates sind umgesetzt. Offen bleibt die
+  automatische Metrik-Uebernahme in das Website-Feedback.
 - `docs/benchmark-results/2026-05-23.ocr-live-baseline.md`:
   OCR-Live-Benchmark mit 6 PDFs, 23 Diagrammen, 1686 Textzeichen, 6/6 Gates
   passed und 0% FEN-False-Positive-Rate. FENs werden weiterhin nicht geraten.

@@ -22,9 +22,12 @@ Aktueller Bestand:
   Coding-Agenten und Schachrollen, mit Pflichtmetriken fuer Laufzeit,
   Tokenwerte, Qualitaet, Aufgabenloesung, Logikfehler und A/B-Feedback.
 - `2026-05-23.search-lexical-hybrid.md` - synthetischer CaiLama-Search-
-  Goldset-Vergleich lexical gegen hybrid.
+  Goldset-Vergleich lexical gegen hybrid; Folgestand ergänzt privacy-safe
+  RAG-/Researcher-`source_quality`-Kennzahlen im Benchmark-Vertrag.
 - `2026-05-23.ptg-offline-baseline.md` - CaiLama-PTG-Offline-Baseline mit
   freigegebenen PGN-Auszügen, Quality-Gates und offenen LLM-Resilienzpunkten.
+- `2026-05-23.ocr-live-baseline.md` - OCR-Live-Benchmark mit FEN-False-
+  Positive-Gate und ohne geratene FENs.
 
 Menschliches Feedback zu Modellrollen wird nicht als Rohprompt-Archiv
 gespeichert, sondern ueber die geschuetzte Website-Seite

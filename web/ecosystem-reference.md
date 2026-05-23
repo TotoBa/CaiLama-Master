@@ -3,7 +3,7 @@
 Zielgruppe: Menschen, Codex, Kimi und andere LLM-Agenten, die schnell den
 aktuellen Systemzuschnitt verstehen müssen.
 
-Stand: 2026-05-23 (Runtime-/Skill- und Code-Abgleich).
+Stand: 2026-05-24 (CaiLama-/Search-Härtung, Runtime- und Website-Deploy).
 
 ## Kurzfassung
 
@@ -170,16 +170,22 @@ Aktueller Fokus:
   für personalisiertes Training sind umgesetzt.
 - Interne Search-Anbindung ist Standardpfad für `web_search` und
   `search_dwz`; Recherchefragen schlagen `search_rag` vor.
-- DWZ-Identity-Linking in Store und CLI integrieren.
-- RAG-Analysepakete in Researcher-/Analyst-Promptflows einhängen.
-- PGN-zu-Trainingsaufgabe-Loop weiter härten: PTG-Live-Verifikation,
-  Legal-Move-Details in weitere Review-/Coach-/Benchmark-Artefakte einhängen,
-  Datenschutz und OCR/FEN-spezifische Qualitätsgates.
+- DWZ-Identity-Linking ist in Store und CLI integriert.
+- RAG-Provenienz ist im Agent-/Researcher-Pfad normalisiert; Quellen,
+  Freshness, Verwendungszweck und Unsicherheit werden promptfähig
+  weitergereicht.
+- PTG-Live-Verifikation gegen den Router, Legal-Move-/Brettwahrheit-Details in
+  Review-/Coach-/Benchmark-Artefakten, Analyse-/Training-Qualitätsgates,
+  OCR/FEN-Gates sowie Profil-Export und bestätigte Profil-Löschung sind
+  umgesetzt.
 - Modellrollen-Benchmarks sollen Dauer, Input-/Thinking-/Output-Tokens,
   Qualitätsurteile, Aufgabenlösung, Logikfehler und A/B-Präferenzen für PTG,
   Coach, Analyst, Researcher und Vision/OCR erfassen.
-- OCR/FEN ist aktiv, aber FENs werden erst nach belastbarer
-  Vision-/Template-Prüfung ausgegeben.
+- Offen bleiben Retention/Profilbindung für dateibasierte Trainingskarten und
+  Review-Historien sowie die automatische Übernahme von Benchmarkmetriken in
+  das geschützte Website-Feedback.
+- OCR/FEN ist aktiv; FENs werden erst nach belastbarer Vision-/Template- und
+  Validitätsprüfung ausgegeben.
 
 Grenzen:
 
@@ -400,23 +406,24 @@ Jetzt:
   Folgearbeit.
 - Trainingsfokus schärfen: CaiLama liefert Trainingsarbeit und reproduzierbare
   Artefakte, nicht Social- oder Plattformfunktionen.
-- RAG-Provenienz in allen Antwortformaten fertigstellen; DWZ-Identity-Linking
-  in Store/CLI ist umgesetzt.
+- RAG-Provenienz ist im Agent-/Researcher-Pfad normalisiert;
+  DWZ-Identity-Linking in Store/CLI ist umgesetzt.
 - Router-Infrastrukturwelle ist abgeschlossen: Backend-API-Key-Weitergabe,
   privacy-safe Token-/Usage-Metriken, `llm-router usage`, Benchmark-Export
   und generische Endpoint-Pfade sind umgesetzt.
 - Search als aktuellen Ausbau-Fokus weiter messen: lexical-vs-hybrid ist
-  benchmarkbar dokumentiert, Filter-/Multi-Index-Bugs und DWZ-Staging sind
-  erledigt; offen bleibt die Freigabeentscheidung für Hybrid auf größerem Eval.
+  benchmarkbar dokumentiert, Filter-/Multi-Index-Bugs, DWZ-Staging und
+  privacy-safe RAG-/Researcher-`source_quality`-Kennzahlen sind erledigt;
+  offen bleibt die Freigabeentscheidung für Hybrid auf größerem Eval.
 - Modellrollen-Hypothese als Benchmark validieren: geschütztes Website-
   Feedback erfasst Laufzeit, Tokenwerte, Qualität, Aufgabenlösung,
   Logikfehler und A/B-Präferenz.
 
 Danach:
 
-- PTG-Live-Verifikation nur bewusst gegen den Router; danach Legal-Move-
-  Details, weitere Qualitätsgates und Datenschutz/Export in die Produktpfade
-  einhängen.
+- Retention/Profilbindung für dateibasierte Trainingskarten und Review-
+  Historien abschließen; Website-Feedback mit Router-/CaiLama-Metriken
+  verbinden.
 - Einheitliche Job-Orchestrierung vorbereiten.
 - Benchmark-Rahmen im Master weiter ausbauen, Website-Feedback mit Router- und
   CaiLama-Metriken verbinden und Ergebnisse repo-übergreifend dokumentieren.

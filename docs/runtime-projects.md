@@ -93,6 +93,13 @@ Ports koennen fuer Search ueber `CAILAMA_SEARCH_HOST` und
 Die Runtime-Ordner enthalten keine `.git`-Verzeichnisse; das wird beim
 Synchronisieren durch `update-runtime-projects.sh` erzwungen.
 
+Stand 2026-05-24: `scripts/update-runtime-projects.sh --install --restart all`
+hat CaiLama, Router und Search aus den lokalen Source-Repos in die
+gitfreien Runtime-Kopien synchronisiert, die Runtime-Abhängigkeiten neu
+installiert und Router/Search über die vorhandene Dienstlogik neu gestartet.
+Lokale Health-Checks antworteten mit Router `/health` und Search `/healthz`;
+beide User-Services waren aktiv.
+
 ## Secretfreie Runtime-Smokes
 
 Nach einem Deploy sind nur secretfreie Checks Standard:
