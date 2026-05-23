@@ -54,19 +54,18 @@ Vor Arbeitsbeginn lesen:
   an. Der alte separate Auth-Schema-Pfad ist entfallen.
   no-key/body/file-Import-Smokes sind in `docs/integrations.md` dokumentiert.
   Folgearbeit: minimale fachliche CaiLama-Read-/Write-Endpunkte.
-- [ ] Produktpositionierung als Master-Pruefpunkt dauerhaft pflegen:
+- [x] Produktpositionierung als Master-Pruefpunkt dauerhaft pflegen:
   CaiLama bleibt Trainingswerkstatt fuer ernsthafte Verbesserung. Der
   dokumentierte Kernloop ist PGN-Import, Stockfish-/Heuristik-Grounding,
   drei bis sieben Schluesselstellungen, Trainingsfragen/-karten, gueltige
   PGN- und Trainings-JSON-Artefakte sowie Review-Rueckfluss. Social-, Feed-,
   Matchmaking- und Mobile-First-Funktionen bleiben Nicht-Ziele, solange dieser
   Produktloop nicht stabil und benchmarkbar ist.
-  Stand 2026-05-23: PTG erzeugt offline `source.pgn`, `annotated.pgn`,
-  `training.json` und `quality_gates.json`. Agent-/DGT-naher Kartenabruf,
-  `card_id`-Durchstich und Review-Stats in der Trainingspriorisierung sind
-  umgesetzt. Offen bleiben PTG-Live-Verifikation, deterministisches Scoring,
-  Fehler-/Mustertaxonomie, Kartentypen, OCR/FEN-Gates und Datenschutz-/Export-
-  Regeln fuer Leistungsprofile.
+  Stand 2026-05-23 (Update): PTG-Scoring, Fehler-/Mustertaxonomie und
+  Kartentypen sind umgesetzt und in Agent-Tools, Board-Chain und Drift-Cards
+  integriert. `privacy-training-data.md` ist als Datenschutz-Konzept angelegt.
+  Offen bleiben PTG-Live-Verifikation, OCR/FEN-Gates und erweiterte
+  Qualitaetsgates.
 - [x] Website-Struktur auf Trainingsfokus als Startseite umstellen:
   `web/index.php` ist die Trainingsfokus-/Trainingswerkstatt-Seite,
   die bisherige Status-Startseite liegt als `web/status.php`. Navigation,
@@ -116,20 +115,18 @@ Vor Arbeitsbeginn lesen:
   Trennung und Datenschutzklaerung planen. Modelle werden nur ueber den
   Router-Vertrag bereitgestellt; Schachproduktlogik bleibt in CaiLama.
 - [ ] Roadmap regelmaessig aus den Unterrepo-`TODO.md`-Dateien abgleichen:
-  **CaiLama** = PTG-Live-Verifikation,
-  CardType-Auswertung in Agent-/Board-Flows, CardScorer-Einbindung in weitere
-  Trainingsauswahl,
-  Analyse-Qualitaetsgates ueber PTG hinaus, Datenschutz/Export,
+  **CaiLama** = CardType-Auswertung in Agent-/Board-Flows umgesetzt;
+  CardScorer-Einbindung in weitere Trainingsauswahl,
+  Analyse-Qualitaetsgates ueber PTG hinaus, Datenschutz/Export dokumentiert,
   RAG-Provenienz, Job-Orchestrierung, PTG-Observability,
   OCR/FEN aktiv ohne geratene FENs.
   **Router** = aktuelle Infrastrukturwelle ist abgearbeitet: Backend-API-Key-
   Weitergabe, Token-/Usage-Metriken, `llm-router usage`, benchmarkbare
   Usage-/Latenzexporte und generische `endpoint_path`-Backends sind umgesetzt;
   neue Router-Arbeit erst bei Live-Smoke-, Benchmark- oder Backend-Auftrag.
-  **Search** = Docker-faehiger Vergleich `lexical` gegen `hybrid` ist
-  dokumentiert; `semantic.enabled=false` bleibt Default. Offen sind
-  filter+hybrid-500er, gruppierte DWZ-Response-Felder, DWZ-Staging-Test und
-  API-/README-Nachzug.
+  **Search** = filter+hybrid-500er und Multi-Index-Response sind
+  behoben (Pass-Rate 9/9). `semantic.enabled=false` bleibt Default.
+  Offen sind DWZ-Staging-Test und API-/README-Nachzug.
 
 ## Kimi-Handoff
 
