@@ -18,7 +18,15 @@ anonymisierte Daten.
 
 Aktueller Bestand:
 
+- `model-role-matrix.current.md` - aktuelle Arbeitshypothese fuer
+  Coding-Agenten und Schachrollen, mit Pflichtmetriken fuer Laufzeit,
+  Tokenwerte, Qualitaet, Aufgabenloesung, Logikfehler und A/B-Feedback.
 - `2026-05-23.search-lexical-hybrid.md` - synthetischer CaiLama-Search-
   Goldset-Vergleich lexical gegen hybrid.
 - `2026-05-23.ptg-offline-baseline.md` - CaiLama-PTG-Offline-Baseline mit
   freigegebenen PGN-Auszügen, Quality-Gates und offenen LLM-Resilienzpunkten.
+
+Menschliches Feedback zu Modellrollen wird nicht als Rohprompt-Archiv
+gespeichert, sondern ueber die geschuetzte Website-Seite
+`/benchmark-feedback.php` in der Provider-Datenbank gesammelt. Relevante
+Tabellen: `cailama_model_benchmark_cases` und `cailama_model_feedback`.

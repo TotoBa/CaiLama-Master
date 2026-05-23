@@ -113,6 +113,14 @@ Vor Arbeitsbeginn lesen:
   `docs/benchmark-results/2026-05-23.ptg-offline-baseline.md`. Offen bleibt
   die wiederholbare Orchestrierung ueber alle Repos, inklusive Router-Latenz,
   OCR/FEN-False-Positive-Gates und groesserem Search-/PTG-Eval.
+  **Update 2026-05-23:** Die Modellrollen-Hypothese ist als Benchmark-
+  Matrix dokumentiert (`docs/benchmark-results/model-role-matrix.current.md`).
+  Die Website besitzt jetzt die geschuetzte Seite
+  `/benchmark-feedback.php`; Feedback wird hinter Login in
+  `cailama_model_benchmark_cases` und `cailama_model_feedback` gespeichert.
+  Erfasst werden Laufzeit, Input-/Thinking-/Output-Tokens, Qualitaet,
+  Aufgabenloesung, Logikfehler, A/B-Praeferenz und Freitext. Offen bleibt die
+  automatische Uebernahme von Router-/CaiLama-Metriken in diese Tabelle.
 - [ ] Spaeteres spezialisiertes LLM-Training als Roadmap-Hebel vorbereiten:
   erst nach Benchmark-Baseline, Datenfreigabe, sauberer Test-/Eval-/Train-
   Trennung und Datenschutzklaerung planen. Modelle werden nur ueber den
@@ -162,7 +170,10 @@ status.plan.cailama.md und master-repo-orchestration.plan.md. Wenn die Aufgabe
 Website oder LLM-Doku betrifft, lies zusaetzlich docs/website.md,
 docs/ecosystem-reference.md, docs/data/ecosystem.json und die betroffenen
 Dateien unter web/. Beachte: web/index.php ist die Trainingsfokus-Startseite;
-der bisherige Status der Startseite liegt unter web/status.php.
+der bisherige Status der Startseite liegt unter web/status.php. Fuer
+Modellrollen-Benchmarks gibt es die geschuetzte Seite
+web/benchmark-feedback.php; keine Kontoanlage oder Registrierung einbauen,
+Nutzer werden direkt in web_users angelegt.
 
 Arbeite danach die offenen Punkte in TODO.md von oben nach unten ab. Pro
 Schritt nur eine kleine, nachvollziehbare Aufgabe bearbeiten: Kontext lesen,
@@ -200,7 +211,11 @@ Retry/Backoff/Timeout, `checkpoint_writer` in `classify_moves` und
 Resume-Semantik (überspringt vorhandene Plies). Neue Doku:
 `CaiLama/docs/pipeline-resilienz.md`.
 Search danach nur fuer DWZ-Staging und semantische Freigabeentscheidung; Router
-nur bei neuem Alias-/Benchmark-Auftrag.
+nur bei neuem Alias-/Benchmark-Auftrag. Die Modellrollen-Hypothese aus
+docs/benchmark-results/model-role-matrix.current.md soll durch Messdaten
+validiert werden: Dauer, Input-/Thinking-/Output-Tokens, Qualitaet,
+Aufgabenloesung, Logikfehler und A/B-Feedback, ohne Rohprompts, volle private
+Partien oder Secrets zu speichern.
 
 Nach jeder Aenderung:
 1. Betroffene Master-Doku oder Website knapp aktualisieren.

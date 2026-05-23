@@ -78,6 +78,8 @@ Rolle:
 - Suchmaschinen-Einstieg über `robots.txt` und `sitemap.xml`.
 - PHP-Login-/Session-Shell, Webspace-API-Status und kontrollierter
   serverseitiger CaiLama-Dump-Import ohne versionierte Credentials.
+- Geschütztes Benchmark-Feedback hinter Login mit Single-DB-Speicherung für
+  Modellrollen, Laufzeiten, Tokenwerte, Qualitätsurteile und A/B-Präferenzen.
 - Roadmap und Cross-Repo-Koordination.
 - Produktpositionierung und Master-geführte Benchmarks.
 - Lokale Checks ohne Schreibzugriffe in Unter-Repos.
@@ -149,6 +151,9 @@ Aktueller Fokus:
 - PGN-zu-Trainingsaufgabe-Loop weiter härten: Live-Router-Verifikation,
   CardType-Auswertung in Agent-/Board-Flows, CardScorer-Einbindung in weitere
   Trainingsauswahl, Datenschutz und OCR/FEN-spezifische Qualitätsgates.
+- Modellrollen-Benchmarks sollen Dauer, Input-/Thinking-/Output-Tokens,
+  Qualitätsurteile, Aufgabenlösung, Logikfehler und A/B-Präferenzen für PTG,
+  Coach, Analyst, Researcher und Vision/OCR erfassen.
 - OCR/FEN ist aktiv, aber FENs werden erst nach belastbarer
   Vision-/Template-Prüfung ausgegeben.
 
@@ -202,6 +207,9 @@ Aktueller Fokus:
   umgesetzt.
 - Später können spezialisierte Modelle über denselben Router-Vertrag
   angebunden werden, aber ohne Schachproduktlogik im Router.
+- Coding-Agentenmetriken und Schachrollenmetriken bleiben getrennt. Kimi nutzt
+  lokal `kimi-k2.6:cloud`; Gemma4 bleibt nur für Schachrollen ein messbarer
+  Kandidat, nicht für Kimi-/Coding-Arbeit.
 
 Grenzen:
 
@@ -310,6 +318,8 @@ Zweck:
 - Wahl zwischen lokaler DB, Provider-API und Hybridbetrieb vorbereiten.
 - Login/Session der Website über `web_users` in derselben Provider-Datenbank
   wie die CaiLama-Fachdaten abbilden.
+- Geschütztes Human-Feedback für Modellrollen-Benchmarks wiederverwendbar
+  sammeln.
 
 Vertrag:
 
@@ -326,6 +336,11 @@ Vertrag:
 - `POST /api/v1/admin/schema/cailama` und
   `POST /api/v1/admin/schema/all` wenden dasselbe Single-DB-Schema über die
   API an.
+- `/benchmark-feedback.php` ist eine Login-geschützte Website-Seite und nutzt
+  `cailama_model_benchmark_cases` sowie `cailama_model_feedback` in
+  `databases.cailama`.
+- Es gibt keine öffentliche Registrierung; Nutzer werden direkt in
+  `web_users` angelegt.
 - Import- und Schema-Endpunkte akzeptieren keine Query-Parameter und keinen
   Request-Body.
   Wenn keine konfigurierte Importdatei vorhanden ist, wird der Import
@@ -367,14 +382,17 @@ Jetzt:
 - Search als aktuellen Ausbau-Fokus vorantreiben: lexical-vs-hybrid ist
   benchmarkbar dokumentiert; offen sind die daraus sichtbaren API-Bugs und
   die Freigabeentscheidung für Hybrid.
+- Modellrollen-Hypothese als Benchmark validieren: geschütztes Website-
+  Feedback erfasst Laufzeit, Tokenwerte, Qualität, Aufgabenlösung,
+  Logikfehler und A/B-Präferenz.
 
 Danach:
 
 - PTG-Live-Verifikation nur bewusst gegen den Router; danach CardType in
   Agent-/Board-Flows, weitere Qualitätsgates und Datenschutz/Export härten.
 - Einheitliche Job-Orchestrierung vorbereiten.
-- Benchmark-Rahmen im Master vorbereiten und Ergebnisse repo-übergreifend
-  dokumentieren.
+- Benchmark-Rahmen im Master weiter ausbauen, Website-Feedback mit Router- und
+  CaiLama-Metriken verbinden und Ergebnisse repo-übergreifend dokumentieren.
 
 Später:
 
@@ -410,6 +428,8 @@ Ausbau:
 - `docs/benchmarks.md`: Master-Rahmen für repo-übergreifende Benchmarks.
 - `docs/benchmark-results/README.md`: Formatregeln für spätere
   Master-Benchmark-Ergebnisse.
+- `docs/benchmark-results/model-role-matrix.current.md`: aktuelle
+  Modellrollen-Hypothese und Feedback-Metriken.
 - `web/data/ecosystem.json`: ausgelieferte Maschinenreferenz auf der Webseite.
 - `web/llms.txt`: LLM-Einstiegspunkt für `https://cailama.org/`.
 - `web/ecosystem-reference.md`: ausgelieferte LLM-freundliche Markdown-Version.

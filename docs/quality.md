@@ -98,3 +98,7 @@ Bei neuer Cross-Repo-Arbeit muessen mindestens diese Angaben vorhanden sein:
 Fuer produktnahe Analyse-, Training-, Search- oder Router-Arbeit gehoert
 zusaetzlich ein messbarer Bezug in den Master-Benchmark-Rahmen: betroffene
 Benchmark-Familie, Dataset-Regel, Datenschutzgrenze und erwartete Metrik.
+Bei Modellrollen gehoeren mindestens Dauer, Input-/Thinking-/Output-Tokens,
+Qualitaet, Aufgabenloesung, Logikfehler und A/B-Praeferenz in den Feedback-
+Rahmen. Das geschuetzte Website-Feedback darf keine Rohprompts, vollstaendige
+private Partien, lokalen Pfade oder Secrets speichern.

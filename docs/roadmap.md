@@ -48,6 +48,10 @@ Koordinationspunkte:
 - Umgesetzt: Single-Database-Mode fuer Webspace-Betrieb. Website-Login
   (`web_users`) und CaiLama-Fachdaten leben in derselben Provider-Datenbank
   unter `databases.cailama`; der alte separate Auth-DB-Pfad ist entfallen.
+- Umgesetzt: geschuetztes Benchmark-Feedback nutzt dieselbe Provider-
+  Datenbank und speichert Modellrollen-Faelle sowie menschliche Bewertungen in
+  `cailama_model_benchmark_cases` und `cailama_model_feedback`. Es gibt keine
+  oeffentliche Registrierung; Nutzer werden direkt in `web_users` angelegt.
 - Umgesetzt: Live-Status meldet `databases.cailama: ok`; Provider-Schema-
   Setup laeuft ueber `POST /api/v1/admin/schema/cailama` beziehungsweise
   `POST /api/v1/admin/schema/all`.
@@ -141,6 +145,9 @@ Koordinationspunkte:
   Lauf priorisierten Schluesselstellungen tief analysieren, keine feste
   21er-Grenze als Produktdefault setzen, Retry/Timeout/Checkpointing einziehen
   und Router-Modelle ueber Rollen/Aliase waehlen.
+- Offen: Modellrollen-Benchmark-Events aus PTG, Coach-Session und Planmodus
+  so exportieren, dass Laufzeit, Input-/Thinking-/Output-Tokens und
+  Fallbezug ins geschuetzte Website-Feedback uebernommen werden koennen.
 - Offen: Planmodus-Workflow in die interaktive Console einbinden, sodass ein
   LLM erst einen Plan/TODO erzeugt, der Nutzer ihn bestaetigen oder anpassen
   kann und danach erst die Ausfuehrung startet.
@@ -205,6 +212,10 @@ Koordinationspunkte:
 
 - Benchmarks werden zentral im Master geplant und dokumentiert, damit
   CaiLama-, Router- und Search-Ergebnisse vergleichbar bleiben.
+- Die Modellrollen-Hypothese ist als Matrix dokumentiert und wird ueber
+  geschuetztes Website-Feedback messbar gemacht.
+- Pflichtmetriken fuer Modellrollen: Dauer, Input-/Thinking-/Output-Tokens,
+  Qualitaetsurteil, Aufgabenloesung, Logikfehler-Klasse und A/B-Praeferenz.
 - Ergebnisdateien duerfen nur synthetische, anonymisierte oder bewusst
   freigegebene Testdaten enthalten.
 - Benchmark-Kommandos duerfen keine produktiven Keys, lokalen Pfade oder

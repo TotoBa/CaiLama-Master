@@ -55,6 +55,7 @@ return [
             'title' => 'Master-Ablage',
             'items' => [
                 'Search-Benchmark lexical vs hybrid und PTG-Offline-Baseline im Master dokumentiert halten.',
+                'Modellrollen-Hypothese über geschütztes Website-Feedback messen.',
                 'Router-Benchmark-Exports einsammeln.',
                 'OCR/FEN-False-Positive-Gates definieren.',
                 'Ergebnisformat in docs/benchmark-results/ standardisieren.',

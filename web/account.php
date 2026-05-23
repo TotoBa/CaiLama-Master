@@ -71,6 +71,7 @@ function h(string $value): string
               <dd><?= ($config['databases']['cailama']['enabled'] ?? false) ? 'konfiguriert' : 'nicht konfiguriert' ?></dd>
             </div>
           </dl>
+          <a class="button light form-button" href="benchmark-feedback.php">Benchmark-Feedback öffnen</a>
           <form method="post" action="logout.php">
             <input type="hidden" name="csrf_token" value="<?= h($session->csrfToken()) ?>">
             <button class="button light form-button" type="submit">Abmelden</button>

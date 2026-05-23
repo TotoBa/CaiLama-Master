@@ -398,9 +398,10 @@ section {
   font-weight: 850;
 }
 
-.auth-panel input {
+.auth-panel input,
+.auth-panel select,
+.auth-panel textarea {
   width: 100%;
-  min-height: 46px;
   padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -409,7 +410,19 @@ section {
   font: inherit;
 }
 
-.auth-panel input:focus {
+.auth-panel input,
+.auth-panel select {
+  min-height: 46px;
+}
+
+.auth-panel textarea {
+  min-height: 112px;
+  resize: vertical;
+}
+
+.auth-panel input:focus,
+.auth-panel select:focus,
+.auth-panel textarea:focus {
   outline: 3px solid rgba(31, 93, 67, 0.18);
   border-color: var(--forest);
 }
@@ -457,6 +470,37 @@ section {
   margin: 0;
   color: var(--ink);
   overflow-wrap: anywhere;
+}
+
+.feedback-layout {
+  display: grid;
+  gap: 22px;
+}
+
+.feedback-form {
+  max-width: none;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.compact-metrics .metric {
+  min-height: 118px;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #fffaf0;
+  background: var(--blue);
+  font-size: 0.78rem;
+  font-weight: 900;
 }
 
 .metric {
@@ -612,7 +656,8 @@ tr:last-child td {
   .grid-3,
   .grid-4,
   .split,
-  .timeline {
+  .timeline,
+  .form-grid {
     grid-template-columns: 1fr;
   }
 

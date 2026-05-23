@@ -37,6 +37,8 @@ in diese Koordination.
 - Streaming-Fehlervertrag.
 - Token-/Usage-Werte aus den privacy-safe Router-Metriken.
 - Master-kompatibler Export per Router-CLI.
+- Coding-Agenten separat von Schachrollen bewerten: Regelbefolgung, Patch-
+  Qualitaet, Testdisziplin, Doku-Sync, Korrekturrate und Arbeitsbaum-Hygiene.
 
 ### Analyse und PTG
 
@@ -55,6 +57,38 @@ in diese Koordination.
 - Diagramm-Erkennungsrate.
 - FEN-Ausgabe nur bei hoher Sicherheit.
 - Falsch-positive FENs als harte Fehlerklasse.
+
+### Modellrollen und Human Feedback
+
+Die Arbeitshypothese aus der Modellbewertung wird als wiederholbarer
+Benchmark behandelt, nicht als Bauchgefuehl. Gemma4 ist nur fuer Kimi-/Coding-
+Agentenarbeit verworfen; fuer Schachrollen wie `chess-small`, `chess-coach`
+oder `chess-vision` bleibt es ein messbarer Kandidat. Coding-Arbeit nutzt
+lokal weiter `kimi-k2.6:cloud` als Kimi-Default.
+
+Erfasst werden mindestens:
+
+- Laufzeit pro Antwort oder Teilaufgabe.
+- Input-, Thinking- und Output-Tokens, soweit vom Router oder Client geliefert.
+- Modellrolle und konkretes Modell.
+- Qualitaetsbewertung 1 bis 5.
+- Bewertung, ob die konkrete Teilaufgabe geloest wurde, 1 bis 5.
+- Logikfehler-Klasse: keine, klein, schwer oder unklar.
+- A/B-Praeferenz: Option A, Option B, gleich gut oder nicht anwendbar.
+- Freitext fuer Fehler, Nutzen und daraus folgende Prompt-/Regel-
+  Verbesserung.
+
+Die Website stellt dafuer eine geschuetzte Feedback-Seite bereit:
+
+```text
+https://cailama.org/benchmark-feedback.php
+```
+
+Sie liegt hinter Login, ist `noindex` und speichert Bewertungen in der
+Provider-Datenbank. Die Tabellen heissen `cailama_model_benchmark_cases` und
+`cailama_model_feedback`. Rohprompts, volle Modellantworten, private Partien
+und Secrets gehoeren nicht in diese Tabellen; dort liegen nur vergleichbare
+Kennzahlen, kurze Aufgabenbeschreibungen und menschliches Feedback.
 
 ## Ergebnisformat
 
@@ -78,6 +112,10 @@ Ein Ergebnis enthaelt mindestens:
 
 ## Vorliegende Ergebnisse
 
+- `docs/benchmark-results/model-role-matrix.current.md`:
+  aktuelle Arbeitshypothese fuer Coding-Agenten und Schachrollen, inklusive
+  Messdimensionen fuer Laufzeit, Thinking-/Output-Tokens, Qualitaet,
+  Aufgabenloesung, Logikfehler und A/B-Feedback.
 - `docs/benchmark-results/2026-05-23.search-lexical-hybrid.md`:
   CaiLama-Search-Goldsets, lexical gegen hybrid. Ergebnis: Recall@5 und
   Recall@10 sind in beiden Modi 1.0; MRR ist in beiden Modi 0.9167; die

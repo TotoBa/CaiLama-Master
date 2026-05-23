@@ -52,8 +52,8 @@ return [
             'tag_class' => 'moss',
             'repo_url' => 'https://github.com/TotoBa/CaiLama-Master',
             'summary' => 'Der Master ist Website, Roadmap, Status, Betrieb und Ecosystem-Dokumentation. Er enthält keine Runtime-Logik der Unterprojekte.',
-            'status' => 'cailama.org läuft als PHP-Webspace mit öffentlichem Document Root und privatem Smarty-App-Bereich. LLM-Referenzen, JSON-Referenz, Sitemap, robots.txt, Deployment-Skript und Webspace-DB-API-Fassade sind vorhanden.',
-            'open' => 'Benchmark-Ergebnisse zentral ablegen, Unterrepo-Status regelmäßig synchronisieren, Runtime/Webseite deployen und die Inhalte datengetrieben aktuell halten.',
+            'status' => 'cailama.org läuft als PHP-Webspace mit öffentlichem Document Root, privatem Smarty-App-Bereich, Login, geschütztem Benchmark-Feedback, LLM-Referenzen, JSON-Referenz, Sitemap, robots.txt, Deployment-Skript und Webspace-DB-API-Fassade.',
+            'open' => 'Benchmark-Feedback mit Router-/CaiLama-Metriken verbinden, Unterrepo-Status regelmäßig synchronisieren, Runtime/Webseite deployen und die Inhalte datengetrieben aktuell halten.',
         ],
     ],
 ];

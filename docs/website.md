@@ -44,6 +44,7 @@ web/operations.php            # Betrieb, Checks, Deployment
 web/reference.php             # Human-/LLM-Referenzseite
 web/login.php                 # Login-Formular mit Session-Schutz
 web/account.php               # geschützter Konto-Stub
+web/benchmark-feedback.php    # geschützte Benchmark-Feedback-Erfassung
 web/logout.php                # CSRF-geschützter Logout
 web/robots.txt                # Crawler-Regeln mit Sitemap-Verweis
 web/sitemap.xml               # Canonical XML-Sitemap für Suchmaschinen
@@ -261,10 +262,11 @@ https://cailama.org/sitemap.xml
 ```
 
 `robots.txt` erlaubt die öffentlichen Seiten, verweist auf die Sitemap und
-schließt API-, interne App- und Sitzungsendpunkte aus. Die Sitemap enthält nur
-kanonische HTTPS-URLs der öffentlichen Dokumentationsseiten und maschinenlesbar
-auslieferbaren Referenzen. Login- und Konto-Seiten gehören nicht in die
-Sitemap; sie tragen zusätzlich `noindex`.
+schließt API-, interne App-, Sitzungs- und Benchmark-Feedback-Endpunkte aus.
+Die Sitemap enthält nur kanonische HTTPS-URLs der öffentlichen
+Dokumentationsseiten und maschinenlesbar auslieferbaren Referenzen. Login-,
+Konto- und Benchmark-Feedback-Seiten gehören nicht in die Sitemap; sie tragen
+zusätzlich `noindex`.
 
 Indexierung wird sauber über die Sitemap-Erkennung in `robots.txt` und über
 Google Search Console angestossen. Der alte Sitemap-Ping-Endpunkt wird nicht
@@ -282,8 +284,9 @@ URL-Prüfung: https://cailama.org/
 Die DB-API ist als kleine PHP-Fassade vorbereitet. Sie ist kein generischer
 SQL-Proxy und enthält keine produktiven Datenbankzugangsdaten. Der aktuelle
 Stand stellt geschützten Status, Login-/Session-Shell, eine einzige
-PDO-Konfiguration für den Shared-Hosting-Betrieb, kontrollierte CaiLama-Import-Endpunkte und geschützte
-Schema-Setup-Endpunkte für den Provider bereit:
+PDO-Konfiguration für den Shared-Hosting-Betrieb, kontrollierte CaiLama-Import-Endpunkte,
+geschützte Schema-Setup-Endpunkte für den Provider und geschütztes
+Benchmark-Feedback bereit:
 
 ```text
 POST /api/v1/status
@@ -293,6 +296,7 @@ POST /api/v1/admin/schema/cailama
 POST /api/v1/admin/schema/all
 /login.php
 /account.php
+/benchmark-feedback.php
 ```
 
 Status-, Import- und Schema-Endpunkte nehmen weder Query-Parameter noch
@@ -356,6 +360,16 @@ Secure-Cookie, CSRF-Token, einfachem Session-basiertem Versuchslimit und
 `password_verify()` gegen Passwort-Hashes aus `web_users` in derselben
 `databases.cailama`-Provider-Datenbank. Die SQL-Vorlagen liegen unter
 `web/api_app/schema/`.
+
+Es gibt keine öffentliche Kontoanlage und keinen Registrierungsendpunkt. Nutzer
+werden direkt als `web_users` in der Provider-Datenbank angelegt. Die Seite
+`/benchmark-feedback.php` ist nur nach Login erreichbar und nutzt dieselbe
+Session. Sie speichert wiederverwendbare Bewertungsdaten für Modellrollen in
+`cailama_model_benchmark_cases` und `cailama_model_feedback`: Laufzeit,
+Input-/Thinking-/Output-Tokens, Qualitäts-Score, Aufgaben-Score,
+Logikfehler-Klasse, A/B-Präferenz und knappe Feedbacknotizen. Rohprompts,
+volle Modellantworten, private Partiearchive, lokale Pfade und Secrets gehören
+nicht in diese Tabellen.
 
 API-Key-Prüfung und Scopes sind als Hash-basierte Bearer-Token-Prüfung
 verdrahtet. Es gibt getrennte Keys für Status, Append-Import, Reset-Import und

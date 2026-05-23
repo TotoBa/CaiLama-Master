@@ -44,7 +44,13 @@
       "Search/RAG recall, MRR, zero-hit-rate, latency and source quality",
       "Router latency, fallback behavior, error handling and usage metrics",
       "Analysis/PTG PGN validity, key positions, card quality, redundancy and review effect",
-      "OCR/FEN recognition quality and false-positive FEN prevention"
+      "OCR/FEN recognition quality and false-positive FEN prevention",
+      "Model-role feedback with duration, input/thinking/output tokens, quality, task success, logic errors and A/B preference"
+    ],
+    "feedback_page": "https://cailama.org/benchmark-feedback.php",
+    "feedback_tables": [
+      "cailama_model_benchmark_cases",
+      "cailama_model_feedback"
     ],
     "data_rules": [
       "no secrets, tokens, private paths or production credentials",
@@ -71,9 +77,11 @@
         "docs/product-positioning.md",
         "docs/benchmarks.md",
         "docs/benchmark-results/README.md",
+        "docs/benchmark-results/model-role-matrix.current.md",
         "skills/",
         "scripts/check-ecosystem.sh",
         "web-smarty/",
+        "web/benchmark-feedback.php",
         "web/api_app/config.local.sample.php",
         "web/"
       ],
@@ -115,7 +123,8 @@
         "internal SearchAdapter is standard path for web_search and search_dwz",
         "search_rag is suggested for research/source questions",
         "DWZ identity linking store and CLI integration",
-        "RAG provenance in researcher and analyst flows"
+        "RAG provenance in researcher and analyst flows",
+        "model-role benchmark events should expose duration and token values for protected website feedback"
       ],
       "constraints": [
         "No live external, engine, router, database or hardware calls unless explicitly requested.",
@@ -156,6 +165,7 @@
         "mypy src is clean",
         "backend API key forwarding is implemented",
         "privacy-safe token usage metrics, usage CLI, benchmark export and generic endpoint_path are implemented",
+        "coding-agent metrics remain separate from chess-role metrics; Kimi local work uses kimi-k2.6:cloud while Gemma4 remains only a chess-role candidate",
         "specialized future models must remain behind the generic router contract"
       ],
       "constraints": [
@@ -244,13 +254,16 @@
                 "POST /api/v1/admin/schema/cailama",
                 "POST /api/v1/admin/schema/all",
                 "/login.php",
-        "/account.php"
+        "/account.php",
+        "/benchmark-feedback.php"
       ],
       "contract_notes": [
         "No SQL-over-HTTP endpoints.",
                 "Real credentials belong only in private webspace config outside /public.",
         "databases.cailama is the only PDO configuration in webspace single-database mode.",
         "web_users and application tables share the provider database while remaining logically separated by table names.",
+        "Benchmark feedback uses cailama_model_benchmark_cases and cailama_model_feedback in databases.cailama.",
+        "There is no public registration endpoint; website users are created directly in web_users.",
                 "Status requires POST /api/v1/status with a Bearer token scope; there is no public GET status with API or database details.",
                 "The import endpoints accept no query parameters and no request body; authentication is through a Bearer token scope.",
                 "Provider schema endpoints accept no query parameters and no request body; authentication requires the admin scope.",
@@ -278,12 +291,13 @@
       "CaiLama deterministic scoring, mistake taxonomy and card types are implemented",
       "DWZ identity linking and RAG provenance",
       "Search benchmark comparison lexical versus hybrid is documented; correctness fixes are complete and hybrid remains default-off pending product decision",
-      "Router infrastructure hardening is complete with backend API key forwarding, privacy-safe usage metrics, usage CLI and benchmark export"
+      "Router infrastructure hardening is complete with backend API key forwarding, privacy-safe usage metrics, usage CLI and benchmark export",
+      "Model-role hypothesis is documented as a benchmark matrix and protected website feedback stores reusable quality data in the provider database"
     ],
     "next": [
       "CaiLama weighted training positions, coach sessions on demand, Planmodus console workflow and PTG LLM batching/retry",
       "Unified job orchestration for CaiLama and Search",
-      "Benchmark framework in Master for cross-repo measurements and result documentation",
+      "Benchmark framework in Master for cross-repo measurements, website feedback, router usage metrics and result documentation",
       "Search DWZ staging verification and semantic production decision on a larger eval"
     ],
     "later": [

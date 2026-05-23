@@ -19,6 +19,12 @@ Human-/LLM-Referenz:
 - <https://cailama.org/robots.txt>
 - <https://cailama.org/sitemap.xml>
 
+Geschuetzter Arbeitsbereich:
+
+- <https://cailama.org/benchmark-feedback.php> - Login-geschuetztes
+  Modellrollen-Feedback fuer Laufzeit, Tokenwerte, Qualitaet,
+  Aufgabenloesung, Logikfehler und A/B-Praeferenzen.
+
 Dieses Repository ist kein Monorepo und enthaelt keinen produktiven Code der
 Unterprojekte.
 
@@ -98,6 +104,8 @@ Dieses Repo dient dazu:
   ohne Secrets oder private Rohdaten.
 - `docs/benchmark-results/README.md` - Ablage- und Formatregeln fuer spaetere
   Master-Benchmark-Ergebnisse.
+- `docs/benchmark-results/model-role-matrix.current.md` - aktuelle
+  Modellrollen-Hypothese und Feedback-Metriken.
 - `docs/roadmap.md` - Roadmap aus `status.plan.cailama.md` als pflegbare
   Master-Sicht.
 - `docs/quality.md` - Master-Checks, Index-Regeln und TODO-Konsistenz.
@@ -106,7 +114,8 @@ Dieses Repo dient dazu:
   repo-uebergreifenden Kontext aus Website und Online-Doku ohne Secret-Zugriff.
 - `web/` - oeffentlicher PHP-Document-Root fuer `https://cailama.org/`;
   die Dokumentationsseiten sind duenne Controller, statische LLM-/JSON-
-  Referenzen und die vorbereitete Webspace-API-Fassade.
+  Referenzen, Login/Konto, geschuetztes Benchmark-Feedback und die
+  vorbereitete Webspace-API-Fassade.
 - `web-smarty/` - private CaiLama-Website-Schicht mit Bootstrap, Content-Daten
   und Smarty-Templates. Die benoetigte Dependency `smarty/smarty ^5.0` liegt
   nur lokal/deployt unter dem ignorierten `web-smarty/vendor/`, nicht im Git.

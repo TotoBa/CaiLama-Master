@@ -77,6 +77,7 @@ required_files=(
   "web/assets/styles.css"
   "web/.htaccess"
   "web/account.php"
+  "web/benchmark-feedback.php"
   "web/api/.htaccess"
   "web/api/public/index.php"
   "web/api_app/.htaccess"
@@ -144,6 +145,7 @@ echo "OK: required master files exist"
 
 footer_contact_sources=(
   "web/account.php"
+  "web/benchmark-feedback.php"
   "web/login.php"
   "web-smarty/templates/partials/footer.tpl"
 )
