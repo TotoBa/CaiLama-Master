@@ -118,20 +118,20 @@ Vor Arbeitsbeginn lesen:
   Trennung und Datenschutzklaerung planen. Modelle werden nur ueber den
   Router-Vertrag bereitgestellt; Schachproduktlogik bleibt in CaiLama.
 - [ ] Roadmap regelmaessig aus den Unterrepo-`TODO.md`-Dateien abgleichen:
-  **CaiLama** = CardType-Auswertung und gewichtete Trainingspositionen sind
-  umgesetzt: `WeightedTrainingPosition` frozen dataclass, `position_pool.py` mit
-  Import, Merge, Sort und dynamischem `refresh_pool_weights()` fuer Spieler-
-  Fortschritt/-Rueckschritt. Naechster Fokus: konkrete Coach-Sessions on demand
-  mit Unicode-Brett und optionaler DGT-Aufstellaufforderung, Planmodus in der
-  interaktiven Console, PGN-/PTG-LLM-Optimierung (alle Zuege klassifizieren,
-  priorisierte Schluesselstellungen tief analysieren, Retry/Timeout/
-  Checkpointing; 21 war nur die Anzahl in der aktuellen Drei-Spiele-
-  Benchmark-Baseline, kein globaler Default), Nutzer-Review-Gate nach erster
-  Stockfish-Analyse fuer die manuelle Schluesselstellungs-Auswahl,
-  Hintergrund-Agenten fuer lange Analyse-/Import-/Trainingprofil-Aufgaben,
-  CardScorer-Einbindung in weitere Trainingsauswahl, Analyse-Qualitaetsgates
-  ueber PTG hinaus, Datenschutz/Export, RAG-Provenienz, PTG-Observability,
-  OCR/FEN aktiv ohne geratene FENs.
+  **CaiLama** = Gewichtete Trainingspositionen (`WeightedTrainingPosition`,
+  `position_pool.py`, `refresh_pool_weights()`) und Coach-Session on demand
+  (`CoachSession` mit State-Machine, `start_coach_session()`, `/coach`
+  Slash-Command, Agent-Tool `start_coach_session`) sind umgesetzt. Unicode-
+  Brett immer, DGT optional. Naechster Fokus: Planmodus in der interaktiven
+  Console, PGN-/PTG-LLM-Optimierung (alle Zuege klassifizieren, priorisierte
+  Schluesselstellungen tief analysieren, Retry/Timeout/Checkpointing;
+  21 war nur die Anzahl in der aktuellen Drei-Spiele-Benchmark-Baseline,
+  kein globaler Default), Nutzer-Review-Gate nach erster Stockfish-Analyse
+  fuer die manuelle Schluesselstellungs-Auswahl, Hintergrund-Agenten fuer
+  lange Analyse-/Import-/Trainingprofil-Aufgaben, CardScorer-Einbindung
+  in weitere Trainingsauswahl, Analyse-Qualitaetsgates ueber PTG hinaus,
+  Datenschutz/Export, RAG-Provenienz, PTG-Observability, OCR/FEN aktiv
+  ohne geratene FENs.
   **Router** = aktuelle Infrastrukturwelle ist abgearbeitet: Backend-API-Key-
   Weitergabe, Token-/Usage-Metriken, `llm-router usage`, benchmarkbare
   Usage-/Latenzexporte und generische `endpoint_path`-Backends sind umgesetzt;
