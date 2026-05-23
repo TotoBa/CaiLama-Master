@@ -129,6 +129,8 @@ Vor Arbeitsbeginn lesen:
   Router-Latenz-Livesmoke und groesseres Search-/PTG-Eval.
   OCR/FEN-False-Positive-Gate ist in CaiLama umgesetzt
   (check_fen_false_positive, 6 Gates, Commit 8cd3ccf).
+  OCR-Live-Benchmark erzeugt: 6 PDFs, 23 Diagramme, 0% FEN-FP-Rate,
+  alle Gates passed. Artefakt: 2026-05-23.ocr-live-baseline.md.
   **Update 2026-05-23:** Die Modellrollen-Hypothese ist als Benchmark-
   Matrix dokumentiert (`docs/benchmark-results/model-role-matrix.current.md`).
   Die Website besitzt die geschuetzte Seite
