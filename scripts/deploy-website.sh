@@ -317,6 +317,13 @@ verify_deploy() {
     ;;
   http-hash)
     static_files=(
+      "index.php"
+      "status.php"
+      "projects.php"
+      "architecture.php"
+      "roadmap.php"
+      "operations.php"
+      "reference.php"
       "robots.txt"
       "sitemap.xml"
       "llms.txt"
@@ -328,7 +335,7 @@ verify_deploy() {
     for relative in "${static_files[@]}"; do
       verify_http_hash "$relative"
     done
-    for page in "" "status.php" "projects.php" "architecture.php" "roadmap.php" "operations.php" "reference.php"; do
+    for page in ""; do
       curl -fsS --max-time 12 "$public_url/$page" >/dev/null
     done
     echo "OK: deployed public files verified via HTTPS hashes"

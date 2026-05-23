@@ -142,8 +142,8 @@ Das Skript:
 2. lädt `web/` per OpenSSH-`sftp` in das konfigurierte Remote-Verzeichnis,
 3. entfernt stale Dateien anhand eines SFTP-Deploy-Manifests,
 4. schützt die echte, ignorierte `web/api_app/config.local.php` vor Löschung,
-5. prüft beim Standard-Live-Ziel ausgewählte öffentliche Dateien per
-   SHA-256 über HTTPS und ruft die öffentlichen PHP-Seiten kurz ab.
+5. prüft beim Standard-Live-Ziel die öffentlichen PHP-Dokumentationsseiten,
+   statischen Dateien und LLM-Referenzen per SHA-256 über HTTPS.
 
 Der Standard-Ecosystem-Check berührt den Live-Webspace nicht. Mit
 `CAILAMA_CHECK_DEPLOYED_WEBSITE=1 bash scripts/check-ecosystem.sh` wird nur ein
