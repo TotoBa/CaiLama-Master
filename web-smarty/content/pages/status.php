@@ -33,8 +33,8 @@ return [
             'summary' => 'Schachanalyse, Training, Profile, Agent-CLI, PGN, Stockfish, OCR/Knowledge und DGT-nahe Workflows.',
             'points' => [
                 'PTG erzeugt valide Artefakte, Trainingskarten, Kartentypen, Muster und erklärbare Priorität.',
-                'Review-Daten fließen in die Trainingsauswahl zurück.',
-                'Offen sind gewichtete Trainingspositionen, Coach-Sitzung on demand, Planmodus, PGN-/LLM-Optimierung und erweiterte Qualitätsgates.',
+                'Gewichtete Trainingspositionen, Coach-Sitzung on demand, Review-Gate, Planmodus, Hintergrund-Agenten und Benchmark-Events sind vorhanden.',
+                'Offen sind der Review-Gate-Console-Flow, die Plan-Kaskade im AgentLoop, PTG-Live-Verifikation und erweiterte OCR/FEN-Qualitätsgates.',
             ],
         ],
         [
@@ -75,9 +75,9 @@ return [
         ],
     ],
     'next' => [
-        ['title' => 'Jetzt', 'text' => 'Gewichtete Trainingspositionen, Coach-Sitzung on demand, Planmodus, Search-/PTG-Benchmarks und OCR/FEN-Gates.'],
-        ['title' => 'Danach', 'text' => 'PTG-LLM-Resilienz, Datenschutz/Export, Job-Orchestrierung und RAG-Provenienz in allen Antwortformaten.'],
+        ['title' => 'Jetzt', 'text' => 'Review-Gate in der Console abrunden, Plan-Kaskade in AgentLoop integrieren, PTG live prüfen und OCR/FEN-Gates weiter härten.'],
+        ['title' => 'Danach', 'text' => 'Search-DWZ-Staging, semantische Freigabe auf größerem Eval, Datenschutz/Export und Qualitätsgates über PTG hinaus.'],
         ['title' => 'Später', 'text' => 'Spezialisierte Modelle erst nach Benchmark-Baseline, Datenfreigabe und Router-kompatibler Bereitstellung.'],
-        ['title' => 'Betrieb', 'text' => 'Öffentliche Website deployen, private Smarty-Abhängigkeit getrennt halten und Repos sauber für Kimi übergeben.'],
+        ['title' => 'Betrieb', 'text' => 'Runtime und Website über secretfreie Skripte deployen, private Smarty-Abhängigkeit getrennt halten und Repos sauber für Kimi übergeben.'],
     ],
 ];

@@ -52,6 +52,19 @@ scripts/update-runtime-projects.sh --ref main cailama
 ```
 
 Das Script verweigert Runtime-Ziele, die ein `.git`-Verzeichnis enthalten.
+Es ermittelt den Master-Root aus dem eigenen Skriptpfad. Dadurch kann es auch
+aus einem Unter-Repository heraus mit absolutem Pfad gestartet werden, ohne
+versehentlich `CaiLama/CaiLama` als Quellpfad zu bauen.
+
+Mit `--install` werden die Runtime-Umgebungen inklusive Test-/Dev-Extras
+installiert:
+
+- CaiLama: `.[test]`
+- Router: `.[dev]`
+- Search: `.[api,dev]`
+
+Damit sind nach einem Runtime-Deploy gezielte Pytest-Smokes ohne manuelle
+Nachinstallation möglich.
 
 ## Dienste
 
@@ -79,3 +92,18 @@ Ports koennen fuer Search ueber `CAILAMA_SEARCH_HOST` und
 
 Die Runtime-Ordner enthalten keine `.git`-Verzeichnisse; das wird beim
 Synchronisieren durch `update-runtime-projects.sh` erzwungen.
+
+## Secretfreie Runtime-Smokes
+
+Nach einem Deploy sind nur secretfreie Checks Standard:
+
+```bash
+scripts/update-runtime-projects.sh --dry-run all
+scripts/update-runtime-projects.sh --install --restart all
+```
+
+Geeignete Smokes sind Help-/Version-Befehle, offline Pytest-Teilsets und
+FakeLLM-Console-Befehle. Live-LLMs, echte DBs, DGT-Hardware,
+Webspace-DB-API, Crawls, DWZ-Importe und produktive Search-/Router-Lastläufe
+bleiben bewusste Operator-Aktionen und dürfen nicht durch Agenten aus
+Neugier gestartet werden.

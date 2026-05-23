@@ -91,6 +91,10 @@ Vor Arbeitsbeginn lesen:
   (`git diff --check`, `bash scripts/check-ecosystem.sh`) im Working Loop.
   Versionierte Quelle und lokale Kimi-Skill-Datei sind synchron deployt.
   Keine Secrets oder Runtime-Pfade.
+  Update 2026-05-23: Der Skill dokumentiert jetzt auch secretfreie Runtime-
+  und Website-Deploys, typische Kimi-Fallstricke aus der Background-Agent-/
+  Benchmark-/Review-Gate-Session und die Regel, lokale Operator-Konfigurationen
+  nur ueber Skripte zu nutzen, aber nie offenzulegen.
 - [x] Runtime-Aktualisierung nach groesseren Unterrepo-Releases pruefen:
   `scripts/update-runtime-projects.sh` fuer Router/Search/CaiLama nutzen und
   dokumentieren, ob Dienste aus Runtime-Ordnern gestartet wurden.
@@ -98,6 +102,11 @@ Vor Arbeitsbeginn lesen:
   erfolgreich; Runtime-Ordner enthalten keine `.git`-Verzeichnisse,
   `llm-router.service` und `cailama-search.service` sind aktiv, CaiLama-
   Runtime-Smoke erzeugt PTG-Artefakte.
+  Update 2026-05-23: `scripts/update-runtime-projects.sh` ermittelt den Master-
+  Root aus dem eigenen Skriptpfad und funktioniert dadurch auch aus
+  Unterrepos heraus. `--install` installiert jetzt Test-/Dev-Extras
+  (`CaiLama .[test]`, Router `.[dev]`, Search `.[api,dev]`), damit Runtime-
+  Smokes ohne manuelles `pytest`-Nachinstallieren laufen.
 - [ ] Benchmark-Rahmen im Master vorbereiten: gemeinsame Benchmark-
   Orchestrierung fuer CaiLama, Router und Search definieren, Ergebnisablage im
   Master unter `docs/benchmark-results/` oder einer klar benannten
@@ -130,16 +139,16 @@ Vor Arbeitsbeginn lesen:
   `position_pool.py`, `refresh_pool_weights()`) und Coach-Session on demand
   (`CoachSession` mit State-Machine, `start_coach_session()`, `/coach`
   Slash-Command, Agent-Tool `start_coach_session`) sind umgesetzt. Unicode-
-  Brett immer, DGT optional. Naechster Fokus: Planmodus in der interaktiven
-  Console, PGN-/PTG-LLM-Optimierung (alle Zuege klassifizieren, priorisierte
-  Schluesselstellungen tief analysieren, Retry/Timeout/Checkpointing;
-  21 war nur die Anzahl in der aktuellen Drei-Spiele-Benchmark-Baseline,
-  kein globaler Default), Nutzer-Review-Gate nach erster Stockfish-Analyse
-  fuer die manuelle Schluesselstellungs-Auswahl, Hintergrund-Agenten fuer
-  lange Analyse-/Import-/Trainingprofil-Aufgaben, CardScorer-Einbindung
-  in weitere Trainingsauswahl, Analyse-Qualitaetsgates ueber PTG hinaus,
-  Datenschutz/Export, RAG-Provenienz, PTG-Observability, OCR/FEN aktiv
-  ohne geratene FENs.
+  Brett immer, DGT optional. PGN-/PTG-LLM-Resilienz mit Retry, Timeout und
+  Checkpointing ist umgesetzt; die 21 Positionen bleiben nur Benchmark-
+  Beobachtung aus drei Beispielspielen, kein globaler Default. Nutzer-
+  Review-Gate, Planmodus, Hintergrund-Agenten und secretfreie
+  Modellrollen-Benchmark-Events sind als erste Version vorhanden.
+  Naechster Fokus in CaiLama: Review-Gate in der interaktiven Console mit
+  Unicode-Brett pro Kandidat und Submit vor LLM-Start abrunden, Plan-Kaskade
+  in `AgentLoop` integrieren, PTG-Live-Verifikation bewusst gegen Router
+  pruefen, OCR/FEN-Gates ohne geratene FENs weiter haerten und
+  Analyse-Qualitaetsgates ueber PTG hinaus ausbauen.
   **Router** = aktuelle Infrastrukturwelle ist abgearbeitet: Backend-API-Key-
   Weitergabe, Token-/Usage-Metriken, `llm-router usage`, benchmarkbare
   Usage-/Latenzexporte und generische `endpoint_path`-Backends sind umgesetzt;
@@ -161,7 +170,7 @@ Du arbeitest im CaiLama-Master-Repository. Die lokale Kimi-Konfiguration nutzt
 fuer die kommende Arbeit `kimi-k2.6:cloud`; das ist ein Client-Default, kein
 produktiver CaiLama-Modellvertrag. Lies zuerst AGENTS.md, README.md und
 TODO.md vollstaendig. Lies danach in allen Unterrepos ebenfalls AGENTS.md,
-TODO.md und vorhandene HANDOFF-/Plan-Dateien, damit du den Gesamtstand
+TODO.md und vorhandene Plan-Dateien sowie die TODO-Handoff-Bloecke, damit du den Gesamtstand
 kennst. Nutze den CaiLama-Ecosystem-Skill als zusaetzliche Orientierung und
 lies die letzten Ergebnisse des Analyse-Workflows, insbesondere die aktuellen
 Benchmark- und PTG-Artefakte. Lies danach docs/ecosystem-map.md,
@@ -186,24 +195,19 @@ Doku/Web abgleichen und dann zum naechsten konkret umsetzbaren offenen Punkt
 weitergehen.
 
 Cross-Repo-Prioritaet fuer den naechsten Lauf: In CaiLama mit den offenen
-Training-/PTG-Punkten beginnen. PTG soll gewichtete Trainingspositionen
-persistieren, keine automatisch offen bleibenden Sessions erzeugen. Der Coach
-waehlt in der interaktiven Console eine passende Position, zeigt immer ein
-Unicode-Brett, fordert bei verbundenem DGT-Brett zum Aufstellen auf und beendet
-die Session eindeutig mit Folgeanalyse oder Abbruch. Danach PGN-/LLM-Pipeline
-haerten: alle Zuege klassifizieren, nach der ersten Stockfish-Analyse ein
-Nutzer-Review-Gate fuer die Schluesselstellungs-Auswahl anbieten, vom Nutzer
-ergaenzte oder hochgestufte Stellungen in die Tiefenanalyse uebernehmen, die
-pro Lauf priorisierten Schluesselstellungen tief analysieren und keine feste
-21er-Grenze als Produktdefault setzen. Retry/Timeout/Checkpointing ergaenzen.
-Planmodus vor Ausfuehrung nutzen: Agent erstellt zuerst Plan/TODO, Nutzer kann
-pruefen und anpassen, erst danach wird gearbeitet. Hintergrund-Agenten sollen
-lange Aufgaben wie Import, Analyse, OCR/FEN-Pruefung und
-Trainingsprofil-Aktualisierung verarbeiten; bestehende Trainingspositionen
-bleiben nutzbar, waehrend neue Analysen laufen. Beispiel: Partie zu einem
-bestehenden Trainingsprofil hinzufuegen, mit vorhandenen Positionen sofort
-trainieren, nach Analyseabschluss auf Session-Abschluss oder Abbruch warten und
-danach Ergebnis, Einordnung und Integrationsvorschlag in der Console anzeigen.
+Training-/PTG-Punkten beginnen. Bereits erledigt sind gewichtete
+Trainingspositionen, on-demand Coach-Session, PGN-/LLM-Resilienz,
+Review-Gate-Grundlage, Planmodus, Hintergrund-Agent und Benchmark-Event-
+Recorder. Offen ist die Abrundung: Review-Gate in der interaktiven Console
+mit Unicode-Brett pro Kandidat und finalem Submit vor LLM-Start; Plan-Kaskade
+in AgentLoop; PTG-Live-Verifikation gegen bewusst gestarteten Router;
+OCR/FEN-Gates ohne geratene FENs; Analyse-Qualitaetsgates ueber PTG hinaus.
+Die 21 Positionen aus dem Benchmark sind nur Beobachtung aus drei
+Beispielpartien. Danach Search nur fuer DWZ-Staging und semantische
+Freigabeentscheidung, Router nur bei neuem Alias-/Benchmark-/Live-Smoke-
+Auftrag. Runtime- und Website-Deploys nur ausfuehren, wenn sie beauftragt
+sind; dabei den Ecosystem-Skill nutzen und keine lokalen Operator-Secrets
+anzeigen oder dokumentieren.
 
 **Update 2026-05-23:** PGN-/LLM-Pipeline ist gehärtet: `run_llm_call` mit
 Retry/Backoff/Timeout, `checkpoint_writer` in `classify_moves` und

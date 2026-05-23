@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-root="$(git rev-parse --show-toplevel)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+root="$(cd "$script_dir/.." && pwd)"
 runtime_root="${CAILAMA_RUNTIME_ROOT:-$HOME}"
 ref=""
 install_deps=0
@@ -227,13 +228,13 @@ install_project() {
   "$target/.venv/bin/python" -m pip install --upgrade pip
   case "$project" in
     cailama)
-      (cd "$target" && .venv/bin/python -m pip install -e .)
+      (cd "$target" && .venv/bin/python -m pip install -e '.[test]')
       ;;
     router)
-      (cd "$target" && .venv/bin/python -m pip install -e .)
+      (cd "$target" && .venv/bin/python -m pip install -e '.[dev]')
       ;;
     search)
-      (cd "$target" && .venv/bin/python -m pip install -e '.[api]')
+      (cd "$target" && .venv/bin/python -m pip install -e '.[api,dev]')
       ;;
   esac
 }

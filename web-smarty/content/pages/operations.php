@@ -22,6 +22,8 @@ return [
         ['title' => 'Private Smarty-App', 'text' => 'Smarty-Templates, Content-Daten, Cache und vendor liegen nicht öffentlich unter web/.'],
         ['title' => 'DB-Import', 'text' => 'Große Dumps werden per SFTP in einen nicht öffentlichen Webspace-Ordner gelegt und fachlich begrenzt verarbeitet.'],
         ['title' => 'API-Konfig', 'text' => 'DB-Zugänge und Token-Hashes liegen außerhalb des Public-Webroots.'],
+        ['title' => 'Runtime-Deploy', 'text' => 'Runtime-Kopien werden gitfrei per Skript aktualisiert; Test-/Dev-Extras sind bei --install enthalten.'],
+        ['title' => 'Agenten-Skill', 'text' => 'Der Kimi-Ecosystem-Skill beschreibt Deploys und Smokes ohne Offenlegung lokaler Operator-Secrets.'],
     ],
     'docs' => [
         ['title' => 'docs/roadmap.md', 'text' => 'Roadmap mit Ziel-Repos und Koordinationspunkten.'],
@@ -30,6 +32,7 @@ return [
         ['title' => 'docs/benchmarks.md', 'text' => 'Master-Rahmen für Search-, Router-, PTG-, OCR/FEN- und Modellrollen-Benchmarks.'],
         ['title' => 'benchmark-feedback.php', 'text' => 'Geschützte Feedback-Erfassung für Laufzeit, Tokenwerte, Qualität, Logikfehler und A/B-Präferenzen.'],
         ['title' => 'docs/website.md', 'text' => 'Webspace-Aufbau, Smarty-Abhängigkeit, Deploypfad und Checks.'],
+        ['title' => 'docs/runtime-projects.md', 'text' => 'Trennung von Git-Checkouts, gitfreien Runtime-Kopien, Service-Starts und secretfreien Smokes.'],
         ['title' => 'docs/data/ecosystem.json', 'text' => 'Maschinenlesbare Struktur der Repos, Endpunkte, Rollen und Roadmap.'],
     ],
 ];

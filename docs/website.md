@@ -162,6 +162,11 @@ Diese Datei und eine optionale Passwortdatei dürfen keine Vorlage für Commits
 sein und gehören nicht ins Repo. Für lokale Tests kann das Skript weiterhin
 mit einem expliziten lokalen Zielpfad aufgerufen werden.
 
+Agenten dürfen die lokale Deploy-Konfiguration durch die vorhandenen Skripte
+nutzen, wenn der Nutzer das Deployment ausdrücklich beauftragt. Sie dürfen
+diese Dateien aber nicht anzeigen, kopieren, zusammenfassen oder in Logs,
+TODOs, Dokumentation oder Commits übernehmen.
+
 ## Reproduzierbares Deployment
 
 Die Website hat keinen Build-Schritt im Repository. Vor dem Deployment muss

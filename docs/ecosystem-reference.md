@@ -3,7 +3,7 @@
 Zielgruppe: Menschen, Codex, Kimi und andere LLM-Agenten, die schnell den
 aktuellen Systemzuschnitt verstehen müssen.
 
-Stand: 2026-05-23 (Session 4 Update).
+Stand: 2026-05-23 (Runtime-/Skill- und Code-Abgleich).
 
 ## Kurzfassung
 
@@ -124,16 +124,22 @@ Wichtige Modulgruppen:
 
 Aktueller Fokus:
 
-**Stand 2026-05-24:**
+**Stand 2026-05-23:**
 - Review-Gate nach erster Stockfish-Analyse: Nutzer kann Kandidaten-
-  Stellungen vor LLM-Tiefenanalyse pruefen, hinzufuegen, entfernen,
-  priorisieren oder zurueckstellen. `training/review_gate.py`
+  Stellungen vor LLM-Tiefenanalyse prüfen, hinzufügen, entfernen,
+  priorisieren oder zurückstellen. `training/review_gate.py`
   mit persistentem JSON-Workflow; Slash-Command `/review`.
-- Planmodus: heuristisch oder LLM-gestuetzte schrittweise Aufgabenplanung.
-  `training/plan_mode.py` mit `Plan`, `PlanStep`, persisentem JSON.
+  `review_decision.json` kann aus Session-Verzeichnissen oder direkt per
+  Dateipfad geladen werden.
+- Planmodus: heuristisch oder LLM-gestützte schrittweise Aufgabenplanung.
+  `training/plan_mode.py` mit `Plan`, `PlanStep`, persistentem JSON.
   Slash-Command `/plan`; Skills `generate_plan`, `plan_next_step`.
+- Hintergrund-Agenten: `/task start|list|status|stop|result|max-steps`,
+  persistente JSON-Jobs und synchron wartbarer Abbruch sind vorhanden.
+- Modellrollen-Benchmark-Events: secretfreie Dauer- und Token-Metriken können
+  aus Agent-Läufen für das geschützte Website-Feedback exportiert werden.
 - Slash-to-Skill-Vertrag: 25 built-in Tools als manifestbasierte Skills
-  verfuegbar; jedes Kern-Feature als Tool, UI-Steuerung als Slash-Command.
+  verfügbar; jedes Kern-Feature als Tool, UI-Steuerung als Slash-Command.
   Dokumentation in `docs/slash-tool-skill-contract.md`.
 - DB-Hybridpfad ist im Grundschnitt umgesetzt: `database.access_mode` wählt
   `native`, `api` oder `hybrid`; API-Metadaten bleiben secretfrei und der
@@ -159,9 +165,9 @@ Aktueller Fokus:
   `search_dwz`; Recherchefragen schlagen `search_rag` vor.
 - DWZ-Identity-Linking in Store und CLI integrieren.
 - RAG-Analysepakete in Researcher-/Analyst-Promptflows einhängen.
-- PGN-zu-Trainingsaufgabe-Loop weiter härten: Live-Router-Verifikation,
-  CardType-Auswertung in Agent-/Board-Flows, CardScorer-Einbindung in weitere
-  Trainingsauswahl, Datenschutz und OCR/FEN-spezifische Qualitätsgates.
+- PGN-zu-Trainingsaufgabe-Loop weiter härten: Review-Gate-Console-Flow mit
+  Unicode-Brett, Plan-Kaskade in AgentLoop, Live-Router-Verifikation,
+  Datenschutz und OCR/FEN-spezifische Qualitätsgates.
 - Modellrollen-Benchmarks sollen Dauer, Input-/Thinking-/Output-Tokens,
   Qualitätsurteile, Aufgabenlösung, Logikfehler und A/B-Präferenzen für PTG,
   Coach, Analyst, Researcher und Vision/OCR erfassen.

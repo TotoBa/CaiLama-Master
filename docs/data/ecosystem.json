@@ -5,6 +5,8 @@
   "features_added": [
     "Review-Gate for key-position selection after Stockfish analysis",
     "Plan mode with heuristic or LLM-backed task planning",
+    "BackgroundAgent slash workflow and benchmark event recorder",
+    "Runtime deployment script hardening and secret-safe Kimi ecosystem skill",
     "Slash-to-Skill contract: 25 built-in tools as manifest-based skills"
   ],
   "canonical_url": "https://cailama.org/",
@@ -124,7 +126,10 @@
         "PTG product-loop artifacts are generated offline: source.pgn, annotated.pgn, training.json and quality_gates.json",
         "Agent/DGT-aware training card retrieval, ReplayPosition.card_id and review stats in training prioritization are implemented",
         "deterministic card scoring, mistake taxonomy and card types are implemented",
-        "PGN-to-training-task follow-up remains live router verification, CardType in agent/board flows, privacy/export rules and OCR/FEN gates",
+        "Review-Gate accepts session directories and direct review_decision.json file paths",
+        "BackgroundAgent supports persistent slash tasks and synchronous cancellation for deterministic status/tests",
+        "BenchmarkEvent/BenchmarkStore provide secret-free duration and token metrics for model-role feedback",
+        "PGN-to-training-task follow-up remains Review-Gate console flow, AgentLoop plan cascade, live router verification, privacy/export rules and OCR/FEN gates",
         "internal SearchAdapter is standard path for web_search and search_dwz",
         "search_rag is suggested for research/source questions",
         "DWZ identity linking store and CLI integration",

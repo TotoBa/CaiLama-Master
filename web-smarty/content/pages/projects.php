@@ -22,8 +22,8 @@ return [
             'tag' => 'Hauptsystem',
             'repo_url' => 'https://github.com/TotoBa/CaiLama',
             'summary' => 'CaiLama ist der Produktkern mit Partieimport, PGN-Verarbeitung, Brettwahrheit, Stockfish-Analyse, Trainingssessions, Spielerprofilen, Agent-CLI, OCR/Knowledge und DGT-nahen Workflows.',
-            'status' => 'Der personalisierte Trainingsgenerator erzeugt source.pgn, annotated.pgn, training.json, quality_gates.json, Trainingskarten, Kartentypen, Muster und erklärbare Priorität. Review-Daten können die nächste Trainingsauswahl beeinflussen.',
-            'open' => 'Nächster Fokus: gewichtete Trainingspositionen statt automatisch offener Sessions, Coach-Sitzung on demand mit Unicode-Brett und optionaler DGT-Aufstellung, Planmodus in der Console, robuste PGN-/LLM-Pipeline und OCR/FEN-Gates.',
+            'status' => 'Der personalisierte Trainingsgenerator erzeugt source.pgn, annotated.pgn, training.json, quality_gates.json, Trainingskarten, Kartentypen, Muster und erklärbare Priorität. Gewichtete Trainingspositionen, Coach-Sitzung, Review-Gate, Planmodus, Hintergrund-Agenten und Benchmark-Events sind vorhanden.',
+            'open' => 'Nächster Fokus: Review-Gate-Console-Flow mit Unicode-Brett, Plan-Kaskade im AgentLoop, bewusste PTG-Live-Verifikation und erweiterte OCR/FEN-Qualitätsgates.',
         ],
         [
             'id' => 'router',

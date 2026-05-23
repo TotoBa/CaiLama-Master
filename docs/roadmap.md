@@ -136,21 +136,22 @@ Koordinationspunkte:
   Review-Stats in der Trainingspriorisierung.
 - Umgesetzt: deterministisches Scoring, Fehler-/Mustertaxonomie, Kartentypen
   und PTG-Basis-Qualitaetsgates.
-- Offen: PTG soll gewichtete Trainingspositionen statt automatisch offener
-  Sessions erzeugen. Die interaktive Coach-Console waehlt daraus eine
-  passende Position, zeigt immer ein Unicode-Brett, fordert bei verbundenem
-  DGT-Brett zum Aufstellen auf und schliesst die Session mit Folgeanalyse
-  oder Abbruch.
-- Offen: PGN-/LLM-Pipeline optimieren. Alle Zuege klassifizieren, die pro
-  Lauf priorisierten Schluesselstellungen tief analysieren, keine feste
-  21er-Grenze als Produktdefault setzen, Retry/Timeout/Checkpointing einziehen
-  und Router-Modelle ueber Rollen/Aliase waehlen.
-- Offen: Modellrollen-Benchmark-Events aus PTG, Coach-Session und Planmodus
-  so exportieren, dass Laufzeit, Input-/Thinking-/Output-Tokens und
-  Fallbezug ins geschuetzte Website-Feedback uebernommen werden koennen.
-- Offen: Planmodus-Workflow in die interaktive Console einbinden, sodass ein
-  LLM erst einen Plan/TODO erzeugt, der Nutzer ihn bestaetigen oder anpassen
-  kann und danach erst die Ausfuehrung startet.
+- Umgesetzt: gewichtete Trainingspositionen und Coach-Session on demand mit
+  Unicode-Brett und optionaler DGT-Aufstellaufforderung.
+- Umgesetzt: PGN-/LLM-Pipeline mit Retry, Timeout, Checkpointing und
+  Resume-Semantik. Die 21 Positionen aus der Drei-Spiele-Benchmark bleiben
+  Beobachtung, kein Produktdefault.
+- Umgesetzt: Review-Gate-Grundlage nach erster Stockfish-Analyse, Planmodus,
+  Hintergrund-Agenten fuer lange Aufgaben und secretfreie
+  Modellrollen-Benchmark-Events.
+- Offen: Review-Gate in der interaktiven Console abrunden: Unicode-Brett pro
+  Kandidat, Nutzerentscheidung komfortabel sammeln und finaler Submit vor
+  LLM-Tiefenanalyse.
+- Offen: Plan-Kaskade in `AgentLoop` integrieren, sodass bestaetigte Plaene
+  die Ausfuehrung steuern.
+- Offen: PTG-Live-Verifikation bewusst gegen Router pruefen und die
+  Ergebnisse in Master-Benchmarks beziehungsweise geschuetztes Website-
+  Feedback rueckfuehren.
 - Offen: erweiterte Qualitaetsgates ueber PTG hinaus.
 - Datenschutz fuer personenbezogene Leistungsprofile klaeren.
 
