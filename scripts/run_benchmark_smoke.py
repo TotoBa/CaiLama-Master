@@ -142,6 +142,43 @@ with tempfile.TemporaryDirectory() as td:
     return _run_script("CaiLama", code)
 
 
+def smoke_cailama_ocr_gate() -> dict:
+    code = r"""
+import json, tempfile
+from pathlib import Path
+from cailama.knowledge.ocr_documents import (
+    ChessDiagramCandidate,
+    OcrDocumentResult,
+    OcrPageResult,
+)
+from cailama.knowledge.ocr_quality_gates import run_ocr_quality_gates, gate_summary
+
+page = OcrPageResult(
+    page_number=1,
+    text="Ein langer Satz mit vielen Worten und mehr Inhalt fuer Tests ueber 50 Zeichen.",
+    text_language="deu",
+    diagram_candidates=[
+        ChessDiagramCandidate(page_number=1, bbox=(0,0,100,100), confidence=0.9,
+            fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"),
+    ],
+)
+result = OcrDocumentResult(
+    source_path="/tmp/smoke.pdf",
+    source_type="pdf",
+    pages=[page],
+)
+gates = run_ocr_quality_gates(result, max_diagrams=5)
+summary = gate_summary(gates)
+out = {
+    "test": "ocr_quality_gates",
+    "gates_total": summary["total"],
+    "all_passed": summary["all_passed"],
+}
+print(json.dumps(out))
+"""
+    return _run_script("CaiLama", code)
+
+
 def smoke_search_goldsets() -> dict:
     code = r"""
 import json
@@ -192,6 +229,7 @@ def main() -> None:
     results: list[dict] = [
         smoke_cailama_ptg(),
         smoke_cailama_events(),
+        smoke_cailama_ocr_gate(),
         smoke_search_goldsets(),
         smoke_router_metrics(),
     ]
