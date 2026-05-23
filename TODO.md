@@ -157,8 +157,10 @@ Vor Arbeitsbeginn lesen:
   erst bei Live-Smoke-, Benchmark- oder Backend-Auftrag.
   **Search** = filter+hybrid-500er und Multi-Index-Response sind
   behoben (Pass-Rate 9/9). `semantic.enabled=false` bleibt Default.
-  Offen bleiben DWZ-Staging-Verifikation, semantische Freigabeentscheidung
-  auf groesserem Eval und API-/README-Pflege bei neuen Vertragsaenderungen.
+  DWZ-Staging-Verifikation ist in `CaiLama-Search` umgesetzt (dwz_staging.py
+  + tests/test_dwz_staging.py, 4 tests passing).
+  Offen bleiben semantische Freigabeentscheidung auf groesserem Eval und
+  API-/README-Pflege bei neuen Vertragsaenderungen.
 
 ## Kimi-Handoff
 
