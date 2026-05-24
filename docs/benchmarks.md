@@ -234,7 +234,7 @@ env CAILAMA_LLM_PROVIDER=openai_compatible \
   .venv/bin/python scripts/run_ptg_model_benchmark.py \
   --pgn /pfad/zum/freigegebenen/import.pgn \
   --output-dir ~/.local/share/cailama/benchmarks/ptg-models \
-  --models kimi-k2.6:cloud,deepseek-v4-flash:cloud,deepseek-v4-pro:cloud,gemma4:31b-cloud,qwen3.5:397b-cloud,glm-5.1:cloud,minimax-m2.7:cloud,nemotron-3-super:cloud,gpt-oss:20b-cloud,hemanth/chessplayer:latest,starling-lm:7b,gemma4:e2b,gemma4:e4b \
+  --models kimi-k2.6:cloud,deepseek-v4-flash:cloud,deepseek-v4-pro:cloud,gemma4:31b-cloud,qwen3.5:397b-cloud,glm-5.1:cloud,minimax-m2.7:cloud,nemotron-3-super:cloud,gpt-oss:20b-cloud,hemanth/chessplayer:latest,starling-lm:7b,gemma4:e2b,gemma4:e4b,qwen3.6:27b \
   --llm-timeout-seconds 0 \
   --upload-timeout-seconds 0 \
   --role-max-tokens 0 \
@@ -259,6 +259,7 @@ ollama pull hemanth/chessplayer:latest
 ollama pull starling-lm:7b
 ollama pull gemma4:e2b
 ollama pull gemma4:e4b
+ollama pull qwen3.6:27b
 ```
 
 Nach dem Eintragen oder Aendern der lokalen Ollama-Cloud-Keys in der

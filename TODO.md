@@ -175,8 +175,9 @@ Vor Arbeitsbeginn lesen:
   `--role-max-tokens 0` und `--max-analysis-positions 0`. Die Modellliste
   fuer den naechsten vollstaendigen Feedbacklauf umfasst zusaetzlich
   `deepseek-v4-pro:cloud`,
-  `hemanth/chessplayer:latest`, `starling-lm:7b`, `gemma4:e2b` und
-  `gemma4:e4b`. Der Router besitzt eine Dual-Ollama-VM-Beispielkonfiguration,
+  `hemanth/chessplayer:latest`, `starling-lm:7b`, `gemma4:e2b`,
+  `gemma4:e4b` und `qwen3.6:27b`. Der Router besitzt eine
+  Dual-Ollama-VM-Beispielkonfiguration,
   damit die Laufzeitmessung nicht mehr vom Pi-Backend ausgebremst wird.
   Cloud-Modelle gehen ueber die zwei Docker-Ollamas mit separaten Keys;
   lokale Modelle gehen ueber den Host-Ollama auf `127.0.0.1:11434`, damit sie
