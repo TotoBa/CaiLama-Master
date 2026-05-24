@@ -183,6 +183,13 @@ Vor Arbeitsbeginn lesen:
   Cloud-Modelle gehen ueber die zwei Docker-Ollamas mit separaten Keys;
   lokale Modelle gehen ueber den Host-Ollama auf `127.0.0.1:11434`, damit sie
   nur einmal geladen werden muessen.
+  **Runtime-Hinweis 2026-05-24:** Nicht waehrend laufender Benchmarks aendern:
+  die beiden Docker-Ollamas besitzen getrennte named volumes und getrennte
+  `OLLAMA_API_KEY`-Env-Fingerprints, aber aktuell denselben persistenten
+  `/root/.ollama/id_ed25519`-Fingerprint. Docker speichert diese
+  Cloud-Identitaet in den Volumes ueber Neustarts hinweg; nach dem aktiven
+  Lauf muss mindestens eine der beiden Ollama-Identitaeten gezielt rotiert und
+  neu angemeldet werden, damit wirklich zwei Cloud-Accounts genutzt werden.
   **Update 2026-05-24:** Die Feedback-Website nimmt optionale Aufgaben-,
   Stellungs- und Fehlerfelder an. Bei FEN rendert sie ein responsives Brett;
   `/benchmark-feedback-results.php` zeigt geschuetzte, weiterhin blinde

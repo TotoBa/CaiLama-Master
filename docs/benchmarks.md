@@ -98,6 +98,7 @@ Die Website stellt dafuer eine geschuetzte Feedback-Seite bereit:
 
 ```text
 https://cailama.org/benchmark-feedback.php
+https://cailama.org/benchmark-feedback-item.php
 https://cailama.org/benchmark-feedback-results.php
 ```
 
@@ -115,6 +116,11 @@ lokale Pfade und Secrets gehoeren nicht in diese Tabellen; dort liegen nur
 vergleichbare Kennzahlen, kurze Aufgabenbeschreibungen, knappe Auszuege,
 optionale Stellungsdaten und menschliches Feedback. Die Ergebnis-Seite zeigt
 Aggregationen pro Lauf, Rolle, Fall und Kandidat weiterhin ohne Modellnamen.
+Die offene Feedbackliste zeigt alle noch unbewerteten Beobachtungen eines
+Laufs; bereits bewertete Kandidaten verschwinden aus der Liste. Ein Klick auf
+`Bewerten` oeffnet eine fokussierte Einzelfallseite. Der Playmodus laedt nach
+dem Speichern automatisch den naechsten offenen Fall, damit lange Laeufe zuegig
+und ohne Modell-Bias bewertet werden koennen.
 
 ## Ergebnisformat
 

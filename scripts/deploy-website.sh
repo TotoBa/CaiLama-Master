@@ -25,6 +25,7 @@ configurable_vars=(
   CAILAMA_DEPLOY_CREATE_DIRS
   CAILAMA_DEPLOY_INCLUDE_VENDOR
   CAILAMA_DEPLOY_SMARTY
+  CAILAMA_DEPLOY_RESET_SMARTY_CACHE
 )
 saved_env_names=()
 deploy_method_from_env=0
@@ -54,6 +55,7 @@ target_arg=""
 create_dirs="${CAILAMA_DEPLOY_CREATE_DIRS:-0}"
 include_vendor="${CAILAMA_DEPLOY_INCLUDE_VENDOR:-0}"
 deploy_smarty="${CAILAMA_DEPLOY_SMARTY:-1}"
+reset_smarty_cache="${CAILAMA_DEPLOY_RESET_SMARTY_CACHE:-1}"
 deploy_method="${CAILAMA_WEB_DEPLOY_METHOD:-}"
 public_url="${CAILAMA_PUBLIC_URL:-https://cailama.org}"
 public_url="${public_url%/}"
@@ -68,6 +70,7 @@ Options:
   --with-vendor    Include web-smarty/vendor in the private upload.
   --with-smarty    Upload private web-smarty app files (default).
   --skip-smarty    Upload public web/ only.
+  --no-cache-reset Do not clear remote Smarty/opcache after upload.
   --full           Equivalent to --create-dirs --with-vendor --with-smarty.
   -h, --help       Show this help.
 
@@ -90,6 +93,9 @@ while [[ $# -gt 0 ]]; do
       ;;
     --skip-smarty)
       deploy_smarty=0
+      ;;
+    --no-cache-reset)
+      reset_smarty_cache=0
       ;;
     --full)
       create_dirs=1
@@ -134,6 +140,10 @@ if [[ "$include_vendor" != "0" && "$include_vendor" != "1" ]]; then
 fi
 if [[ "$deploy_smarty" != "0" && "$deploy_smarty" != "1" ]]; then
   echo "ERROR: CAILAMA_DEPLOY_SMARTY must be 0 or 1" >&2
+  exit 2
+fi
+if [[ "$reset_smarty_cache" != "0" && "$reset_smarty_cache" != "1" ]]; then
+  echo "ERROR: CAILAMA_DEPLOY_RESET_SMARTY_CACHE must be 0 or 1" >&2
   exit 2
 fi
 
@@ -377,6 +387,11 @@ deploy_local() {
       smarty_rsync_args+=(--exclude "/vendor/")
     fi
     rsync "${smarty_rsync_args[@]}" "web-smarty/" "$smarty_target/"
+    if [[ "$reset_smarty_cache" == "1" ]]; then
+      find "$smarty_target/cache/smarty" "$smarty_target/cache/templates_c" \
+        -type f ! -name ".gitkeep" -delete 2>/dev/null || true
+      echo "Reset local Smarty cache in $smarty_target/cache"
+    fi
   fi
 
   echo "Deployed web/ to $target"
@@ -622,6 +637,63 @@ PHP
   rm -rf "$tmp_dir"
 }
 
+reset_remote_smarty_cache() {
+  if [[ "$deploy_method" != "sftp" || "$reset_smarty_cache" != "1" ]]; then
+    return
+  fi
+
+  local tmp_dir reset_name reset_file upload_batch delete_batch output
+  tmp_dir="$(mktemp -d)"
+  reset_name=".cailama-smarty-cache-reset-$(date +%s)-$$.php"
+  reset_file="$tmp_dir/$reset_name"
+  upload_batch="$tmp_dir/smarty-cache-reset-upload.sftp"
+  delete_batch="$tmp_dir/smarty-cache-reset-delete.sftp"
+
+  cat > "$reset_file" <<'PHP'
+<?php
+declare(strict_types=1);
+header('Content-Type: text/plain; charset=UTF-8');
+
+$privateApp = dirname(__DIR__) . '/smarty';
+$cacheDirs = [
+    $privateApp . '/cache/smarty',
+    $privateApp . '/cache/templates_c',
+];
+
+$deleted = 0;
+foreach ($cacheDirs as $dir) {
+    if (!is_dir($dir)) {
+        continue;
+    }
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::CHILD_FIRST
+    );
+    foreach ($iterator as $entry) {
+        $path = $entry->getPathname();
+        if ($entry->isFile() && basename($path) !== '.gitkeep') {
+            if (@unlink($path)) {
+                $deleted++;
+            }
+        }
+    }
+}
+echo "smarty_cache_deleted=" . $deleted . "\n";
+PHP
+
+  printf "put -p %s %s\n" \
+    "$(sftp_quote "$reset_file")" \
+    "$(sftp_quote "$(remote_path "$reset_name")")" > "$upload_batch"
+  sftp_batch "$upload_batch" >/dev/null
+
+  output="$(curl -fsS --max-time 20 "$public_url/$reset_name")"
+  echo "$output"
+
+  printf -- "-rm %s\n" "$(sftp_quote "$(remote_path "$reset_name")")" > "$delete_batch"
+  sftp_batch "$delete_batch" >/dev/null || true
+  rm -rf "$tmp_dir"
+}
+
 verify_deploy() {
   local local_target="${1:-}"
 
@@ -642,6 +714,7 @@ verify_deploy() {
     ;;
   http-hash)
     reset_remote_php_cache
+    reset_remote_smarty_cache
     dynamic_pages=(
       "index.php"
       "status.php"

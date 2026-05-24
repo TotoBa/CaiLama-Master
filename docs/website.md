@@ -215,7 +215,8 @@ Das Skript:
 4. lädt danach `web/` per OpenSSH-`sftp` in den öffentlichen Document Root,
 5. entfernt stale Dateien anhand getrennter SFTP-Deploy-Manifeste,
 6. schützt die echte, ignorierte `web/api_app/config.local.php` vor Löschung,
-7. prüft beim Standard-Live-Ziel die gerenderten öffentlichen Seiten,
+7. leert beim Standard-Live-Ziel OPcache und den privaten Smarty-Cache,
+8. prüft beim Standard-Live-Ziel die gerenderten öffentlichen Seiten,
    statischen Dateien und LLM-Referenzen per SHA-256 über HTTPS.
 
 Deploy-Flags:
@@ -223,6 +224,7 @@ Deploy-Flags:
 - `--create-dirs`: Remote-Ordner vor dem Upload anlegen.
 - `--with-vendor`: `web-smarty/vendor/` mit hochladen.
 - `--skip-smarty`: nur `web/` hochladen.
+- `--no-cache-reset`: OPcache/Smarty-Cache nach dem Upload nicht leeren.
 - `--full`: Ordner anlegen, `web/` hochladen, `web-smarty/` inklusive
   `vendor/` hochladen.
 
