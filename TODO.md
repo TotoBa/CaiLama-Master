@@ -166,7 +166,10 @@ Vor Arbeitsbeginn lesen:
   Zuordnung bleibt serverseitig. `--skip-ptg` erlaubt schnelle Rollen-
   Feedbacklaeufe ohne den teuren PTG-Teil. `--role-max-tokens` begrenzt nur
   die kurzen Rollen-Probes, damit Benchmarklaufzeiten vergleichbarer bleiben
-  und langsame Provider nicht den gesamten Upload blockieren. Offen bleibt die fachliche
+  und langsame Provider nicht den gesamten Upload blockieren. Lokale CaiLama-
+  Artefakte erfassen zusaetzlich Router-Backend, Provider-Modell und Fallback,
+  falls der Router diese Header liefert; die Website-Bewertung bleibt blind.
+  Offen bleibt die fachliche
   Bewertung der heutigen Laeufe und die Ableitung belastbarer Modell-/Prompt-
   Regeln.
 - [ ] Spaeteres spezialisiertes LLM-Training als Roadmap-Hebel vorbereiten:

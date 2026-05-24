@@ -246,3 +246,7 @@ blind: angezeigt wird nur ein Kandidaten-Code, nicht der Modellname.
 `--role-max-tokens` begrenzt nur die kurzen Rollen-Probes auf
 OpenAI-kompatiblen Backends. Damit werden Laufzeit und Antwortlaenge
 vergleichbarer; der volle PTG-Classify-/Analyze-Lauf bleibt davon unberuehrt.
+Lokale Artefakte erfassen Router-Header fuer Backend, Provider-Modell und
+Fallback, sofern der Router sie liefert. Das ist wichtig, weil `vm`/`pi`-
+Routing die Laufzeitmessung beeinflusst. Die geschuetzte Website zeigt diese
+Zuordnung nicht im Bewertungsformular.

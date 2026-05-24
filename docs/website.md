@@ -388,7 +388,10 @@ Drei-Spiele-Benchmark erzeugt Fälle für alle CaiLama-Rollen: `router`,
 `small`, `large`, `task`, `translator`, `coach`, `analyst`, `critic`,
 `vision`, `scribe` und `researcher`. Rollen-Probes duerfen mit
 `--role-max-tokens` gekappt werden, damit einzelne Modellantworten den
-Feedbacklauf nicht blockieren; die PTG-Tiefenanalyse bleibt separat.
+Feedbacklauf nicht blockieren; die PTG-Tiefenanalyse bleibt separat. Lokale
+Benchmark-Artefakte duerfen Router-Backend-/Provider-/Fallback-Metriken
+speichern, die Website zeigt diese technische Zuordnung aber nicht im
+Bewertungsformular.
 
 API-Key-Prüfung und Scopes sind als Hash-basierte Bearer-Token-Prüfung
 verdrahtet. Es gibt getrennte Keys für Status, Append-Import, Reset-Import und
