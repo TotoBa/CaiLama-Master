@@ -234,6 +234,14 @@ Vor Arbeitsbeginn lesen:
 Der Master bleibt Koordination, Website und Doku. Keine Unterrepo-Dateien im
 Master tracken, keine Submodules, keine produktive Runtime-Logik.
 
+Update 2026-05-24: Fuer den langen Modellrollen-Benchmark sind Qwen-3.6-27B-
+Thinking-Aliase vorbereitet (`think` false/true/low/medium/high). Der Router
+nutzt dafuer `request_overrides` in Modellrouten; CaiLama exportiert
+abgelehnte Modell-/Thinking-Varianten als Feedback-Fehlerfall und arbeitet
+den restlichen Benchmark weiter ab. Vor dem finalen Lauf muessen alle lokalen
+Modelle in Host-Ollama vorhanden sein; der Startbefehl steht in
+`docs/benchmarks.md`.
+
 ```text
 Du arbeitest im CaiLama-Master-Repository. Die lokale Kimi-Konfiguration nutzt
 fuer die kommende Arbeit `kimi-k2.6:cloud`; das ist ein Client-Default, kein

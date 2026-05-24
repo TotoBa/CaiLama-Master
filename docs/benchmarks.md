@@ -234,7 +234,7 @@ env CAILAMA_LLM_PROVIDER=openai_compatible \
   .venv/bin/python scripts/run_ptg_model_benchmark.py \
   --pgn /pfad/zum/freigegebenen/import.pgn \
   --output-dir ~/.local/share/cailama/benchmarks/ptg-models \
-  --models kimi-k2.6:cloud,deepseek-v4-flash:cloud,deepseek-v4-pro:cloud,gemma4:31b-cloud,qwen3.5:397b-cloud,glm-5.1:cloud,minimax-m2.7:cloud,nemotron-3-super:cloud,gpt-oss:20b-cloud,hemanth/chessplayer:latest,starling-lm:7b,gemma4:e2b,gemma4:e4b,qwen3.6:27b \
+  --models kimi-k2.6:cloud,deepseek-v4-flash:cloud,deepseek-v4-pro:cloud,gemma4:31b-cloud,qwen3.5:397b-cloud,glm-5.1:cloud,minimax-m2.7:cloud,nemotron-3-super:cloud,gpt-oss:20b-cloud,hemanth/chessplayer:latest,starling-lm:7b,gemma4:e2b,gemma4:e4b,qwen3.6:27b,qwen3.6:27b:think-off,qwen3.6:27b:think-on,qwen3.6:27b:think-low,qwen3.6:27b:think-medium,qwen3.6:27b:think-high \
   --llm-timeout-seconds 0 \
   --upload-timeout-seconds 0 \
   --role-max-tokens 0 \
@@ -261,6 +261,13 @@ ollama pull gemma4:e2b
 ollama pull gemma4:e4b
 ollama pull qwen3.6:27b
 ```
+
+Ollamas CLI bietet Thinking-Mode-Werte `false`, `true`, `low`, `medium` und
+`high` fuer unterstuetzte Modelle. Der Router bildet diese fuer
+`qwen3.6:27b` als eigene Aliase ab, damit der Benchmark die Modi blind wie
+separate Modellkandidaten bewerten kann. Wenn ein Backend einen Modus nicht
+unterstuetzt, soll der CaiLama-Benchmark-Runner den Fehler als Feedbackfall
+erfassen und mit den uebrigen Modellen fortfahren.
 
 Nach dem Eintragen oder Aendern der lokalen Ollama-Cloud-Keys in der
 unversionierten Router-`.env` muessen die Container neu erstellt und der
