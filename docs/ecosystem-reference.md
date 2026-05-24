@@ -180,7 +180,9 @@ Aktueller Fokus:
   umgesetzt.
 - Modellrollen-Benchmarks sollen Dauer, Input-/Thinking-/Output-Tokens,
   Qualitätsurteile, Aufgabenlösung, Logikfehler und A/B-Präferenzen für PTG,
-  Coach, Analyst, Researcher und Vision/OCR erfassen.
+  Coach, Analyst, Researcher und Vision/OCR erfassen. Modelle werden
+  rollenweise verglichen; Ziel ist ein belastbarer Favorit pro Aufgabe und
+  Rolle, nicht nur ein globaler Sieger.
 - Offen bleiben Retention/Profilbindung für dateibasierte Trainingskarten und
   Review-Historien sowie die automatische Übernahme von Benchmarkmetriken in
   das geschützte Website-Feedback.
@@ -368,8 +370,12 @@ Vertrag:
   `POST /api/v1/admin/schema/all` wenden dasselbe Single-DB-Schema über die
   API an.
 - `/benchmark-feedback.php` ist eine Login-geschützte Website-Seite und nutzt
-  `cailama_model_benchmark_cases` sowie `cailama_model_feedback` in
-  `databases.cailama`.
+  `cailama_model_benchmark_cases`,
+  `cailama_model_benchmark_observations` sowie
+  `cailama_model_feedback` in `databases.cailama`.
+- `POST /api/v1/benchmarks/observations` importiert secretfreie
+  Benchmark-Laufdaten mit `benchmark:write` oder `admin`; Rohprompts,
+  vollständige Antworten, lokale Pfade und Secrets sind ausgeschlossen.
 - Es gibt keine öffentliche Registrierung; Nutzer werden direkt in
   `web_users` angelegt.
 - Import- und Schema-Endpunkte akzeptieren keine Query-Parameter und keinen
@@ -416,14 +422,14 @@ Jetzt:
   privacy-safe RAG-/Researcher-`source_quality`-Kennzahlen sind erledigt;
   offen bleibt die Freigabeentscheidung für Hybrid auf größerem Eval.
 - Modellrollen-Hypothese als Benchmark validieren: geschütztes Website-
-  Feedback erfasst Laufzeit, Tokenwerte, Qualität, Aufgabenlösung,
-  Logikfehler und A/B-Präferenz.
+  Feedback erfasst importierte Laufdaten, Tokenwerte, Qualität,
+  Aufgabenlösung, Logikfehler und A/B-Präferenz.
 
 Danach:
 
 - Retention/Profilbindung für dateibasierte Trainingskarten und Review-
-  Historien abschließen; Website-Feedback mit Router-/CaiLama-Metriken
-  verbinden.
+  Historien abschließen; importierte Website-Benchmarkläufe fachlich
+  bewerten und daraus Modell-/Prompt-Regeln ableiten.
 - Einheitliche Job-Orchestrierung vorbereiten.
 - Benchmark-Rahmen im Master weiter ausbauen, Website-Feedback mit Router- und
   CaiLama-Metriken verbinden und Ergebnisse repo-übergreifend dokumentieren.

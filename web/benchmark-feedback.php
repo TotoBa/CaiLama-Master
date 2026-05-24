@@ -40,6 +40,18 @@ function post_int_or_null(string $key): ?int
     return min((int) $value, 2147483647);
 }
 
+function query_int_or_null(string $key): ?int
+{
+    $value = is_string($_GET[$key] ?? null) ? trim($_GET[$key]) : '';
+    if ($value === '') {
+        return null;
+    }
+    if (!preg_match('/^\d+$/', $value)) {
+        return null;
+    }
+    return min((int) $value, 2147483647);
+}
+
 function post_score(string $key): ?int
 {
     $value = post_int_or_null($key);
@@ -100,7 +112,31 @@ function load_benchmark_data(PDO $pdo): array
          LIMIT 12"
     )->fetchAll();
 
-    return [$cases, $summary, $recent];
+    $observations = $pdo->query(
+        "SELECT
+            o.id,
+            o.run_key,
+            o.model_label,
+            o.duration_ms,
+            o.input_tokens,
+            o.thinking_tokens,
+            o.output_tokens,
+            o.artifact_ref,
+            o.output_excerpt,
+            o.created_at,
+            c.id AS case_id,
+            c.case_key,
+            c.task_label,
+            c.task_summary,
+            c.role_name,
+            c.quality_question
+         FROM cailama_model_benchmark_observations o
+         INNER JOIN cailama_model_benchmark_cases c ON c.id = o.case_id
+         ORDER BY o.created_at DESC
+         LIMIT 30"
+    )->fetchAll();
+
+    return [$cases, $summary, $recent, $observations];
 }
 
 $pdo = null;
@@ -109,10 +145,42 @@ $errors = [];
 $cases = [];
 $summary = [];
 $recent = [];
+$observations = [];
+$selectedObservation = null;
 
 try {
     $pdo = ConnectionFactory::fromConfig($config, 'cailama');
-    [$cases, $summary, $recent] = load_benchmark_data($pdo);
+    [$cases, $summary, $recent, $observations] = load_benchmark_data($pdo);
+    $selectedObservationId = query_int_or_null('observation_id');
+    if ($selectedObservationId !== null) {
+        $statement = $pdo->prepare(
+            "SELECT
+                o.id,
+                o.run_key,
+                o.model_label,
+                o.duration_ms,
+                o.input_tokens,
+                o.thinking_tokens,
+                o.output_tokens,
+                o.artifact_ref,
+                o.output_excerpt,
+                o.created_at,
+                c.id AS case_id,
+                c.case_key,
+                c.task_label,
+                c.task_summary,
+                c.role_name,
+                c.quality_question
+             FROM cailama_model_benchmark_observations o
+             INNER JOIN cailama_model_benchmark_cases c ON c.id = o.case_id
+             WHERE o.id = :id"
+        );
+        $statement->execute(['id' => $selectedObservationId]);
+        $loadedObservation = $statement->fetch();
+        if (is_array($loadedObservation)) {
+            $selectedObservation = $loadedObservation;
+        }
+    }
 } catch (Throwable) {
     $loadError = 'Die Benchmark-Datenbank ist noch nicht bereit. Bitte zuerst das aktuelle Datenbankschema einspielen.';
 }
@@ -192,9 +260,33 @@ foreach ($cases as $case) {
         }
     }
 }
+foreach ($observations as $observation) {
+    $alias = is_string($observation['model_label'] ?? null) ? trim($observation['model_label']) : '';
+    if ($alias !== '') {
+        $modelAliases[$alias] = true;
+    }
+}
 ksort($modelAliases);
 
 $feedbackCount = array_sum(array_map(static fn (array $row): int => (int) $row['feedback_count'], $summary));
+$formCaseId = is_string($_POST['case_id'] ?? null)
+    ? (string) $_POST['case_id']
+    : (string) ($selectedObservation['case_id'] ?? '');
+$formModelLabel = is_string($_POST['model_label'] ?? null)
+    ? (string) $_POST['model_label']
+    : (string) ($selectedObservation['model_label'] ?? '');
+$formDurationMs = is_string($_POST['duration_ms'] ?? null)
+    ? (string) $_POST['duration_ms']
+    : (string) ($selectedObservation['duration_ms'] ?? '');
+$formInputTokens = is_string($_POST['input_tokens'] ?? null)
+    ? (string) $_POST['input_tokens']
+    : (string) ($selectedObservation['input_tokens'] ?? '');
+$formThinkingTokens = is_string($_POST['thinking_tokens'] ?? null)
+    ? (string) $_POST['thinking_tokens']
+    : (string) ($selectedObservation['thinking_tokens'] ?? '');
+$formOutputTokens = is_string($_POST['output_tokens'] ?? null)
+    ? (string) $_POST['output_tokens']
+    : (string) ($selectedObservation['output_tokens'] ?? '');
 ?>
 <!doctype html>
 <html lang="de">
@@ -258,19 +350,53 @@ $feedbackCount = array_sum(array_map(static fn (array $row): int => (int) $row['
               <p>gespeicherte Feedbacks</p>
             </div>
             <div class="metric">
-              <strong><?= h((string) count($modelAliases)) ?></strong>
-              <p>Modelle in A/B-Fällen</p>
+              <strong><?= h((string) count($observations)) ?></strong>
+              <p>importierte Laufdaten</p>
             </div>
           </div>
 
+          <?php if ($observations !== []): ?>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Zeitpunkt</th>
+                    <th>Benchmark-Lauf</th>
+                    <th>Modell</th>
+                    <th>Metriken</th>
+                    <th>Auszug</th>
+                    <th>Aktion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($observations as $observation): ?>
+                    <tr>
+                      <td><?= h((string) $observation['created_at']) ?></td>
+                      <td><strong><?= h((string) $observation['role_name']) ?></strong><br><?= h((string) $observation['task_label']) ?><br><span class="muted"><?= h((string) $observation['run_key']) ?></span></td>
+                      <td><?= h((string) $observation['model_label']) ?></td>
+                      <td>Dauer <?= h((string) ($observation['duration_ms'] ?? '-')) ?> ms<br>Input <?= h((string) ($observation['input_tokens'] ?? '-')) ?><br>Thinking <?= h((string) ($observation['thinking_tokens'] ?? '-')) ?><br>Output <?= h((string) ($observation['output_tokens'] ?? '-')) ?></td>
+                      <td><?= h((string) ($observation['output_excerpt'] ?? '')) ?><br><span class="muted"><?= h((string) ($observation['artifact_ref'] ?? '')) ?></span></td>
+                      <td><a class="button light" href="benchmark-feedback.php?observation_id=<?= h((string) $observation['id']) ?>">Bewerten</a></td>
+                    </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
+          <?php endif; ?>
+
+          <?php if ($selectedObservation !== null): ?>
+            <p class="notice" role="status">Benchmark-Lauf vorausgefüllt: <?= h((string) $selectedObservation['model_label']) ?> · <?= h((string) $selectedObservation['task_label']) ?></p>
+          <?php endif; ?>
+
           <form class="auth-panel feedback-form" method="post" action="benchmark-feedback.php">
             <input type="hidden" name="csrf_token" value="<?= h($session->csrfToken()) ?>">
+            <input type="hidden" name="observation_id" value="<?= h((string) ($selectedObservation['id'] ?? '')) ?>">
             <div>
               <label for="case_id">Benchmark-Fall</label>
               <select id="case_id" name="case_id" required>
                 <option value="">Bitte auswählen</option>
                 <?php foreach ($cases as $case): ?>
-                  <option value="<?= h((string) $case['id']) ?>" <?= ((string) ($_POST['case_id'] ?? '') === (string) $case['id']) ? 'selected' : '' ?>>
+                  <option value="<?= h((string) $case['id']) ?>" <?= ($formCaseId === (string) $case['id']) ? 'selected' : '' ?>>
                     <?= h((string) $case['role_name'] . ' - ' . (string) $case['task_label']) ?>
                   </option>
                 <?php endforeach; ?>
@@ -279,7 +405,7 @@ $feedbackCount = array_sum(array_map(static fn (array $row): int => (int) $row['
 
             <div>
               <label for="model_label">Modell oder Option</label>
-              <input id="model_label" name="model_label" list="model_aliases" maxlength="120" required value="<?= h(is_string($_POST['model_label'] ?? null) ? $_POST['model_label'] : '') ?>" placeholder="z. B. kimi-k2.6:cloud oder Option A">
+              <input id="model_label" name="model_label" list="model_aliases" maxlength="120" required value="<?= h($formModelLabel) ?>" placeholder="z. B. kimi-k2.6:cloud oder Option A">
               <datalist id="model_aliases">
                 <?php foreach (array_keys($modelAliases) as $alias): ?>
                   <option value="<?= h($alias) ?>"></option>
@@ -345,19 +471,19 @@ $feedbackCount = array_sum(array_map(static fn (array $row): int => (int) $row['
             <div class="form-grid">
               <div>
                 <label for="duration_ms">Dauer in ms</label>
-                <input id="duration_ms" name="duration_ms" type="number" inputmode="numeric" min="0" step="1" value="<?= h(is_string($_POST['duration_ms'] ?? null) ? $_POST['duration_ms'] : '') ?>">
+                <input id="duration_ms" name="duration_ms" type="number" inputmode="numeric" min="0" step="1" value="<?= h($formDurationMs) ?>">
               </div>
               <div>
                 <label for="input_tokens">Input-Tokens</label>
-                <input id="input_tokens" name="input_tokens" type="number" inputmode="numeric" min="0" step="1" value="<?= h(is_string($_POST['input_tokens'] ?? null) ? $_POST['input_tokens'] : '') ?>">
+                <input id="input_tokens" name="input_tokens" type="number" inputmode="numeric" min="0" step="1" value="<?= h($formInputTokens) ?>">
               </div>
               <div>
                 <label for="thinking_tokens">Thinking-Tokens</label>
-                <input id="thinking_tokens" name="thinking_tokens" type="number" inputmode="numeric" min="0" step="1" value="<?= h(is_string($_POST['thinking_tokens'] ?? null) ? $_POST['thinking_tokens'] : '') ?>">
+                <input id="thinking_tokens" name="thinking_tokens" type="number" inputmode="numeric" min="0" step="1" value="<?= h($formThinkingTokens) ?>">
               </div>
               <div>
                 <label for="output_tokens">Output-Tokens</label>
-                <input id="output_tokens" name="output_tokens" type="number" inputmode="numeric" min="0" step="1" value="<?= h(is_string($_POST['output_tokens'] ?? null) ? $_POST['output_tokens'] : '') ?>">
+                <input id="output_tokens" name="output_tokens" type="number" inputmode="numeric" min="0" step="1" value="<?= h($formOutputTokens) ?>">
               </div>
             </div>
 

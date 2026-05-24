@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS cailama_schema_meta (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO cailama_schema_meta (id, schema_name, schema_version)
-VALUES (1, 'cailama-data', '0.3.0')
+VALUES (1, 'cailama-data', '0.4.0')
 ON DUPLICATE KEY UPDATE schema_version = VALUES(schema_version);
 
 -- Website user authentication table (formerly in a separate auth database).
@@ -73,9 +73,63 @@ CREATE TABLE IF NOT EXISTS cailama_model_feedback (
         ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS cailama_model_benchmark_observations (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    case_id BIGINT UNSIGNED NOT NULL,
+    run_key VARCHAR(120) NOT NULL,
+    model_label VARCHAR(120) NOT NULL,
+    duration_ms INT UNSIGNED NULL,
+    input_tokens INT UNSIGNED NULL,
+    thinking_tokens INT UNSIGNED NULL,
+    output_tokens INT UNSIGNED NULL,
+    artifact_ref VARCHAR(190) NOT NULL DEFAULT '',
+    output_excerpt TEXT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uniq_cailama_benchmark_observation (case_id, run_key, model_label, artifact_ref),
+    INDEX idx_cailama_benchmark_observations_created (created_at),
+    INDEX idx_cailama_benchmark_observations_model (model_label),
+    CONSTRAINT fk_cailama_model_benchmark_observation_case
+        FOREIGN KEY (case_id) REFERENCES cailama_model_benchmark_cases (id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 INSERT INTO cailama_model_benchmark_cases
     (case_key, area, role_name, model_a, model_b, task_label, task_summary, quality_question, status)
 VALUES
+    (
+        'ptg-three-games',
+        'pipeline',
+        'ptg-three-games',
+        'kimi-k2.6:cloud',
+        'gemma4:31b-cloud',
+        'PTG-Drei-Spiele-Benchmark',
+        'Modell klassifiziert alle Zuege der drei freigegebenen PTG-Baseline-Spiele und analysiert die priorisierten Schluesselstellungen tief.',
+        'Wie gut sind Klassifikation, Trainingsfragen und Analysequalitaet fuer diese drei Spiele?',
+        'active'
+    ),
+    (
+        'ptg-three-games-classify',
+        'pipeline',
+        'chess-small',
+        'gemma4:31b-cloud',
+        'deepseek-v4-flash:cloud',
+        'PTG-Zugklassifikation',
+        'Modell klassifiziert alle Zuege der drei freigegebenen PTG-Baseline-Spiele und muss stabile, weiterverarbeitbare Klassifikationsdaten liefern.',
+        'Wie korrekt, stabil und pipeline-tauglich ist die Zugklassifikation?',
+        'active'
+    ),
+    (
+        'ptg-three-games-analysis',
+        'pipeline',
+        'chess-analyst',
+        'qwen3.5:397b-cloud',
+        'kimi-k2.6:cloud',
+        'PTG-Schluesselstellungsanalyse',
+        'Modell analysiert die priorisierten Schluesselstellungen der drei freigegebenen PTG-Baseline-Spiele mit Engine- und BoardTruth-Kontext.',
+        'Wie gut sind Analysequalitaet, Engine-Grounding, Variantenlogik und Trainingsnutzen?',
+        'active'
+    ),
     (
         'coding-agent-todo-work',
         'coding',

@@ -297,6 +297,7 @@ Benchmark-Feedback bereit:
 POST /api/v1/status
 POST /api/v1/imports/cailama/append
 POST /api/v1/imports/cailama/reset
+POST /api/v1/benchmarks/observations
 POST /api/v1/admin/schema/cailama
 POST /api/v1/admin/schema/all
 /login.php
@@ -305,11 +306,13 @@ POST /api/v1/admin/schema/all
 ```
 
 Status-, Import- und Schema-Endpunkte nehmen weder Query-Parameter noch
-Nutzdaten im Request-Body an. Gesendet wird nur ein Bearer-Key mit passendem
-Scope: `status:read` für Status, `db_import:write` für Append-Import,
-`db_import:reset` für Reset-Import oder `admin` für Schema-Setup und
-Admin-Aktionen. Ohne gültigen Key liefert die API keine API-, DB-, Schema-
-oder Importdetails. Der Import-Modus wird über den Pfad gewählt: `append`
+Nutzdaten im Request-Body an. Der Benchmark-Beobachtungs-Endpunkt nimmt einen
+begrenzten JSON-Body mit secretfreien Beobachtungszeilen an. Gesendet wird nur
+ein Bearer-Key mit passendem Scope: `status:read` für Status,
+`db_import:write` für Append-Import, `db_import:reset` für Reset-Import,
+`benchmark:write` oder `admin` für Benchmark-Beobachtungen oder `admin` für
+Schema-Setup und Admin-Aktionen. Ohne gültigen Key liefert die API keine API-,
+DB-, Schema-, Import- oder Benchmarkdetails. Der Import-Modus wird über den Pfad gewählt: `append`
 fügt erlaubte Insert-Daten in die bestehende CaiLama-Datenbank ein; `reset`
 ist nur aktiv, wenn `allow_reset` in der lokalen Konfiguration bewusst gesetzt
 wurde.
@@ -370,11 +373,16 @@ Es gibt keine öffentliche Kontoanlage und keinen Registrierungsendpunkt. Nutzer
 werden direkt als `web_users` in der Provider-Datenbank angelegt. Die Seite
 `/benchmark-feedback.php` ist nur nach Login erreichbar und nutzt dieselbe
 Session. Sie speichert wiederverwendbare Bewertungsdaten für Modellrollen in
-`cailama_model_benchmark_cases` und `cailama_model_feedback`: Laufzeit,
-Input-/Thinking-/Output-Tokens, Qualitäts-Score, Aufgaben-Score,
-Logikfehler-Klasse, A/B-Präferenz und knappe Feedbacknotizen. Rohprompts,
-volle Modellantworten, private Partiearchive, lokale Pfade und Secrets gehören
-nicht in diese Tabellen.
+`cailama_model_benchmark_cases`, `cailama_model_benchmark_observations` und
+`cailama_model_feedback`: Laufzeit, Input-/Thinking-/Output-Tokens,
+Qualitäts-Score, Aufgaben-Score, Logikfehler-Klasse, A/B-Präferenz,
+secretfreie Lauf-Auszüge und knappe Feedbacknotizen. Rohprompts, volle
+Modellantworten, private Partiearchive, lokale Pfade und Secrets gehören nicht
+in diese Tabellen.
+Benchmark-Fälle speichern Rolle und Aufgabe getrennt, damit dieselben
+Modellkandidaten rollenweise bewertet werden können, etwa
+`chess-small`/Zugklassifikation gegenüber `chess-analyst`/
+Schlüsselstellungsanalyse.
 
 API-Key-Prüfung und Scopes sind als Hash-basierte Bearer-Token-Prüfung
 verdrahtet. Es gibt getrennte Keys für Status, Append-Import, Reset-Import und

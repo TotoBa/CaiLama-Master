@@ -63,6 +63,7 @@
     "feedback_page": "https://cailama.org/benchmark-feedback.php",
     "feedback_tables": [
       "cailama_model_benchmark_cases",
+      "cailama_model_benchmark_observations",
       "cailama_model_feedback"
     ],
     "data_rules": [
@@ -273,6 +274,7 @@
                 "POST /api/v1/status",
                 "POST /api/v1/imports/cailama/append",
                 "POST /api/v1/imports/cailama/reset",
+                "POST /api/v1/benchmarks/observations",
                 "POST /api/v1/admin/schema/cailama",
                 "POST /api/v1/admin/schema/all",
                 "/login.php",
@@ -284,7 +286,9 @@
                 "Real credentials belong only in private webspace config outside /public.",
         "databases.cailama is the only PDO configuration in webspace single-database mode.",
         "web_users and application tables share the provider database while remaining logically separated by table names.",
-        "Benchmark feedback uses cailama_model_benchmark_cases and cailama_model_feedback in databases.cailama.",
+        "Benchmark feedback uses cailama_model_benchmark_cases, cailama_model_benchmark_observations and cailama_model_feedback in databases.cailama.",
+        "Benchmark observations can be imported with benchmark:write or admin scope and contain only secret-free run metrics, short excerpts and artifact references.",
+        "Benchmark cases keep role and task separate so candidate models can be compared per role instead of only globally.",
         "There is no public registration endpoint; website users are created directly in web_users.",
                 "Status requires POST /api/v1/status with a Bearer token scope; there is no public GET status with API or database details.",
                 "The import endpoints accept no query parameters and no request body; authentication is through a Bearer token scope.",
@@ -314,11 +318,11 @@
       "DWZ identity linking and normalized RAG provenance are implemented in the current agent/researcher paths",
       "Search benchmark comparison lexical versus hybrid is documented; correctness fixes are complete and hybrid remains default-off pending product decision",
       "Router infrastructure hardening is complete with backend API key forwarding, privacy-safe usage metrics, usage CLI and benchmark export",
-      "Model-role hypothesis is documented as a benchmark matrix and protected website feedback stores reusable quality data in the provider database"
+      "Model-role hypothesis is documented as a benchmark matrix and protected website feedback stores reusable quality data plus imported role-specific run observations in the provider database"
     ],
     "next": [
       "CaiLama retention/profile binding for file-based training cards and review histories",
-      "automatic import of Router/CaiLama benchmark metrics into the protected website feedback tables",
+      "human review of imported PTG model benchmark observations in the protected website feedback flow",
       "Unified job orchestration for CaiLama and Search",
       "Benchmark framework in Master for cross-repo measurements, website feedback, router usage metrics and result documentation",
       "Search semantic production decision on a larger eval"

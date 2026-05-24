@@ -87,6 +87,13 @@ Erfasst werden mindestens:
 - Freitext fuer Fehler, Nutzen und daraus folgende Prompt-/Regel-
   Verbesserung.
 
+Modelle werden nicht nur global verglichen, sondern pro Rolle und Teilaufgabe.
+Ein Modell kann fuer `chess-small`/Klassifikation gut sein, aber fuer
+`chess-analyst`, `chess-coach`, `chess-vision`, `chess-researcher` oder
+Coding-Agenten schlechter passen. Benchmarkfaelle speichern deshalb Rolle,
+Aufgabe und Modell getrennt; die Auswertung soll spaeter je Rolle einen
+belastbaren Favoriten zeigen.
+
 Die Website stellt dafuer eine geschuetzte Feedback-Seite bereit:
 
 ```text
@@ -94,10 +101,14 @@ https://cailama.org/benchmark-feedback.php
 ```
 
 Sie liegt hinter Login, ist `noindex` und speichert Bewertungen in der
-Provider-Datenbank. Die Tabellen heissen `cailama_model_benchmark_cases` und
-`cailama_model_feedback`. Rohprompts, volle Modellantworten, private Partien
+Provider-Datenbank. Die Tabellen heissen `cailama_model_benchmark_cases`,
+`cailama_model_benchmark_observations` und `cailama_model_feedback`.
+Benchmark-Runner duerfen secretfreie Beobachtungen ueber
+`POST /api/v1/benchmarks/observations` importieren; bewertet wird danach in
+der Website. Rohprompts, volle Modellantworten, private Partien, lokale Pfade
 und Secrets gehoeren nicht in diese Tabellen; dort liegen nur vergleichbare
-Kennzahlen, kurze Aufgabenbeschreibungen und menschliches Feedback.
+Kennzahlen, kurze Aufgabenbeschreibungen, knappe Auszuege und menschliches
+Feedback.
 
 ## Ergebnisformat
 
@@ -143,7 +154,16 @@ Ein Ergebnis enthaelt mindestens:
   Klassifikation vorhanden. PTG-Live-Verifikation gegen Router,
   Legal-Move-/Brettwahrheit-Artefakte, RAG-Provenienz, OCR/FEN-Gates,
   Analyse-Gates und TrainingSession-Gates sind umgesetzt. Offen bleibt die
-  automatische Metrik-Uebernahme in das Website-Feedback.
+  Auswertung der neuen Modelllauf-Beobachtungen im Website-Feedback.
+- PTG-Drei-Spiele-Modellbenchmark:
+  CaiLama stellt `scripts/run_ptg_model_benchmark.py` bereit. Der Runner
+  extrahiert die drei freigegebenen Baseline-Spiele aus dem lokalen PGN-
+  Archiv, laesst die PTG-Pipeline pro Router-Modell laufen, schreibt lokale
+  Artefakte und kann die secretfreien Beobachtungen in die Website-API
+  hochladen. Pro Modell werden ein aggregierter PTG-Fall sowie rollenbezogene
+  Faelle fuer `chess-small`/Zugklassifikation und `chess-analyst`/
+  Schluesselstellungsanalyse erzeugt. `--max-analysis-positions` ist ein
+  explizites Laufzeitbudget fuer den Benchmark, keine allgemeine 21er-Regel.
 - `docs/benchmark-results/2026-05-23.ocr-live-baseline.md`:
   OCR-Live-Benchmark mit 6 PDFs, 23 Diagrammen, 1686 Textzeichen, 6/6 Gates
   passed und 0% FEN-False-Positive-Rate. FENs werden weiterhin nicht geraten.
@@ -176,3 +196,30 @@ python3 scripts/run_benchmark_smoke.py
 
 `scripts/check-ecosystem.sh` fuehrt den Smoke automatisch als letzten Schritt
 aus.  Er liefert nur Pass/Fail; keine lokalen Pfade, keine Live-Queries.
+
+## Live-Modellbenchmark
+
+Der echte Drei-Spiele-Lauf ist bewusst kein Standard-Check. Er benoetigt
+Router, Stockfish und freigegebene lokale PGN-Daten. Der Lauf kann im
+Hintergrund gestartet werden; fuer Feedback-Laeufe ist der Website-Upload
+verbindlich. Der API-Token kommt nur aus einer lokalen Env-Variable und wird
+nicht ausgegeben:
+
+```bash
+env CAILAMA_LLM_PROVIDER=openai_compatible \
+  CAILAMA_LLM_BASE_URL=http://127.0.0.1:18080/v1 \
+  .venv/bin/python scripts/run_ptg_model_benchmark.py \
+  --pgn /pfad/zum/freigegebenen/import.pgn \
+  --output-dir ~/.local/share/cailama/benchmarks/ptg-models \
+  --models kimi-k2.6:cloud,gemma4:31b-cloud,qwen3.5:397b-cloud,deepseek-v4-flash:cloud \
+  --max-analysis-positions 7 \
+  --upload-url https://cailama.org/api/v1/benchmarks/observations \
+  --upload-token-env CAILAMA_DB_API_ADMIN_KEY \
+  --require-upload
+```
+
+Nach dem Upload erscheint der Lauf unter
+`https://cailama.org/benchmark-feedback.php`. Dort wird pro Modell Feedback zu
+Qualitaet, Aufgabenloesung, Logikfehlern und A/B-Praeferenz erfasst.
+Die Teilaufgaben `chess-small`/Zugklassifikation und `chess-analyst`/
+Schluesselstellungsanalyse erscheinen als eigene Feedback-Faelle.

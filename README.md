@@ -22,8 +22,8 @@ Human-/LLM-Referenz:
 Geschuetzter Arbeitsbereich:
 
 - <https://cailama.org/benchmark-feedback.php> - Login-geschuetztes
-  Modellrollen-Feedback fuer Laufzeit, Tokenwerte, Qualitaet,
-  Aufgabenloesung, Logikfehler und A/B-Praeferenzen.
+  Modellrollen-Feedback fuer importierte Laufdaten, Laufzeit, Tokenwerte,
+  Qualitaet, Aufgabenloesung, Logikfehler und A/B-Praeferenzen.
 
 Dieses Repository ist kein Monorepo und enthaelt keinen produktiven Code der
 Unterprojekte.

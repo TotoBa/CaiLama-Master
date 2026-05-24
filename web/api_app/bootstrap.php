@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use CaiLama\WebApi\Controllers\StatusController;
+use CaiLama\WebApi\Controllers\BenchmarkController;
 use CaiLama\WebApi\Controllers\ImportController;
 use CaiLama\WebApi\Controllers\SchemaController;
 use CaiLama\WebApi\Http\Request;
@@ -12,6 +13,7 @@ $config = require __DIR__ . '/init.php';
 
 $router = new Router();
 $router->post('/api/v1/status', StatusController::class, 'show');
+$router->post('/api/v1/benchmarks/observations', BenchmarkController::class, 'observations');
 $router->post('/api/v1/imports/cailama/append', ImportController::class, 'append');
 $router->post('/api/v1/imports/cailama/reset', ImportController::class, 'reset');
 $router->post('/api/v1/admin/schema/cailama', SchemaController::class, 'cailama');

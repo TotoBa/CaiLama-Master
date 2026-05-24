@@ -151,6 +151,18 @@ Vor Arbeitsbeginn lesen:
   RAG-/Researcher-`source_quality`-Kennzahlen fuer Benchmarkberichte. Offen
   bleibt die wiederholbare Cross-Repo-Orchestrierung und die automatische
   Uebernahme dieser Metriken in das Website-Feedback.
+  **Update 2026-05-24:** Die Website-API besitzt jetzt
+  `POST /api/v1/benchmarks/observations` fuer secretfreie Modelllaufdaten.
+  `benchmark-feedback.php` zeigt importierte Beobachtungen an und fuellt das
+  Feedbackformular pro Lauf vor. CaiLama kann den Drei-Spiele-PTG-
+  Modellbenchmark per `scripts/run_ptg_model_benchmark.py` ausfuehren und die
+  Beobachtungen hochladen. Der Lauf erzeugt pro Modell einen Gesamtfall und
+  rollenbezogene Faelle fuer `chess-small`/Klassifikation und
+  `chess-analyst`/Analyse, damit das beste Modell pro Aufgabe statt nur ein
+  globaler Sieger bestimmt werden kann. Fuer Feedback-Laeufe wird der Upload
+  mit `--require-upload` verbindlich gemacht. Offen bleibt die fachliche
+  Bewertung der heutigen Laeufe und die Ableitung belastbarer Modell-/Prompt-
+  Regeln.
 - [ ] Spaeteres spezialisiertes LLM-Training als Roadmap-Hebel vorbereiten:
   erst nach Benchmark-Baseline, Datenfreigabe, sauberer Test-/Eval-/Train-
   Trennung und Datenschutzklaerung planen. Modelle werden nur ueber den
@@ -173,7 +185,7 @@ Vor Arbeitsbeginn lesen:
   OCR/FEN-Gates, Analyse-/Training-Qualitaetsgates und Profil-Export/
   bestaetigte Profil-Loeschung sind umgesetzt. Offen bleiben Retention/
   Profilbindung fuer dateibasierte Trainingskarten und Review-Historien sowie
-  die automatische Uebernahme von Benchmarkmetriken in das Website-Feedback.
+  die fachliche Bewertung der importierten Website-Benchmarklaeufe.
   **Router** = aktuelle Infrastrukturwelle ist abgearbeitet: Backend-API-Key-
   Weitergabe, Token-/Usage-Metriken, `llm-router usage`, benchmarkbare
   Usage-/Latenzexporte und generische `endpoint_path`-Backends sind umgesetzt;
@@ -237,7 +249,9 @@ OCR/FEN-Gates ohne geratene FENs, RAG-Provenienz, Analyse-/Training-
 Qualitaetsgates sowie Profil-Export und bestaetigte Profil-Loeschung. Offen
 ist die Abrundung: Retention/Profilbindung fuer dateibasierte Trainingskarten
 und Review-Historien sowie automatische Router-/CaiLama-Metrikuebernahme in
-das Website-Feedback. Die 21 Positionen aus dem Benchmark sind nur Beobachtung
+das Website-Feedback. Neu vorbereitet ist der Drei-Spiele-PTG-Modellbenchmark
+mit Website-Beobachtungsimport; nach echten Laeufen sind die Feedbackfaelle auf
+der Website fachlich zu bewerten. Die 21 Positionen aus dem Benchmark sind nur Beobachtung
 aus drei Beispielpartien. Danach Search nur fuer semantische
 Freigabeentscheidung auf groesserem Eval; RAG-/Researcher-Kennzahlen sind als
 `source_quality` im Benchmark-Vertrag umgesetzt. Router nur bei neuem Alias-/
