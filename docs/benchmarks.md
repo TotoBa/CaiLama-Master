@@ -167,7 +167,11 @@ Ein Ergebnis enthaelt mindestens:
   Classify-/Analyze-Teil erzeugt zusaetzlich aggregierte PTG-Faelle.
   `--skip-ptg` ist fuer schnelle Feedbacklaeufe erlaubt; `--max-analysis-
   positions` ist ein explizites Laufzeitbudget fuer den vollen PTG-Lauf,
-  keine allgemeine 21er-Regel.
+  keine allgemeine 21er-Regel. Fuer vollstaendige Laeufe koennen
+  `--llm-timeout-seconds 0`, `--role-max-tokens 0` und
+  `--max-analysis-positions 0` gesetzt werden; fuer den finalen Upload gilt
+  entsprechend `--upload-timeout-seconds 0`. `0` bedeutet in diesem Runner
+  bewusst unbegrenzt.
 - `docs/benchmark-results/2026-05-23.ocr-live-baseline.md`:
   OCR-Live-Benchmark mit 6 PDFs, 23 Diagrammen, 1686 Textzeichen, 6/6 Gates
   passed und 0% FEN-False-Positive-Rate. FENs werden weiterhin nicht geraten.
@@ -207,7 +211,7 @@ Der echte Drei-Spiele-Lauf ist bewusst kein Standard-Check. Er benoetigt
 Router, Stockfish und freigegebene lokale PGN-Daten. Der Lauf kann im
 Hintergrund gestartet werden; fuer Feedback-Laeufe ist der Website-Upload
 verbindlich. Der API-Token kommt nur aus einer lokalen Env-Variable und wird
-nicht ausgegeben:
+nicht ausgegeben. Fuer schnelle Proben bleiben positive Limits sinnvoll:
 
 ```bash
 env CAILAMA_LLM_PROVIDER=openai_compatible \
@@ -220,6 +224,43 @@ env CAILAMA_LLM_PROVIDER=openai_compatible \
   --upload-url https://cailama.org/api/v1/benchmarks/observations \
   --upload-token-env CAILAMA_DB_API_ADMIN_KEY \
   --require-upload
+```
+
+Vollstaendiger Lauf ohne clientseitige Benchmark-Kappung:
+
+```bash
+env CAILAMA_LLM_PROVIDER=openai_compatible \
+  CAILAMA_LLM_BASE_URL=http://127.0.0.1:18080/v1 \
+  .venv/bin/python scripts/run_ptg_model_benchmark.py \
+  --pgn /pfad/zum/freigegebenen/import.pgn \
+  --output-dir ~/.local/share/cailama/benchmarks/ptg-models \
+  --models kimi-k2.6:cloud,deepseek-v4-flash:cloud,deepseek-v4-pro:cloud,gemma4:31b-cloud,qwen3.5:397b-cloud,glm-5.1:cloud,minimax-m2.7:cloud,nemotron-3-super:cloud,gpt-oss:20b-cloud,hemanth/chessplayer:latest,starling-lm:7b,gemma4:e2b,gemma4:e4b \
+  --llm-timeout-seconds 0 \
+  --upload-timeout-seconds 0 \
+  --role-max-tokens 0 \
+  --max-analysis-positions 0 \
+  --upload-url https://cailama.org/api/v1/benchmarks/observations \
+  --upload-token-env CAILAMA_DB_API_ADMIN_KEY \
+  --require-upload
+```
+
+Fuer diesen Lauf sollte der Router nicht ueber ein langsames Pi-Backend
+round-robinnen. Der Router enthaelt dafuer
+`configs/router.vm-dual-ollama.example.yaml` und
+`docker/docker-compose.dual-ollama.example.yml`: zwei lokale
+Ollama-Instanzen auf der VM, beide mit lokalen Secret-Keys aus der
+Operator-Konfiguration. Lokal auszufuehrende Modelle muessen in beiden
+Instanzen vorhanden sein:
+
+```bash
+docker exec cailama-ollama-vm-a ollama pull hemanth/chessplayer:latest
+docker exec cailama-ollama-vm-a ollama pull starling-lm:7b
+docker exec cailama-ollama-vm-a ollama pull gemma4:e2b
+docker exec cailama-ollama-vm-a ollama pull gemma4:e4b
+docker exec cailama-ollama-vm-b ollama pull hemanth/chessplayer:latest
+docker exec cailama-ollama-vm-b ollama pull starling-lm:7b
+docker exec cailama-ollama-vm-b ollama pull gemma4:e2b
+docker exec cailama-ollama-vm-b ollama pull gemma4:e4b
 ```
 
 Schneller Rollenlauf fuer heutiges Blind-Feedback:

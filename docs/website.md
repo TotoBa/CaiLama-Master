@@ -152,6 +152,9 @@ CAILAMA_WEB_SFTP_CONNECT_TIMEOUT=20
 CAILAMA_WEB_SFTP_PASSWORD_FILE=<optional-local-secret-file>
 CAILAMA_PUBLIC_URL=https://cailama.org
 CAILAMA_DEPLOY_ALLOW_MISSING_VENDOR=0
+CAILAMA_DEPLOY_CREATE_DIRS=0
+CAILAMA_DEPLOY_INCLUDE_VENDOR=0
+CAILAMA_DEPLOY_SMARTY=1
 ```
 
 Wenn `CAILAMA_WEB_SFTP_REMOTE_ROOT` gesetzt ist, leitet das Skript daraus
@@ -179,13 +182,21 @@ composer install --no-dev --optimize-autoloader
 ```
 
 Live-Deployment ist ein nativer SFTP-Upload von `web/` nach `public/` und
-`web-smarty/` nach `smarty/`. `web-smarty/vendor/` wird deployt, aber nicht
-versioniert.
+`web-smarty/` nach `smarty/`. Der Standardmodus ist bewusst schlank: Es wird
+Code hochgeladen, bestehende Zielordner werden vorausgesetzt und
+`web-smarty/vendor/` bleibt unberuehrt. Ordneranlage und Dependency-Upload
+werden nur mit expliziten Flags ausgefuehrt.
 
 Standardbefehl:
 
 ```bash
 scripts/deploy-website.sh
+```
+
+Erstinstallation oder bewusster Vollabgleich:
+
+```bash
+scripts/deploy-website.sh --full
 ```
 
 Expliziter lokaler Test-Zielpfad:
@@ -199,12 +210,21 @@ Das Skript:
 1. ermittelt das Git-Root,
 2. prüft `web/`, `web-smarty/`, `web-smarty/bootstrap.php` und
    `web-smarty/vendor/autoload.php`,
-3. lädt zuerst `web-smarty/` in den privaten Smarty-Zielordner,
+3. lädt zuerst `web-smarty/` ohne `vendor/` in den privaten Smarty-Zielordner,
+   sofern `--skip-smarty` nicht gesetzt ist,
 4. lädt danach `web/` per OpenSSH-`sftp` in den öffentlichen Document Root,
 5. entfernt stale Dateien anhand getrennter SFTP-Deploy-Manifeste,
 6. schützt die echte, ignorierte `web/api_app/config.local.php` vor Löschung,
 7. prüft beim Standard-Live-Ziel die gerenderten öffentlichen Seiten,
    statischen Dateien und LLM-Referenzen per SHA-256 über HTTPS.
+
+Deploy-Flags:
+
+- `--create-dirs`: Remote-Ordner vor dem Upload anlegen.
+- `--with-vendor`: `web-smarty/vendor/` mit hochladen.
+- `--skip-smarty`: nur `web/` hochladen.
+- `--full`: Ordner anlegen, `web/` hochladen, `web-smarty/` inklusive
+  `vendor/` hochladen.
 
 Der Standard-Ecosystem-Check berührt den Live-Webspace nicht. Mit
 `CAILAMA_CHECK_DEPLOYED_WEBSITE=1 bash scripts/check-ecosystem.sh` wird nur ein

@@ -169,6 +169,18 @@ Vor Arbeitsbeginn lesen:
   und langsame Provider nicht den gesamten Upload blockieren. Lokale CaiLama-
   Artefakte erfassen zusaetzlich Router-Backend, Provider-Modell und Fallback,
   falls der Router diese Header liefert; die Website-Bewertung bleibt blind.
+  **Update 2026-05-24:** Der volle Drei-Spiele-Modellbenchmark kann nun
+  bewusst ohne clientseitige Benchmark-Kappung laufen:
+  `--llm-timeout-seconds 0`, `--upload-timeout-seconds 0`,
+  `--role-max-tokens 0` und `--max-analysis-positions 0`. Die Modellliste
+  fuer den naechsten vollstaendigen Feedbacklauf umfasst zusaetzlich
+  `deepseek-v4-pro:cloud`,
+  `hemanth/chessplayer:latest`, `starling-lm:7b`, `gemma4:e2b` und
+  `gemma4:e4b`. Der Router besitzt eine Dual-Ollama-VM-Beispielkonfiguration,
+  damit die Laufzeitmessung nicht mehr vom Pi-Backend ausgebremst wird.
+  Das Website-Deploy-Skript laedt im Standardmodus nur Code hoch; Remote-
+  Ordneranlage und `web-smarty/vendor/`-Upload erfolgen nur mit explizitem
+  Flag (`--create-dirs`, `--with-vendor`, `--full`).
   Offen bleibt die fachliche
   Bewertung der heutigen Laeufe und die Ableitung belastbarer Modell-/Prompt-
   Regeln.

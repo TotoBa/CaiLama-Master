@@ -22,6 +22,9 @@ configurable_vars=(
   CAILAMA_PUBLIC_URL
   CAILAMA_DEPLOY_VERIFY
   CAILAMA_DEPLOY_ALLOW_MISSING_VENDOR
+  CAILAMA_DEPLOY_CREATE_DIRS
+  CAILAMA_DEPLOY_INCLUDE_VENDOR
+  CAILAMA_DEPLOY_SMARTY
 )
 saved_env_names=()
 deploy_method_from_env=0
@@ -47,11 +50,92 @@ for name in "${saved_env_names[@]}"; do
   printf -v "$name" "%s" "${!saved_name}"
 done
 
-target_arg="${1:-}"
+target_arg=""
+create_dirs="${CAILAMA_DEPLOY_CREATE_DIRS:-0}"
+include_vendor="${CAILAMA_DEPLOY_INCLUDE_VENDOR:-0}"
+deploy_smarty="${CAILAMA_DEPLOY_SMARTY:-1}"
 deploy_method="${CAILAMA_WEB_DEPLOY_METHOD:-}"
 public_url="${CAILAMA_PUBLIC_URL:-https://cailama.org}"
 public_url="${public_url%/}"
 verify_mode="${CAILAMA_DEPLOY_VERIFY:-}"
+
+usage() {
+  cat <<'USAGE'
+Usage: scripts/deploy-website.sh [options] [local-target]
+
+Options:
+  --create-dirs    Create remote directories before uploading files.
+  --with-vendor    Include web-smarty/vendor in the private upload.
+  --with-smarty    Upload private web-smarty app files (default).
+  --skip-smarty    Upload public web/ only.
+  --full           Equivalent to --create-dirs --with-vendor --with-smarty.
+  -h, --help       Show this help.
+
+Default SFTP mode uploads code only, assumes directories already exist, and
+skips third-party vendor libraries.
+USAGE
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --create-dirs)
+      create_dirs=1
+      ;;
+    --with-vendor|--include-vendor)
+      include_vendor=1
+      deploy_smarty=1
+      ;;
+    --with-smarty)
+      deploy_smarty=1
+      ;;
+    --skip-smarty)
+      deploy_smarty=0
+      ;;
+    --full)
+      create_dirs=1
+      include_vendor=1
+      deploy_smarty=1
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --)
+      shift
+      if [[ $# -gt 0 ]]; then
+        target_arg="${1:-}"
+        shift
+      fi
+      break
+      ;;
+    -*)
+      echo "ERROR: unknown deploy option: $1" >&2
+      usage >&2
+      exit 2
+      ;;
+    *)
+      if [[ -n "$target_arg" ]]; then
+        echo "ERROR: only one local target path can be supplied" >&2
+        exit 2
+      fi
+      target_arg="$1"
+      ;;
+  esac
+  shift
+done
+
+if [[ "$create_dirs" != "0" && "$create_dirs" != "1" ]]; then
+  echo "ERROR: CAILAMA_DEPLOY_CREATE_DIRS must be 0 or 1" >&2
+  exit 2
+fi
+if [[ "$include_vendor" != "0" && "$include_vendor" != "1" ]]; then
+  echo "ERROR: CAILAMA_DEPLOY_INCLUDE_VENDOR must be 0 or 1" >&2
+  exit 2
+fi
+if [[ "$deploy_smarty" != "0" && "$deploy_smarty" != "1" ]]; then
+  echo "ERROR: CAILAMA_DEPLOY_SMARTY must be 0 or 1" >&2
+  exit 2
+fi
 
 cd "$root"
 
@@ -167,13 +251,28 @@ remote_path_from_base() {
 
 write_smarty_manifest() {
   local manifest="$1"
-  find web-smarty \
-    -path "web-smarty/cache/smarty" -prune -o \
-    -path "web-smarty/cache/templates_c" -prune -o \
-    -name ".git*" -prune -o \
+  local find_args=(
+    web-smarty
+    -path "web-smarty/cache/smarty" -prune -o
+    -path "web-smarty/cache/templates_c" -prune -o
+    -name ".git*" -prune -o
+  )
+  if [[ "$include_vendor" != "1" ]]; then
+    find_args+=(-path "web-smarty/vendor" -prune -o)
+  fi
+  find "${find_args[@]}" \
     -type f \
     ! -path "web-smarty/composer.lock" \
     -printf "%P\n" | LC_ALL=C sort > "$manifest"
+}
+
+filter_previous_smarty_manifest() {
+  local source="$1" target="$2"
+  if [[ "$include_vendor" == "1" ]]; then
+    LC_ALL=C sort -u "$source" > "$target"
+  else
+    grep -vE '^(vendor/|vendor$)' "$source" | LC_ALL=C sort -u > "$target" || true
+  fi
 }
 
 sftp_batch() {
@@ -264,16 +363,32 @@ deploy_local() {
     --exclude "/api_app/config.local.php" \
     --exclude "/api_app/config.local.*.php" \
     "web/" "$target/"
-  rsync -a --delete \
-    --exclude "/cache/smarty/*" \
-    --exclude "/cache/templates_c/*" \
-    --exclude "/composer.lock" \
-    --exclude ".git*/" \
-    --exclude ".git*" \
-    "web-smarty/" "$smarty_target/"
+  if [[ "$deploy_smarty" == "1" ]]; then
+    local smarty_rsync_args=(
+      -a
+      --delete
+      --exclude "/cache/smarty/*"
+      --exclude "/cache/templates_c/*"
+      --exclude "/composer.lock"
+      --exclude ".git*/"
+      --exclude ".git*"
+    )
+    if [[ "$include_vendor" != "1" ]]; then
+      smarty_rsync_args+=(--exclude "/vendor/")
+    fi
+    rsync "${smarty_rsync_args[@]}" "web-smarty/" "$smarty_target/"
+  fi
 
   echo "Deployed web/ to $target"
-  echo "Deployed web-smarty/ to $smarty_target"
+  if [[ "$deploy_smarty" == "1" ]]; then
+    if [[ "$include_vendor" == "1" ]]; then
+      echo "Deployed web-smarty/ including vendor to $smarty_target"
+    else
+      echo "Deployed web-smarty/ app files to $smarty_target (vendor skipped)"
+    fi
+  else
+    echo "SKIP: private web-smarty deployment disabled"
+  fi
 }
 
 deploy_sftp() {
@@ -340,20 +455,22 @@ deploy_sftp() {
   fi
 
   {
-    printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path)")"
-    while IFS= read -r directory; do
-      printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path "$directory")")"
-    done < <(
-      awk -F/ '
-        NF > 1 {
-          path = ""
-          for (i = 1; i < NF; i++) {
-            path = path ? path "/" $i : $i
-            print path
+    if [[ "$create_dirs" == "1" ]]; then
+      printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path)")"
+      while IFS= read -r directory; do
+        printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path "$directory")")"
+      done < <(
+        awk -F/ '
+          NF > 1 {
+            path = ""
+            for (i = 1; i < NF; i++) {
+              path = path ? path "/" $i : $i
+              print path
+            }
           }
-        }
-      ' "$manifest" | LC_ALL=C sort -u
-    )
+        ' "$manifest" | LC_ALL=C sort -u
+      )
+    fi
     while IFS= read -r relative; do
       printf "put -p %s %s\n" \
         "$(sftp_quote "web/$relative")" \
@@ -395,7 +512,7 @@ deploy_smarty_sftp() {
   sftp_batch "$batch" >/dev/null || true
 
   if [[ -f "$previous_manifest" ]]; then
-    LC_ALL=C sort -u "$previous_manifest" > "$tmp_dir/previous-smarty-manifest.sorted"
+    filter_previous_smarty_manifest "$previous_manifest" "$tmp_dir/previous-smarty-manifest.sorted"
     comm -23 "$tmp_dir/previous-smarty-manifest.sorted" "$manifest" > "$stale_files"
   else
     : > "$stale_files"
@@ -429,23 +546,25 @@ deploy_smarty_sftp() {
   fi
 
   {
-    printf -- "-mkdir %s\n" "$(sftp_quote "$remote_base")"
-    printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path_from_base "$remote_base" "cache")")"
-    printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path_from_base "$remote_base" "cache/smarty")")"
-    printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path_from_base "$remote_base" "cache/templates_c")")"
-    while IFS= read -r directory; do
-      printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path_from_base "$remote_base" "$directory")")"
-    done < <(
-      awk -F/ '
-        NF > 1 {
-          path = ""
-          for (i = 1; i < NF; i++) {
-            path = path ? path "/" $i : $i
-            print path
+    if [[ "$create_dirs" == "1" ]]; then
+      printf -- "-mkdir %s\n" "$(sftp_quote "$remote_base")"
+      printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path_from_base "$remote_base" "cache")")"
+      printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path_from_base "$remote_base" "cache/smarty")")"
+      printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path_from_base "$remote_base" "cache/templates_c")")"
+      while IFS= read -r directory; do
+        printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path_from_base "$remote_base" "$directory")")"
+      done < <(
+        awk -F/ '
+          NF > 1 {
+            path = ""
+            for (i = 1; i < NF; i++) {
+              path = path ? path "/" $i : $i
+              print path
+            }
           }
-        }
-      ' "$manifest" | LC_ALL=C sort -u
-    )
+        ' "$manifest" | LC_ALL=C sort -u
+      )
+    fi
     while IFS= read -r relative; do
       printf "put -p %s %s\n" \
         "$(sftp_quote "web-smarty/$relative")" \
@@ -458,7 +577,11 @@ deploy_smarty_sftp() {
 
   sftp_batch "$upload_batch" >/dev/null
   rm -rf "$tmp_dir"
-  echo "Deployed web-smarty/ to private SFTP target"
+  if [[ "$include_vendor" == "1" ]]; then
+    echo "Deployed web-smarty/ including vendor to private SFTP target"
+  else
+    echo "Deployed web-smarty/ app files to private SFTP target (vendor skipped)"
+  fi
 }
 
 reset_remote_php_cache() {
@@ -590,7 +713,11 @@ case "$deploy_method" in
     verify_deploy "$local_target"
     ;;
   sftp)
-    deploy_smarty_sftp
+    if [[ "$deploy_smarty" == "1" ]]; then
+      deploy_smarty_sftp
+    else
+      echo "SKIP: private web-smarty deployment disabled"
+    fi
     deploy_sftp
     verify_deploy
     ;;
