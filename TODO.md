@@ -157,13 +157,16 @@ Vor Arbeitsbeginn lesen:
   Feedbackformular pro Lauf vor. CaiLama kann den Drei-Spiele-PTG-
   Modellbenchmark per `scripts/run_ptg_model_benchmark.py` ausfuehren und die
   Beobachtungen hochladen. Der Lauf erzeugt pro Modell einen Gesamtfall und
-  rollenbezogene Faelle fuer `chess-small`/Klassifikation und
-  `chess-analyst`/Analyse, damit das beste Modell pro Aufgabe statt nur ein
-  globaler Sieger bestimmt werden kann. Fuer Feedback-Laeufe wird der Upload
-  mit `--require-upload` verbindlich gemacht. Das Feedback ist blind:
+  rollenbezogene Faelle fuer alle verfuegbaren CaiLama-Rollen (`router`,
+  `small`, `large`, `task`, `translator`, `coach`, `analyst`, `critic`,
+  `vision`, `scribe`, `researcher`), damit das beste Modell pro Aufgabe statt
+  nur ein globaler Sieger bestimmt werden kann. Fuer Feedback-Laeufe wird der
+  Upload mit `--require-upload` verbindlich gemacht. Das Feedback ist blind:
   importierte Laeufe zeigen nur Kandidaten-Codes, keine Modellnamen; die
-  Zuordnung bleibt serverseitig. Offen bleibt die fachliche Bewertung der
-  heutigen Laeufe und die Ableitung belastbarer Modell-/Prompt-Regeln.
+  Zuordnung bleibt serverseitig. `--skip-ptg` erlaubt schnelle Rollen-
+  Feedbacklaeufe ohne den teuren PTG-Teil. Offen bleibt die fachliche
+  Bewertung der heutigen Laeufe und die Ableitung belastbarer Modell-/Prompt-
+  Regeln.
 - [ ] Spaeteres spezialisiertes LLM-Training als Roadmap-Hebel vorbereiten:
   erst nach Benchmark-Baseline, Datenfreigabe, sauberer Test-/Eval-/Train-
   Trennung und Datenschutzklaerung planen. Modelle werden nur ueber den

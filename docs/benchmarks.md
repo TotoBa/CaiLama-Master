@@ -161,10 +161,13 @@ Ein Ergebnis enthaelt mindestens:
   extrahiert die drei freigegebenen Baseline-Spiele aus dem lokalen PGN-
   Archiv, laesst die PTG-Pipeline pro Router-Modell laufen, schreibt lokale
   Artefakte und kann die secretfreien Beobachtungen in die Website-API
-  hochladen. Pro Modell werden ein aggregierter PTG-Fall sowie rollenbezogene
-  Faelle fuer `chess-small`/Zugklassifikation und `chess-analyst`/
-  Schluesselstellungsanalyse erzeugt. `--max-analysis-positions` ist ein
-  explizites Laufzeitbudget fuer den Benchmark, keine allgemeine 21er-Regel.
+  hochladen. Pro Modell werden Rollen-Probes fuer alle CaiLama-Rollen
+  erzeugt: `router`, `small`, `large`, `task`, `translator`, `coach`,
+  `analyst`, `critic`, `vision`, `scribe` und `researcher`. Der teure PTG-
+  Classify-/Analyze-Teil erzeugt zusaetzlich aggregierte PTG-Faelle.
+  `--skip-ptg` ist fuer schnelle Feedbacklaeufe erlaubt; `--max-analysis-
+  positions` ist ein explizites Laufzeitbudget fuer den vollen PTG-Lauf,
+  keine allgemeine 21er-Regel.
 - `docs/benchmark-results/2026-05-23.ocr-live-baseline.md`:
   OCR-Live-Benchmark mit 6 PDFs, 23 Diagrammen, 1686 Textzeichen, 6/6 Gates
   passed und 0% FEN-False-Positive-Rate. FENs werden weiterhin nicht geraten.
@@ -219,10 +222,23 @@ env CAILAMA_LLM_PROVIDER=openai_compatible \
   --require-upload
 ```
 
+Schneller Rollenlauf fuer heutiges Blind-Feedback:
+
+```bash
+env CAILAMA_LLM_PROVIDER=openai_compatible \
+  CAILAMA_LLM_BASE_URL=http://127.0.0.1:18080/v1 \
+  .venv/bin/python scripts/run_ptg_model_benchmark.py \
+  --pgn /pfad/zum/freigegebenen/import.pgn \
+  --output-dir ~/.local/share/cailama/benchmarks/ptg-models \
+  --models kimi-k2.6:cloud,gemma4:31b-cloud,qwen3.5:397b-cloud,deepseek-v4-flash:cloud \
+  --skip-ptg \
+  --upload-url https://cailama.org/api/v1/benchmarks/observations \
+  --upload-token-env CAILAMA_DB_API_ADMIN_KEY \
+  --require-upload
+```
+
 Nach dem Upload erscheint der Lauf unter
 `https://cailama.org/benchmark-feedback.php`. Dort wird pro Modell Feedback zu
 Qualitaet, Aufgabenloesung, Logikfehlern und A/B-Praeferenz erfasst.
-Die Teilaufgaben `chess-small`/Zugklassifikation und `chess-analyst`/
-Schluesselstellungsanalyse erscheinen als eigene Feedback-Faelle. Die
-sichtbare Bewertung bleibt blind: angezeigt wird nur ein Kandidaten-Code,
-nicht der Modellname.
+Jede Rolle erscheint als eigener Feedback-Fall. Die sichtbare Bewertung bleibt
+blind: angezeigt wird nur ein Kandidaten-Code, nicht der Modellname.

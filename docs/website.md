@@ -383,9 +383,10 @@ Importierte Benchmark-Läufe werden blind bewertet: Die Website zeigt nur
 Kandidaten-Codes und lädt das echte Modell serverseitig anhand der
 Beobachtungs-ID, damit im Formular kein Modellname sichtbar ist.
 Benchmark-Fälle speichern Rolle und Aufgabe getrennt, damit dieselben
-Modellkandidaten rollenweise bewertet werden können, etwa
-`chess-small`/Zugklassifikation gegenüber `chess-analyst`/
-Schlüsselstellungsanalyse.
+Modellkandidaten rollenweise bewertet werden können. Der aktuelle
+Drei-Spiele-Benchmark erzeugt Fälle für alle CaiLama-Rollen: `router`,
+`small`, `large`, `task`, `translator`, `coach`, `analyst`, `critic`,
+`vision`, `scribe` und `researcher`.
 
 API-Key-Prüfung und Scopes sind als Hash-basierte Bearer-Token-Prüfung
 verdrahtet. Es gibt getrennte Keys für Status, Append-Import, Reset-Import und

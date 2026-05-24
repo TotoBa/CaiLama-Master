@@ -183,6 +183,10 @@ Aktueller Fokus:
   Coach, Analyst, Researcher und Vision/OCR erfassen. Modelle werden
   rollenweise verglichen; Ziel ist ein belastbarer Favorit pro Aufgabe und
   Rolle, nicht nur ein globaler Sieger.
+- Der Drei-Spiele-Modellbenchmark erzeugt Rollen-Probes fuer alle CaiLama-
+  Rollen (`router`, `small`, `large`, `task`, `translator`, `coach`,
+  `analyst`, `critic`, `vision`, `scribe`, `researcher`) und kann den teuren
+  PTG-Teil fuer schnelle Blind-Feedbacklaeufe mit `--skip-ptg` auslassen.
 - Offen bleiben Retention/Profilbindung für dateibasierte Trainingskarten und
   Review-Historien sowie die automatische Übernahme von Benchmarkmetriken in
   das geschützte Website-Feedback.
