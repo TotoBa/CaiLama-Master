@@ -114,8 +114,10 @@ Output- oder Fehlerauszug und bei stellungsbezogenen Faellen ein responsives
 Schachbrett aus der FEN. Rohprompts, volle Modellantworten, private Partien,
 lokale Pfade und Secrets gehoeren nicht in diese Tabellen; dort liegen nur
 vergleichbare Kennzahlen, kurze Aufgabenbeschreibungen, knappe Auszuege,
-optionale Stellungsdaten und menschliches Feedback. Die Ergebnis-Seite zeigt
-Aggregationen pro Lauf, Rolle, Fall und Kandidat weiterhin ohne Modellnamen.
+optionale Stellungsdaten und menschliches Feedback. Uebersetzung/deutsche
+Ausgabe kann als eigene Bewertungsdimension erfasst werden. Die Ergebnis-Seite
+zeigt Aggregationen pro Lauf, Rolle, Fall und Kandidat weiterhin ohne
+Modellnamen.
 Die offene Feedbackliste zeigt alle noch unbewerteten Beobachtungen eines
 Laufs; bereits bewertete Kandidaten verschwinden aus der Liste. Ein Klick auf
 `Bewerten` oeffnet eine fokussierte Einzelfallseite. Der Playmodus laedt nach
@@ -182,11 +184,15 @@ Ein Ergebnis enthaelt mindestens:
   Classify-/Analyze-Teil erzeugt zusaetzlich aggregierte PTG-Faelle.
   Beobachtungen enthalten neben Dauer, Tokens, Artefakt und Output-Auszug auch
   Aufgaben-Auszug, erwarteten Ausgabetyp, optionale FEN/Side-to-move- und
-  Kandidatenzug-Auszuege. Backend-Fehler oder abgelehnte Thinking-Modi werden
-  als Feedbackfaelle importiert und brechen den Gesamtlauf nicht ab. Der
-  Website-Upload streamt Beobachtungen in 100er-Batches, sobald ein Batch voll
-  ist; erste Feedbackfaelle koennen daher bereits bewertet werden, waehrend der
-  lange Benchmark weiterlaeuft.
+  Kandidatenzug-Auszuege. Backend-Fehler, abgelehnte Thinking-Modi und harte
+  Strukturfehler wie falsche Router-Toolwahl, ungueltiges JSON, fehlende
+  Quellenmarker oder geratene FENs werden als Feedbackfaelle importiert und
+  brechen den Gesamtlauf nicht ab. Strukturfehler koennen serverseitig
+  automatisch als nicht manuell bewertbar geschlossen werden. Der Website-
+  Upload streamt Beobachtungen in 50er-Batches, sobald ein Batch voll ist;
+  erste Feedbackfaelle koennen daher bereits bewertet werden, waehrend der
+  lange Benchmark weiterlaeuft. Rollen-Probes sprechen intern englisch; Deutsch
+  ist eine Ausgabe-/Uebersetzungsschicht und kann separat bewertet werden.
   `--skip-ptg` ist fuer schnelle Feedbacklaeufe erlaubt; `--max-analysis-
   positions` ist ein explizites Laufzeitbudget fuer den vollen PTG-Lauf,
   keine allgemeine 21er-Regel. Fuer vollstaendige Laeufe koennen
@@ -261,6 +267,7 @@ env CAILAMA_LLM_PROVIDER=openai_compatible \
   --upload-timeout-seconds 0 \
   --role-max-tokens 0 \
   --max-analysis-positions 0 \
+  --cloud-concurrency 4 \
   --upload-url https://cailama.org/api/v1/benchmarks/observations \
   --upload-token-env CAILAMA_DB_API_ADMIN_KEY \
   --require-upload
@@ -270,24 +277,31 @@ Fuer diesen Lauf sollte der Router nicht ueber ein langsames Pi-Backend
 round-robinnen. Der Router enthaelt dafuer
 `configs/router.vm-dual-ollama.example.yaml` und
 `docker/docker-compose.dual-ollama.example.yml`: zwei lokale Docker-Ollamas
-auf der VM, beide mit lokalen Secret-Keys aus der Operator-Konfiguration.
-Diese Container sind nur die zwei Cloud-Ausgaenge. Lokal auszufuehrende
-Modelle laufen ueber den vorhandenen Host-Ollama auf `127.0.0.1:11434`, damit
-sie nur einmal geladen werden muessen und die VM nicht zwei lokale Modelle
-parallel startet:
+auf der VM, beide mit eigenen persistenten Ollama-Cloud-Anmeldungen in ihren
+Docker-Volumes.
+Diese Container sind nur die zwei Cloud-Ausgaenge. Cloud-Modelle duerfen im
+Runner mit `--cloud-concurrency 4` parallel laufen. Lokale Modelle laufen
+parallel dazu in einer eigenen Einser-Spur: Cloud-Aufgaben koennen also weiter
+arbeiten, aber auf Host-Ollama wird immer nur ein lokales Modell gleichzeitig
+geladen. Lokal auszufuehrende Modelle laufen ueber den vorhandenen
+Host-Ollama auf `127.0.0.1:11434`, damit sie nur einmal geladen werden muessen
+und die VM nicht zwei lokale Modelle parallel startet:
 
 ```bash
 ollama pull starling-lm:7b
 ollama pull gemma4:e2b
 ollama pull gemma4:e4b
 ollama pull qwen3.6:27b
+ollama pull granite4.1:3b
 ```
 
-Alle lokal in Host-Ollama vorhandenen Modelle werden ueber den Router als
-Benchmark-Kandidaten angeboten. `hemanth/chessplayer:latest` bleibt aktuell
-ausgenommen, weil ein wiederholter Pull einen fehlerhaften GGUF-Blob lieferte
-und Host-Ollama in einen Crash-Loop brachte; die Quarantaene ist lokale
-Runtime-Wartung und gehoert nicht ins Repo.
+Aktuell werden fuer den naechsten Lauf die kleinen Host-Ollama-Kandidaten bis
+etwa 2 GB plus die ausdruecklich gewuenschte Ausnahme `granite4.1:3b` ueber
+den Router angeboten. Groessere lokale Modelle bleiben aus dem automatischen
+Benchmark heraus, damit der Lauf nicht durch lokale Ladezeiten blockiert.
+`hemanth/chessplayer:latest` bleibt aktuell ausgenommen, weil ein wiederholter
+Pull einen fehlerhaften GGUF-Blob lieferte und Host-Ollama in einen Crash-Loop
+brachte; die Quarantaene ist lokale Runtime-Wartung und gehoert nicht ins Repo.
 
 Ollamas CLI bietet Thinking-Mode-Werte `false`, `true`, `low`, `medium` und
 `high` fuer unterstuetzte Modelle. Der Router bildet diese fuer alle
@@ -297,18 +311,18 @@ GPT-OSS-Modelle nutzen nur die dokumentierten Stufen `low`, `medium` und
 Benchmark-Runner den Fehler als Feedbackfall und faehrt mit den uebrigen
 Modellen fort.
 
-Nach dem Eintragen oder Aendern der lokalen Ollama-Cloud-Keys in der
-unversionierten Router-`.env` muessen die Container neu erstellt und der
-Router neu gestartet werden. Die Container sind mit `restart: unless-stopped`
-vorbereitet; Docker, Router und Search muessen als Boot-Dienste enabled sein,
-damit die Benchmark-Infrastruktur nach einem Neustart wieder verfuegbar ist.
-Praktischer Live-Befund: Fuer Ollama-Cloud reicht die Env-Key-Weitergabe
-allein nicht immer; die Docker-Ollamas muessen im privaten Docker-Volume auch
-eine signierte Ollama-Anmeldung besitzen oder im Container per `ollama signin`
-eingerichtet werden. Fehlt diese Anmeldung, liefert Ollama bei Cloud-Modellen
-HTTP 500 mit `internal service error` beziehungsweise meldet im CLI, dass eine
-Anmeldung erforderlich ist. Signierte Ollama-Dateien und Keys bleiben lokale
-Operator-Secrets und werden nicht dokumentiert oder versioniert.
+Die Container sind mit `restart: unless-stopped` vorbereitet; Docker, Router
+und Search muessen als Boot-Dienste enabled sein, damit die Benchmark-
+Infrastruktur nach einem Neustart wieder verfuegbar ist. Praktischer
+Live-Befund: Fuer Ollama-Cloud ist die signierte Ollama-Anmeldung im privaten
+Docker-Volume entscheidend. API-Keys sind fuer diese Docker-Ollamas nicht
+erforderlich, wenn die Anmeldung vorhanden ist; dann sollte der Router keinen
+Authorization-Header an die Docker-Ollamas senden, damit ein falscher Key den
+eingeloggten Account nicht uebersteuert. Docker persistiert diese Anmeldung in
+named volumes ueber Neustarts hinweg. Fehlt diese Anmeldung, liefert Ollama bei
+Cloud-Modellen HTTP 500 mit `internal service error` beziehungsweise meldet im
+CLI, dass eine Anmeldung erforderlich ist. Signierte Ollama-Dateien und Keys
+bleiben lokale Operator-Secrets und werden nicht dokumentiert oder versioniert.
 
 Schneller Rollenlauf fuer heutiges Blind-Feedback:
 

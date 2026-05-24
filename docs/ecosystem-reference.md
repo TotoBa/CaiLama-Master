@@ -188,6 +188,10 @@ Aktueller Fokus:
   Rollen (`router`, `small`, `large`, `task`, `translator`, `coach`,
   `analyst`, `critic`, `vision`, `scribe`, `researcher`) und kann den teuren
   PTG-Teil fuer schnelle Blind-Feedbacklaeufe mit `--skip-ptg` auslassen.
+  Cloud-Kandidaten duerfen im Runner parallel laufen; lokale Host-Ollama-
+  Kandidaten laufen parallel dazu nur in einer Einser-Spur. Rollen-Probes
+  verwenden intern englische Aufgaben; deutsche Ausgabe/Uebersetzung wird als
+  eigene Bewertungsdimension behandelt.
 - Offen bleiben Retention/Profilbindung für dateibasierte Trainingskarten und
   Review-Historien sowie die automatische Übernahme von Benchmarkmetriken in
   das geschützte Website-Feedback.
@@ -385,7 +389,8 @@ Vertrag:
   vollständige Antworten, lokale Pfade und Secrets sind ausgeschlossen.
   Optionale Felder für Aufgaben-Auszug, erwarteten Ausgabetyp, FEN,
   Side-to-move, Positionslabel, Kandidatenzug-Auszug und gekürzte Fehlerdaten
-  sind erlaubt.
+  sind erlaubt. Harte Strukturfehler werden beim Import automatisch als nicht
+  manuell bewertbare Feedbackfälle geschlossen.
 - Importierte Benchmark-Läufe werden im Website-Feedback blind angezeigt:
   Nutzer sehen Kandidaten-Codes statt Modellnamen; die Zuordnung bleibt
   serverseitig in der Datenbank.

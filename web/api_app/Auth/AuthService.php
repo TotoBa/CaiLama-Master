@@ -14,20 +14,21 @@ final class AuthService
     ) {
     }
 
-    public function authenticate(string $email, string $password): ?array
+    public function authenticate(string $login, string $password): ?array
     {
         if (!($this->config['enabled'] ?? false)) {
             throw new RuntimeException('Login is not configured.');
         }
 
-        $email = strtolower(trim($email));
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 190 || $password === '') {
+        $login = strtolower(trim($login));
+        if ($login === '' || strlen($login) > 190 || !preg_match('/^[a-z0-9._@-]+$/', $login) || $password === '') {
             return null;
         }
 
         $table = self::identifier((string) ($this->config['users_table'] ?? 'web_users'));
         $columns = [
             'id' => self::identifier((string) ($this->config['id_column'] ?? 'id')),
+            'login' => self::identifier((string) ($this->config['login_column'] ?? 'login_name')),
             'email' => self::identifier((string) ($this->config['email_column'] ?? 'email')),
             'display_name' => self::identifier((string) ($this->config['display_name_column'] ?? 'display_name')),
             'password_hash' => self::identifier((string) ($this->config['password_hash_column'] ?? 'password_hash')),
@@ -35,18 +36,19 @@ final class AuthService
         ];
 
         $sql = sprintf(
-            'SELECT %s AS id, %s AS email, %s AS display_name, %s AS password_hash, %s AS status FROM %s WHERE %s = :email LIMIT 1',
+            'SELECT %s AS id, %s AS login_name, %s AS email, %s AS display_name, %s AS password_hash, %s AS status FROM %s WHERE %s = :login LIMIT 1',
             $columns['id'],
+            $columns['login'],
             $columns['email'],
             $columns['display_name'],
             $columns['password_hash'],
             $columns['status'],
             $table,
-            $columns['email'],
+            $columns['login'],
         );
 
         $statement = $this->pdo->prepare($sql);
-        $statement->execute(['email' => $email]);
+        $statement->execute(['login' => $login]);
         $row = $statement->fetch();
 
         if (!is_array($row)) {
@@ -65,6 +67,7 @@ final class AuthService
 
         return [
             'id' => (string) ($row['id'] ?? ''),
+            'login_name' => (string) ($row['login_name'] ?? ''),
             'email' => (string) ($row['email'] ?? ''),
             'display_name' => (string) ($row['display_name'] ?? ''),
         ];

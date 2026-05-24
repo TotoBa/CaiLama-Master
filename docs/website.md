@@ -401,7 +401,8 @@ Seiten bleiben `noindex`/`nofollow`. Gespeichert werden wiederverwendbare
 Bewertungsdaten für Modellrollen in `cailama_model_benchmark_cases`,
 `cailama_model_benchmark_observations` und `cailama_model_feedback`:
 Laufzeit, Input-/Thinking-/Output-Tokens, Qualitäts-Score, Aufgaben-Score,
-Logikfehler-Klasse, A/B-Präferenz, secretfreie Lauf-Auszüge, knappe
+optionaler Übersetzungs-Score, Logikfehler-Klasse, A/B-Präferenz,
+secretfreie Lauf-Auszüge, knappe
 Feedbacknotizen und optionale fachliche Kontextfelder für Aufgaben-Auszug,
 erwarteten Ausgabetyp, FEN, Side-to-move, Positionslabel,
 Kandidatenzug-Auszug sowie gekürzte Fehlerdaten. Rohprompts, volle
@@ -420,6 +421,11 @@ Feedbacklauf nicht blockieren; die PTG-Tiefenanalyse bleibt separat. Lokale
 Benchmark-Artefakte duerfen Router-Backend-/Provider-/Fallback-Metriken
 speichern, die Website zeigt diese technische Zuordnung aber nicht im
 Bewertungsformular.
+Harte Strukturfehler (`structure_failed`) wie falsche Router-Toolwahl,
+ungueltige JSON-Struktur, fehlende Quellenmarker oder verbotene FEN-Ausgabe
+werden beim Import automatisch als nicht manuell bewertbare Fehlerfaelle
+geschlossen. Dadurch bleibt die offene Feedbackliste auf inhaltlich noch zu
+bewertende Antworten fokussiert.
 
 Wenn eine importierte Beobachtung eine FEN enthält, rendert die Feedback-Seite
 ein responsives 8x8-Brett. Figurensätze sind konfigurierbar über

@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS cailama_schema_meta (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO cailama_schema_meta (id, schema_name, schema_version)
-VALUES (1, 'cailama-data', '0.5.0')
+VALUES (1, 'cailama-data', '0.7.0')
 ON DUPLICATE KEY UPDATE schema_version = VALUES(schema_version);
 
 -- Website user authentication table (formerly in a separate auth database).
@@ -19,7 +19,8 @@ ON DUPLICATE KEY UPDATE schema_version = VALUES(schema_version);
 -- php -r 'echo password_hash("replace-this-password", PASSWORD_DEFAULT), PHP_EOL;'
 CREATE TABLE IF NOT EXISTS web_users (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(190) NOT NULL UNIQUE,
+    login_name VARCHAR(190) NOT NULL UNIQUE,
+    email VARCHAR(190) NULL UNIQUE,
     display_name VARCHAR(120) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     status ENUM('active', 'locked') NOT NULL DEFAULT 'active',
@@ -29,8 +30,8 @@ CREATE TABLE IF NOT EXISTS web_users (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Example first user (uncomment and replace hash on target system):
--- INSERT INTO web_users (email, display_name, password_hash, status)
--- VALUES ('sample@example.invalid', 'CaiLama Admin', '<replace-with-password-hash>', 'active');
+-- INSERT INTO web_users (login_name, email, display_name, password_hash, status)
+-- VALUES ('testuser', NULL, 'CaiLama Admin', '<replace-with-password-hash>', 'active');
 
 -- Model-role benchmark cases and reusable human feedback.
 -- Raw prompts, full responses and private game data do not belong here.
@@ -52,8 +53,10 @@ CREATE TABLE IF NOT EXISTS cailama_model_benchmark_cases (
 
 CREATE TABLE IF NOT EXISTS cailama_model_feedback (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    observation_id BIGINT UNSIGNED NULL,
     case_id BIGINT UNSIGNED NOT NULL,
     user_id BIGINT UNSIGNED NULL,
+    run_key VARCHAR(120) NOT NULL DEFAULT '',
     model_label VARCHAR(120) NOT NULL,
     duration_ms INT UNSIGNED NULL,
     input_tokens INT UNSIGNED NULL,
@@ -63,9 +66,13 @@ CREATE TABLE IF NOT EXISTS cailama_model_feedback (
     task_solution_score TINYINT UNSIGNED NOT NULL,
     logic_error_level ENUM('none', 'minor', 'major', 'unknown') NOT NULL DEFAULT 'unknown',
     preferred_option ENUM('a', 'b', 'tie', 'not_applicable') NOT NULL DEFAULT 'not_applicable',
+    translation_score TINYINT UNSIGNED NULL,
     feedback_text TEXT NULL,
     improvement_note TEXT NULL,
+    translation_note TEXT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_cailama_model_feedback_observation (observation_id),
+    INDEX idx_cailama_model_feedback_run_case (run_key, case_id),
     INDEX idx_cailama_model_feedback_case_created (case_id, created_at),
     INDEX idx_cailama_model_feedback_model (model_label),
     CONSTRAINT fk_cailama_model_feedback_case
@@ -111,6 +118,22 @@ ALTER TABLE cailama_model_benchmark_observations
     ADD COLUMN IF NOT EXISTS candidate_moves_excerpt TEXT NULL AFTER expected_output_type,
     ADD COLUMN IF NOT EXISTS error_status VARCHAR(40) NOT NULL DEFAULT '' AFTER candidate_moves_excerpt,
     ADD COLUMN IF NOT EXISTS error_message VARCHAR(500) NOT NULL DEFAULT '' AFTER error_status;
+
+ALTER TABLE web_users
+    ADD COLUMN IF NOT EXISTS login_name VARCHAR(190) NOT NULL DEFAULT '' AFTER id;
+
+UPDATE web_users
+SET login_name = email
+WHERE login_name = '' AND email IS NOT NULL AND email <> '';
+
+ALTER TABLE web_users
+    MODIFY COLUMN email VARCHAR(190) NULL;
+
+ALTER TABLE cailama_model_feedback
+    ADD COLUMN IF NOT EXISTS observation_id BIGINT UNSIGNED NULL AFTER id,
+    ADD COLUMN IF NOT EXISTS run_key VARCHAR(120) NOT NULL DEFAULT '' AFTER user_id,
+    ADD COLUMN IF NOT EXISTS translation_score TINYINT UNSIGNED NULL AFTER preferred_option,
+    ADD COLUMN IF NOT EXISTS translation_note TEXT NULL AFTER improvement_note;
 
 INSERT INTO cailama_model_benchmark_cases
     (case_key, area, role_name, model_a, model_b, task_label, task_summary, quality_question, status)

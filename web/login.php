@@ -18,7 +18,7 @@ $error = null;
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $token = is_string($_POST['csrf_token'] ?? null) ? $_POST['csrf_token'] : null;
-    $email = is_string($_POST['email'] ?? null) ? $_POST['email'] : '';
+    $login = is_string($_POST['login'] ?? null) ? $_POST['login'] : '';
     $password = is_string($_POST['password'] ?? null) ? $_POST['password'] : '';
 
     if (!$session->validateCsrf($token)) {
@@ -32,7 +32,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         try {
             $pdo = ConnectionFactory::fromConfig($config, 'cailama');
             $auth = new AuthService($pdo, $config['auth'] ?? []);
-            $user = $auth->authenticate($email, $password);
+            $user = $auth->authenticate($login, $password);
             if ($user !== null) {
                 $session->clearLoginFailures();
                 $session->login($user);
@@ -40,7 +40,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                 exit;
             }
             $session->recordLoginFailure((int) ($config['auth']['attempt_window_seconds'] ?? 600));
-            $error = 'E-Mail oder Passwort ist ungültig.';
+            $error = 'Login oder Passwort ist ungültig.';
         } catch (Throwable) {
             $error = 'Der Login ist aktuell nicht verfügbar.';
         }
@@ -99,8 +99,8 @@ function h(string $value): string
           <?php if ($error !== null): ?>
             <p class="notice error" role="alert"><?= h($error) ?></p>
           <?php endif; ?>
-          <label for="email">E-Mail</label>
-          <input id="email" name="email" type="email" autocomplete="username" required maxlength="190" value="<?= h(is_string($_POST['email'] ?? null) ? $_POST['email'] : '') ?>">
+          <label for="login">Login</label>
+          <input id="login" name="login" type="text" autocomplete="username" required maxlength="190" value="<?= h(is_string($_POST['login'] ?? null) ? $_POST['login'] : '') ?>">
           <label for="password">Passwort</label>
           <input id="password" name="password" type="password" autocomplete="current-password" required>
           <button class="button primary form-button" type="submit">Einloggen</button>

@@ -180,24 +180,30 @@ Vor Arbeitsbeginn lesen:
   fehlerhaftem Pull vorerst ausgenommen, weil der Blob Host-Ollama crashen
   liess. Der Router besitzt eine Dual-Ollama-VM-Beispielkonfiguration,
   damit die Laufzeitmessung nicht mehr vom Pi-Backend ausgebremst wird.
-  Cloud-Modelle gehen ueber die zwei Docker-Ollamas mit separaten Keys;
+  Cloud-Modelle gehen ueber die zwei Docker-Ollamas mit separaten persistenten
+  Ollama-Cloud-Anmeldungen; API-Key-Header sind dort nicht erforderlich;
   lokale Modelle gehen ueber den Host-Ollama auf `127.0.0.1:11434`, damit sie
   nur einmal geladen werden muessen.
-  **Runtime-Hinweis 2026-05-24:** Nicht waehrend laufender Benchmarks aendern:
-  die beiden Docker-Ollamas besitzen getrennte named volumes und getrennte
-  `OLLAMA_API_KEY`-Env-Fingerprints, aber aktuell denselben persistenten
-  `/root/.ollama/id_ed25519`-Fingerprint. Docker speichert diese
-  Cloud-Identitaet in den Volumes ueber Neustarts hinweg; nach dem aktiven
-  Lauf muss mindestens eine der beiden Ollama-Identitaeten gezielt rotiert und
-  neu angemeldet werden, damit wirklich zwei Cloud-Accounts genutzt werden.
+  **Update 2026-05-25:** Die zweite Docker-Ollama-Identitaet wurde aus der
+  zweiten lokalen Ollama-Cloud-Anmeldung uebernommen; die Container besitzen
+  nun unterschiedliche persistente Identity-Fingerprints. Docker speichert
+  diese Cloud-Identitaet in den named volumes ueber Neustarts hinweg.
   **Update 2026-05-24:** Die Feedback-Website nimmt optionale Aufgaben-,
   Stellungs- und Fehlerfelder an. Bei FEN rendert sie ein responsives Brett;
   `/benchmark-feedback-results.php` zeigt geschuetzte, weiterhin blinde
   Aggregationen pro Lauf/Rolle/Fall/Kandidat. Thinking-Aliase werden im Router
   fuer alle nachweislich thinking-faehigen Modelle vorbereitet; abgelehnte
   Modi bleiben Feedbackfaelle statt Laufabbruch. CaiLama streamt den Upload
-  jetzt in 100er-Batches, sobald ein Batch voll ist, damit Human-Feedback schon
-  waehrend langer Laeufe beginnen kann.
+  jetzt in kleineren Batches, sobald ein Batch voll ist, damit Human-Feedback
+  schon waehrend langer Laeufe beginnen kann.
+  **Update 2026-05-25:** Feedback zeigt vollere Antwortauszuege, bewertet
+  Uebersetzung optional separat und schliesst harte Strukturfehler automatisch
+  als nicht manuell bewertbar. Die Login-Oberflaeche nutzt `Login` statt
+  E-Mail; der Einzelaccount heisst operativ `testuser`.
+  Cloud-Modelle duerfen im Benchmark mit `--cloud-concurrency 4` parallel
+  laufen; lokale Host-Ollama-Modelle laufen gleichzeitig dazu in einer
+  Einser-Spur, sodass lokal nie mehr als ein Modell aktiv ist. Der neue Lauf
+  nimmt die kleinen lokalen Modelle bis ca. 2 GB plus `granite4.1:3b` auf.
   Das Website-Deploy-Skript laedt im Standardmodus nur Code hoch; Remote-
   Ordneranlage und `web-smarty/vendor/`-Upload erfolgen nur mit explizitem
   Flag (`--create-dirs`, `--with-vendor`, `--full`).

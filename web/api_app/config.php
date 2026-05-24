@@ -38,6 +38,7 @@ $config = [
         'enabled' => false,
         'users_table' => 'web_users',
         'id_column' => 'id',
+        'login_column' => 'login_name',
         'email_column' => 'email',
         'display_name_column' => 'display_name',
         'password_hash_column' => 'password_hash',

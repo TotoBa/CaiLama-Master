@@ -110,7 +110,7 @@ function observation_select_sql(string $extraWhere): string
             c.quality_question
          FROM cailama_model_benchmark_observations o
          INNER JOIN cailama_model_benchmark_cases c ON c.id = o.case_id
-         LEFT JOIN cailama_model_feedback f ON f.case_id = c.id AND f.model_label = o.model_label
+         LEFT JOIN cailama_model_feedback f ON f.observation_id = o.id
          WHERE " . $extraWhere;
 }
 
@@ -140,15 +140,15 @@ function load_next_open_observation(PDO $pdo, string $runKey): ?array
     return is_array($row) ? $row : null;
 }
 
-function feedback_exists(PDO $pdo, int $caseId, string $modelLabel): bool
+function feedback_exists(PDO $pdo, int $observationId): bool
 {
     $statement = $pdo->prepare(
         "SELECT 1
          FROM cailama_model_feedback
-         WHERE case_id = :case_id AND model_label = :model_label
+         WHERE observation_id = :observation_id
          LIMIT 1"
     );
-    $statement->execute(['case_id' => $caseId, 'model_label' => $modelLabel]);
+    $statement->execute(['observation_id' => $observationId]);
     return $statement->fetchColumn() !== false;
 }
 
@@ -157,23 +157,23 @@ function upsert_feedback(PDO $pdo, ?int $userId, array $observation, array $valu
     $find = $pdo->prepare(
         "SELECT id
          FROM cailama_model_feedback
-         WHERE case_id = :case_id
-           AND model_label = :model_label
+         WHERE observation_id = :observation_id
            AND ((user_id IS NULL AND :user_id_is_null = 1) OR user_id = :user_id)
          ORDER BY id DESC
          LIMIT 1"
     );
     $find->execute([
-        'case_id' => (int) $observation['case_id'],
-        'model_label' => (string) $observation['model_label'],
+        'observation_id' => (int) $observation['id'],
         'user_id' => $userId,
         'user_id_is_null' => $userId === null ? 1 : 0,
     ]);
     $existingId = $find->fetchColumn();
 
     $params = [
+        'observation_id' => (int) $observation['id'],
         'case_id' => (int) $observation['case_id'],
         'user_id' => $userId,
+        'run_key' => (string) $observation['run_key'],
         'model_label' => (string) $observation['model_label'],
         'duration_ms' => $observation['duration_ms'],
         'input_tokens' => $observation['input_tokens'],
@@ -183,14 +183,21 @@ function upsert_feedback(PDO $pdo, ?int $userId, array $observation, array $valu
         'task_solution_score' => $values['task_solution_score'],
         'logic_error_level' => $values['logic_error_level'],
         'preferred_option' => $values['preferred_option'],
+        'translation_score' => $values['translation_score'],
         'feedback_text' => $values['feedback_text'],
         'improvement_note' => $values['improvement_note'],
+        'translation_note' => $values['translation_note'],
     ];
 
     if ($existingId !== false) {
         $statement = $pdo->prepare(
             "UPDATE cailama_model_feedback
-             SET duration_ms = :duration_ms,
+             SET observation_id = :observation_id,
+                 case_id = :case_id,
+                 user_id = :user_id,
+                 run_key = :run_key,
+                 model_label = :model_label,
+                 duration_ms = :duration_ms,
                  input_tokens = :input_tokens,
                  thinking_tokens = :thinking_tokens,
                  output_tokens = :output_tokens,
@@ -198,8 +205,10 @@ function upsert_feedback(PDO $pdo, ?int $userId, array $observation, array $valu
                  task_solution_score = :task_solution_score,
                  logic_error_level = :logic_error_level,
                  preferred_option = :preferred_option,
+                 translation_score = :translation_score,
                  feedback_text = :feedback_text,
-                 improvement_note = :improvement_note
+                 improvement_note = :improvement_note,
+                 translation_note = :translation_note
              WHERE id = :id"
         );
         $params['id'] = (int) $existingId;
@@ -209,11 +218,11 @@ function upsert_feedback(PDO $pdo, ?int $userId, array $observation, array $valu
 
     $statement = $pdo->prepare(
         "INSERT INTO cailama_model_feedback
-            (case_id, user_id, model_label, duration_ms, input_tokens, thinking_tokens, output_tokens,
-             quality_score, task_solution_score, logic_error_level, preferred_option, feedback_text, improvement_note)
+            (observation_id, case_id, user_id, run_key, model_label, duration_ms, input_tokens, thinking_tokens, output_tokens,
+             quality_score, task_solution_score, logic_error_level, preferred_option, translation_score, feedback_text, improvement_note, translation_note)
          VALUES
-            (:case_id, :user_id, :model_label, :duration_ms, :input_tokens, :thinking_tokens, :output_tokens,
-             :quality_score, :task_solution_score, :logic_error_level, :preferred_option, :feedback_text, :improvement_note)"
+            (:observation_id, :case_id, :user_id, :run_key, :model_label, :duration_ms, :input_tokens, :thinking_tokens, :output_tokens,
+             :quality_score, :task_solution_score, :logic_error_level, :preferred_option, :translation_score, :feedback_text, :improvement_note, :translation_note)"
     );
     $statement->execute($params);
 }
@@ -245,7 +254,7 @@ try {
 
     if ($observation !== null) {
         $runKey = (string) $observation['run_key'];
-        $alreadyRated = feedback_exists($pdo, (int) $observation['case_id'], (string) $observation['model_label']);
+        $alreadyRated = feedback_exists($pdo, (int) $observation['id']);
     }
 
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
@@ -259,6 +268,7 @@ try {
 
         $qualityScore = post_score('quality_score');
         $taskSolutionScore = post_score('task_solution_score');
+        $translationScore = post_score('translation_score');
         $logicErrorLevel = request_string($_POST, 'logic_error_level', 16);
         $preferredOption = request_string($_POST, 'preferred_option', 16);
 
@@ -282,8 +292,10 @@ try {
                 'task_solution_score' => $taskSolutionScore,
                 'logic_error_level' => $logicErrorLevel,
                 'preferred_option' => $preferredOption,
+                'translation_score' => $translationScore,
                 'feedback_text' => nullable_text(request_string($_POST, 'feedback_text', 5000)),
                 'improvement_note' => nullable_text(request_string($_POST, 'improvement_note', 5000)),
+                'translation_note' => nullable_text(request_string($_POST, 'translation_note', 5000)),
             ]);
 
             $target = $playMode
@@ -429,7 +441,7 @@ $preferenceOptions = [
 
               <div>
                 <strong>Antwortauszug</strong>
-                <p class="output-excerpt"><?= h((string) ($observation['output_excerpt'] ?? '')) ?></p>
+                <pre class="output-excerpt"><?= h((string) ($observation['output_excerpt'] ?? '')) ?></pre>
               </div>
 
               <div
@@ -469,6 +481,14 @@ $preferenceOptions = [
                 <?php endforeach; ?>
               </fieldset>
 
+              <fieldset class="choice-group optional-choice-group">
+                <legend>Übersetzung</legend>
+                <?php foreach ($scoreOptions as $score => $label): ?>
+                  <label><input type="radio" name="translation_score" value="<?= h((string) $score) ?>"> <?= h($label) ?></label>
+                <?php endforeach; ?>
+                <label><input type="radio" name="translation_score" value=""> nicht bewerten</label>
+              </fieldset>
+
               <div class="form-grid two">
                 <div>
                   <label for="logic_error_level">Logikfehler</label>
@@ -495,6 +515,10 @@ $preferenceOptions = [
               <div>
                 <label for="improvement_note">Verbesserungshinweis</label>
                 <textarea id="improvement_note" name="improvement_note" rows="3" maxlength="5000" placeholder="Welche Regel, Gewichtung oder Prompt-Änderung folgt daraus?"><?= h(request_string($_POST, 'improvement_note', 5000)) ?></textarea>
+              </div>
+              <div>
+                <label for="translation_note">Hinweis zur Übersetzung</label>
+                <textarea id="translation_note" name="translation_note" rows="2" maxlength="5000" placeholder="Nur falls Übersetzung oder deutsche Ausgabe bewertet wurde."><?= h(request_string($_POST, 'translation_note', 5000)) ?></textarea>
               </div>
 
               <button class="button primary form-button" type="submit"><?= $playMode ? 'Speichern und weiter' : 'Feedback speichern' ?></button>

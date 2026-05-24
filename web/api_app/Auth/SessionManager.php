@@ -44,6 +44,7 @@ final class SessionManager
         session_regenerate_id(true);
         $_SESSION['user'] = [
             'id' => (string) ($user['id'] ?? ''),
+            'login_name' => (string) ($user['login_name'] ?? ''),
             'email' => (string) ($user['email'] ?? ''),
             'display_name' => (string) ($user['display_name'] ?? ''),
         ];

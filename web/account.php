@@ -54,7 +54,7 @@ function h(string $value): string
       <div class="page-hero-inner">
         <p class="eyebrow">CaiLama Konto</p>
         <h1>Konto</h1>
-        <p class="page-lead"><?= h((string) (($user['display_name'] ?? '') ?: ($user['email'] ?? ''))) ?></p>
+        <p class="page-lead"><?= h((string) (($user['display_name'] ?? '') ?: ($user['login_name'] ?? ''))) ?></p>
       </div>
     </section>
 
@@ -63,8 +63,8 @@ function h(string $value): string
         <div class="auth-panel">
           <dl class="account-list">
             <div>
-              <dt>E-Mail</dt>
-              <dd><?= h((string) ($user['email'] ?? '')) ?></dd>
+              <dt>Login</dt>
+              <dd><?= h((string) ($user['login_name'] ?? '')) ?></dd>
             </div>
             <div>
               <dt>Datenbank</dt>

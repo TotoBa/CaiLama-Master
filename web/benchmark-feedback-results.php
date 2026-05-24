@@ -86,6 +86,7 @@ function load_results(PDO $pdo, array $filters): array
             COUNT(f.id) AS feedback_count,
             ROUND(AVG(f.quality_score), 2) AS quality_avg,
             ROUND(AVG(f.task_solution_score), 2) AS task_solution_avg,
+            ROUND(AVG(f.translation_score), 2) AS translation_avg,
             SUM(f.logic_error_level = 'major') AS major_logic_errors,
             SUM(o.error_status <> '') AS error_observations,
             ROUND(AVG(o.duration_ms), 0) AS duration_avg,
@@ -93,7 +94,7 @@ function load_results(PDO $pdo, array $filters): array
             ROUND(AVG(o.output_tokens), 0) AS output_avg
          FROM cailama_model_benchmark_observations o
          INNER JOIN cailama_model_benchmark_cases c ON c.id = o.case_id
-         LEFT JOIN cailama_model_feedback f ON f.case_id = c.id AND f.model_label = o.model_label"
+         LEFT JOIN cailama_model_feedback f ON f.observation_id = o.id"
         . $where .
         " GROUP BY o.run_key, c.case_key, c.role_name, c.task_label, o.model_label
           ORDER BY o.run_key DESC, c.role_name, c.task_label, MD5(CONCAT(o.run_key, c.case_key, o.model_label))
@@ -115,14 +116,16 @@ function load_results(PDO $pdo, array $filters): array
             c.task_label,
             f.quality_score,
             f.task_solution_score,
+            f.translation_score,
             f.logic_error_level,
             f.preferred_option,
             f.feedback_text,
             f.improvement_note,
+            f.translation_note,
             f.created_at
          FROM cailama_model_feedback f
          INNER JOIN cailama_model_benchmark_cases c ON c.id = f.case_id
-         LEFT JOIN cailama_model_benchmark_observations o ON o.case_id = c.id AND o.model_label = f.model_label"
+         LEFT JOIN cailama_model_benchmark_observations o ON o.id = f.observation_id"
         . $feedbackWhere .
         " ORDER BY f.created_at DESC
           LIMIT 80";
@@ -234,7 +237,7 @@ try {
                     <td><strong><?= h((string) $row['role_name']) ?></strong><br><?= h((string) $row['task_label']) ?><br><span class="muted"><?= h((string) $row['run_key']) ?></span></td>
                     <td><?= h(candidate_label($row)) ?></td>
                     <td><?= h((string) $row['feedback_count']) ?> Feedbacks<br><?= h((string) $row['observation_count']) ?> Beobachtungen</td>
-                    <td>Qualität <?= h((string) ($row['quality_avg'] ?? '-')) ?><br>Aufgabe <?= h((string) ($row['task_solution_avg'] ?? '-')) ?><br>schwere Logikfehler <?= h((string) ($row['major_logic_errors'] ?? 0)) ?></td>
+                    <td>Qualität <?= h((string) ($row['quality_avg'] ?? '-')) ?><br>Aufgabe <?= h((string) ($row['task_solution_avg'] ?? '-')) ?><br>Übersetzung <?= h((string) ($row['translation_avg'] ?? '-')) ?><br>schwere Logikfehler <?= h((string) ($row['major_logic_errors'] ?? 0)) ?></td>
                     <td>Dauer Ø <?= h((string) ($row['duration_avg'] ?? '-')) ?> ms<br>Thinking Ø <?= h((string) ($row['thinking_avg'] ?? '-')) ?><br>Output Ø <?= h((string) ($row['output_avg'] ?? '-')) ?></td>
                     <td><?= h((string) ($row['error_observations'] ?? 0)) ?></td>
                   </tr>
@@ -261,8 +264,8 @@ try {
                       <td><?= h((string) $row['created_at']) ?></td>
                       <td><?= h((string) $row['role_name']) ?><br><?= h((string) $row['task_label']) ?></td>
                       <td><?= h(candidate_label($row)) ?></td>
-                      <td>Qualität <?= h((string) $row['quality_score']) ?>, Aufgabe <?= h((string) $row['task_solution_score']) ?><br>Logik <?= h((string) $row['logic_error_level']) ?>, A/B <?= h((string) $row['preferred_option']) ?></td>
-                      <td><?= h((string) ($row['feedback_text'] ?? '')) ?><br><span class="muted"><?= h((string) ($row['improvement_note'] ?? '')) ?></span></td>
+                      <td>Qualität <?= h((string) $row['quality_score']) ?>, Aufgabe <?= h((string) $row['task_solution_score']) ?><?= $row['translation_score'] !== null ? ', Übersetzung ' . h((string) $row['translation_score']) : '' ?><br>Logik <?= h((string) $row['logic_error_level']) ?>, A/B <?= h((string) $row['preferred_option']) ?></td>
+                      <td><?= h((string) ($row['feedback_text'] ?? '')) ?><br><span class="muted"><?= h((string) ($row['improvement_note'] ?? '')) ?></span><?php if ((string) ($row['translation_note'] ?? '') !== ''): ?><br><span class="muted">Übersetzung: <?= h((string) $row['translation_note']) ?></span><?php endif; ?></td>
                     </tr>
                   <?php endforeach; ?>
                 </tbody>

@@ -39,13 +39,17 @@ final class BenchmarkController
             $pdo = ConnectionFactory::fromConfig($config, 'cailama');
             $pdo->beginTransaction();
             $imported = 0;
+            $autoFeedback = 0;
             foreach ($payload['observations'] as $row) {
                 if (!is_array($row)) {
                     throw new \InvalidArgumentException('Observation must be an object.');
                 }
                 $observation = $this->normalizeObservation($row);
                 $caseId = $this->upsertCase($pdo, $observation);
-                $this->upsertObservation($pdo, $caseId, $observation);
+                $observationId = $this->upsertObservation($pdo, $caseId, $observation);
+                if ($this->autoCloseObservation($pdo, $caseId, $observationId, $observation)) {
+                    $autoFeedback++;
+                }
                 $imported++;
             }
             $pdo->commit();
@@ -64,6 +68,7 @@ final class BenchmarkController
         return Response::json([
             'status' => 'ok',
             'imported' => $imported,
+            'auto_feedback' => $autoFeedback,
         ]);
     }
 
@@ -90,12 +95,12 @@ final class BenchmarkController
             'position_fen' => $this->optionalFen($row, 'position_fen'),
             'side_to_move' => $this->optionalSideToMove($row, 'side_to_move'),
             'position_label' => $this->optionalString($row, 'position_label', 190),
-            'task_prompt_excerpt' => $this->optionalString($row, 'task_prompt_excerpt', 5000),
+            'task_prompt_excerpt' => $this->optionalString($row, 'task_prompt_excerpt', 10000),
             'expected_output_type' => $this->optionalString($row, 'expected_output_type', 80),
             'candidate_moves_excerpt' => $this->optionalString($row, 'candidate_moves_excerpt', 5000),
             'error_status' => $this->optionalString($row, 'error_status', 40),
             'error_message' => $this->optionalString($row, 'error_message', 500),
-            'output_excerpt' => $this->optionalString($row, 'output_excerpt', 5000),
+            'output_excerpt' => $this->optionalString($row, 'output_excerpt', 20000),
         ];
     }
 
@@ -132,7 +137,7 @@ final class BenchmarkController
         return (int) $id;
     }
 
-    private function upsertObservation(PDO $pdo, int $caseId, array $observation): void
+    private function upsertObservation(PDO $pdo, int $caseId, array $observation): int
     {
         $statement = $pdo->prepare(
             "INSERT INTO cailama_model_benchmark_observations
@@ -177,6 +182,80 @@ final class BenchmarkController
             'error_message' => $observation['error_message'],
             'output_excerpt' => $observation['output_excerpt'],
         ]);
+
+        $select = $pdo->prepare(
+            "SELECT id
+             FROM cailama_model_benchmark_observations
+             WHERE case_id = :case_id
+               AND run_key = :run_key
+               AND model_label = :model_label
+               AND artifact_ref = :artifact_ref
+             LIMIT 1"
+        );
+        $select->execute([
+            'case_id' => $caseId,
+            'run_key' => $observation['run_key'],
+            'model_label' => $observation['model_label'],
+            'artifact_ref' => $observation['artifact_ref'],
+        ]);
+        $id = $select->fetchColumn();
+        if ($id === false) {
+            throw new \RuntimeException('Benchmark observation not found after upsert.');
+        }
+        return (int) $id;
+    }
+
+    private function autoCloseObservation(PDO $pdo, int $caseId, int $observationId, array $observation): bool
+    {
+        $status = (string) $observation['error_status'];
+        if (!in_array($status, ['structure_failed', 'llm_error', 'model_failed'], true)) {
+            return false;
+        }
+
+        $existing = $pdo->prepare(
+            "SELECT 1 FROM cailama_model_feedback WHERE observation_id = :observation_id LIMIT 1"
+        );
+        $existing->execute(['observation_id' => $observationId]);
+        if ($existing->fetchColumn() !== false) {
+            return false;
+        }
+
+        $message = $this->autoFeedbackMessage($status, (string) $observation['error_message']);
+        $statement = $pdo->prepare(
+            "INSERT INTO cailama_model_feedback
+                (observation_id, case_id, user_id, run_key, model_label, duration_ms, input_tokens,
+                 thinking_tokens, output_tokens, quality_score, task_solution_score,
+                 logic_error_level, preferred_option, feedback_text, improvement_note)
+             VALUES
+                (:observation_id, :case_id, NULL, :run_key, :model_label, :duration_ms, :input_tokens,
+                 :thinking_tokens, :output_tokens, 1, 1,
+                 'major', 'not_applicable', :feedback_text, :improvement_note)"
+        );
+        $statement->execute([
+            'observation_id' => $observationId,
+            'case_id' => $caseId,
+            'run_key' => $observation['run_key'],
+            'model_label' => $observation['model_label'],
+            'duration_ms' => $observation['duration_ms'],
+            'input_tokens' => $observation['input_tokens'],
+            'thinking_tokens' => $observation['thinking_tokens'],
+            'output_tokens' => $observation['output_tokens'],
+            'feedback_text' => $message,
+            'improvement_note' => (string) $observation['error_message'],
+        ]);
+        return true;
+    }
+
+    private function autoFeedbackMessage(string $status, string $message): string
+    {
+        $prefix = match ($status) {
+            'structure_failed' => 'Automatisch: Struktur-/Toolprüfung fehlgeschlagen.',
+            'llm_error' => 'Automatisch: LLM-Aufruf fehlgeschlagen.',
+            'model_failed' => 'Automatisch: Modelllauf fehlgeschlagen.',
+            default => 'Automatisch: Fall nicht manuell bewertbar.',
+        };
+        $message = trim($message);
+        return $message === '' ? $prefix : $prefix . ' ' . $message;
     }
 
     private function stringField(array $row, string $key, int $maxLength): string

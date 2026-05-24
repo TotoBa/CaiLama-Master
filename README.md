@@ -23,8 +23,10 @@ Geschuetzter Arbeitsbereich:
 
 - <https://cailama.org/benchmark-feedback.php> - Login-geschuetztes
   Modellrollen-Feedback fuer importierte Laufdaten, Laufzeit, Tokenwerte,
-  Aufgaben-/Stellungsdaten, Qualitaet, Aufgabenloesung, Logikfehler und
-  A/B-Praeferenzen.
+  Aufgaben-/Stellungsdaten, Qualitaet, Aufgabenloesung, Uebersetzung,
+  Logikfehler und A/B-Praeferenzen. Harte Strukturfehler koennen automatisch
+  geschlossen werden, damit manuell nur fachlich bewertbare Faelle offen
+  bleiben.
 - <https://cailama.org/benchmark-feedback-results.php> - geschuetzte blinde
   Auswertung der gespeicherten Benchmark-Feedbacks.
 

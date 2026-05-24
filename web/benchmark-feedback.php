@@ -76,7 +76,7 @@ function load_feedback_list(PDO $pdo, string $runKey): array
             SUM(CASE WHEN f.id IS NULL THEN 0 ELSE 1 END) AS done_count
          FROM cailama_model_benchmark_observations o
          INNER JOIN cailama_model_benchmark_cases c ON c.id = o.case_id
-         LEFT JOIN cailama_model_feedback f ON f.case_id = c.id AND f.model_label = o.model_label
+         LEFT JOIN cailama_model_feedback f ON f.observation_id = o.id
          WHERE 1=1" . $whereRun
     );
     $stats->execute($params);
@@ -107,7 +107,7 @@ function load_feedback_list(PDO $pdo, string $runKey): array
             c.quality_question
          FROM cailama_model_benchmark_observations o
          INNER JOIN cailama_model_benchmark_cases c ON c.id = o.case_id
-         LEFT JOIN cailama_model_feedback f ON f.case_id = c.id AND f.model_label = o.model_label
+         LEFT JOIN cailama_model_feedback f ON f.observation_id = o.id
          WHERE f.id IS NULL" . $whereRun . "
          ORDER BY o.created_at ASC, c.role_name, c.task_label, MD5(CONCAT(o.run_key, c.case_key, o.model_label, o.id))"
     );
