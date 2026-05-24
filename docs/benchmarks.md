@@ -288,10 +288,10 @@ Host-Ollama auf `127.0.0.1:11434`, damit sie nur einmal geladen werden muessen
 und die VM nicht zwei lokale Modelle parallel startet:
 
 ```bash
-ollama pull starling-lm:7b
-ollama pull gemma4:e2b
-ollama pull gemma4:e4b
-ollama pull qwen3.6:27b
+ollama pull deepseek-r1:1.5b
+ollama pull qwen3:0.6b
+ollama pull qwen3:1.7b
+ollama pull qwen3-vl:2b
 ollama pull granite4.1:3b
 ```
 
