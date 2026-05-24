@@ -263,6 +263,12 @@ docker exec cailama-ollama-vm-b ollama pull gemma4:e2b
 docker exec cailama-ollama-vm-b ollama pull gemma4:e4b
 ```
 
+Nach dem Eintragen oder Aendern der lokalen Ollama-Cloud-Keys in der
+unversionierten Router-`.env` muessen die Container neu erstellt und der
+Router neu gestartet werden. Die Container sind mit `restart: unless-stopped`
+vorbereitet; Docker, Router und Search muessen als Boot-Dienste enabled sein,
+damit die Benchmark-Infrastruktur nach einem Neustart wieder verfuegbar ist.
+
 Schneller Rollenlauf fuer heutiges Blind-Feedback:
 
 ```bash
