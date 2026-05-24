@@ -178,6 +178,9 @@ Vor Arbeitsbeginn lesen:
   `hemanth/chessplayer:latest`, `starling-lm:7b`, `gemma4:e2b` und
   `gemma4:e4b`. Der Router besitzt eine Dual-Ollama-VM-Beispielkonfiguration,
   damit die Laufzeitmessung nicht mehr vom Pi-Backend ausgebremst wird.
+  Cloud-Modelle gehen ueber die zwei Docker-Ollamas mit separaten Keys;
+  lokale Modelle gehen ueber den Host-Ollama auf `127.0.0.1:11434`, damit sie
+  nur einmal geladen werden muessen.
   Das Website-Deploy-Skript laedt im Standardmodus nur Code hoch; Remote-
   Ordneranlage und `web-smarty/vendor/`-Upload erfolgen nur mit explizitem
   Flag (`--create-dirs`, `--with-vendor`, `--full`).

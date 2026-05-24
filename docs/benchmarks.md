@@ -247,20 +247,18 @@ env CAILAMA_LLM_PROVIDER=openai_compatible \
 Fuer diesen Lauf sollte der Router nicht ueber ein langsames Pi-Backend
 round-robinnen. Der Router enthaelt dafuer
 `configs/router.vm-dual-ollama.example.yaml` und
-`docker/docker-compose.dual-ollama.example.yml`: zwei lokale
-Ollama-Instanzen auf der VM, beide mit lokalen Secret-Keys aus der
-Operator-Konfiguration. Lokal auszufuehrende Modelle muessen in beiden
-Instanzen vorhanden sein:
+`docker/docker-compose.dual-ollama.example.yml`: zwei lokale Docker-Ollamas
+auf der VM, beide mit lokalen Secret-Keys aus der Operator-Konfiguration.
+Diese Container sind nur die zwei Cloud-Ausgaenge. Lokal auszufuehrende
+Modelle laufen ueber den vorhandenen Host-Ollama auf `127.0.0.1:11434`, damit
+sie nur einmal geladen werden muessen und die VM nicht zwei lokale Modelle
+parallel startet:
 
 ```bash
-docker exec cailama-ollama-vm-a ollama pull hemanth/chessplayer:latest
-docker exec cailama-ollama-vm-a ollama pull starling-lm:7b
-docker exec cailama-ollama-vm-a ollama pull gemma4:e2b
-docker exec cailama-ollama-vm-a ollama pull gemma4:e4b
-docker exec cailama-ollama-vm-b ollama pull hemanth/chessplayer:latest
-docker exec cailama-ollama-vm-b ollama pull starling-lm:7b
-docker exec cailama-ollama-vm-b ollama pull gemma4:e2b
-docker exec cailama-ollama-vm-b ollama pull gemma4:e4b
+ollama pull hemanth/chessplayer:latest
+ollama pull starling-lm:7b
+ollama pull gemma4:e2b
+ollama pull gemma4:e4b
 ```
 
 Nach dem Eintragen oder Aendern der lokalen Ollama-Cloud-Keys in der
