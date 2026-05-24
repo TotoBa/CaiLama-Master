@@ -231,6 +231,7 @@ env CAILAMA_LLM_PROVIDER=openai_compatible \
   --pgn /pfad/zum/freigegebenen/import.pgn \
   --output-dir ~/.local/share/cailama/benchmarks/ptg-models \
   --models kimi-k2.6:cloud,gemma4:31b-cloud,qwen3.5:397b-cloud,deepseek-v4-flash:cloud \
+  --role-max-tokens 700 \
   --skip-ptg \
   --upload-url https://cailama.org/api/v1/benchmarks/observations \
   --upload-token-env CAILAMA_DB_API_ADMIN_KEY \
@@ -242,3 +243,6 @@ Nach dem Upload erscheint der Lauf unter
 Qualitaet, Aufgabenloesung, Logikfehlern und A/B-Praeferenz erfasst.
 Jede Rolle erscheint als eigener Feedback-Fall. Die sichtbare Bewertung bleibt
 blind: angezeigt wird nur ein Kandidaten-Code, nicht der Modellname.
+`--role-max-tokens` begrenzt nur die kurzen Rollen-Probes auf
+OpenAI-kompatiblen Backends. Damit werden Laufzeit und Antwortlaenge
+vergleichbarer; der volle PTG-Classify-/Analyze-Lauf bleibt davon unberuehrt.

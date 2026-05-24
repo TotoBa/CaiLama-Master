@@ -386,7 +386,9 @@ Benchmark-Fälle speichern Rolle und Aufgabe getrennt, damit dieselben
 Modellkandidaten rollenweise bewertet werden können. Der aktuelle
 Drei-Spiele-Benchmark erzeugt Fälle für alle CaiLama-Rollen: `router`,
 `small`, `large`, `task`, `translator`, `coach`, `analyst`, `critic`,
-`vision`, `scribe` und `researcher`.
+`vision`, `scribe` und `researcher`. Rollen-Probes duerfen mit
+`--role-max-tokens` gekappt werden, damit einzelne Modellantworten den
+Feedbacklauf nicht blockieren; die PTG-Tiefenanalyse bleibt separat.
 
 API-Key-Prüfung und Scopes sind als Hash-basierte Bearer-Token-Prüfung
 verdrahtet. Es gibt getrennte Keys für Status, Append-Import, Reset-Import und

@@ -164,7 +164,9 @@ Vor Arbeitsbeginn lesen:
   Upload mit `--require-upload` verbindlich gemacht. Das Feedback ist blind:
   importierte Laeufe zeigen nur Kandidaten-Codes, keine Modellnamen; die
   Zuordnung bleibt serverseitig. `--skip-ptg` erlaubt schnelle Rollen-
-  Feedbacklaeufe ohne den teuren PTG-Teil. Offen bleibt die fachliche
+  Feedbacklaeufe ohne den teuren PTG-Teil. `--role-max-tokens` begrenzt nur
+  die kurzen Rollen-Probes, damit Benchmarklaufzeiten vergleichbarer bleiben
+  und langsame Provider nicht den gesamten Upload blockieren. Offen bleibt die fachliche
   Bewertung der heutigen Laeufe und die Ableitung belastbarer Modell-/Prompt-
   Regeln.
 - [ ] Spaeteres spezialisiertes LLM-Training als Roadmap-Hebel vorbereiten:
