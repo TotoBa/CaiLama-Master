@@ -323,6 +323,7 @@ POST /api/v1/admin/schema/all
 /login.php
 /account.php
 /benchmark-feedback.php
+/benchmark-feedback-results.php
 ```
 
 Status-, Import- und Schema-Endpunkte nehmen weder Query-Parameter noch
@@ -392,11 +393,16 @@ Secure-Cookie, CSRF-Token, einfachem Session-basiertem Versuchslimit und
 Es gibt keine öffentliche Kontoanlage und keinen Registrierungsendpunkt. Nutzer
 werden direkt als `web_users` in der Provider-Datenbank angelegt. Die Seite
 `/benchmark-feedback.php` ist nur nach Login erreichbar und nutzt dieselbe
-Session. Sie speichert wiederverwendbare Bewertungsdaten für Modellrollen in
-`cailama_model_benchmark_cases`, `cailama_model_benchmark_observations` und
-`cailama_model_feedback`: Laufzeit, Input-/Thinking-/Output-Tokens,
-Qualitäts-Score, Aufgaben-Score, Logikfehler-Klasse, A/B-Präferenz,
-secretfreie Lauf-Auszüge und knappe Feedbacknotizen. Rohprompts, volle
+Session. Die zusätzliche Seite `/benchmark-feedback-results.php` zeigt
+geschützte Blind-Aggregationen nach Lauf, Rolle, Fall und Kandidat. Beide
+Seiten bleiben `noindex`/`nofollow`. Gespeichert werden wiederverwendbare
+Bewertungsdaten für Modellrollen in `cailama_model_benchmark_cases`,
+`cailama_model_benchmark_observations` und `cailama_model_feedback`:
+Laufzeit, Input-/Thinking-/Output-Tokens, Qualitäts-Score, Aufgaben-Score,
+Logikfehler-Klasse, A/B-Präferenz, secretfreie Lauf-Auszüge, knappe
+Feedbacknotizen und optionale fachliche Kontextfelder für Aufgaben-Auszug,
+erwarteten Ausgabetyp, FEN, Side-to-move, Positionslabel,
+Kandidatenzug-Auszug sowie gekürzte Fehlerdaten. Rohprompts, volle
 Modellantworten, private Partiearchive, lokale Pfade und Secrets gehören nicht
 in diese Tabellen.
 Importierte Benchmark-Läufe werden blind bewertet: Die Website zeigt nur
@@ -412,6 +418,14 @@ Feedbacklauf nicht blockieren; die PTG-Tiefenanalyse bleibt separat. Lokale
 Benchmark-Artefakte duerfen Router-Backend-/Provider-/Fallback-Metriken
 speichern, die Website zeigt diese technische Zuordnung aber nicht im
 Bewertungsformular.
+
+Wenn eine importierte Beobachtung eine FEN enthält, rendert die Feedback-Seite
+ein responsives 8x8-Brett. Figurensätze sind konfigurierbar über
+`benchmark_feedback.piece_asset_base_url`, `piece_sets` und
+`default_piece_set` in der privaten Web-Konfiguration. Lokale Runtime-Assets
+dürfen dafür gespiegelt werden, aber versionierte Defaults enthalten keine
+absoluten lokalen Pfade und keine Figurendateien. Ohne FEN zeigt die Seite
+einen klaren Hinweis, statt den Feedbackfluss zu unterbrechen.
 
 API-Key-Prüfung und Scopes sind als Hash-basierte Bearer-Token-Prüfung
 verdrahtet. Es gibt getrennte Keys für Status, Append-Import, Reset-Import und

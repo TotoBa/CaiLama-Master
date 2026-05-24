@@ -98,6 +98,7 @@ Die Website stellt dafuer eine geschuetzte Feedback-Seite bereit:
 
 ```text
 https://cailama.org/benchmark-feedback.php
+https://cailama.org/benchmark-feedback-results.php
 ```
 
 Sie liegt hinter Login, ist `noindex` und speichert Bewertungen in der
@@ -106,10 +107,14 @@ Provider-Datenbank. Die Tabellen heissen `cailama_model_benchmark_cases`,
 Benchmark-Runner duerfen secretfreie Beobachtungen ueber
 `POST /api/v1/benchmarks/observations` importieren; bewertet wird danach in
 der Website als Blind-Feedback. Die Feedback-Seite zeigt bei importierten
-Laeufen nur Kandidaten-Codes, nicht das konkrete Modell. Rohprompts, volle
-Modellantworten, private Partien, lokale Pfade und Secrets gehoeren nicht in
-diese Tabellen; dort liegen nur vergleichbare Kennzahlen, kurze
-Aufgabenbeschreibungen, knappe Auszuege und menschliches Feedback.
+Laeufen nur Kandidaten-Codes, nicht das konkrete Modell. Sichtbar sind
+Aufgabenzusammenfassung, erwarteter Ausgabetyp, Laufzeit-/Tokenmetriken,
+Output- oder Fehlerauszug und bei stellungsbezogenen Faellen ein responsives
+Schachbrett aus der FEN. Rohprompts, volle Modellantworten, private Partien,
+lokale Pfade und Secrets gehoeren nicht in diese Tabellen; dort liegen nur
+vergleichbare Kennzahlen, kurze Aufgabenbeschreibungen, knappe Auszuege,
+optionale Stellungsdaten und menschliches Feedback. Die Ergebnis-Seite zeigt
+Aggregationen pro Lauf, Rolle, Fall und Kandidat weiterhin ohne Modellnamen.
 
 ## Ergebnisformat
 
@@ -161,10 +166,18 @@ Ein Ergebnis enthaelt mindestens:
   extrahiert die drei freigegebenen Baseline-Spiele aus dem lokalen PGN-
   Archiv, laesst die PTG-Pipeline pro Router-Modell laufen, schreibt lokale
   Artefakte und kann die secretfreien Beobachtungen in die Website-API
-  hochladen. Pro Modell werden Rollen-Probes fuer alle CaiLama-Rollen
+  hochladen. Mit `--models auto` liest er die Kandidaten aus dem Router-
+  Endpoint `/v1/models`; operative Router-Aliase wie `default`,
+  `kimi-cli-default` und `chess-*` werden dabei standardmaessig aus der
+  CaiLama-Benchmarkliste entfernt. Pro Modell werden Rollen-Probes fuer alle
+  CaiLama-Rollen
   erzeugt: `router`, `small`, `large`, `task`, `translator`, `coach`,
   `analyst`, `critic`, `vision`, `scribe` und `researcher`. Der teure PTG-
   Classify-/Analyze-Teil erzeugt zusaetzlich aggregierte PTG-Faelle.
+  Beobachtungen enthalten neben Dauer, Tokens, Artefakt und Output-Auszug auch
+  Aufgaben-Auszug, erwarteten Ausgabetyp, optionale FEN/Side-to-move- und
+  Kandidatenzug-Auszuege. Backend-Fehler oder abgelehnte Thinking-Modi werden
+  als Feedbackfaelle importiert und brechen den Gesamtlauf nicht ab.
   `--skip-ptg` ist fuer schnelle Feedbacklaeufe erlaubt; `--max-analysis-
   positions` ist ein explizites Laufzeitbudget fuer den vollen PTG-Lauf,
   keine allgemeine 21er-Regel. Fuer vollstaendige Laeufe koennen
@@ -219,7 +232,7 @@ env CAILAMA_LLM_PROVIDER=openai_compatible \
   .venv/bin/python scripts/run_ptg_model_benchmark.py \
   --pgn /pfad/zum/freigegebenen/import.pgn \
   --output-dir ~/.local/share/cailama/benchmarks/ptg-models \
-  --models kimi-k2.6:cloud,gemma4:31b-cloud,qwen3.5:397b-cloud,deepseek-v4-flash:cloud \
+  --models auto \
   --max-analysis-positions 7 \
   --upload-url https://cailama.org/api/v1/benchmarks/observations \
   --upload-token-env CAILAMA_DB_API_ADMIN_KEY \
@@ -234,7 +247,7 @@ env CAILAMA_LLM_PROVIDER=openai_compatible \
   .venv/bin/python scripts/run_ptg_model_benchmark.py \
   --pgn /pfad/zum/freigegebenen/import.pgn \
   --output-dir ~/.local/share/cailama/benchmarks/ptg-models \
-  --models kimi-k2.6:cloud,deepseek-v4-flash:cloud,deepseek-v4-pro:cloud,gemma4:31b-cloud,qwen3.5:397b-cloud,glm-5.1:cloud,minimax-m2.7:cloud,nemotron-3-super:cloud,gpt-oss:20b-cloud,hemanth/chessplayer:latest,starling-lm:7b,gemma4:e2b,gemma4:e4b,qwen3.6:27b,qwen3.6:27b:think-off,qwen3.6:27b:think-on,qwen3.6:27b:think-low,qwen3.6:27b:think-medium,qwen3.6:27b:think-high \
+  --models auto \
   --llm-timeout-seconds 0 \
   --upload-timeout-seconds 0 \
   --role-max-tokens 0 \
@@ -255,19 +268,25 @@ sie nur einmal geladen werden muessen und die VM nicht zwei lokale Modelle
 parallel startet:
 
 ```bash
-ollama pull hemanth/chessplayer:latest
 ollama pull starling-lm:7b
 ollama pull gemma4:e2b
 ollama pull gemma4:e4b
 ollama pull qwen3.6:27b
 ```
 
+Alle lokal in Host-Ollama vorhandenen Modelle werden ueber den Router als
+Benchmark-Kandidaten angeboten. `hemanth/chessplayer:latest` bleibt aktuell
+ausgenommen, weil ein wiederholter Pull einen fehlerhaften GGUF-Blob lieferte
+und Host-Ollama in einen Crash-Loop brachte; die Quarantaene ist lokale
+Runtime-Wartung und gehoert nicht ins Repo.
+
 Ollamas CLI bietet Thinking-Mode-Werte `false`, `true`, `low`, `medium` und
-`high` fuer unterstuetzte Modelle. Der Router bildet diese fuer
-`qwen3.6:27b` als eigene Aliase ab, damit der Benchmark die Modi blind wie
-separate Modellkandidaten bewerten kann. Wenn ein Backend einen Modus nicht
-unterstuetzt, soll der CaiLama-Benchmark-Runner den Fehler als Feedbackfall
-erfassen und mit den uebrigen Modellen fortfahren.
+`high` fuer unterstuetzte Modelle. Der Router bildet diese fuer alle
+nachweislich thinking-faehigen lokalen und Cloud-Modelle als eigene Aliase ab;
+GPT-OSS-Modelle nutzen nur die dokumentierten Stufen `low`, `medium` und
+`high`. Wenn ein Backend einen Modus nicht unterstuetzt, erfasst der CaiLama-
+Benchmark-Runner den Fehler als Feedbackfall und faehrt mit den uebrigen
+Modellen fort.
 
 Nach dem Eintragen oder Aendern der lokalen Ollama-Cloud-Keys in der
 unversionierten Router-`.env` muessen die Container neu erstellt und der
@@ -290,7 +309,7 @@ env CAILAMA_LLM_PROVIDER=openai_compatible \
   .venv/bin/python scripts/run_ptg_model_benchmark.py \
   --pgn /pfad/zum/freigegebenen/import.pgn \
   --output-dir ~/.local/share/cailama/benchmarks/ptg-models \
-  --models kimi-k2.6:cloud,gemma4:31b-cloud,qwen3.5:397b-cloud,deepseek-v4-flash:cloud \
+  --models auto \
   --role-max-tokens 700 \
   --skip-ptg \
   --upload-url https://cailama.org/api/v1/benchmarks/observations \
@@ -299,10 +318,12 @@ env CAILAMA_LLM_PROVIDER=openai_compatible \
 ```
 
 Nach dem Upload erscheint der Lauf unter
-`https://cailama.org/benchmark-feedback.php`. Dort wird pro Modell Feedback zu
-Qualitaet, Aufgabenloesung, Logikfehlern und A/B-Praeferenz erfasst.
-Jede Rolle erscheint als eigener Feedback-Fall. Die sichtbare Bewertung bleibt
-blind: angezeigt wird nur ein Kandidaten-Code, nicht der Modellname.
+`https://cailama.org/benchmark-feedback.php`; aggregierte Auswertungen liegen
+unter `https://cailama.org/benchmark-feedback-results.php`. Dort wird pro
+Modell Feedback zu Qualitaet, Aufgabenloesung, Logikfehlern und A/B-Praeferenz
+erfasst. Jede Rolle erscheint als eigener Feedback-Fall. Die sichtbare
+Bewertung bleibt blind: angezeigt wird nur ein Kandidaten-Code, nicht der
+Modellname.
 `--role-max-tokens` begrenzt nur die kurzen Rollen-Probes auf
 OpenAI-kompatiblen Backends. Damit werden Laufzeit und Antwortlaenge
 vergleichbarer; der volle PTG-Classify-/Analyze-Lauf bleibt davon unberuehrt.

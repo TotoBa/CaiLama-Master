@@ -46,6 +46,11 @@ $config = [
         'max_attempts_per_session' => 5,
         'attempt_window_seconds' => 600,
     ],
+    'benchmark_feedback' => [
+        'piece_asset_base_url' => '',
+        'piece_sets' => [],
+        'default_piece_set' => '',
+    ],
     'databases' => [
         'cailama' => [
             'enabled' => false,

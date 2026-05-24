@@ -82,6 +82,17 @@ function candidate_label(array $row): string
     );
 }
 
+function benchmark_piece_config(array $config): array
+{
+    $feedback = is_array($config['benchmark_feedback'] ?? null) ? $config['benchmark_feedback'] : [];
+    $sets = is_array($feedback['piece_sets'] ?? null) ? $feedback['piece_sets'] : [];
+    return [
+        'baseUrl' => is_string($feedback['piece_asset_base_url'] ?? null) ? trim($feedback['piece_asset_base_url']) : '',
+        'sets' => $sets,
+        'defaultSet' => is_string($feedback['default_piece_set'] ?? null) ? trim($feedback['default_piece_set']) : '',
+    ];
+}
+
 function load_benchmark_data(PDO $pdo): array
 {
     $cases = $pdo->query(
@@ -139,6 +150,14 @@ function load_benchmark_data(PDO $pdo): array
             o.thinking_tokens,
             o.output_tokens,
             o.artifact_ref,
+            o.position_fen,
+            o.side_to_move,
+            o.position_label,
+            o.task_prompt_excerpt,
+            o.expected_output_type,
+            o.candidate_moves_excerpt,
+            o.error_status,
+            o.error_message,
             o.output_excerpt,
             o.created_at,
             c.id AS case_id,
@@ -168,6 +187,14 @@ function load_benchmark_observation(PDO $pdo, int $id): ?array
             o.thinking_tokens,
             o.output_tokens,
             o.artifact_ref,
+            o.position_fen,
+            o.side_to_move,
+            o.position_label,
+            o.task_prompt_excerpt,
+            o.expected_output_type,
+            o.candidate_moves_excerpt,
+            o.error_status,
+            o.error_message,
             o.output_excerpt,
             o.created_at,
             c.id AS case_id,
@@ -302,6 +329,7 @@ $formThinkingTokens = is_string($_POST['thinking_tokens'] ?? null)
 $formOutputTokens = is_string($_POST['output_tokens'] ?? null)
     ? (string) $_POST['output_tokens']
     : (string) ($selectedObservation['output_tokens'] ?? '');
+$pieceConfig = benchmark_piece_config($config);
 ?>
 <!doctype html>
 <html lang="de">
@@ -314,6 +342,7 @@ $formOutputTokens = is_string($_POST['output_tokens'] ?? null)
   <link rel="canonical" href="https://cailama.org/benchmark-feedback.php">
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
   <header class="site-header">
@@ -329,7 +358,7 @@ $formOutputTokens = is_string($_POST['output_tokens'] ?? null)
         <a href="roadmap.php">Roadmap</a>
         <a href="operations.php">Betrieb</a>
         <a href="reference.php">Referenz</a>
-        <a aria-current="page" href="account.php">Konto</a>
+        <a href="account.php">Konto</a>
       </div>
     </nav>
   </header>
@@ -401,6 +430,61 @@ $formOutputTokens = is_string($_POST['output_tokens'] ?? null)
 
           <?php if ($selectedObservation !== null): ?>
             <p class="notice" role="status">Benchmark-Lauf vorausgefüllt: <?= h(candidate_label($selectedObservation)) ?> · <?= h((string) $selectedObservation['task_label']) ?></p>
+            <div class="auth-panel benchmark-observation-detail">
+              <div>
+                <h2>Bewertungsfall</h2>
+                <p><strong><?= h((string) $selectedObservation['task_label']) ?></strong></p>
+                <p><?= h((string) $selectedObservation['task_summary']) ?></p>
+                <?php if ((string) ($selectedObservation['task_prompt_excerpt'] ?? '') !== ''): ?>
+                  <pre><?= h((string) $selectedObservation['task_prompt_excerpt']) ?></pre>
+                <?php endif; ?>
+              </div>
+              <div class="detail-grid">
+                <div>
+                  <strong>Kandidat</strong>
+                  <span><?= h(candidate_label($selectedObservation)) ?></span>
+                </div>
+                <div>
+                  <strong>Erwarteter Output</strong>
+                  <span><?= h((string) (($selectedObservation['expected_output_type'] ?? '') ?: 'nicht angegeben')) ?></span>
+                </div>
+                <div>
+                  <strong>Metriken</strong>
+                  <span>Dauer <?= h((string) ($selectedObservation['duration_ms'] ?? '-')) ?> ms · Input <?= h((string) ($selectedObservation['input_tokens'] ?? '-')) ?> · Thinking <?= h((string) ($selectedObservation['thinking_tokens'] ?? '-')) ?> · Output <?= h((string) ($selectedObservation['output_tokens'] ?? '-')) ?></span>
+                </div>
+                <div>
+                  <strong>Fehlerstatus</strong>
+                  <span><?= h((string) (($selectedObservation['error_status'] ?? '') ?: 'kein Fehlerstatus')) ?></span>
+                </div>
+              </div>
+              <?php if ((string) ($selectedObservation['candidate_moves_excerpt'] ?? '') !== ''): ?>
+                <div>
+                  <strong>Kandidatenzüge</strong>
+                  <p><?= h((string) $selectedObservation['candidate_moves_excerpt']) ?></p>
+                </div>
+              <?php endif; ?>
+              <?php if ((string) ($selectedObservation['error_message'] ?? '') !== ''): ?>
+                <p class="notice error"><?= h((string) $selectedObservation['error_message']) ?></p>
+              <?php endif; ?>
+              <div>
+                <strong>Output-Auszug</strong>
+                <p><?= h((string) ($selectedObservation['output_excerpt'] ?? '')) ?></p>
+              </div>
+              <div
+                class="feedback-board"
+                data-fen="<?= h((string) ($selectedObservation['position_fen'] ?? '')) ?>"
+                data-side="<?= h((string) ($selectedObservation['side_to_move'] ?? '')) ?>"
+                data-label="<?= h((string) ($selectedObservation['position_label'] ?? '')) ?>"
+                data-piece-config="<?= h(json_encode($pieceConfig, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '{}') ?>"
+              >
+                <div class="board-toolbar">
+                  <strong>Stellung</strong>
+                  <button class="button light board-flip" type="button">Drehen</button>
+                </div>
+                <p class="board-empty">Keine Stellung hinterlegt.</p>
+                <div class="chess-board" aria-label="Benchmark-Stellung"></div>
+              </div>
+            </div>
           <?php endif; ?>
 
           <form class="auth-panel feedback-form" method="post" action="benchmark-feedback.php">
@@ -607,5 +691,95 @@ $formOutputTokens = is_string($_POST['output_tokens'] ?? null)
       <a href="mailto:info@cailama.org">Kontakt</a>
     </div>
   </footer>
+  <script>
+  (function ($) {
+    const unicodePieces = {
+      wK: "♔", wQ: "♕", wR: "♖", wB: "♗", wN: "♘", wP: "♙",
+      bK: "♚", bQ: "♛", bR: "♜", bB: "♝", bN: "♞", bP: "♟"
+    };
+    const pieceMap = { p: "P", r: "R", n: "N", b: "B", q: "Q", k: "K" };
+
+    function parseFen(fen) {
+      const parts = String(fen || "").trim().split(/\s+/);
+      if (parts.length < 2) {
+        return null;
+      }
+      const ranks = parts[0].split("/");
+      if (ranks.length !== 8) {
+        return null;
+      }
+      return ranks.map(function (rank) {
+        const squares = [];
+        for (const ch of rank) {
+          if (/^[1-8]$/.test(ch)) {
+            for (let i = 0; i < Number(ch); i += 1) {
+              squares.push("");
+            }
+          } else if (/^[prnbqkPRNBQK]$/.test(ch)) {
+            const color = ch === ch.toUpperCase() ? "w" : "b";
+            squares.push(color + pieceMap[ch.toLowerCase()]);
+          } else {
+            return null;
+          }
+        }
+        return squares.length === 8 ? squares : null;
+      });
+    }
+
+    function pieceUrl(piece, config) {
+      if (!config || !config.baseUrl || !config.defaultSet || !config.sets || !config.sets[config.defaultSet]) {
+        return "";
+      }
+      return String(config.baseUrl).replace(/\/$/, "") + "/" + String(config.sets[config.defaultSet]).replace(/^\/|\/$/g, "") + "/" + piece + ".svg";
+    }
+
+    function renderBoard($wrap, flipped) {
+      const fen = $wrap.data("fen");
+      const rows = parseFen(fen);
+      const $board = $wrap.find(".chess-board");
+      if (!rows) {
+        $wrap.find(".board-empty").show();
+        $board.empty().hide();
+        return;
+      }
+      let config = {};
+      try {
+        config = JSON.parse($wrap.attr("data-piece-config") || "{}");
+      } catch (error) {
+        config = {};
+      }
+      $wrap.find(".board-empty").hide();
+      $board.empty().show();
+      const rankOrder = flipped ? [7, 6, 5, 4, 3, 2, 1, 0] : [0, 1, 2, 3, 4, 5, 6, 7];
+      const fileOrder = flipped ? [7, 6, 5, 4, 3, 2, 1, 0] : [0, 1, 2, 3, 4, 5, 6, 7];
+      rankOrder.forEach(function (r) {
+        fileOrder.forEach(function (f) {
+          const piece = rows[r][f];
+          const $square = $("<div>", { "class": "board-square " + (((r + f) % 2 === 0) ? "light-square" : "dark-square") });
+          if (piece) {
+            const url = pieceUrl(piece, config);
+            if (url) {
+              $("<img>", { src: url, alt: piece }).appendTo($square);
+            } else {
+              $("<span>", { text: unicodePieces[piece] || piece }).appendTo($square);
+            }
+          }
+          $board.append($square);
+        });
+      });
+    }
+
+    $(".feedback-board").each(function () {
+      const $wrap = $(this);
+      const side = String($wrap.data("side") || "").toLowerCase();
+      let flipped = side === "b" || side === "black";
+      renderBoard($wrap, flipped);
+      $wrap.find(".board-flip").on("click", function () {
+        flipped = !flipped;
+        renderBoard($wrap, flipped);
+      });
+    });
+  })(jQuery);
+  </script>
 </body>
 </html>

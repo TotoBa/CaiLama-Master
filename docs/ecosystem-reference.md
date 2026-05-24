@@ -79,7 +79,8 @@ Rolle:
 - PHP-Login-/Session-Shell, Webspace-API-Status und kontrollierter
   serverseitiger CaiLama-Dump-Import ohne versionierte Credentials.
 - Geschütztes Benchmark-Feedback hinter Login mit Single-DB-Speicherung für
-  Modellrollen, Laufzeiten, Tokenwerte, Qualitätsurteile und A/B-Präferenzen.
+  Modellrollen, Laufzeiten, Tokenwerte, Aufgaben-/Stellungsdaten,
+  Qualitätsurteile, A/B-Präferenzen und blinde Ergebnis-Aggregationen.
 - Roadmap und Cross-Repo-Koordination.
 - Produktpositionierung und Master-geführte Benchmarks.
 - Lokale Checks ohne Schreibzugriffe in Unter-Repos.
@@ -377,9 +378,14 @@ Vertrag:
   `cailama_model_benchmark_cases`,
   `cailama_model_benchmark_observations` sowie
   `cailama_model_feedback` in `databases.cailama`.
+- `/benchmark-feedback-results.php` zeigt geschützte Blind-Aggregationen nach
+  Lauf, Rolle, Fall und Kandidat.
 - `POST /api/v1/benchmarks/observations` importiert secretfreie
   Benchmark-Laufdaten mit `benchmark:write` oder `admin`; Rohprompts,
   vollständige Antworten, lokale Pfade und Secrets sind ausgeschlossen.
+  Optionale Felder für Aufgaben-Auszug, erwarteten Ausgabetyp, FEN,
+  Side-to-move, Positionslabel, Kandidatenzug-Auszug und gekürzte Fehlerdaten
+  sind erlaubt.
 - Importierte Benchmark-Läufe werden im Website-Feedback blind angezeigt:
   Nutzer sehen Kandidaten-Codes statt Modellnamen; die Zuordnung bleibt
   serverseitig in der Datenbank.

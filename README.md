@@ -23,7 +23,10 @@ Geschuetzter Arbeitsbereich:
 
 - <https://cailama.org/benchmark-feedback.php> - Login-geschuetztes
   Modellrollen-Feedback fuer importierte Laufdaten, Laufzeit, Tokenwerte,
-  Qualitaet, Aufgabenloesung, Logikfehler und A/B-Praeferenzen.
+  Aufgaben-/Stellungsdaten, Qualitaet, Aufgabenloesung, Logikfehler und
+  A/B-Praeferenzen.
+- <https://cailama.org/benchmark-feedback-results.php> - geschuetzte blinde
+  Auswertung der gespeicherten Benchmark-Feedbacks.
 
 Dieses Repository ist kein Monorepo und enthaelt keinen produktiven Code der
 Unterprojekte.

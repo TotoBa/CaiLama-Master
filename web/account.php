@@ -72,6 +72,7 @@ function h(string $value): string
             </div>
           </dl>
           <a class="button light form-button" href="benchmark-feedback.php">Benchmark-Feedback öffnen</a>
+          <a class="button light form-button" href="benchmark-feedback-results.php">Benchmark-Auswertung öffnen</a>
           <form method="post" action="logout.php">
             <input type="hidden" name="csrf_token" value="<?= h($session->csrfToken()) ?>">
             <button class="button light form-button" type="submit">Abmelden</button>

@@ -87,6 +87,14 @@ final class BenchmarkController
             'thinking_tokens' => $this->nullableInt($row, 'thinking_tokens'),
             'output_tokens' => $this->nullableInt($row, 'output_tokens'),
             'artifact_ref' => $this->optionalString($row, 'artifact_ref', 190),
+            'position_fen' => $this->optionalFen($row, 'position_fen'),
+            'side_to_move' => $this->optionalSideToMove($row, 'side_to_move'),
+            'position_label' => $this->optionalString($row, 'position_label', 190),
+            'task_prompt_excerpt' => $this->optionalString($row, 'task_prompt_excerpt', 5000),
+            'expected_output_type' => $this->optionalString($row, 'expected_output_type', 80),
+            'candidate_moves_excerpt' => $this->optionalString($row, 'candidate_moves_excerpt', 5000),
+            'error_status' => $this->optionalString($row, 'error_status', 40),
+            'error_message' => $this->optionalString($row, 'error_message', 500),
             'output_excerpt' => $this->optionalString($row, 'output_excerpt', 5000),
         ];
     }
@@ -129,15 +137,25 @@ final class BenchmarkController
         $statement = $pdo->prepare(
             "INSERT INTO cailama_model_benchmark_observations
                 (case_id, run_key, model_label, duration_ms, input_tokens, thinking_tokens, output_tokens,
-                 artifact_ref, output_excerpt)
+                 artifact_ref, position_fen, side_to_move, position_label, task_prompt_excerpt,
+                 expected_output_type, candidate_moves_excerpt, error_status, error_message, output_excerpt)
              VALUES
                 (:case_id, :run_key, :model_label, :duration_ms, :input_tokens, :thinking_tokens, :output_tokens,
-                 :artifact_ref, :output_excerpt)
+                 :artifact_ref, :position_fen, :side_to_move, :position_label, :task_prompt_excerpt,
+                 :expected_output_type, :candidate_moves_excerpt, :error_status, :error_message, :output_excerpt)
              ON DUPLICATE KEY UPDATE
                 duration_ms = VALUES(duration_ms),
                 input_tokens = VALUES(input_tokens),
                 thinking_tokens = VALUES(thinking_tokens),
                 output_tokens = VALUES(output_tokens),
+                position_fen = VALUES(position_fen),
+                side_to_move = VALUES(side_to_move),
+                position_label = VALUES(position_label),
+                task_prompt_excerpt = VALUES(task_prompt_excerpt),
+                expected_output_type = VALUES(expected_output_type),
+                candidate_moves_excerpt = VALUES(candidate_moves_excerpt),
+                error_status = VALUES(error_status),
+                error_message = VALUES(error_message),
                 output_excerpt = VALUES(output_excerpt)"
         );
         $statement->execute([
@@ -149,6 +167,14 @@ final class BenchmarkController
             'thinking_tokens' => $observation['thinking_tokens'],
             'output_tokens' => $observation['output_tokens'],
             'artifact_ref' => $observation['artifact_ref'],
+            'position_fen' => $observation['position_fen'],
+            'side_to_move' => $observation['side_to_move'],
+            'position_label' => $observation['position_label'],
+            'task_prompt_excerpt' => $observation['task_prompt_excerpt'],
+            'expected_output_type' => $observation['expected_output_type'],
+            'candidate_moves_excerpt' => $observation['candidate_moves_excerpt'],
+            'error_status' => $observation['error_status'],
+            'error_message' => $observation['error_message'],
             'output_excerpt' => $observation['output_excerpt'],
         ]);
     }
@@ -193,6 +219,34 @@ final class BenchmarkController
         }
         $int = (int) $value;
         return min($int, 2147483647);
+    }
+
+    private function optionalFen(array $row, string $key): string
+    {
+        $value = $this->optionalString($row, $key, 120);
+        if ($value === '') {
+            return '';
+        }
+        $parts = preg_split('/\s+/', $value) ?: [];
+        if (count($parts) !== 6 || !in_array($parts[1], ['w', 'b'], true)) {
+            throw new \InvalidArgumentException('Invalid FEN field: ' . $key);
+        }
+        if (!preg_match('/^[prnbqkPRNBQK1-8\/]+$/', $parts[0])) {
+            throw new \InvalidArgumentException('Invalid FEN field: ' . $key);
+        }
+        return $value;
+    }
+
+    private function optionalSideToMove(array $row, string $key): string
+    {
+        $value = strtolower($this->optionalString($row, $key, 8));
+        if ($value === '') {
+            return '';
+        }
+        if (!in_array($value, ['w', 'b', 'white', 'black'], true)) {
+            throw new \InvalidArgumentException('Invalid side_to_move field.');
+        }
+        return $value;
     }
 
     private function error(string $code, string $message, int $status): Response

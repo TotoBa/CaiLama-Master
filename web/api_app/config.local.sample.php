@@ -34,6 +34,18 @@ return [
     'auth' => [
         'enabled' => true,
     ],
+    'benchmark_feedback' => [
+        /*
+         * Optional public URL prefix for mirrored chess piece images.
+         * Keep local runtime paths out of this file. Example:
+         *   'piece_asset_base_url' => '/assets/chesspieces',
+         *   'piece_sets' => ['merida' => 'merida'],
+         *   'default_piece_set' => 'merida',
+         */
+        'piece_asset_base_url' => '',
+        'piece_sets' => [],
+        'default_piece_set' => '',
+    ],
     'databases' => [
         'cailama' => [
             'enabled' => true,

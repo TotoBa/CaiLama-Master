@@ -173,15 +173,22 @@ Vor Arbeitsbeginn lesen:
   bewusst ohne clientseitige Benchmark-Kappung laufen:
   `--llm-timeout-seconds 0`, `--upload-timeout-seconds 0`,
   `--role-max-tokens 0` und `--max-analysis-positions 0`. Die Modellliste
-  fuer den naechsten vollstaendigen Feedbacklauf umfasst zusaetzlich
-  `deepseek-v4-pro:cloud`,
-  `hemanth/chessplayer:latest`, `starling-lm:7b`, `gemma4:e2b`,
-  `gemma4:e4b` und `qwen3.6:27b`. Der Router besitzt eine
-  Dual-Ollama-VM-Beispielkonfiguration,
+  fuer den naechsten vollstaendigen Feedbacklauf wird per `--models auto` aus
+  dem Router gelesen; operative Aliase wie `default`, `kimi-cli-default` und
+  `chess-*` bleiben Router-Aliase und werden in CaiLama nicht als
+  Benchmarkkandidaten genutzt. `hemanth/chessplayer:latest` ist nach erneutem
+  fehlerhaftem Pull vorerst ausgenommen, weil der Blob Host-Ollama crashen
+  liess. Der Router besitzt eine Dual-Ollama-VM-Beispielkonfiguration,
   damit die Laufzeitmessung nicht mehr vom Pi-Backend ausgebremst wird.
   Cloud-Modelle gehen ueber die zwei Docker-Ollamas mit separaten Keys;
   lokale Modelle gehen ueber den Host-Ollama auf `127.0.0.1:11434`, damit sie
   nur einmal geladen werden muessen.
+  **Update 2026-05-24:** Die Feedback-Website nimmt optionale Aufgaben-,
+  Stellungs- und Fehlerfelder an. Bei FEN rendert sie ein responsives Brett;
+  `/benchmark-feedback-results.php` zeigt geschuetzte, weiterhin blinde
+  Aggregationen pro Lauf/Rolle/Fall/Kandidat. Thinking-Aliase werden im Router
+  fuer alle nachweislich thinking-faehigen Modelle vorbereitet; abgelehnte
+  Modi bleiben Feedbackfaelle statt Laufabbruch.
   Das Website-Deploy-Skript laedt im Standardmodus nur Code hoch; Remote-
   Ordneranlage und `web-smarty/vendor/`-Upload erfolgen nur mit explizitem
   Flag (`--create-dirs`, `--with-vendor`, `--full`).
@@ -234,12 +241,15 @@ Vor Arbeitsbeginn lesen:
 Der Master bleibt Koordination, Website und Doku. Keine Unterrepo-Dateien im
 Master tracken, keine Submodules, keine produktive Runtime-Logik.
 
-Update 2026-05-24: Fuer den langen Modellrollen-Benchmark sind Qwen-3.6-27B-
-Thinking-Aliase vorbereitet (`think` false/true/low/medium/high). Der Router
-nutzt dafuer `request_overrides` in Modellrouten; CaiLama exportiert
-abgelehnte Modell-/Thinking-Varianten als Feedback-Fehlerfall und arbeitet
-den restlichen Benchmark weiter ab. Vor dem finalen Lauf muessen alle lokalen
-Modelle in Host-Ollama vorhanden sein; der Startbefehl steht in
+Update 2026-05-24: Fuer den langen Modellrollen-Benchmark sind Router-Aliase
+fuer alle lokal/cloudseitig nachgewiesenen Modelle und Thinking-Varianten
+vorbereitet. Der Router nutzt dafuer `request_overrides` in Modellrouten;
+CaiLama liest die Kandidaten per `--models auto` aus `/v1/models`, filtert
+Router-Default-/Rollen-Aliase wie `default`, `kimi-cli-default` und `chess-*`
+heraus und exportiert abgelehnte Modell-/Thinking-Varianten als Feedback-
+Fehlerfall. Vor dem finalen Lauf muessen alle lokalen Modelle in Host-Ollama
+vorhanden sein; `hemanth/chessplayer:latest` ist wegen wiederholtem defektem
+Pull/Host-Ollama-Crash vorerst nicht in der Liste. Der Startbefehl steht in
 `docs/benchmarks.md`.
 
 ```text
@@ -257,9 +267,10 @@ Website oder LLM-Doku betrifft, lies zusaetzlich docs/website.md,
 docs/ecosystem-reference.md, docs/data/ecosystem.json und die betroffenen
 Dateien unter web/. Beachte: web/index.php ist die Trainingsfokus-Startseite;
 der bisherige Status der Startseite liegt unter web/status.php. Fuer
-Modellrollen-Benchmarks gibt es die geschuetzte Seite
-web/benchmark-feedback.php; keine Kontoanlage oder Registrierung einbauen,
-Nutzer werden direkt in web_users angelegt.
+  Modellrollen-Benchmarks gibt es die geschuetzten Seiten
+  web/benchmark-feedback.php und web/benchmark-feedback-results.php; keine
+  Kontoanlage oder Registrierung einbauen, Nutzer werden direkt in web_users
+  angelegt.
 
 Arbeite danach die offenen Punkte in TODO.md von oben nach unten ab. Pro
 Schritt nur eine kleine, nachvollziehbare Aufgabe bearbeiten: Kontext lesen,
@@ -281,11 +292,15 @@ Legal-Move-/Brettwahrheit-Details in Review-/Coach-/Benchmark-Artefakten,
 OCR/FEN-Gates ohne geratene FENs, RAG-Provenienz, Analyse-/Training-
 Qualitaetsgates sowie Profil-Export und bestaetigte Profil-Loeschung. Offen
 ist die Abrundung: Retention/Profilbindung fuer dateibasierte Trainingskarten
-und Review-Historien sowie automatische Router-/CaiLama-Metrikuebernahme in
-das Website-Feedback. Neu vorbereitet ist der Drei-Spiele-PTG-Modellbenchmark
-mit Website-Beobachtungsimport; nach echten Laeufen sind die Feedbackfaelle auf
-der Website fachlich zu bewerten. Die 21 Positionen aus dem Benchmark sind nur Beobachtung
-aus drei Beispielpartien. Danach Search nur fuer semantische
+  und Review-Historien. Neu vorbereitet ist der Drei-Spiele-PTG-
+  Modellbenchmark mit automatischer Router-Modellliste, Thinking-Varianten,
+  Fehler-Beobachtungen, Website-Beobachtungsimport, FEN-/Brettanzeige und
+  Ergebnis-Aggregation. Router-Default-/Rollen-Aliase wie `default`,
+  `kimi-cli-default` und `chess-*` gehoeren nicht in die CaiLama-
+  Benchmarkkandidaten, ausser sie werden explizit mit `--include-role-aliases`
+  verlangt. Nach echten Laeufen sind die Feedbackfaelle auf der Website
+  fachlich zu bewerten. Die 21 Positionen aus dem Benchmark sind nur
+  Beobachtung aus drei Beispielpartien. Danach Search nur fuer semantische
 Freigabeentscheidung auf groesserem Eval; RAG-/Researcher-Kennzahlen sind als
 `source_quality` im Benchmark-Vertrag umgesetzt. Router nur bei neuem Alias-/
 Benchmark-/Live-Smoke-Auftrag.

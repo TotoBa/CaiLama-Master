@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS cailama_schema_meta (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO cailama_schema_meta (id, schema_name, schema_version)
-VALUES (1, 'cailama-data', '0.4.0')
+VALUES (1, 'cailama-data', '0.5.0')
 ON DUPLICATE KEY UPDATE schema_version = VALUES(schema_version);
 
 -- Website user authentication table (formerly in a separate auth database).
@@ -83,6 +83,14 @@ CREATE TABLE IF NOT EXISTS cailama_model_benchmark_observations (
     thinking_tokens INT UNSIGNED NULL,
     output_tokens INT UNSIGNED NULL,
     artifact_ref VARCHAR(190) NOT NULL DEFAULT '',
+    position_fen VARCHAR(120) NOT NULL DEFAULT '',
+    side_to_move VARCHAR(8) NOT NULL DEFAULT '',
+    position_label VARCHAR(190) NOT NULL DEFAULT '',
+    task_prompt_excerpt TEXT NULL,
+    expected_output_type VARCHAR(80) NOT NULL DEFAULT '',
+    candidate_moves_excerpt TEXT NULL,
+    error_status VARCHAR(40) NOT NULL DEFAULT '',
+    error_message VARCHAR(500) NOT NULL DEFAULT '',
     output_excerpt TEXT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -93,6 +101,16 @@ CREATE TABLE IF NOT EXISTS cailama_model_benchmark_observations (
         FOREIGN KEY (case_id) REFERENCES cailama_model_benchmark_cases (id)
         ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE cailama_model_benchmark_observations
+    ADD COLUMN IF NOT EXISTS position_fen VARCHAR(120) NOT NULL DEFAULT '' AFTER artifact_ref,
+    ADD COLUMN IF NOT EXISTS side_to_move VARCHAR(8) NOT NULL DEFAULT '' AFTER position_fen,
+    ADD COLUMN IF NOT EXISTS position_label VARCHAR(190) NOT NULL DEFAULT '' AFTER side_to_move,
+    ADD COLUMN IF NOT EXISTS task_prompt_excerpt TEXT NULL AFTER position_label,
+    ADD COLUMN IF NOT EXISTS expected_output_type VARCHAR(80) NOT NULL DEFAULT '' AFTER task_prompt_excerpt,
+    ADD COLUMN IF NOT EXISTS candidate_moves_excerpt TEXT NULL AFTER expected_output_type,
+    ADD COLUMN IF NOT EXISTS error_status VARCHAR(40) NOT NULL DEFAULT '' AFTER candidate_moves_excerpt,
+    ADD COLUMN IF NOT EXISTS error_message VARCHAR(500) NOT NULL DEFAULT '' AFTER error_status;
 
 INSERT INTO cailama_model_benchmark_cases
     (case_key, area, role_name, model_a, model_b, task_label, task_summary, quality_question, status)
