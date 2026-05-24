@@ -274,6 +274,13 @@ unversionierten Router-`.env` muessen die Container neu erstellt und der
 Router neu gestartet werden. Die Container sind mit `restart: unless-stopped`
 vorbereitet; Docker, Router und Search muessen als Boot-Dienste enabled sein,
 damit die Benchmark-Infrastruktur nach einem Neustart wieder verfuegbar ist.
+Praktischer Live-Befund: Fuer Ollama-Cloud reicht die Env-Key-Weitergabe
+allein nicht immer; die Docker-Ollamas muessen im privaten Docker-Volume auch
+eine signierte Ollama-Anmeldung besitzen oder im Container per `ollama signin`
+eingerichtet werden. Fehlt diese Anmeldung, liefert Ollama bei Cloud-Modellen
+HTTP 500 mit `internal service error` beziehungsweise meldet im CLI, dass eine
+Anmeldung erforderlich ist. Signierte Ollama-Dateien und Keys bleiben lokale
+Operator-Secrets und werden nicht dokumentiert oder versioniert.
 
 Schneller Rollenlauf fuer heutiges Blind-Feedback:
 
