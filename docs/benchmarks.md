@@ -177,7 +177,10 @@ Ein Ergebnis enthaelt mindestens:
   Beobachtungen enthalten neben Dauer, Tokens, Artefakt und Output-Auszug auch
   Aufgaben-Auszug, erwarteten Ausgabetyp, optionale FEN/Side-to-move- und
   Kandidatenzug-Auszuege. Backend-Fehler oder abgelehnte Thinking-Modi werden
-  als Feedbackfaelle importiert und brechen den Gesamtlauf nicht ab.
+  als Feedbackfaelle importiert und brechen den Gesamtlauf nicht ab. Der
+  Website-Upload streamt Beobachtungen in 100er-Batches, sobald ein Batch voll
+  ist; erste Feedbackfaelle koennen daher bereits bewertet werden, waehrend der
+  lange Benchmark weiterlaeuft.
   `--skip-ptg` ist fuer schnelle Feedbacklaeufe erlaubt; `--max-analysis-
   positions` ist ein explizites Laufzeitbudget fuer den vollen PTG-Lauf,
   keine allgemeine 21er-Regel. Fuer vollstaendige Laeufe koennen

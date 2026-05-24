@@ -188,7 +188,9 @@ Vor Arbeitsbeginn lesen:
   `/benchmark-feedback-results.php` zeigt geschuetzte, weiterhin blinde
   Aggregationen pro Lauf/Rolle/Fall/Kandidat. Thinking-Aliase werden im Router
   fuer alle nachweislich thinking-faehigen Modelle vorbereitet; abgelehnte
-  Modi bleiben Feedbackfaelle statt Laufabbruch.
+  Modi bleiben Feedbackfaelle statt Laufabbruch. CaiLama streamt den Upload
+  jetzt in 100er-Batches, sobald ein Batch voll ist, damit Human-Feedback schon
+  waehrend langer Laeufe beginnen kann.
   Das Website-Deploy-Skript laedt im Standardmodus nur Code hoch; Remote-
   Ordneranlage und `web-smarty/vendor/`-Upload erfolgen nur mit explizitem
   Flag (`--create-dirs`, `--with-vendor`, `--full`).
