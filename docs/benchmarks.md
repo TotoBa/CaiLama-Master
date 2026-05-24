@@ -105,10 +105,11 @@ Provider-Datenbank. Die Tabellen heissen `cailama_model_benchmark_cases`,
 `cailama_model_benchmark_observations` und `cailama_model_feedback`.
 Benchmark-Runner duerfen secretfreie Beobachtungen ueber
 `POST /api/v1/benchmarks/observations` importieren; bewertet wird danach in
-der Website. Rohprompts, volle Modellantworten, private Partien, lokale Pfade
-und Secrets gehoeren nicht in diese Tabellen; dort liegen nur vergleichbare
-Kennzahlen, kurze Aufgabenbeschreibungen, knappe Auszuege und menschliches
-Feedback.
+der Website als Blind-Feedback. Die Feedback-Seite zeigt bei importierten
+Laeufen nur Kandidaten-Codes, nicht das konkrete Modell. Rohprompts, volle
+Modellantworten, private Partien, lokale Pfade und Secrets gehoeren nicht in
+diese Tabellen; dort liegen nur vergleichbare Kennzahlen, kurze
+Aufgabenbeschreibungen, knappe Auszuege und menschliches Feedback.
 
 ## Ergebnisformat
 
@@ -222,4 +223,6 @@ Nach dem Upload erscheint der Lauf unter
 `https://cailama.org/benchmark-feedback.php`. Dort wird pro Modell Feedback zu
 Qualitaet, Aufgabenloesung, Logikfehlern und A/B-Praeferenz erfasst.
 Die Teilaufgaben `chess-small`/Zugklassifikation und `chess-analyst`/
-Schluesselstellungsanalyse erscheinen als eigene Feedback-Faelle.
+Schluesselstellungsanalyse erscheinen als eigene Feedback-Faelle. Die
+sichtbare Bewertung bleibt blind: angezeigt wird nur ein Kandidaten-Code,
+nicht der Modellname.

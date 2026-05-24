@@ -376,6 +376,9 @@ Vertrag:
 - `POST /api/v1/benchmarks/observations` importiert secretfreie
   Benchmark-Laufdaten mit `benchmark:write` oder `admin`; Rohprompts,
   vollständige Antworten, lokale Pfade und Secrets sind ausgeschlossen.
+- Importierte Benchmark-Läufe werden im Website-Feedback blind angezeigt:
+  Nutzer sehen Kandidaten-Codes statt Modellnamen; die Zuordnung bleibt
+  serverseitig in der Datenbank.
 - Es gibt keine öffentliche Registrierung; Nutzer werden direkt in
   `web_users` angelegt.
 - Import- und Schema-Endpunkte akzeptieren keine Query-Parameter und keinen

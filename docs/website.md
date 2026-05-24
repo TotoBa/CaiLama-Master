@@ -379,6 +379,9 @@ Qualitäts-Score, Aufgaben-Score, Logikfehler-Klasse, A/B-Präferenz,
 secretfreie Lauf-Auszüge und knappe Feedbacknotizen. Rohprompts, volle
 Modellantworten, private Partiearchive, lokale Pfade und Secrets gehören nicht
 in diese Tabellen.
+Importierte Benchmark-Läufe werden blind bewertet: Die Website zeigt nur
+Kandidaten-Codes und lädt das echte Modell serverseitig anhand der
+Beobachtungs-ID, damit im Formular kein Modellname sichtbar ist.
 Benchmark-Fälle speichern Rolle und Aufgabe getrennt, damit dieselben
 Modellkandidaten rollenweise bewertet werden können, etwa
 `chess-small`/Zugklassifikation gegenüber `chess-analyst`/

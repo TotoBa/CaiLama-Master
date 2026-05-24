@@ -160,9 +160,10 @@ Vor Arbeitsbeginn lesen:
   rollenbezogene Faelle fuer `chess-small`/Klassifikation und
   `chess-analyst`/Analyse, damit das beste Modell pro Aufgabe statt nur ein
   globaler Sieger bestimmt werden kann. Fuer Feedback-Laeufe wird der Upload
-  mit `--require-upload` verbindlich gemacht. Offen bleibt die fachliche
-  Bewertung der heutigen Laeufe und die Ableitung belastbarer Modell-/Prompt-
-  Regeln.
+  mit `--require-upload` verbindlich gemacht. Das Feedback ist blind:
+  importierte Laeufe zeigen nur Kandidaten-Codes, keine Modellnamen; die
+  Zuordnung bleibt serverseitig. Offen bleibt die fachliche Bewertung der
+  heutigen Laeufe und die Ableitung belastbarer Modell-/Prompt-Regeln.
 - [ ] Spaeteres spezialisiertes LLM-Training als Roadmap-Hebel vorbereiten:
   erst nach Benchmark-Baseline, Datenfreigabe, sauberer Test-/Eval-/Train-
   Trennung und Datenschutzklaerung planen. Modelle werden nur ueber den
