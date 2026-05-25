@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS cailama_schema_meta (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO cailama_schema_meta (id, schema_name, schema_version)
-VALUES (1, 'cailama-data', '0.7.0')
+VALUES (1, 'cailama-data', '0.8.0')
 ON DUPLICATE KEY UPDATE schema_version = VALUES(schema_version);
 
 -- Website user authentication table (formerly in a separate auth database).
@@ -62,6 +62,11 @@ CREATE TABLE IF NOT EXISTS cailama_model_feedback (
     input_tokens INT UNSIGNED NULL,
     thinking_tokens INT UNSIGNED NULL,
     output_tokens INT UNSIGNED NULL,
+    total_tokens INT UNSIGNED NULL,
+    model_usage_level VARCHAR(32) NOT NULL DEFAULT '',
+    model_usage_weight TINYINT UNSIGNED NULL,
+    weighted_token_units BIGINT UNSIGNED NULL,
+    estimated_usage_units DECIMAL(18,3) NULL,
     quality_score TINYINT UNSIGNED NOT NULL,
     task_solution_score TINYINT UNSIGNED NOT NULL,
     logic_error_level ENUM('none', 'minor', 'major', 'unknown') NOT NULL DEFAULT 'unknown',
@@ -89,6 +94,11 @@ CREATE TABLE IF NOT EXISTS cailama_model_benchmark_observations (
     input_tokens INT UNSIGNED NULL,
     thinking_tokens INT UNSIGNED NULL,
     output_tokens INT UNSIGNED NULL,
+    total_tokens INT UNSIGNED NULL,
+    model_usage_level VARCHAR(32) NOT NULL DEFAULT '',
+    model_usage_weight TINYINT UNSIGNED NULL,
+    weighted_token_units BIGINT UNSIGNED NULL,
+    estimated_usage_units DECIMAL(18,3) NULL,
     artifact_ref VARCHAR(190) NOT NULL DEFAULT '',
     position_fen VARCHAR(120) NOT NULL DEFAULT '',
     side_to_move VARCHAR(8) NOT NULL DEFAULT '',
@@ -110,6 +120,11 @@ CREATE TABLE IF NOT EXISTS cailama_model_benchmark_observations (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 ALTER TABLE cailama_model_benchmark_observations
+    ADD COLUMN IF NOT EXISTS total_tokens INT UNSIGNED NULL AFTER output_tokens,
+    ADD COLUMN IF NOT EXISTS model_usage_level VARCHAR(32) NOT NULL DEFAULT '' AFTER total_tokens,
+    ADD COLUMN IF NOT EXISTS model_usage_weight TINYINT UNSIGNED NULL AFTER model_usage_level,
+    ADD COLUMN IF NOT EXISTS weighted_token_units BIGINT UNSIGNED NULL AFTER model_usage_weight,
+    ADD COLUMN IF NOT EXISTS estimated_usage_units DECIMAL(18,3) NULL AFTER weighted_token_units,
     ADD COLUMN IF NOT EXISTS position_fen VARCHAR(120) NOT NULL DEFAULT '' AFTER artifact_ref,
     ADD COLUMN IF NOT EXISTS side_to_move VARCHAR(8) NOT NULL DEFAULT '' AFTER position_fen,
     ADD COLUMN IF NOT EXISTS position_label VARCHAR(190) NOT NULL DEFAULT '' AFTER side_to_move,
@@ -132,6 +147,11 @@ ALTER TABLE web_users
 ALTER TABLE cailama_model_feedback
     ADD COLUMN IF NOT EXISTS observation_id BIGINT UNSIGNED NULL AFTER id,
     ADD COLUMN IF NOT EXISTS run_key VARCHAR(120) NOT NULL DEFAULT '' AFTER user_id,
+    ADD COLUMN IF NOT EXISTS total_tokens INT UNSIGNED NULL AFTER output_tokens,
+    ADD COLUMN IF NOT EXISTS model_usage_level VARCHAR(32) NOT NULL DEFAULT '' AFTER total_tokens,
+    ADD COLUMN IF NOT EXISTS model_usage_weight TINYINT UNSIGNED NULL AFTER model_usage_level,
+    ADD COLUMN IF NOT EXISTS weighted_token_units BIGINT UNSIGNED NULL AFTER model_usage_weight,
+    ADD COLUMN IF NOT EXISTS estimated_usage_units DECIMAL(18,3) NULL AFTER weighted_token_units,
     ADD COLUMN IF NOT EXISTS translation_score TINYINT UNSIGNED NULL AFTER preferred_option,
     ADD COLUMN IF NOT EXISTS translation_note TEXT NULL AFTER improvement_note;
 

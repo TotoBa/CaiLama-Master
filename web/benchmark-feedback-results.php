@@ -91,7 +91,11 @@ function load_results(PDO $pdo, array $filters): array
             SUM(o.error_status <> '') AS error_observations,
             ROUND(AVG(o.duration_ms), 0) AS duration_avg,
             ROUND(AVG(o.thinking_tokens), 0) AS thinking_avg,
-            ROUND(AVG(o.output_tokens), 0) AS output_avg
+            ROUND(AVG(o.output_tokens), 0) AS output_avg,
+            ROUND(AVG(o.total_tokens), 0) AS total_avg,
+            MAX(o.model_usage_level) AS usage_level,
+            SUM(o.weighted_token_units) AS weighted_token_units_sum,
+            ROUND(SUM(o.estimated_usage_units), 3) AS estimated_usage_units_sum
          FROM cailama_model_benchmark_observations o
          INNER JOIN cailama_model_benchmark_cases c ON c.id = o.case_id
          LEFT JOIN cailama_model_feedback f ON f.observation_id = o.id"
@@ -111,6 +115,10 @@ function load_results(PDO $pdo, array $filters): array
             o.model_label,
             o.error_status,
             o.error_message,
+            o.total_tokens,
+            o.model_usage_level,
+            o.weighted_token_units,
+            o.estimated_usage_units,
             c.case_key,
             c.role_name,
             c.task_label,
@@ -238,7 +246,7 @@ try {
                     <td><?= h(candidate_label($row)) ?></td>
                     <td><?= h((string) $row['feedback_count']) ?> Feedbacks<br><?= h((string) $row['observation_count']) ?> Beobachtungen</td>
                     <td>Qualität <?= h((string) ($row['quality_avg'] ?? '-')) ?><br>Aufgabe <?= h((string) ($row['task_solution_avg'] ?? '-')) ?><br>Übersetzung <?= h((string) ($row['translation_avg'] ?? '-')) ?><br>schwere Logikfehler <?= h((string) ($row['major_logic_errors'] ?? 0)) ?></td>
-                    <td>Dauer Ø <?= h((string) ($row['duration_avg'] ?? '-')) ?> ms<br>Thinking Ø <?= h((string) ($row['thinking_avg'] ?? '-')) ?><br>Output Ø <?= h((string) ($row['output_avg'] ?? '-')) ?></td>
+                    <td>Dauer Ø <?= h((string) ($row['duration_avg'] ?? '-')) ?> ms<br>Thinking Ø <?= h((string) ($row['thinking_avg'] ?? '-')) ?><br>Output Ø <?= h((string) ($row['output_avg'] ?? '-')) ?><br>Gesamt Ø <?= h((string) ($row['total_avg'] ?? '-')) ?><br>Verbrauch <?= h((string) (($row['usage_level'] ?? '') ?: '-')) ?><br>Gewichtet <?= h((string) ($row['weighted_token_units_sum'] ?? '-')) ?> · Einheiten <?= h((string) ($row['estimated_usage_units_sum'] ?? '-')) ?></td>
                     <td><?= h((string) ($row['error_observations'] ?? 0)) ?></td>
                   </tr>
                 <?php endforeach; ?>
@@ -264,7 +272,7 @@ try {
                       <td><?= h((string) $row['created_at']) ?></td>
                       <td><?= h((string) $row['role_name']) ?><br><?= h((string) $row['task_label']) ?></td>
                       <td><?= h(candidate_label($row)) ?></td>
-                      <td>Qualität <?= h((string) $row['quality_score']) ?>, Aufgabe <?= h((string) $row['task_solution_score']) ?><?= $row['translation_score'] !== null ? ', Übersetzung ' . h((string) $row['translation_score']) : '' ?><br>Logik <?= h((string) $row['logic_error_level']) ?>, A/B <?= h((string) $row['preferred_option']) ?></td>
+                      <td>Qualität <?= h((string) $row['quality_score']) ?>, Aufgabe <?= h((string) $row['task_solution_score']) ?><?= $row['translation_score'] !== null ? ', Übersetzung ' . h((string) $row['translation_score']) : '' ?><br>Logik <?= h((string) $row['logic_error_level']) ?>, A/B <?= h((string) $row['preferred_option']) ?><br>Gesamt <?= h((string) ($row['total_tokens'] ?? '-')) ?>, Verbrauch <?= h((string) (($row['model_usage_level'] ?? '') ?: '-')) ?></td>
                       <td><?= h((string) ($row['feedback_text'] ?? '')) ?><br><span class="muted"><?= h((string) ($row['improvement_note'] ?? '')) ?></span><?php if ((string) ($row['translation_note'] ?? '') !== ''): ?><br><span class="muted">Übersetzung: <?= h((string) $row['translation_note']) ?></span><?php endif; ?></td>
                     </tr>
                   <?php endforeach; ?>

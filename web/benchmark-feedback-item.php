@@ -93,6 +93,11 @@ function observation_select_sql(string $extraWhere): string
             o.input_tokens,
             o.thinking_tokens,
             o.output_tokens,
+            o.total_tokens,
+            o.model_usage_level,
+            o.model_usage_weight,
+            o.weighted_token_units,
+            o.estimated_usage_units,
             o.position_fen,
             o.side_to_move,
             o.position_label,
@@ -179,6 +184,11 @@ function upsert_feedback(PDO $pdo, ?int $userId, array $observation, array $valu
         'input_tokens' => $observation['input_tokens'],
         'thinking_tokens' => $observation['thinking_tokens'],
         'output_tokens' => $observation['output_tokens'],
+        'total_tokens' => $observation['total_tokens'],
+        'model_usage_level' => $observation['model_usage_level'],
+        'model_usage_weight' => $observation['model_usage_weight'],
+        'weighted_token_units' => $observation['weighted_token_units'],
+        'estimated_usage_units' => $observation['estimated_usage_units'],
         'quality_score' => $values['quality_score'],
         'task_solution_score' => $values['task_solution_score'],
         'logic_error_level' => $values['logic_error_level'],
@@ -201,6 +211,11 @@ function upsert_feedback(PDO $pdo, ?int $userId, array $observation, array $valu
                  input_tokens = :input_tokens,
                  thinking_tokens = :thinking_tokens,
                  output_tokens = :output_tokens,
+                 total_tokens = :total_tokens,
+                 model_usage_level = :model_usage_level,
+                 model_usage_weight = :model_usage_weight,
+                 weighted_token_units = :weighted_token_units,
+                 estimated_usage_units = :estimated_usage_units,
                  quality_score = :quality_score,
                  task_solution_score = :task_solution_score,
                  logic_error_level = :logic_error_level,
@@ -219,9 +234,11 @@ function upsert_feedback(PDO $pdo, ?int $userId, array $observation, array $valu
     $statement = $pdo->prepare(
         "INSERT INTO cailama_model_feedback
             (observation_id, case_id, user_id, run_key, model_label, duration_ms, input_tokens, thinking_tokens, output_tokens,
+             total_tokens, model_usage_level, model_usage_weight, weighted_token_units, estimated_usage_units,
              quality_score, task_solution_score, logic_error_level, preferred_option, translation_score, feedback_text, improvement_note, translation_note)
          VALUES
             (:observation_id, :case_id, :user_id, :run_key, :model_label, :duration_ms, :input_tokens, :thinking_tokens, :output_tokens,
+             :total_tokens, :model_usage_level, :model_usage_weight, :weighted_token_units, :estimated_usage_units,
              :quality_score, :task_solution_score, :logic_error_level, :preferred_option, :translation_score, :feedback_text, :improvement_note, :translation_note)"
     );
     $statement->execute($params);
@@ -421,7 +438,7 @@ $preferenceOptions = [
                 </div>
                 <div>
                   <strong>Metriken</strong>
-                  <span>Dauer <?= h((string) ($observation['duration_ms'] ?? '-')) ?> ms · Input <?= h((string) ($observation['input_tokens'] ?? '-')) ?> · Thinking <?= h((string) ($observation['thinking_tokens'] ?? '-')) ?> · Output <?= h((string) ($observation['output_tokens'] ?? '-')) ?></span>
+                  <span>Dauer <?= h((string) ($observation['duration_ms'] ?? '-')) ?> ms · Input <?= h((string) ($observation['input_tokens'] ?? '-')) ?> · Thinking <?= h((string) ($observation['thinking_tokens'] ?? '-')) ?> · Output <?= h((string) ($observation['output_tokens'] ?? '-')) ?> · Gesamt <?= h((string) ($observation['total_tokens'] ?? '-')) ?> · Verbrauch <?= h((string) (($observation['model_usage_level'] ?? '') ?: '-')) ?></span>
                 </div>
                 <div>
                   <strong>Fehlerstatus</strong>

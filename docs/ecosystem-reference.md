@@ -388,9 +388,13 @@ Vertrag:
   Benchmark-Laufdaten mit `benchmark:write` oder `admin`; Rohprompts,
   vollständige Antworten, lokale Pfade und Secrets sind ausgeschlossen.
   Optionale Felder für Aufgaben-Auszug, erwarteten Ausgabetyp, FEN,
-  Side-to-move, Positionslabel, Kandidatenzug-Auszug und gekürzte Fehlerdaten
-  sind erlaubt. Harte Strukturfehler werden beim Import automatisch als nicht
-  manuell bewertbare Feedbackfälle geschlossen.
+  Side-to-move, Positionslabel, Kandidatenzug-Auszug, gekürzte Fehlerdaten,
+  Total-Tokens und Verbrauchs-/Kostengewichte sind erlaubt. Harte
+  Strukturfehler werden beim Import automatisch als nicht manuell bewertbare
+  Feedbackfälle geschlossen.
+- `POST /api/v1/benchmarks/reset` setzt nur Benchmark-Beobachtungen und
+  Benchmark-Feedback zurück. Der Endpunkt ist admin-geschützt und nimmt weder
+  Query-Parameter noch Request-Body an.
 - Importierte Benchmark-Läufe werden im Website-Feedback blind angezeigt:
   Nutzer sehen Kandidaten-Codes statt Modellnamen; die Zuordnung bleibt
   serverseitig in der Datenbank.

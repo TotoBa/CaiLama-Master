@@ -209,6 +209,13 @@ Vor Arbeitsbeginn lesen:
   Das Website-Deploy-Skript laedt im Standardmodus nur Code hoch; Remote-
   Ordneranlage und `web-smarty/vendor/`-Upload erfolgen nur mit explizitem
   Flag (`--create-dirs`, `--with-vendor`, `--full`).
+  **Update 2026-05-25:** `cailama-data` Schema `0.8.0` speichert
+  `total_tokens`, Verbrauchsklasse, Verbrauchsgewicht, gewichtete Token-
+  Einheiten und geschaetzte Usage-Einheiten in Beobachtungen und Feedback.
+  `POST /api/v1/benchmarks/reset` setzt vor neuen Laeufen nur Benchmark-
+  Beobachtungen und Benchmark-Feedback zurueck. CaiLama nutzt fuer den vollen
+  PTG-Modellbenchmark standardmaessig die lokale MariaDB-Konfiguration statt
+  SQLite, damit keine NAS-Locks entstehen.
   Offen bleibt die fachliche
   Bewertung der heutigen Laeufe und die Ableitung belastbarer Modell-/Prompt-
   Regeln.

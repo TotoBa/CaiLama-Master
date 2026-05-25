@@ -320,6 +320,7 @@ POST /api/v1/status
 POST /api/v1/imports/cailama/append
 POST /api/v1/imports/cailama/reset
 POST /api/v1/benchmarks/observations
+POST /api/v1/benchmarks/reset
 POST /api/v1/admin/schema/cailama
 POST /api/v1/admin/schema/all
 /login.php
@@ -334,11 +335,14 @@ begrenzten JSON-Body mit secretfreien Beobachtungszeilen an. Gesendet wird nur
 ein Bearer-Key mit passendem Scope: `status:read` für Status,
 `db_import:write` für Append-Import, `db_import:reset` für Reset-Import,
 `benchmark:write` oder `admin` für Benchmark-Beobachtungen oder `admin` für
-Schema-Setup und Admin-Aktionen. Ohne gültigen Key liefert die API keine API-,
+Schema-Setup, Benchmark-Reset und Admin-Aktionen. Ohne gültigen Key liefert die API keine API-,
 DB-, Schema-, Import- oder Benchmarkdetails. Der Import-Modus wird über den Pfad gewählt: `append`
 fügt erlaubte Insert-Daten in die bestehende CaiLama-Datenbank ein; `reset`
 ist nur aktiv, wenn `allow_reset` in der lokalen Konfiguration bewusst gesetzt
 wurde.
+`POST /api/v1/benchmarks/reset` löscht nur Benchmark-Beobachtungen und
+Benchmark-Feedback; es akzeptiert weder Query-Parameter noch Body und ist nur
+für bewusst gestartete neue Feedbackläufe vorgesehen.
 
 Große Übertragungen laufen nicht über HTTP-Request-Body. Der Dump wird per
 SFTP in einen nicht öffentlich erreichbaren Webspace-Ordner gelegt. Die API
@@ -400,14 +404,17 @@ geschützte Blind-Aggregationen nach Lauf, Rolle, Fall und Kandidat. Beide
 Seiten bleiben `noindex`/`nofollow`. Gespeichert werden wiederverwendbare
 Bewertungsdaten für Modellrollen in `cailama_model_benchmark_cases`,
 `cailama_model_benchmark_observations` und `cailama_model_feedback`:
-Laufzeit, Input-/Thinking-/Output-Tokens, Qualitäts-Score, Aufgaben-Score,
-optionaler Übersetzungs-Score, Logikfehler-Klasse, A/B-Präferenz,
-secretfreie Lauf-Auszüge, knappe
+Laufzeit, Input-/Thinking-/Output-/Total-Tokens, Verbrauchsklasse,
+Verbrauchsgewicht, gewichtete Token-Einheiten, geschätzte Usage-Einheiten,
+Qualitäts-Score, Aufgaben-Score, optionaler Übersetzungs-Score,
+Logikfehler-Klasse, A/B-Präferenz, secretfreie Lauf-Auszüge, knappe
 Feedbacknotizen und optionale fachliche Kontextfelder für Aufgaben-Auszug,
 erwarteten Ausgabetyp, FEN, Side-to-move, Positionslabel,
 Kandidatenzug-Auszug sowie gekürzte Fehlerdaten. Rohprompts, volle
 Modellantworten, private Partiearchive, lokale Pfade und Secrets gehören nicht
 in diese Tabellen.
+Die Usage-Felder sind ein Preis-/Verbrauchsproxy für Modellvergleiche, keine
+abrechnungsfähigen Kostenwerte.
 Importierte Benchmark-Läufe werden blind bewertet: Die Website zeigt nur
 Kandidaten-Codes und lädt das echte Modell serverseitig anhand der
 Beobachtungs-ID, damit im Formular kein Modellname sichtbar ist.
@@ -449,6 +456,8 @@ Webspace-API; `POST /api/v1/status` meldet `databases.cailama: ok`, und
 `POST /api/v1/admin/schema/cailama` beziehungsweise
 `POST /api/v1/admin/schema/all` wenden dasselbe Schema an. Echte Host-, User-
 oder Passwortwerte werden nicht in Doku oder Repo geschrieben.
+Schema-Stand 2026-05-25: `cailama-data` ist auf Version `0.8.0` angehoben und
+enthält die zusätzlichen Benchmark-Usage-Felder in Beobachtungen und Feedback.
 
 Deployment-Status am 2026-05-24: `scripts/deploy-website.sh` hat `web/` und
 den privaten Smarty-Bereich per SFTP deployt und die öffentlichen Dateien per

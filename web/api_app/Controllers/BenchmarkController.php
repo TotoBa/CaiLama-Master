@@ -11,6 +11,38 @@ use PDO;
 
 final class BenchmarkController
 {
+    public function reset(Request $request, array $config): Response
+    {
+        if (!ApiTokenGuard::hasAnyScope($request, $config, ['admin'])) {
+            return $this->error('unauthorized', 'Unauthorized.', 401);
+        }
+        if ($request->query !== []) {
+            return $this->error('query_not_allowed', 'Query parameters are not allowed for this endpoint.', 400);
+        }
+        if ($request->body !== '') {
+            return $this->error('body_not_allowed', 'Request body is not allowed for this endpoint.', 400);
+        }
+
+        try {
+            $pdo = ConnectionFactory::fromConfig($config, 'cailama');
+            $pdo->beginTransaction();
+            $feedbackDeleted = (int) $pdo->exec('DELETE FROM cailama_model_feedback');
+            $observationsDeleted = (int) $pdo->exec('DELETE FROM cailama_model_benchmark_observations');
+            $pdo->commit();
+        } catch (\Throwable) {
+            if (isset($pdo) && $pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            return $this->error('reset_failed', 'Benchmark feedback could not be reset.', 500);
+        }
+
+        return Response::json([
+            'status' => 'ok',
+            'feedback_deleted' => $feedbackDeleted,
+            'observations_deleted' => $observationsDeleted,
+        ]);
+    }
+
     public function observations(Request $request, array $config): Response
     {
         if (!ApiTokenGuard::hasAnyScope($request, $config, ['benchmark:write', 'admin'])) {
@@ -91,6 +123,11 @@ final class BenchmarkController
             'input_tokens' => $this->nullableInt($row, 'input_tokens'),
             'thinking_tokens' => $this->nullableInt($row, 'thinking_tokens'),
             'output_tokens' => $this->nullableInt($row, 'output_tokens'),
+            'total_tokens' => $this->nullableInt($row, 'total_tokens'),
+            'model_usage_level' => $this->optionalUsageLevel($row, 'model_usage_level'),
+            'model_usage_weight' => $this->nullableInt($row, 'model_usage_weight'),
+            'weighted_token_units' => $this->nullableInt($row, 'weighted_token_units'),
+            'estimated_usage_units' => $this->nullableDecimal($row, 'estimated_usage_units'),
             'artifact_ref' => $this->optionalString($row, 'artifact_ref', 190),
             'position_fen' => $this->optionalFen($row, 'position_fen'),
             'side_to_move' => $this->optionalSideToMove($row, 'side_to_move'),
@@ -142,10 +179,12 @@ final class BenchmarkController
         $statement = $pdo->prepare(
             "INSERT INTO cailama_model_benchmark_observations
                 (case_id, run_key, model_label, duration_ms, input_tokens, thinking_tokens, output_tokens,
+                 total_tokens, model_usage_level, model_usage_weight, weighted_token_units, estimated_usage_units,
                  artifact_ref, position_fen, side_to_move, position_label, task_prompt_excerpt,
                  expected_output_type, candidate_moves_excerpt, error_status, error_message, output_excerpt)
              VALUES
                 (:case_id, :run_key, :model_label, :duration_ms, :input_tokens, :thinking_tokens, :output_tokens,
+                 :total_tokens, :model_usage_level, :model_usage_weight, :weighted_token_units, :estimated_usage_units,
                  :artifact_ref, :position_fen, :side_to_move, :position_label, :task_prompt_excerpt,
                  :expected_output_type, :candidate_moves_excerpt, :error_status, :error_message, :output_excerpt)
              ON DUPLICATE KEY UPDATE
@@ -153,6 +192,11 @@ final class BenchmarkController
                 input_tokens = VALUES(input_tokens),
                 thinking_tokens = VALUES(thinking_tokens),
                 output_tokens = VALUES(output_tokens),
+                total_tokens = VALUES(total_tokens),
+                model_usage_level = VALUES(model_usage_level),
+                model_usage_weight = VALUES(model_usage_weight),
+                weighted_token_units = VALUES(weighted_token_units),
+                estimated_usage_units = VALUES(estimated_usage_units),
                 position_fen = VALUES(position_fen),
                 side_to_move = VALUES(side_to_move),
                 position_label = VALUES(position_label),
@@ -171,6 +215,11 @@ final class BenchmarkController
             'input_tokens' => $observation['input_tokens'],
             'thinking_tokens' => $observation['thinking_tokens'],
             'output_tokens' => $observation['output_tokens'],
+            'total_tokens' => $observation['total_tokens'],
+            'model_usage_level' => $observation['model_usage_level'],
+            'model_usage_weight' => $observation['model_usage_weight'],
+            'weighted_token_units' => $observation['weighted_token_units'],
+            'estimated_usage_units' => $observation['estimated_usage_units'],
             'artifact_ref' => $observation['artifact_ref'],
             'position_fen' => $observation['position_fen'],
             'side_to_move' => $observation['side_to_move'],
@@ -224,11 +273,13 @@ final class BenchmarkController
         $statement = $pdo->prepare(
             "INSERT INTO cailama_model_feedback
                 (observation_id, case_id, user_id, run_key, model_label, duration_ms, input_tokens,
-                 thinking_tokens, output_tokens, quality_score, task_solution_score,
+                 thinking_tokens, output_tokens, total_tokens, model_usage_level, model_usage_weight,
+                 weighted_token_units, estimated_usage_units, quality_score, task_solution_score,
                  logic_error_level, preferred_option, feedback_text, improvement_note)
              VALUES
                 (:observation_id, :case_id, NULL, :run_key, :model_label, :duration_ms, :input_tokens,
-                 :thinking_tokens, :output_tokens, 1, 1,
+                 :thinking_tokens, :output_tokens, :total_tokens, :model_usage_level, :model_usage_weight,
+                 :weighted_token_units, :estimated_usage_units, 1, 1,
                  'major', 'not_applicable', :feedback_text, :improvement_note)"
         );
         $statement->execute([
@@ -240,6 +291,11 @@ final class BenchmarkController
             'input_tokens' => $observation['input_tokens'],
             'thinking_tokens' => $observation['thinking_tokens'],
             'output_tokens' => $observation['output_tokens'],
+            'total_tokens' => $observation['total_tokens'],
+            'model_usage_level' => $observation['model_usage_level'],
+            'model_usage_weight' => $observation['model_usage_weight'],
+            'weighted_token_units' => $observation['weighted_token_units'],
+            'estimated_usage_units' => $observation['estimated_usage_units'],
             'feedback_text' => $message,
             'improvement_note' => (string) $observation['error_message'],
         ]);
@@ -298,6 +354,31 @@ final class BenchmarkController
         }
         $int = (int) $value;
         return min($int, 2147483647);
+    }
+
+    private function optionalUsageLevel(array $row, string $key): string
+    {
+        $value = strtolower($this->optionalString($row, $key, 32));
+        if ($value === '') {
+            return '';
+        }
+        if (!in_array($value, ['local', 'unknown', 'low', 'medium', 'high', 'extra high'], true)) {
+            return 'unknown';
+        }
+        return $value;
+    }
+
+    private function nullableDecimal(array $row, string $key): ?string
+    {
+        $value = $row[$key] ?? null;
+        if ($value === null || $value === '') {
+            return null;
+        }
+        if (!is_int($value) && !is_float($value) && !(is_string($value) && is_numeric($value))) {
+            throw new \InvalidArgumentException('Invalid decimal field: ' . $key);
+        }
+        $float = max(0.0, min((float) $value, 999999999999999.999));
+        return number_format($float, 3, '.', '');
     }
 
     private function optionalFen(array $row, string $key): string

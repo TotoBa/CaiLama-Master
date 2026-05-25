@@ -184,7 +184,11 @@ Ein Ergebnis enthaelt mindestens:
   Classify-/Analyze-Teil erzeugt zusaetzlich aggregierte PTG-Faelle.
   Beobachtungen enthalten neben Dauer, Tokens, Artefakt und Output-Auszug auch
   Aufgaben-Auszug, erwarteten Ausgabetyp, optionale FEN/Side-to-move- und
-  Kandidatenzug-Auszuege. Backend-Fehler, abgelehnte Thinking-Modi und harte
+  Kandidatenzug-Auszuege sowie `total_tokens`, Verbrauchsklasse,
+  Verbrauchsgewicht, gewichtete Token-Einheiten und geschaetzte
+  Usage-Einheiten. Diese Kostenfelder sind ein Vergleichsproxy fuer kleine
+  und grosse Ollama-Cloud-Modelle, keine Provider-Abrechnung. Backend-Fehler,
+  abgelehnte Thinking-Modi und harte
   Strukturfehler wie falsche Router-Toolwahl, ungueltiges JSON, fehlende
   Quellenmarker oder geratene FENs werden als Feedbackfaelle importiert und
   brechen den Gesamtlauf nicht ab. Strukturfehler koennen serverseitig
@@ -200,6 +204,12 @@ Ein Ergebnis enthaelt mindestens:
   `--max-analysis-positions 0` gesetzt werden; fuer den finalen Upload gilt
   entsprechend `--upload-timeout-seconds 0`. `0` bedeutet in diesem Runner
   bewusst unbegrenzt.
+  PTG-Modelllaeufe verwenden standardmaessig MariaDB/MySQL ueber die lokale
+  CaiLama-Runtime-Konfiguration beziehungsweise `CAILAMA_BENCHMARK_DB_URI`.
+  SQLite ist nur ein expliziter Kurztestpfad und soll nicht auf NAS-/CIFS-
+  Pfaden genutzt werden. Ohne `--ptg-isolated-databases` wird die
+  konfigurierte Datenbank verwendet; CaiLama erzeugt pro Modell eindeutige
+  Benchmark-Profile und Game-IDs.
 - `docs/benchmark-results/2026-05-23.ocr-live-baseline.md`:
   OCR-Live-Benchmark mit 6 PDFs, 23 Diagrammen, 1686 Textzeichen, 6/6 Gates
   passed und 0% FEN-False-Positive-Rate. FENs werden weiterhin nicht geraten.
@@ -249,6 +259,7 @@ env CAILAMA_LLM_PROVIDER=openai_compatible \
   --output-dir ~/.local/share/cailama/benchmarks/ptg-models \
   --models auto \
   --max-analysis-positions 7 \
+  --ptg-db-backend mariadb \
   --upload-url https://cailama.org/api/v1/benchmarks/observations \
   --upload-token-env CAILAMA_DB_API_ADMIN_KEY \
   --require-upload
@@ -268,6 +279,7 @@ env CAILAMA_LLM_PROVIDER=openai_compatible \
   --role-max-tokens 0 \
   --max-analysis-positions 0 \
   --cloud-concurrency 4 \
+  --ptg-db-backend mariadb \
   --upload-url https://cailama.org/api/v1/benchmarks/observations \
   --upload-token-env CAILAMA_DB_API_ADMIN_KEY \
   --require-upload
