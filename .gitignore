@@ -13,6 +13,10 @@ PROMPT.md
 *.prompt.md
 *.prompts.md
 *PROMPT*.md
+!benchmarks/model-role/prompt_templates/
+!benchmarks/model-role/prompt_templates/*.md
+!benchmarks/model-role/system_prompts/
+!benchmarks/model-role/system_prompts/*.md
 
 # Environment and secrets
 .env

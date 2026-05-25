@@ -41,13 +41,13 @@ if [[ -n "$tracked_local_config" ]]; then
 fi
 echo "OK: real web local config is not tracked by master"
 
-tracked_prompts="$(git ls-files | grep -Ei '(^|/).*(prompt|followup|handoff).*' || true)"
+tracked_prompts="$(git ls-files | grep -Ei '(^|/).*(prompt|followup|handoff).*' | grep -Ev '^benchmarks/model-role/(prompt_templates|system_prompts)/' || true)"
 if [[ -n "$tracked_prompts" ]]; then
   echo "ERROR: prompt or handoff files are tracked in master:"
   echo "$tracked_prompts"
   exit 1
 fi
-echo "OK: no prompt/handoff files tracked by master"
+echo "OK: no disallowed prompt/handoff files tracked by master"
 echo
 
 echo "-- Master content checks --"
