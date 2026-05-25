@@ -216,6 +216,11 @@ Vor Arbeitsbeginn lesen:
   Beobachtungen und Benchmark-Feedback zurueck. CaiLama nutzt fuer den vollen
   PTG-Modellbenchmark standardmaessig die lokale MariaDB-Konfiguration statt
   SQLite, damit keine NAS-Locks entstehen.
+  **Update 2026-05-25:** Der Router erzwingt jetzt backendweite In-Flight-
+  Limits. In der Dual-Ollama-Runtime duerfen je Docker-Ollama-Cloud-Account
+  maximal drei Requests gleichzeitig laufen; Host-Ollama lokal bleibt auf
+  einen Request begrenzt. Damit koennen Benchmarklaeufe parallel bleiben, ohne
+  dass ein einzelner Cloud-Account versehentlich ueberlastet wird.
   Offen bleibt die fachliche
   Bewertung der heutigen Laeufe und die Ableitung belastbarer Modell-/Prompt-
   Regeln.

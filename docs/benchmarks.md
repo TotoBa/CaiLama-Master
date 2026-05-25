@@ -204,6 +204,12 @@ Ein Ergebnis enthaelt mindestens:
   `--max-analysis-positions 0` gesetzt werden; fuer den finalen Upload gilt
   entsprechend `--upload-timeout-seconds 0`. `0` bedeutet in diesem Runner
   bewusst unbegrenzt.
+  Der LLM-Router begrenzt parallel laufende Requests zusätzlich pro Ollama-
+  Backend: in der aktuellen Dual-Ollama-Runtime maximal drei gleichzeitige
+  Cloud-Requests je Docker-Ollama-Account und maximal ein lokaler Host-Ollama-
+  Request. Der Runner darf dadurch weiterhin parallel starten; der Router
+  reiht zusätzliche Requests pro Backend ein, statt einen einzelnen Account zu
+  überlasten.
   PTG-Modelllaeufe verwenden standardmaessig MariaDB/MySQL ueber die lokale
   CaiLama-Runtime-Konfiguration beziehungsweise `CAILAMA_BENCHMARK_DB_URI`.
   SQLite ist nur ein expliziter Kurztestpfad und soll nicht auf NAS-/CIFS-
