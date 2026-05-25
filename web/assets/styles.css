@@ -495,14 +495,14 @@ section {
 }
 
 .feedback-workspace {
-  width: min(100%, 1680px);
+  width: min(calc(100vw - 24px), 1680px);
   margin: 0 auto;
   display: grid;
   gap: 18px;
 }
 
 .feedback-item-workspace {
-  width: min(100%, 1580px);
+  width: min(calc(100vw - 24px), 1580px);
 }
 
 .feedback-toolbar,
@@ -548,7 +548,7 @@ section {
 
 .feedback-item-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 400px);
   gap: 18px;
   align-items: start;
 }
@@ -729,17 +729,21 @@ section {
 }
 
 .feedback-table {
-  min-width: 1120px;
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
 }
 
 .feedback-table th,
 .feedback-table td {
   padding: 12px 13px;
+  vertical-align: top;
+  overflow-wrap: anywhere;
 }
 
 .feedback-table td:nth-child(3) {
-  min-width: 360px;
-  max-width: 680px;
+  min-width: 0;
+  max-width: none;
   overflow-wrap: anywhere;
 }
 

@@ -272,8 +272,7 @@ try {
                         Input <?= h((string) ($observation['input_tokens'] ?? '-')) ?> ·
                         Thinking <?= h((string) ($observation['thinking_tokens'] ?? '-')) ?> ·
                         Output <?= h((string) ($observation['output_tokens'] ?? '-')) ?><br>
-                        Gesamt <?= h((string) ($observation['total_tokens'] ?? '-')) ?> ·
-                        Verbrauch <?= h((string) (($observation['model_usage_level'] ?? '') ?: '-')) ?>
+                        Gesamt <?= h((string) ($observation['total_tokens'] ?? '-')) ?>
                       </td>
                       <td>
                         <a class="button light table-action" href="benchmark-feedback-item.php?observation_id=<?= h((string) $observation['id']) ?>&amp;run_key=<?= h(rawurlencode($runKey)) ?>">Bewerten</a>

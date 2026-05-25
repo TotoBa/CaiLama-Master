@@ -248,7 +248,7 @@ try {
                     <td><?= h(candidate_label($row)) ?></td>
                     <td><?= h((string) $row['feedback_count']) ?> Feedbacks<br><?= h((string) $row['observation_count']) ?> Beobachtungen</td>
                     <td>Qualität <?= h((string) ($row['quality_avg'] ?? '-')) ?><br>Aufgabe <?= h((string) ($row['task_solution_avg'] ?? '-')) ?><br>Dauer <?= h((string) ($row['duration_score_avg'] ?? '-')) ?><br>Übersetzung <?= h((string) ($row['translation_avg'] ?? '-')) ?><br>schwere Logikfehler <?= h((string) ($row['major_logic_errors'] ?? 0)) ?></td>
-                    <td>Dauer Ø <?= h((string) ($row['duration_avg'] ?? '-')) ?> ms<br>Thinking Ø <?= h((string) ($row['thinking_avg'] ?? '-')) ?><br>Output Ø <?= h((string) ($row['output_avg'] ?? '-')) ?><br>Gesamt Ø <?= h((string) ($row['total_avg'] ?? '-')) ?><br>Verbrauch <?= h((string) (($row['usage_level'] ?? '') ?: '-')) ?><br>Gewichtet <?= h((string) ($row['weighted_token_units_sum'] ?? '-')) ?> · Einheiten <?= h((string) ($row['estimated_usage_units_sum'] ?? '-')) ?></td>
+                    <td>Dauer Ø <?= h((string) ($row['duration_avg'] ?? '-')) ?> ms<br>Thinking Ø <?= h((string) ($row['thinking_avg'] ?? '-')) ?><br>Output Ø <?= h((string) ($row['output_avg'] ?? '-')) ?><br>Gesamt Ø <?= h((string) ($row['total_avg'] ?? '-')) ?></td>
                     <td><?= h((string) ($row['error_observations'] ?? 0)) ?></td>
                   </tr>
                 <?php endforeach; ?>
@@ -274,7 +274,7 @@ try {
                       <td><?= h((string) $row['created_at']) ?></td>
                       <td><?= h((string) $row['role_name']) ?><br><?= h((string) $row['task_label']) ?></td>
                       <td><?= h(candidate_label($row)) ?></td>
-                      <td>Qualität <?= h((string) $row['quality_score']) ?>, Aufgabe <?= h((string) $row['task_solution_score']) ?><?= $row['duration_score'] !== null ? ', Dauer ' . h((string) $row['duration_score']) : '' ?><?= $row['translation_score'] !== null ? ', Übersetzung ' . h((string) $row['translation_score']) : '' ?><br>Logik <?= h((string) $row['logic_error_level']) ?>, A/B <?= h((string) $row['preferred_option']) ?><br>Gesamt <?= h((string) ($row['total_tokens'] ?? '-')) ?>, Verbrauch <?= h((string) (($row['model_usage_level'] ?? '') ?: '-')) ?></td>
+                      <td>Qualität <?= h((string) $row['quality_score']) ?>, Aufgabe <?= h((string) $row['task_solution_score']) ?><?= $row['duration_score'] !== null ? ', Dauer ' . h((string) $row['duration_score']) : '' ?><?= $row['translation_score'] !== null ? ', Übersetzung ' . h((string) $row['translation_score']) : '' ?><br>Logik <?= h((string) $row['logic_error_level']) ?>, A/B <?= h((string) $row['preferred_option']) ?><br>Gesamt <?= h((string) ($row['total_tokens'] ?? '-')) ?></td>
                       <td><?= h((string) ($row['feedback_text'] ?? '')) ?><br><span class="muted"><?= h((string) ($row['improvement_note'] ?? '')) ?></span><?php if ((string) ($row['translation_note'] ?? '') !== ''): ?><br><span class="muted">Übersetzung: <?= h((string) $row['translation_note']) ?></span><?php endif; ?></td>
                     </tr>
                   <?php endforeach; ?>

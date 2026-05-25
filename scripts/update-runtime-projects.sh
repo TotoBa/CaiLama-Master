@@ -119,6 +119,31 @@ source_dir() {
   esac
 }
 
+sync_master_benchmark_assets() {
+  local target benchmark_source config_target
+  target="$(runtime_dir cailama)"
+  benchmark_source="$root/benchmarks/model-role"
+  config_target="$target/config/model_role_benchmark"
+
+  if [[ ! -d "$benchmark_source" ]]; then
+    return
+  fi
+
+  echo "== Update cailama benchmark assets =="
+  echo "source: $(display_path "$benchmark_source")"
+  echo "target: $(display_path "$config_target")"
+
+  if [[ "$dry_run" -eq 1 ]]; then
+    echo "DRY-RUN: would copy benchmark task catalog and prompt templates"
+    echo "DRY-RUN: would copy role system prompts into $(display_path "$target/config")"
+    return
+  fi
+
+  mkdir -p "$config_target" "$target/config"
+  rsync -a --delete "$benchmark_source/" "$config_target/"
+  rsync -a "$benchmark_source/system_prompts/" "$target/config/"
+}
+
 require_source_repo() {
   local project="$1"
   local source
@@ -294,6 +319,9 @@ restart_search() {
 
 for project in "${projects[@]}"; do
   sync_project "$project"
+  if [[ "$project" == "cailama" ]]; then
+    sync_master_benchmark_assets
+  fi
   if [[ "$install_deps" -eq 1 ]]; then
     install_project "$project"
   fi

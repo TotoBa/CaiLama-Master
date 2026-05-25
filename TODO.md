@@ -221,6 +221,20 @@ Vor Arbeitsbeginn lesen:
   maximal drei Requests gleichzeitig laufen; Host-Ollama lokal bleibt auf
   einen Request begrenzt. Damit koennen Benchmarklaeufe parallel bleiben, ohne
   dass ein einzelner Cloud-Account versehentlich ueberlastet wird.
+  **Update 2026-05-25:** Der Master enthaelt jetzt den editierbaren
+  Modellrollen-Aufgabenkatalog `benchmarks/model-role/tasks.json` mit 10
+  Aufgaben je Rolle sowie versionierte Systemprompts und Prompt-Templates.
+  `scripts/update-runtime-projects.sh cailama` kopiert diese Assets in die
+  Runtime-Konfiguration. CaiLama arbeitet den Rollenbenchmark modellzentriert
+  ab: ein Modell durchlaeuft alle Rollenaufgaben, erst danach startet das
+  naechste Modell. Lokale Modelle bleiben im automatischen Lauf ausgenommen,
+  sofern `--include-local-models` nicht explizit gesetzt wird. Router-/Provider-
+  Fehler 500/503 werden pro LLM-Call dreimal mit Wartezeit versucht; erwartete
+  Tool-Aufrufe werden strukturell automatisch geprueft, fehlende erwartete
+  Tools werden als `structure_failed` geschlossen, unerwartete formal gueltige
+  Tools bleiben als menschlicher Feedbackfall offen. Die Website blendet
+  Usage-Level im Blindfeedback aus und der Playmodus zieht offene Faelle
+  zufaellig.
   Offen bleibt die fachliche
   Bewertung der heutigen Laeufe und die Ableitung belastbarer Modell-/Prompt-
   Regeln.

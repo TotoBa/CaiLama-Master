@@ -137,7 +137,7 @@ function load_next_open_observation(PDO $pdo, string $runKey): ?array
     }
     $statement = $pdo->prepare(
         observation_select_sql($where) .
-        " ORDER BY o.created_at ASC, c.role_name, c.task_label, MD5(CONCAT(o.run_key, c.case_key, o.model_label, o.id))
+        " ORDER BY RAND()
           LIMIT 1"
     );
     $statement->execute($params);
@@ -452,7 +452,7 @@ $preferenceOptions = [
                 </div>
                 <div>
                   <strong>Metriken</strong>
-                  <span>Dauer <?= h((string) ($observation['duration_ms'] ?? '-')) ?> ms · Input <?= h((string) ($observation['input_tokens'] ?? '-')) ?> · Thinking <?= h((string) ($observation['thinking_tokens'] ?? '-')) ?> · Output <?= h((string) ($observation['output_tokens'] ?? '-')) ?> · Gesamt <?= h((string) ($observation['total_tokens'] ?? '-')) ?> · Verbrauch <?= h((string) (($observation['model_usage_level'] ?? '') ?: '-')) ?></span>
+                  <span>Dauer <?= h((string) ($observation['duration_ms'] ?? '-')) ?> ms · Input <?= h((string) ($observation['input_tokens'] ?? '-')) ?> · Thinking <?= h((string) ($observation['thinking_tokens'] ?? '-')) ?> · Output <?= h((string) ($observation['output_tokens'] ?? '-')) ?> · Gesamt <?= h((string) ($observation['total_tokens'] ?? '-')) ?></span>
                 </div>
                 <div>
                   <strong>Fehlerstatus</strong>

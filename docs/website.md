@@ -45,6 +45,8 @@ web/reference.php             # Human-/LLM-Referenzseite
 web/login.php                 # Login-Formular mit Session-Schutz
 web/account.php               # geschützter Konto-Stub
 web/benchmark-feedback.php    # geschützte Benchmark-Feedback-Erfassung
+web/benchmark-feedback-item.php # einzelner blinder Feedback-Fall / Playmodus
+web/benchmark-feedback-results.php # geschützte aggregierte Feedback-Auswertung
 web/logout.php                # CSRF-geschützter Logout
 web/robots.txt                # Crawler-Regeln mit Sitemap-Verweis
 web/sitemap.xml               # Canonical XML-Sitemap für Suchmaschinen
@@ -218,6 +220,13 @@ Das Skript:
 7. leert beim Standard-Live-Ziel OPcache und den privaten Smarty-Cache,
 8. prüft beim Standard-Live-Ziel die gerenderten öffentlichen Seiten,
    statischen Dateien und LLM-Referenzen per SHA-256 über HTTPS.
+
+`scripts/update-runtime-projects.sh cailama` kopiert zusätzlich die versionierten
+Benchmark-Aufgaben, Prompt-Templates und Rollen-Systemprompts aus
+`benchmarks/model-role/` in die CaiLama-Runtime unter
+`config/model_role_benchmark/` sowie die `system_prompt.<rolle>.md`-Dateien
+nach `config/`. Dadurch nutzt der Runtime-Benchmark dieselben Promptquellen wie
+die Master-Dokumentation, ohne lokale Secrets oder Credentials zu versionieren.
 
 Deploy-Flags:
 
