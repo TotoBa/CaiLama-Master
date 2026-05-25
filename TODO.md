@@ -202,8 +202,10 @@ Vor Arbeitsbeginn lesen:
   E-Mail; der Einzelaccount heisst operativ `testuser`.
   Cloud-Modelle duerfen im Benchmark mit `--cloud-concurrency 4` parallel
   laufen; lokale Host-Ollama-Modelle laufen gleichzeitig dazu in einer
-  Einser-Spur, sodass lokal nie mehr als ein Modell aktiv ist. Der neue Lauf
-  nimmt die kleinen lokalen Modelle bis ca. 2 GB plus `granite4.1:3b` auf.
+  Einser-Spur, sodass lokal nie mehr als ein Modell aktiv ist. Der aktuelle
+  Lauf nimmt lokal nur `qwen3:0.6b:think-off` und `qwen3:0.6b:think-on` auf;
+  nackte Basis-Aliase werden wegen unklarem Default-Thinking nicht doppelt
+  gegen explizite Thinking-Modi gemessen.
   Das Website-Deploy-Skript laedt im Standardmodus nur Code hoch; Remote-
   Ordneranlage und `web-smarty/vendor/`-Upload erfolgen nur mit explizitem
   Flag (`--create-dirs`, `--with-vendor`, `--full`).

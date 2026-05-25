@@ -288,17 +288,16 @@ Host-Ollama auf `127.0.0.1:11434`, damit sie nur einmal geladen werden muessen
 und die VM nicht zwei lokale Modelle parallel startet:
 
 ```bash
-ollama pull deepseek-r1:1.5b
 ollama pull qwen3:0.6b
-ollama pull qwen3:1.7b
-ollama pull qwen3-vl:2b
-ollama pull granite4.1:3b
 ```
 
-Aktuell werden fuer den naechsten Lauf die kleinen Host-Ollama-Kandidaten bis
-etwa 2 GB plus die ausdruecklich gewuenschte Ausnahme `granite4.1:3b` ueber
-den Router angeboten. Groessere lokale Modelle bleiben aus dem automatischen
-Benchmark heraus, damit der Lauf nicht durch lokale Ladezeiten blockiert.
+Aktuell wird fuer den laufenden Feedback-Benchmark nur das kleine
+Host-Ollama-Modell `qwen3:0.6b` angeboten, und zwar nur ueber die expliziten
+Aliase `qwen3:0.6b:think-off` und `qwen3:0.6b:think-on`. Der nackte
+Basis-Alias wird nicht gebenchmarkt, weil der modellseitige Thinking-Default
+sonst unklar beziehungsweise doppelt zu einem expliziten Modus waere. Weitere
+lokale Modelle bleiben aus dem automatischen Benchmark heraus, damit der Lauf
+nicht durch lokale Ladezeiten blockiert.
 `hemanth/chessplayer:latest` bleibt aktuell ausgenommen, weil ein wiederholter
 Pull einen fehlerhaften GGUF-Blob lieferte und Host-Ollama in einen Crash-Loop
 brachte; die Quarantaene ist lokale Runtime-Wartung und gehoert nicht ins Repo.
