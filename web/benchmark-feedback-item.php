@@ -101,6 +101,7 @@ function observation_select_sql(string $extraWhere): string
             o.position_fen,
             o.side_to_move,
             o.position_label,
+            o.system_prompt_excerpt,
             o.task_prompt_excerpt,
             o.expected_output_type,
             o.candidate_moves_excerpt,
@@ -435,10 +436,20 @@ $preferenceOptions = [
             <article class="auth-panel benchmark-observation-detail">
               <div>
                 <h2>Aufgabe</h2>
-                <p><?= h((string) (($observation['task_prompt_excerpt'] ?? '') ?: $observation['task_summary'])) ?></p>
+                <p><?= h((string) $observation['task_summary']) ?></p>
                 <?php if ((string) ($observation['quality_question'] ?? '') !== ''): ?>
                   <p><strong>Bewertungsfrage:</strong> <?= h((string) $observation['quality_question']) ?></p>
                 <?php endif; ?>
+              </div>
+
+              <div>
+                <strong>System-Prompt</strong>
+                <pre class="output-excerpt prompt-excerpt"><?= h((string) ($observation['system_prompt_excerpt'] ?? '')) ?></pre>
+              </div>
+
+              <div>
+                <strong>User-Prompt</strong>
+                <pre class="output-excerpt prompt-excerpt"><?= h((string) (($observation['task_prompt_excerpt'] ?? '') ?: $observation['task_summary'])) ?></pre>
               </div>
 
               <div class="detail-grid">

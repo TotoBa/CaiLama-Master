@@ -180,8 +180,12 @@ Ein Ergebnis enthaelt mindestens:
   hochladen. Die Benchmark-Aufgaben und Prompt-Templates liegen versioniert im
   Master unter `benchmarks/model-role/` und werden beim Runtime-Deploy in die
   CaiLama-Runtime kopiert. Aktueller Startpunkt sind 10 editierbare Aufgaben
-  je Rolle. Jede Aufgabe beschreibt erwartete Ausgabe, optionale Tool-
-  Erwartungen samt Argumentstruktur und objektive Auto-Checks. Mit
+  je Rolle. Alle Rollenaufgaben haben Schachbezug: konkrete FEN-Stellungen aus
+  den drei freigegebenen Baseline-Spielen, oeffentliche Referenzmotive wie
+  Opera Game/Kiwipete/Turmendspiele, OCR/FEN-Gates, Coach-/DGT-Flows,
+  Schachuebersetzung und schachbezogene RAG-/Recherchefaelle. Jede Aufgabe
+  beschreibt erwartete Ausgabe, optionale Tool-Erwartungen samt
+  Argumentstruktur und objektive Auto-Checks. Mit
   `--models auto` liest der Runner die Kandidaten aus dem Router-Endpoint
   `/v1/models`; operative Router-Aliase wie `default`, `kimi-cli-default` und
   `chess-*` werden dabei standardmaessig aus der CaiLama-Benchmarkliste
@@ -195,7 +199,8 @@ Ein Ergebnis enthaelt mindestens:
   Zuordnung startet der teure PTG-Classify-/Analyze-Teil, und dann nur fuer
   die Modelle, die mindestens eine Rolle uebernommen haben.
   Beobachtungen enthalten neben Dauer, Tokens, Artefakt und Output-Auszug auch
-  Aufgaben-Auszug, erwarteten Ausgabetyp, optionale FEN/Side-to-move- und
+  den vollstaendigen konstruierten System- und User-Prompt der Rollenprobe,
+  erwarteten Ausgabetyp, optionale FEN/Side-to-move- und
   Kandidatenzug-Auszuege sowie `total_tokens`, Verbrauchsklasse,
   Verbrauchsgewicht, gewichtete Token-Einheiten und geschaetzte
   Usage-Einheiten. Diese Kostenfelder sind ein Vergleichsproxy fuer kleine
@@ -215,6 +220,10 @@ Ein Ergebnis enthaelt mindestens:
   Rolle `translator` enthaelt eigene Aufgaben mit und ohne kleines
   Schachwoerterbuch; im Feedback bleibt der englische Ausgangstext sichtbar,
   damit die Uebersetzung nicht still ungetestet bleibt.
+  Die Rollenprobe nutzt fuer Nicht-Router-Rollen den echten CaiLama-
+  `PromptBuilder` inklusive Brettwahrheit-/Kontextbloecken; Router-Probes
+  nutzen denselben kompakten Router-Prompt mit aktueller Toolliste wie die
+  interaktive Konsole. Es gibt dadurch keine parallele Benchmark-Promptlogik.
   `--skip-ptg` ist fuer schnelle Feedbacklaeufe erlaubt; `--max-analysis-
   positions` ist ein explizites Laufzeitbudget fuer den vollen PTG-Lauf,
   keine allgemeine 21er-Regel. Fuer vollstaendige Laeufe koennen
@@ -382,7 +391,12 @@ Aufgabe und Kandidat Feedback zu Qualitaet, Aufgabenloesung, Dauer,
 Uebersetzung, Logikfehlern und A/B-Praeferenz erfasst. Der Playmodus waehlt
 offene Faelle zufaellig, bewertete Faelle verschwinden aus der offenen Liste.
 Die sichtbare Bewertung bleibt blind: angezeigt wird nur ein Kandidaten-Code,
-nicht der Modellname und nicht die Verbrauchsklasse.
+nicht der Modellname und nicht die Verbrauchsklasse. Der einzelne Feedbackfall
+zeigt den vollstaendigen System- und User-Prompt der Rollenprobe, damit die
+Antwort gegen den tatsaechlichen Konsolenkontext bewertet werden kann. Diese
+Prompts duerfen Rolle, Aufgabe, Toolliste, Brettwahrheit, FEN und
+Kandidatenzuege enthalten, aber keine Modellidentitaet, keine
+Verbrauchsklasse, keine lokalen Pfade und keine Secrets.
 `--role-max-tokens` begrenzt nur die kurzen Rollen-Probes auf
 OpenAI-kompatiblen Backends. Damit werden Laufzeit und Antwortlaenge
 vergleichbarer; der volle PTG-Classify-/Analyze-Lauf bleibt davon unberuehrt.

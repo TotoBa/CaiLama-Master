@@ -841,6 +841,11 @@ pre.output-excerpt {
   box-shadow: none;
 }
 
+pre.prompt-excerpt {
+  max-height: 360px;
+  overflow: auto;
+}
+
 code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 }

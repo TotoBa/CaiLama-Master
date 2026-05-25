@@ -227,6 +227,9 @@ Benchmark-Aufgaben, Prompt-Templates und Rollen-Systemprompts aus
 `config/model_role_benchmark/` sowie die `system_prompt.<rolle>.md`-Dateien
 nach `config/`. Dadurch nutzt der Runtime-Benchmark dieselben Promptquellen wie
 die Master-Dokumentation, ohne lokale Secrets oder Credentials zu versionieren.
+Die tatsaechlichen Rollenprobe-Prompts werden in CaiLama ueber `PromptBuilder`
+oder den Router-Prompt gebaut; die versionierten Templates sind nur noch
+strukturierende Master-Assets, keine parallele LLM-Promptstrecke.
 
 Deploy-Flags:
 
@@ -329,6 +332,7 @@ POST /api/v1/status
 POST /api/v1/imports/cailama/append
 POST /api/v1/imports/cailama/reset
 POST /api/v1/benchmarks/observations
+POST /api/v1/benchmarks/feedback/export
 POST /api/v1/benchmarks/reset
 POST /api/v1/admin/schema/cailama
 POST /api/v1/admin/schema/all
@@ -344,7 +348,7 @@ begrenzten JSON-Body mit secretfreien Beobachtungszeilen an. Gesendet wird nur
 ein Bearer-Key mit passendem Scope: `status:read` für Status,
 `db_import:write` für Append-Import, `db_import:reset` für Reset-Import,
 `benchmark:write` oder `admin` für Benchmark-Beobachtungen oder `admin` für
-Schema-Setup, Benchmark-Reset und Admin-Aktionen. Ohne gültigen Key liefert die API keine API-,
+Feedback-Export, Schema-Setup, Benchmark-Reset und Admin-Aktionen. Ohne gültigen Key liefert die API keine API-,
 DB-, Schema-, Import- oder Benchmarkdetails. Der Import-Modus wird über den Pfad gewählt: `append`
 fügt erlaubte Insert-Daten in die bestehende CaiLama-Datenbank ein; `reset`
 ist nur aktiv, wenn `allow_reset` in der lokalen Konfiguration bewusst gesetzt
@@ -418,10 +422,12 @@ Verbrauchsgewicht, gewichtete Token-Einheiten, geschätzte Usage-Einheiten,
 Qualitäts-Score, Aufgaben-Score, Dauer-Score, optionaler Übersetzungs-Score,
 Logikfehler-Klasse, A/B-Präferenz, secretfreie Lauf-Auszüge, knappe
 Feedbacknotizen und optionale fachliche Kontextfelder für Aufgaben-Auszug,
-erwarteten Ausgabetyp, FEN, Side-to-move, Positionslabel,
-Kandidatenzug-Auszug sowie gekürzte Fehlerdaten. Rohprompts, volle
-Modellantworten, private Partiearchive, lokale Pfade und Secrets gehören nicht
-in diese Tabellen.
+vollständigen System-/User-Prompt der Rollenprobe, erwarteten Ausgabetyp, FEN,
+Side-to-move, Positionslabel, Kandidatenzug-Auszug sowie gekürzte Fehlerdaten.
+Volle Modellantworten, private Partiearchive, lokale Pfade und Secrets gehören
+nicht in diese Tabellen. Die sichtbaren Prompts enthalten den tatsächlichen
+Konsolenkontext der Aufgabe, aber keinen Modellnamen und keine
+Verbrauchsklasse.
 Die Usage-Felder sind ein Preis-/Verbrauchsproxy für Modellvergleiche, keine
 abrechnungsfähigen Kostenwerte.
 Importierte Benchmark-Läufe werden blind bewertet: Die Website zeigt nur
@@ -442,6 +448,11 @@ ungueltige JSON-Struktur, fehlende Quellenmarker oder verbotene FEN-Ausgabe
 werden beim Import automatisch als nicht manuell bewertbare Fehlerfaelle
 geschlossen. Dadurch bleibt die offene Feedbackliste auf inhaltlich noch zu
 bewertende Antworten fokussiert.
+Für interne Auswertungen steht zusätzlich
+`POST /api/v1/benchmarks/feedback/export` mit Admin-Scope bereit. Der Endpunkt
+liefert Feedbackzeilen mit Kandidaten-Code; Modellnamen werden nur auf
+explizite Admin-Anforderung im JSON-Body ergänzt und bleiben nicht Teil des
+Blind-Feedbackformulars.
 
 Wenn eine importierte Beobachtung eine FEN enthält, rendert die Feedback-Seite
 ein responsives 8x8-Brett. Figurensätze sind konfigurierbar über

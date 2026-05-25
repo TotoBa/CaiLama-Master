@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS cailama_schema_meta (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO cailama_schema_meta (id, schema_name, schema_version)
-VALUES (1, 'cailama-data', '0.8.1')
+VALUES (1, 'cailama-data', '0.8.2')
 ON DUPLICATE KEY UPDATE schema_version = VALUES(schema_version);
 
 -- Website user authentication table (formerly in a separate auth database).
@@ -104,7 +104,8 @@ CREATE TABLE IF NOT EXISTS cailama_model_benchmark_observations (
     position_fen VARCHAR(120) NOT NULL DEFAULT '',
     side_to_move VARCHAR(8) NOT NULL DEFAULT '',
     position_label VARCHAR(190) NOT NULL DEFAULT '',
-    task_prompt_excerpt TEXT NULL,
+    system_prompt_excerpt MEDIUMTEXT NULL,
+    task_prompt_excerpt MEDIUMTEXT NULL,
     expected_output_type VARCHAR(80) NOT NULL DEFAULT '',
     candidate_moves_excerpt TEXT NULL,
     error_status VARCHAR(40) NOT NULL DEFAULT '',
@@ -129,11 +130,15 @@ ALTER TABLE cailama_model_benchmark_observations
     ADD COLUMN IF NOT EXISTS position_fen VARCHAR(120) NOT NULL DEFAULT '' AFTER artifact_ref,
     ADD COLUMN IF NOT EXISTS side_to_move VARCHAR(8) NOT NULL DEFAULT '' AFTER position_fen,
     ADD COLUMN IF NOT EXISTS position_label VARCHAR(190) NOT NULL DEFAULT '' AFTER side_to_move,
-    ADD COLUMN IF NOT EXISTS task_prompt_excerpt TEXT NULL AFTER position_label,
+    ADD COLUMN IF NOT EXISTS system_prompt_excerpt MEDIUMTEXT NULL AFTER position_label,
+    ADD COLUMN IF NOT EXISTS task_prompt_excerpt MEDIUMTEXT NULL AFTER system_prompt_excerpt,
     ADD COLUMN IF NOT EXISTS expected_output_type VARCHAR(80) NOT NULL DEFAULT '' AFTER task_prompt_excerpt,
     ADD COLUMN IF NOT EXISTS candidate_moves_excerpt TEXT NULL AFTER expected_output_type,
     ADD COLUMN IF NOT EXISTS error_status VARCHAR(40) NOT NULL DEFAULT '' AFTER candidate_moves_excerpt,
     ADD COLUMN IF NOT EXISTS error_message VARCHAR(500) NOT NULL DEFAULT '' AFTER error_status;
+
+ALTER TABLE cailama_model_benchmark_observations
+    MODIFY COLUMN task_prompt_excerpt MEDIUMTEXT NULL;
 
 ALTER TABLE web_users
     ADD COLUMN IF NOT EXISTS login_name VARCHAR(190) NOT NULL DEFAULT '' AFTER id;

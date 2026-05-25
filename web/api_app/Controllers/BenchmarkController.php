@@ -104,6 +104,107 @@ final class BenchmarkController
         ]);
     }
 
+    public function feedbackExport(Request $request, array $config): Response
+    {
+        if (!ApiTokenGuard::hasAnyScope($request, $config, ['admin'])) {
+            return $this->error('unauthorized', 'Unauthorized.', 401);
+        }
+        if ($request->query !== []) {
+            return $this->error('query_not_allowed', 'Query parameters are not allowed for this endpoint.', 400);
+        }
+
+        $runKey = '';
+        $includeModelLabels = false;
+        if (trim($request->body) !== '') {
+            try {
+                $payload = json_decode($request->body, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\Throwable) {
+                return $this->error('invalid_json', 'JSON body is invalid.', 400);
+            }
+            if (!is_array($payload)) {
+                return $this->error('invalid_payload', 'Expected JSON object.', 400);
+            }
+            $runKey = $this->optionalString($payload, 'run_key', 120);
+            $includeModelLabels = (bool) ($payload['include_model_labels'] ?? false);
+        }
+
+        try {
+            $pdo = ConnectionFactory::fromConfig($config, 'cailama');
+            $params = [];
+            $where = '';
+            if ($runKey !== '') {
+                $where = 'WHERE f.run_key = :run_key';
+                $params['run_key'] = $runKey;
+            }
+            $statement = $pdo->prepare(
+                "SELECT
+                    f.run_key,
+                    f.model_label,
+                    f.quality_score,
+                    f.task_solution_score,
+                    f.duration_score,
+                    f.logic_error_level,
+                    f.preferred_option,
+                    f.translation_score,
+                    f.feedback_text,
+                    f.improvement_note,
+                    f.translation_note,
+                    f.created_at,
+                    c.case_key,
+                    c.role_name,
+                    c.task_label,
+                    o.error_status,
+                    o.error_message
+                 FROM cailama_model_feedback f
+                 INNER JOIN cailama_model_benchmark_cases c ON c.id = f.case_id
+                 LEFT JOIN cailama_model_benchmark_observations o ON o.id = f.observation_id
+                 " . $where . "
+                 ORDER BY f.created_at ASC, f.id ASC
+                 LIMIT 2000"
+            );
+            $statement->execute($params);
+            $rows = [];
+            foreach ($statement->fetchAll() as $row) {
+                if (!is_array($row)) {
+                    continue;
+                }
+                $candidate = substr(hash('sha256', (string) $row['run_key'] . '|' . (string) $row['case_key'] . '|' . (string) $row['model_label']), 0, 12);
+                $export = [
+                    'run_key' => (string) $row['run_key'],
+                    'candidate_code' => strtoupper($candidate),
+                    'case_key' => (string) $row['case_key'],
+                    'role_name' => (string) $row['role_name'],
+                    'task_label' => (string) $row['task_label'],
+                    'quality_score' => $row['quality_score'],
+                    'task_solution_score' => $row['task_solution_score'],
+                    'duration_score' => $row['duration_score'],
+                    'logic_error_level' => (string) $row['logic_error_level'],
+                    'preferred_option' => (string) $row['preferred_option'],
+                    'translation_score' => $row['translation_score'],
+                    'feedback_text' => (string) ($row['feedback_text'] ?? ''),
+                    'improvement_note' => (string) ($row['improvement_note'] ?? ''),
+                    'translation_note' => (string) ($row['translation_note'] ?? ''),
+                    'error_status' => (string) ($row['error_status'] ?? ''),
+                    'error_message' => (string) ($row['error_message'] ?? ''),
+                    'created_at' => (string) $row['created_at'],
+                ];
+                if ($includeModelLabels) {
+                    $export['model_label'] = (string) $row['model_label'];
+                }
+                $rows[] = $export;
+            }
+        } catch (\Throwable) {
+            return $this->error('export_failed', 'Benchmark feedback could not be exported.', 500);
+        }
+
+        return Response::json([
+            'status' => 'ok',
+            'run_key' => $runKey,
+            'count' => count($rows),
+            'feedback' => $rows,
+        ]);
+    }
+
     private function normalizeObservation(array $row): array
     {
         $area = $this->stringField($row, 'area', 40);
@@ -132,7 +233,8 @@ final class BenchmarkController
             'position_fen' => $this->optionalFen($row, 'position_fen'),
             'side_to_move' => $this->optionalSideToMove($row, 'side_to_move'),
             'position_label' => $this->optionalString($row, 'position_label', 190),
-            'task_prompt_excerpt' => $this->optionalString($row, 'task_prompt_excerpt', 10000),
+            'system_prompt_excerpt' => $this->optionalString($row, 'system_prompt_excerpt', 60000),
+            'task_prompt_excerpt' => $this->optionalString($row, 'task_prompt_excerpt', 60000),
             'expected_output_type' => $this->optionalString($row, 'expected_output_type', 80),
             'candidate_moves_excerpt' => $this->optionalString($row, 'candidate_moves_excerpt', 5000),
             'error_status' => $this->optionalString($row, 'error_status', 40),
@@ -180,12 +282,12 @@ final class BenchmarkController
             "INSERT INTO cailama_model_benchmark_observations
                 (case_id, run_key, model_label, duration_ms, input_tokens, thinking_tokens, output_tokens,
                  total_tokens, model_usage_level, model_usage_weight, weighted_token_units, estimated_usage_units,
-                 artifact_ref, position_fen, side_to_move, position_label, task_prompt_excerpt,
+                 artifact_ref, position_fen, side_to_move, position_label, system_prompt_excerpt, task_prompt_excerpt,
                  expected_output_type, candidate_moves_excerpt, error_status, error_message, output_excerpt)
              VALUES
-                (:case_id, :run_key, :model_label, :duration_ms, :input_tokens, :thinking_tokens, :output_tokens,
-                 :total_tokens, :model_usage_level, :model_usage_weight, :weighted_token_units, :estimated_usage_units,
-                 :artifact_ref, :position_fen, :side_to_move, :position_label, :task_prompt_excerpt,
+                 (:case_id, :run_key, :model_label, :duration_ms, :input_tokens, :thinking_tokens, :output_tokens,
+                  :total_tokens, :model_usage_level, :model_usage_weight, :weighted_token_units, :estimated_usage_units,
+                 :artifact_ref, :position_fen, :side_to_move, :position_label, :system_prompt_excerpt, :task_prompt_excerpt,
                  :expected_output_type, :candidate_moves_excerpt, :error_status, :error_message, :output_excerpt)
              ON DUPLICATE KEY UPDATE
                 duration_ms = VALUES(duration_ms),
@@ -200,6 +302,7 @@ final class BenchmarkController
                 position_fen = VALUES(position_fen),
                 side_to_move = VALUES(side_to_move),
                 position_label = VALUES(position_label),
+                system_prompt_excerpt = VALUES(system_prompt_excerpt),
                 task_prompt_excerpt = VALUES(task_prompt_excerpt),
                 expected_output_type = VALUES(expected_output_type),
                 candidate_moves_excerpt = VALUES(candidate_moves_excerpt),
@@ -224,6 +327,7 @@ final class BenchmarkController
             'position_fen' => $observation['position_fen'],
             'side_to_move' => $observation['side_to_move'],
             'position_label' => $observation['position_label'],
+            'system_prompt_excerpt' => $observation['system_prompt_excerpt'],
             'task_prompt_excerpt' => $observation['task_prompt_excerpt'],
             'expected_output_type' => $observation['expected_output_type'],
             'candidate_moves_excerpt' => $observation['candidate_moves_excerpt'],

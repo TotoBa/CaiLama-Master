@@ -235,6 +235,14 @@ Vor Arbeitsbeginn lesen:
   Tools bleiben als menschlicher Feedbackfall offen. Die Website blendet
   Usage-Level im Blindfeedback aus und der Playmodus zieht offene Faelle
   zufaellig.
+  **Update 2026-05-25:** Der Katalog wurde komplett auf schachbezogene
+  Aufgaben umgestellt: lokale FENs aus den drei freigegebenen PGN-
+  Baseline-Spielen, oeffentliche Referenzmotive wie Opera Game/Kiwipete/
+  Turmendspiele, OCR/FEN-Gates, Coach-/DGT-Flows, Schachuebersetzung und
+  schachbezogene RAG-Faelle. CaiLama nutzt fuer Rollenprobes nun den echten
+  `PromptBuilder` beziehungsweise den echten Router-Prompt; die Website zeigt
+  im Blindfeedback den vollstaendigen System- und User-Prompt der Rollenprobe
+  ohne Modellnamen oder Verbrauchsklasse.
   Offen bleibt die fachliche
   Bewertung der heutigen Laeufe und die Ableitung belastbarer Modell-/Prompt-
   Regeln.
