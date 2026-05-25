@@ -406,7 +406,7 @@ Bewertungsdaten für Modellrollen in `cailama_model_benchmark_cases`,
 `cailama_model_benchmark_observations` und `cailama_model_feedback`:
 Laufzeit, Input-/Thinking-/Output-/Total-Tokens, Verbrauchsklasse,
 Verbrauchsgewicht, gewichtete Token-Einheiten, geschätzte Usage-Einheiten,
-Qualitäts-Score, Aufgaben-Score, optionaler Übersetzungs-Score,
+Qualitäts-Score, Aufgaben-Score, Dauer-Score, optionaler Übersetzungs-Score,
 Logikfehler-Klasse, A/B-Präferenz, secretfreie Lauf-Auszüge, knappe
 Feedbacknotizen und optionale fachliche Kontextfelder für Aufgaben-Auszug,
 erwarteten Ausgabetyp, FEN, Side-to-move, Positionslabel,
@@ -456,8 +456,9 @@ Webspace-API; `POST /api/v1/status` meldet `databases.cailama: ok`, und
 `POST /api/v1/admin/schema/cailama` beziehungsweise
 `POST /api/v1/admin/schema/all` wenden dasselbe Schema an. Echte Host-, User-
 oder Passwortwerte werden nicht in Doku oder Repo geschrieben.
-Schema-Stand 2026-05-25: `cailama-data` ist auf Version `0.8.0` angehoben und
-enthält die zusätzlichen Benchmark-Usage-Felder in Beobachtungen und Feedback.
+Schema-Stand 2026-05-25: `cailama-data` ist auf Version `0.8.1` angehoben und
+enthält die zusätzlichen Benchmark-Usage-Felder in Beobachtungen und Feedback
+sowie eine harte Dauerbewertung pro manuellem Feedback.
 
 Deployment-Status am 2026-05-24: `scripts/deploy-website.sh` hat `web/` und
 den privaten Smarty-Bereich per SFTP deployt und die öffentlichen Dateien per

@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS cailama_schema_meta (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO cailama_schema_meta (id, schema_name, schema_version)
-VALUES (1, 'cailama-data', '0.8.0')
+VALUES (1, 'cailama-data', '0.8.1')
 ON DUPLICATE KEY UPDATE schema_version = VALUES(schema_version);
 
 -- Website user authentication table (formerly in a separate auth database).
@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS cailama_model_feedback (
     estimated_usage_units DECIMAL(18,3) NULL,
     quality_score TINYINT UNSIGNED NOT NULL,
     task_solution_score TINYINT UNSIGNED NOT NULL,
+    duration_score TINYINT UNSIGNED NULL,
     logic_error_level ENUM('none', 'minor', 'major', 'unknown') NOT NULL DEFAULT 'unknown',
     preferred_option ENUM('a', 'b', 'tie', 'not_applicable') NOT NULL DEFAULT 'not_applicable',
     translation_score TINYINT UNSIGNED NULL,
@@ -152,6 +153,7 @@ ALTER TABLE cailama_model_feedback
     ADD COLUMN IF NOT EXISTS model_usage_weight TINYINT UNSIGNED NULL AFTER model_usage_level,
     ADD COLUMN IF NOT EXISTS weighted_token_units BIGINT UNSIGNED NULL AFTER model_usage_weight,
     ADD COLUMN IF NOT EXISTS estimated_usage_units DECIMAL(18,3) NULL AFTER weighted_token_units,
+    ADD COLUMN IF NOT EXISTS duration_score TINYINT UNSIGNED NULL AFTER task_solution_score,
     ADD COLUMN IF NOT EXISTS translation_score TINYINT UNSIGNED NULL AFTER preferred_option,
     ADD COLUMN IF NOT EXISTS translation_note TEXT NULL AFTER improvement_note;
 

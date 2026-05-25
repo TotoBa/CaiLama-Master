@@ -191,6 +191,7 @@ function upsert_feedback(PDO $pdo, ?int $userId, array $observation, array $valu
         'estimated_usage_units' => $observation['estimated_usage_units'],
         'quality_score' => $values['quality_score'],
         'task_solution_score' => $values['task_solution_score'],
+        'duration_score' => $values['duration_score'],
         'logic_error_level' => $values['logic_error_level'],
         'preferred_option' => $values['preferred_option'],
         'translation_score' => $values['translation_score'],
@@ -218,6 +219,7 @@ function upsert_feedback(PDO $pdo, ?int $userId, array $observation, array $valu
                  estimated_usage_units = :estimated_usage_units,
                  quality_score = :quality_score,
                  task_solution_score = :task_solution_score,
+                 duration_score = :duration_score,
                  logic_error_level = :logic_error_level,
                  preferred_option = :preferred_option,
                  translation_score = :translation_score,
@@ -235,11 +237,11 @@ function upsert_feedback(PDO $pdo, ?int $userId, array $observation, array $valu
         "INSERT INTO cailama_model_feedback
             (observation_id, case_id, user_id, run_key, model_label, duration_ms, input_tokens, thinking_tokens, output_tokens,
              total_tokens, model_usage_level, model_usage_weight, weighted_token_units, estimated_usage_units,
-             quality_score, task_solution_score, logic_error_level, preferred_option, translation_score, feedback_text, improvement_note, translation_note)
+             quality_score, task_solution_score, duration_score, logic_error_level, preferred_option, translation_score, feedback_text, improvement_note, translation_note)
          VALUES
             (:observation_id, :case_id, :user_id, :run_key, :model_label, :duration_ms, :input_tokens, :thinking_tokens, :output_tokens,
              :total_tokens, :model_usage_level, :model_usage_weight, :weighted_token_units, :estimated_usage_units,
-             :quality_score, :task_solution_score, :logic_error_level, :preferred_option, :translation_score, :feedback_text, :improvement_note, :translation_note)"
+             :quality_score, :task_solution_score, :duration_score, :logic_error_level, :preferred_option, :translation_score, :feedback_text, :improvement_note, :translation_note)"
     );
     $statement->execute($params);
 }
@@ -285,6 +287,7 @@ try {
 
         $qualityScore = post_score('quality_score');
         $taskSolutionScore = post_score('task_solution_score');
+        $durationScore = post_score('duration_score');
         $translationScore = post_score('translation_score');
         $logicErrorLevel = request_string($_POST, 'logic_error_level', 16);
         $preferredOption = request_string($_POST, 'preferred_option', 16);
@@ -294,6 +297,9 @@ try {
         }
         if ($taskSolutionScore === null) {
             $errors[] = 'Bitte die Aufgabenbewertung setzen.';
+        }
+        if ($durationScore === null) {
+            $errors[] = 'Bitte die Dauerbewertung setzen.';
         }
         if (!in_array($logicErrorLevel, ['none', 'minor', 'major', 'unknown'], true)) {
             $errors[] = 'Bitte die Logikfehler-Einschätzung setzen.';
@@ -307,6 +313,7 @@ try {
             upsert_feedback($pdo, $userId, $observation, [
                 'quality_score' => $qualityScore,
                 'task_solution_score' => $taskSolutionScore,
+                'duration_score' => $durationScore,
                 'logic_error_level' => $logicErrorLevel,
                 'preferred_option' => $preferredOption,
                 'translation_score' => $translationScore,
@@ -339,6 +346,13 @@ $taskOptions = [
     3 => 'teilweise gelöst',
     4 => 'gut gelöst',
     5 => 'voll gelöst',
+];
+$durationOptions = [
+    1 => 'viel zu langsam',
+    2 => 'langsam',
+    3 => 'akzeptabel',
+    4 => 'schnell',
+    5 => 'sehr schnell',
 ];
 $logicOptions = [
     'unknown' => 'unklar',
@@ -495,6 +509,13 @@ $preferenceOptions = [
                 <legend>Aufgabe gelöst</legend>
                 <?php foreach ($taskOptions as $score => $label): ?>
                   <label><input type="radio" name="task_solution_score" value="<?= h((string) $score) ?>" required> <?= h($label) ?></label>
+                <?php endforeach; ?>
+              </fieldset>
+
+              <fieldset class="choice-group">
+                <legend>Dauer</legend>
+                <?php foreach ($durationOptions as $score => $label): ?>
+                  <label><input type="radio" name="duration_score" value="<?= h((string) $score) ?>" required> <?= h($label) ?></label>
                 <?php endforeach; ?>
               </fieldset>
 

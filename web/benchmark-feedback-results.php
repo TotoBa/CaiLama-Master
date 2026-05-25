@@ -86,6 +86,7 @@ function load_results(PDO $pdo, array $filters): array
             COUNT(f.id) AS feedback_count,
             ROUND(AVG(f.quality_score), 2) AS quality_avg,
             ROUND(AVG(f.task_solution_score), 2) AS task_solution_avg,
+            ROUND(AVG(f.duration_score), 2) AS duration_score_avg,
             ROUND(AVG(f.translation_score), 2) AS translation_avg,
             SUM(f.logic_error_level = 'major') AS major_logic_errors,
             SUM(o.error_status <> '') AS error_observations,
@@ -124,6 +125,7 @@ function load_results(PDO $pdo, array $filters): array
             c.task_label,
             f.quality_score,
             f.task_solution_score,
+            f.duration_score,
             f.translation_score,
             f.logic_error_level,
             f.preferred_option,
@@ -245,7 +247,7 @@ try {
                     <td><strong><?= h((string) $row['role_name']) ?></strong><br><?= h((string) $row['task_label']) ?><br><span class="muted"><?= h((string) $row['run_key']) ?></span></td>
                     <td><?= h(candidate_label($row)) ?></td>
                     <td><?= h((string) $row['feedback_count']) ?> Feedbacks<br><?= h((string) $row['observation_count']) ?> Beobachtungen</td>
-                    <td>Qualität <?= h((string) ($row['quality_avg'] ?? '-')) ?><br>Aufgabe <?= h((string) ($row['task_solution_avg'] ?? '-')) ?><br>Übersetzung <?= h((string) ($row['translation_avg'] ?? '-')) ?><br>schwere Logikfehler <?= h((string) ($row['major_logic_errors'] ?? 0)) ?></td>
+                    <td>Qualität <?= h((string) ($row['quality_avg'] ?? '-')) ?><br>Aufgabe <?= h((string) ($row['task_solution_avg'] ?? '-')) ?><br>Dauer <?= h((string) ($row['duration_score_avg'] ?? '-')) ?><br>Übersetzung <?= h((string) ($row['translation_avg'] ?? '-')) ?><br>schwere Logikfehler <?= h((string) ($row['major_logic_errors'] ?? 0)) ?></td>
                     <td>Dauer Ø <?= h((string) ($row['duration_avg'] ?? '-')) ?> ms<br>Thinking Ø <?= h((string) ($row['thinking_avg'] ?? '-')) ?><br>Output Ø <?= h((string) ($row['output_avg'] ?? '-')) ?><br>Gesamt Ø <?= h((string) ($row['total_avg'] ?? '-')) ?><br>Verbrauch <?= h((string) (($row['usage_level'] ?? '') ?: '-')) ?><br>Gewichtet <?= h((string) ($row['weighted_token_units_sum'] ?? '-')) ?> · Einheiten <?= h((string) ($row['estimated_usage_units_sum'] ?? '-')) ?></td>
                     <td><?= h((string) ($row['error_observations'] ?? 0)) ?></td>
                   </tr>
@@ -272,7 +274,7 @@ try {
                       <td><?= h((string) $row['created_at']) ?></td>
                       <td><?= h((string) $row['role_name']) ?><br><?= h((string) $row['task_label']) ?></td>
                       <td><?= h(candidate_label($row)) ?></td>
-                      <td>Qualität <?= h((string) $row['quality_score']) ?>, Aufgabe <?= h((string) $row['task_solution_score']) ?><?= $row['translation_score'] !== null ? ', Übersetzung ' . h((string) $row['translation_score']) : '' ?><br>Logik <?= h((string) $row['logic_error_level']) ?>, A/B <?= h((string) $row['preferred_option']) ?><br>Gesamt <?= h((string) ($row['total_tokens'] ?? '-')) ?>, Verbrauch <?= h((string) (($row['model_usage_level'] ?? '') ?: '-')) ?></td>
+                      <td>Qualität <?= h((string) $row['quality_score']) ?>, Aufgabe <?= h((string) $row['task_solution_score']) ?><?= $row['duration_score'] !== null ? ', Dauer ' . h((string) $row['duration_score']) : '' ?><?= $row['translation_score'] !== null ? ', Übersetzung ' . h((string) $row['translation_score']) : '' ?><br>Logik <?= h((string) $row['logic_error_level']) ?>, A/B <?= h((string) $row['preferred_option']) ?><br>Gesamt <?= h((string) ($row['total_tokens'] ?? '-')) ?>, Verbrauch <?= h((string) (($row['model_usage_level'] ?? '') ?: '-')) ?></td>
                       <td><?= h((string) ($row['feedback_text'] ?? '')) ?><br><span class="muted"><?= h((string) ($row['improvement_note'] ?? '')) ?></span><?php if ((string) ($row['translation_note'] ?? '') !== ''): ?><br><span class="muted">Übersetzung: <?= h((string) $row['translation_note']) ?></span><?php endif; ?></td>
                     </tr>
                   <?php endforeach; ?>

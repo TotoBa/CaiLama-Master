@@ -82,6 +82,8 @@ Erfasst werden mindestens:
 - Modellrolle und konkretes Modell.
 - Qualitaetsbewertung 1 bis 5.
 - Bewertung, ob die konkrete Teilaufgabe geloest wurde, 1 bis 5.
+- Dauerbewertung 1 bis 5, damit Laufzeit nicht nur als Freitextkommentar
+  erfasst wird.
 - Logikfehler-Klasse: keine, klein, schwer oder unklar.
 - A/B-Praeferenz: Option A, Option B, gleich gut oder nicht anwendbar.
 - Freitext fuer Fehler, Nutzen und daraus folgende Prompt-/Regel-
@@ -114,8 +116,9 @@ Output- oder Fehlerauszug und bei stellungsbezogenen Faellen ein responsives
 Schachbrett aus der FEN. Rohprompts, volle Modellantworten, private Partien,
 lokale Pfade und Secrets gehoeren nicht in diese Tabellen; dort liegen nur
 vergleichbare Kennzahlen, kurze Aufgabenbeschreibungen, knappe Auszuege,
-optionale Stellungsdaten und menschliches Feedback. Uebersetzung/deutsche
-Ausgabe kann als eigene Bewertungsdimension erfasst werden. Die Ergebnis-Seite
+optionale Stellungsdaten und menschliches Feedback. Dauer/Tempo und
+Uebersetzung/deutsche Ausgabe koennen als eigene Bewertungsdimensionen erfasst
+werden. Die Ergebnis-Seite
 zeigt Aggregationen pro Lauf, Rolle, Fall und Kandidat weiterhin ohne
 Modellnamen.
 Die offene Feedbackliste zeigt alle noch unbewerteten Beobachtungen eines
