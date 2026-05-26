@@ -98,6 +98,7 @@ function load_feedback_list(PDO $pdo, string $runKey): array
             o.position_fen,
             o.side_to_move,
             o.position_label,
+            o.task_query,
             o.task_prompt_excerpt,
             o.expected_output_type,
             o.candidate_moves_excerpt,
@@ -261,7 +262,7 @@ try {
                         <span class="muted"><?= h((string) (($observation['position_label'] ?? '') ?: $observation['run_key'])) ?></span>
                       </td>
                       <td>
-                        <?= h((string) (($observation['task_prompt_excerpt'] ?? '') ?: $observation['task_summary'])) ?>
+                        <?= h((string) (($observation['task_query'] ?? '') ?: (($observation['task_prompt_excerpt'] ?? '') ?: $observation['task_summary']))) ?>
                         <?php if ((string) ($observation['error_status'] ?? '') !== ''): ?>
                           <br><span class="status-pill error-pill"><?= h((string) $observation['error_status']) ?></span>
                         <?php endif; ?>

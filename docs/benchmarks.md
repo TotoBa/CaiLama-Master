@@ -111,12 +111,13 @@ Benchmark-Runner duerfen secretfreie Beobachtungen ueber
 `POST /api/v1/benchmarks/observations` importieren; bewertet wird danach in
 der Website als Blind-Feedback. Die Feedback-Seite zeigt bei importierten
 Laeufen nur Kandidaten-Codes, nicht das konkrete Modell. Sichtbar sind
-Aufgabenzusammenfassung, erwarteter Ausgabetyp, Laufzeit-/Tokenmetriken,
-Output- oder Fehlerauszug und bei stellungsbezogenen Faellen ein responsives
-Schachbrett aus der FEN. Rohprompts, volle Modellantworten, private Partien,
-lokale Pfade und Secrets gehoeren nicht in diese Tabellen; dort liegen nur
-vergleichbare Kennzahlen, kurze Aufgabenbeschreibungen, knappe Auszuege,
-optionale Stellungsdaten und menschliches Feedback. Dauer/Tempo und
+Aufgabenzusammenfassung, die eigentliche Modellfrage, vollstaendiger System- und
+User-Prompt innerhalb des technischen Importlimits, erwarteter Ausgabetyp,
+Laufzeit-/Tokenmetriken, moeglichst vollstaendige Modellantwort oder Fehler und
+bei stellungsbezogenen Faellen ein responsives Schachbrett aus der FEN. Private
+Partiearchive, lokale Pfade und Secrets gehoeren nicht in diese Tabellen; dort
+liegen vergleichbare Kennzahlen, Aufgaben-/Promptkontext, optionaler
+Stellungskontext und menschliches Feedback. Dauer/Tempo und
 Uebersetzung/deutsche Ausgabe koennen als eigene Bewertungsdimensionen erfasst
 werden. Die Ergebnis-Seite
 zeigt Aggregationen pro Lauf, Rolle, Fall und Kandidat weiterhin ohne
@@ -198,18 +199,20 @@ Ein Ergebnis enthaelt mindestens:
   danach startet das naechste Modell. Erst nach der automatischen Rollen-
   Zuordnung startet der teure PTG-Classify-/Analyze-Teil, und dann nur fuer
   die Modelle, die mindestens eine Rolle uebernommen haben.
-  Beobachtungen enthalten neben Dauer, Tokens, Artefakt und Output-Auszug auch
-  den vollstaendigen konstruierten System- und User-Prompt der Rollenprobe,
-  erwarteten Ausgabetyp, optionale FEN/Side-to-move- und
-  Kandidatenzug-Auszuege sowie `total_tokens`, Verbrauchsklasse,
+  Beobachtungen enthalten neben Dauer, Tokens, Artefakt, eigentlicher
+  Modellfrage und moeglichst vollstaendiger Ausgabe auch den konstruierten
+  System- und User-Prompt der Rollenprobe, erwarteten Ausgabetyp, optionale
+  FEN/Side-to-move- und Kandidatenzug-Auszuege sowie `total_tokens`, Verbrauchsklasse,
   Verbrauchsgewicht, gewichtete Token-Einheiten und geschaetzte
   Usage-Einheiten. Diese Kostenfelder sind ein Vergleichsproxy fuer kleine
   und grosse Ollama-Cloud-Modelle, keine Provider-Abrechnung. Backend-Fehler,
   abgelehnte Thinking-Modi und harte Strukturfehler wie falsche Router-
   Toolwahl, ungueltiges JSON, fehlende Quellenmarker oder geratene FENs werden
   als Feedbackfaelle importiert und brechen den Gesamtlauf nicht ab. Router-/
-  Provider-Fehler 500/503 werden pro LLM-Call bis zu drei Mal mit Wartezeit
-  wiederholt; erst danach wird der Fall als Fehler exportiert. Strukturfehler
+  Provider-Fehler 429/500/503 werden pro LLM-Call bis zu drei Mal mit
+  Wartezeit wiederholt; erst danach wird der Fall als Fehler exportiert.
+  Leere Modellantworten werden automatisch als Strukturfehler geschlossen,
+  damit sie nicht in der manuellen Bewertung landen. Strukturfehler
   koennen serverseitig automatisch als nicht manuell bewertbar geschlossen
   werden. Unerwartete, aber formal strukturierte Tool-Aufrufe bleiben als
   menschlich zu bewertende Feedback-Faelle offen. Der Website-Upload streamt
@@ -221,9 +224,12 @@ Ein Ergebnis enthaelt mindestens:
   Schachwoerterbuch; im Feedback bleibt der englische Ausgangstext sichtbar,
   damit die Uebersetzung nicht still ungetestet bleibt.
   Die Rollenprobe nutzt fuer Nicht-Router-Rollen den echten CaiLama-
-  `PromptBuilder` inklusive Brettwahrheit-/Kontextbloecken; Router-Probes
-  nutzen denselben kompakten Router-Prompt mit aktueller Toolliste wie die
-  interaktive Konsole. Es gibt dadurch keine parallele Benchmark-Promptlogik.
+  `PromptBuilder` inklusive Brettwahrheit-/Kontextbloecken; RAG-/Researcher-
+  Faelle holen ihren Kontext vor dem Prompt ueber das echte `search_rag`-Tool
+  und bekommen dadurch denselben Search-Kontext wie der Live-Pfad. Router-
+  Probes nutzen denselben kompakten Router-Prompt mit aktueller Toolliste wie
+  die interaktive Konsole. Es gibt dadurch keine parallele Benchmark-
+  Promptlogik.
   `--skip-ptg` ist fuer schnelle Feedbacklaeufe erlaubt; `--max-analysis-
   positions` ist ein explizites Laufzeitbudget fuer den vollen PTG-Lauf,
   keine allgemeine 21er-Regel. Fuer vollstaendige Laeufe koennen

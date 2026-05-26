@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "generated_for": "CaiLama ecosystem documentation",
-  "last_reviewed": "2026-05-24",
+  "last_reviewed": "2026-05-26",
   "features_added": [
     "Review-Gate for key-position selection after Stockfish analysis",
     "Plan mode with heuristic or LLM-backed task planning",
@@ -13,7 +13,8 @@
     "Normalized RAG provenance for agent and researcher flows",
     "OCR/FEN validity gates and analysis/training quality gates beyond PTG",
     "Profile export and confirmed profile deletion",
-    "Privacy-safe RAG/researcher source_quality metrics in Search goldset and benchmark exports"
+    "Privacy-safe RAG/researcher source_quality metrics in Search goldset and benchmark exports",
+    "Model-role benchmark feedback now shows model question, full prompts within import limits, live RAG context and full answer payloads within MEDIUMTEXT limits"
   ],
   "canonical_url": "https://cailama.org/",
   "language": "de",
@@ -288,7 +289,7 @@
         "databases.cailama is the only PDO configuration in webspace single-database mode.",
         "web_users and application tables share the provider database while remaining logically separated by table names.",
         "Benchmark feedback uses cailama_model_benchmark_cases, cailama_model_benchmark_observations and cailama_model_feedback in databases.cailama.",
-        "Benchmark observations can be imported with benchmark:write or admin scope and contain only secret-free run metrics, short excerpts, optional task/position/error context and artifact references.",
+        "Benchmark observations can be imported with benchmark:write or admin scope and contain only secret-free run metrics, model question, full prompts within import limits, optional task/position/error context, artifact references and full answer payloads within MEDIUMTEXT limits.",
         "Benchmark cases keep role and task separate so candidate models can be compared per role instead of only globally.",
         "The PTG three-game model benchmark emits probes for all CaiLama roles: router, small, large, task, translator, coach, analyst, critic, vision, scribe and researcher.",
         "Imported benchmark observations are shown as blind candidate codes in the website feedback form; model names stay server-side.",

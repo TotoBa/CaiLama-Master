@@ -385,13 +385,13 @@ Vertrag:
 - `/benchmark-feedback-results.php` zeigt geschützte Blind-Aggregationen nach
   Lauf, Rolle, Fall und Kandidat.
 - `POST /api/v1/benchmarks/observations` importiert secretfreie
-  Benchmark-Laufdaten mit `benchmark:write` oder `admin`; Rohprompts,
-  vollständige Antworten, lokale Pfade und Secrets sind ausgeschlossen.
-  Optionale Felder für Aufgaben-Auszug, erwarteten Ausgabetyp, FEN,
-  Side-to-move, Positionslabel, Kandidatenzug-Auszug, gekürzte Fehlerdaten,
-  Total-Tokens und Verbrauchs-/Kostengewichte sind erlaubt. Harte
-  Strukturfehler werden beim Import automatisch als nicht manuell bewertbare
-  Feedbackfälle geschlossen.
+  Benchmark-Laufdaten mit `benchmark:write` oder `admin`; lokale Pfade,
+  private PGN-Archive und Secrets sind ausgeschlossen. Optionale Felder für
+  eigentliche Modellfrage, System-/User-Prompt, erwarteten Ausgabetyp, FEN,
+  Side-to-move, Positionslabel, Kandidatenzug-Auszug, Fehlerdaten,
+  Total-Tokens, Verbrauchs-/Kostengewichte und möglichst vollständige
+  Modellantwort sind erlaubt. Harte Strukturfehler werden beim Import
+  automatisch als nicht manuell bewertbare Feedbackfälle geschlossen.
 - `POST /api/v1/benchmarks/reset` setzt nur Benchmark-Beobachtungen und
   Benchmark-Feedback zurück. Der Endpunkt ist admin-geschützt und nimmt weder
   Query-Parameter noch Request-Body an.

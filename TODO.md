@@ -216,6 +216,16 @@ Vor Arbeitsbeginn lesen:
   Beobachtungen und Benchmark-Feedback zurueck. CaiLama nutzt fuer den vollen
   PTG-Modellbenchmark standardmaessig die lokale MariaDB-Konfiguration statt
   SQLite, damit keine NAS-Locks entstehen.
+  **Update 2026-05-26:** Schema `0.8.3` speichert fuer importierte
+  Modellrollen-Beobachtungen zusaetzlich die eigentliche Modellfrage
+  (`task_query`), System-/User-Prompt als `MEDIUMTEXT` und die moeglichst
+  vollstaendige Modellantwort als `MEDIUMTEXT`. Die Feedback-Seite zeigt
+  Modellfrage, vollständigen Prompt und volle Antwort im Einzelfall, bleibt
+  aber blind hinsichtlich Modellname und Verbrauchsklasse. CaiLama retryt im
+  Benchmarkpfad jetzt 429/500/503, schliesst leere Antworten automatisch als
+  Strukturfehler und nutzt fuer Researcher/RAG-Faelle das echte `search_rag`-
+  Tool vor dem Prompt. Search liefert dafuer einen versionierten Public-
+  Knowledge-Seed fuer Eröffnungen und Endspiele.
   **Update 2026-05-25:** Der Router erzwingt jetzt backendweite In-Flight-
   Limits. In der Dual-Ollama-Runtime duerfen je Docker-Ollama-Cloud-Account
   maximal drei Requests gleichzeitig laufen; Host-Ollama lokal bleibt auf

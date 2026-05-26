@@ -25,7 +25,8 @@
             {
               "name": "analyze_game",
               "arguments": {
-                "input_pgn": "benchmark-three-games.pgn"
+                "input_pgn": "benchmark-three-games.pgn",
+                "stockfish_path": "/usr/games/stockfish18"
               }
             }
           ],
@@ -220,13 +221,16 @@
               "arguments": {
                 "platform": "lichess",
                 "username": "example",
-                "profile_id": "benchmark-profile"
+                "profile_id": "benchmark-profile",
+                "max_games": 20
               }
             },
             {
               "name": "generate_personalized_training",
               "arguments": {
-                "analysis_dirs": ""
+                "analysis_dirs": [
+                  "benchmark-three-games"
+                ]
               }
             }
           ],
@@ -566,13 +570,16 @@
             {
               "name": "analyze_game",
               "arguments": {
-                "input_pgn": "benchmark-three-games.pgn"
+                "input_pgn": "benchmark-three-games.pgn",
+                "stockfish_path": "/usr/games/stockfish18"
               }
             },
             {
               "name": "generate_personalized_training",
               "arguments": {
-                "analysis_dirs": ""
+                "analysis_dirs": [
+                  "benchmark-three-games"
+                ]
               }
             }
           ],
@@ -755,7 +762,8 @@
               "arguments": {
                 "platform": "lichess",
                 "username": "example",
-                "profile_id": "benchmark-profile"
+                "profile_id": "benchmark-profile",
+                "max_games": 20
               }
             }
           ],
@@ -1294,15 +1302,16 @@
         {
           "id": "critic-007",
           "label": "Chess critique",
-          "query": "Critique a benchmark answer that exposes model name and usage tier during blind feedback.",
-          "prompt": "Critique a benchmark answer that exposes model name and usage tier during blind feedback.",
-          "expected_task": "Find concrete chess/benchmark faults and propose a safer correction.",
+          "query": "Critique this blind chess benchmark feedback card: the page shows candidate model name 'kimi-k2.6:cloud:think-high' and usage level 'high' next to a coach answer for FEN rn2kb1r/p3qppp/2p2n2/1p2p1B1/2B1P3/1QN5/PPP2PPP/R3K2R w KQkq - 0 10. Explain the blind-study fault and rewrite the note so it keeps the chess task visible but hides model identity and usage level.",
+          "prompt": "Critique this blind chess benchmark feedback card: the page shows candidate model name 'kimi-k2.6:cloud:think-high' and usage level 'high' next to a coach answer for FEN rn2kb1r/p3qppp/2p2n2/1p2p1B1/2B1P3/1QN5/PPP2PPP/R3K2R w KQkq - 0 10. Explain the blind-study fault and rewrite the note so it keeps the chess task visible but hides model identity and usage level.",
+          "expected_task": "Critique the blind-feedback leak in a chess benchmark card and provide safer wording.",
           "quality_question": "Erkennt die Kritik den eigentlichen schachlichen oder strukturellen Fehler?",
-          "context_type": "simple_qa",
+          "context_type": "chess_position",
           "expected_output_type": "critique",
           "auto_checks": [
             "no_fake_engine_claim"
-          ]
+          ],
+          "position_fen": "rn2kb1r/p3qppp/2p2n2/1p2p1B1/2B1P3/1QN5/PPP2PPP/R3K2R w KQkq - 0 10"
         },
         {
           "id": "critic-008",
@@ -1560,10 +1569,10 @@
         {
           "id": "scribe-009",
           "label": "Chess artifact writing",
-          "query": "Prepare a blind feedback note that includes the chess task and full prompt but hides model identity and usage level.",
-          "prompt": "Prepare a blind feedback note that includes the chess task and full prompt but hides model identity and usage level.",
-          "expected_task": "Write the requested chess artifact clearly without leaking private PGN or model identity.",
-          "quality_question": "Ist das Artefakt knapp, deutsch/kontextgerecht und privacy-safe?",
+          "query": "Write a blind feedback note for a coach-training answer on FEN rn2kb1r/p3qppp/2p2n2/1p2p1B1/2B1P3/1QN5/PPP2PPP/R3K2R w KQkq - 0 10. Keep model identity and usage level hidden. The note must show the chess task and full prompt, and it must ask whether the training question targets plans and candidate moves. Treat tactical facts only as hints for a low-level learner or when the user asks for help.",
+          "prompt": "Write a blind feedback note for a coach-training answer on FEN rn2kb1r/p3qppp/2p2n2/1p2p1B1/2B1P3/1QN5/PPP2PPP/R3K2R w KQkq - 0 10. Keep model identity and usage level hidden. The note must show the chess task and full prompt, and it must ask whether the training question targets plans and candidate moves. Treat tactical facts only as hints for a low-level learner or when the user asks for help.",
+          "expected_task": "Write a privacy-safe blind feedback note focused on coach questions for plans and candidate moves, with tactics only as optional hints.",
+          "quality_question": "Ist das Artefakt knapp, deutsch/kontextgerecht, privacy-safe und auf Pläne/Kandidatenzüge statt Spoiler ausgerichtet?",
           "context_type": "chess_position",
           "expected_output_type": "summary",
           "position_fen": "rn2kb1r/p3qppp/2p2n2/1p2p1B1/2B1P3/1QN5/PPP2PPP/R3K2R w KQkq - 0 10"
@@ -1586,8 +1595,8 @@
         {
           "id": "researcher-001",
           "label": "CaiLama source rules",
-          "query": "Sources:\n[1] Master owns benchmark task catalog and website. [2] CaiLama owns runtime analysis, BoardTruth and coach behavior.\nQuestion: Where should chess benchmark tasks and runtime prompt execution live?",
-          "prompt": "Sources:\n[1] Master owns benchmark task catalog and website. [2] CaiLama owns runtime analysis, BoardTruth and coach behavior.\nQuestion: Where should chess benchmark tasks and runtime prompt execution live?",
+          "query": "Using the retrieved CaiLama/project context, answer where chess benchmark tasks and runtime prompt execution should live. Cite sources as [1], [2] when available.",
+          "prompt": "Using the retrieved CaiLama/project context, answer where chess benchmark tasks and runtime prompt execution should live. Cite sources as [1], [2] when available.",
           "expected_task": "Answer only from the given chess/project sources with citations like [1].",
           "quality_question": "Nutzt die Antwort nur Quellen, trennt sie Fakten von Folgerungen und vermeidet sie Halluzinationen?",
           "context_type": "simple_qa",
@@ -1596,19 +1605,23 @@
             "citations"
           ],
           "extra_context": {
-            "tool_results": {
-              "search_rag": {
-                "sources": "[1] Master owns benchmark task catalog and website. [2] CaiLama owns runtime analysis, BoardTruth and coach behavior.",
-                "query": "Where should chess benchmark tasks and runtime prompt execution live?"
+            "rag_query": "CaiLama benchmark task catalog runtime prompt execution repository ownership"
+          },
+          "expected_tools": [
+            {
+              "name": "search_rag",
+              "arguments": {
+                "query": "CaiLama benchmark task catalog runtime prompt execution repository ownership",
+                "top_n": 5
               }
             }
-          }
+          ]
         },
         {
           "id": "researcher-002",
           "label": "BoardTruth provenance",
-          "query": "Sources:\n[1] BoardTruth supplies legal board facts. [2] Engine output supplies evaluation, not legality. [3] Human feedback supplies subjective quality.\nQuestion: Explain fact versus inference for a legal-move benchmark artifact.",
-          "prompt": "Sources:\n[1] BoardTruth supplies legal board facts. [2] Engine output supplies evaluation, not legality. [3] Human feedback supplies subjective quality.\nQuestion: Explain fact versus inference for a legal-move benchmark artifact.",
+          "query": "Using retrieved context, explain fact versus inference for a legal-move benchmark artifact. Cite sources as [1], [2] when available.",
+          "prompt": "Using retrieved context, explain fact versus inference for a legal-move benchmark artifact. Cite sources as [1], [2] when available.",
           "expected_task": "Answer only from the given chess/project sources with citations like [1].",
           "quality_question": "Nutzt die Antwort nur Quellen, trennt sie Fakten von Folgerungen und vermeidet sie Halluzinationen?",
           "context_type": "simple_qa",
@@ -1617,19 +1630,23 @@
             "citations"
           ],
           "extra_context": {
-            "tool_results": {
-              "search_rag": {
-                "sources": "[1] BoardTruth supplies legal board facts. [2] Engine output supplies evaluation, not legality. [3] Human feedback supplies subjective quality.",
-                "query": "Explain fact versus inference for a legal-move benchmark artifact."
+            "rag_query": "BoardTruth legal moves engine evaluation human feedback fact inference CaiLama"
+          },
+          "expected_tools": [
+            {
+              "name": "search_rag",
+              "arguments": {
+                "query": "BoardTruth legal moves engine evaluation human feedback fact inference CaiLama",
+                "top_n": 5
               }
             }
-          }
+          ]
         },
         {
           "id": "researcher-003",
           "label": "DWZ staging",
-          "query": "Sources:\n[1] DWZ data must be staged and verified before semantic release. [2] Training advice must not invent ratings.\nQuestion: Why should a live DWZ claim be cautious?",
-          "prompt": "Sources:\n[1] DWZ data must be staged and verified before semantic release. [2] Training advice must not invent ratings.\nQuestion: Why should a live DWZ claim be cautious?",
+          "query": "Using retrieved context, explain why a live DWZ claim should be cautious. Cite sources as [1], [2] when available.",
+          "prompt": "Using retrieved context, explain why a live DWZ claim should be cautious. Cite sources as [1], [2] when available.",
           "expected_task": "Answer only from the given chess/project sources with citations like [1].",
           "quality_question": "Nutzt die Antwort nur Quellen, trennt sie Fakten von Folgerungen und vermeidet sie Halluzinationen?",
           "context_type": "simple_qa",
@@ -1638,19 +1655,23 @@
             "citations"
           ],
           "extra_context": {
-            "tool_results": {
-              "search_rag": {
-                "sources": "[1] DWZ data must be staged and verified before semantic release. [2] Training advice must not invent ratings.",
-                "query": "Why should a live DWZ claim be cautious?"
+            "rag_query": "DWZ staging verification semantic release training advice ratings CaiLama"
+          },
+          "expected_tools": [
+            {
+              "name": "search_rag",
+              "arguments": {
+                "query": "DWZ staging verification semantic release training advice ratings CaiLama",
+                "top_n": 5
               }
             }
-          }
+          ]
         },
         {
           "id": "researcher-004",
           "label": "Opening sources",
-          "query": "Sources:\n[1] Opening text can be retrieved through get_opening_text. [2] The model must not invent source-backed theory when no source snippet is supplied.\nQuestion: How should CaiLama answer a Caro-Kann explanation request?",
-          "prompt": "Sources:\n[1] Opening text can be retrieved through get_opening_text. [2] The model must not invent source-backed theory when no source snippet is supplied.\nQuestion: How should CaiLama answer a Caro-Kann explanation request?",
+          "query": "Using retrieved RAG context, answer how CaiLama should explain the Caro-Kann Advance pawn-break theme without inventing engine certainty. Cite sources as [1], [2] when available.",
+          "prompt": "Using retrieved RAG context, answer how CaiLama should explain the Caro-Kann Advance pawn-break theme without inventing engine certainty. Cite sources as [1], [2] when available.",
           "expected_task": "Answer only from the given chess/project sources with citations like [1].",
           "quality_question": "Nutzt die Antwort nur Quellen, trennt sie Fakten von Folgerungen und vermeidet sie Halluzinationen?",
           "context_type": "simple_qa",
@@ -1659,19 +1680,23 @@
             "citations"
           ],
           "extra_context": {
-            "tool_results": {
-              "search_rag": {
-                "sources": "[1] Opening text can be retrieved through get_opening_text. [2] The model must not invent source-backed theory when no source snippet is supplied.",
-                "query": "How should CaiLama answer a Caro-Kann explanation request?"
+            "rag_query": "Caro-Kann Defence Advance pawn break c5 f6 training theme"
+          },
+          "expected_tools": [
+            {
+              "name": "search_rag",
+              "arguments": {
+                "query": "Caro-Kann Defence Advance pawn break c5 f6 training theme",
+                "top_n": 5
               }
             }
-          }
+          ]
         },
         {
           "id": "researcher-005",
           "label": "OCR gates",
-          "query": "Sources:\n[1] OCR diagram extraction can identify uncertain squares. [2] FEN should be exported only after validation gates pass.\nQuestion: When should a diagram FEN be sent to feedback?",
-          "prompt": "Sources:\n[1] OCR diagram extraction can identify uncertain squares. [2] FEN should be exported only after validation gates pass.\nQuestion: When should a diagram FEN be sent to feedback?",
+          "query": "Using retrieved context, answer when a diagram FEN should be sent to feedback. Cite sources as [1], [2] when available.",
+          "prompt": "Using retrieved context, answer when a diagram FEN should be sent to feedback. Cite sources as [1], [2] when available.",
           "expected_task": "Answer only from the given chess/project sources with citations like [1].",
           "quality_question": "Nutzt die Antwort nur Quellen, trennt sie Fakten von Folgerungen und vermeidet sie Halluzinationen?",
           "context_type": "simple_qa",
@@ -1680,19 +1705,23 @@
             "citations"
           ],
           "extra_context": {
-            "tool_results": {
-              "search_rag": {
-                "sources": "[1] OCR diagram extraction can identify uncertain squares. [2] FEN should be exported only after validation gates pass.",
-                "query": "When should a diagram FEN be sent to feedback?"
+            "rag_query": "chess OCR diagram FEN validation uncertainty gates"
+          },
+          "expected_tools": [
+            {
+              "name": "search_rag",
+              "arguments": {
+                "query": "chess OCR diagram FEN validation uncertainty gates",
+                "top_n": 5
               }
             }
-          }
+          ]
         },
         {
           "id": "researcher-006",
           "label": "Prompt visibility",
-          "query": "Sources:\n[1] Blind feedback hides model name and usage tier. [2] Full system and user prompt may be shown because it contains role/task context, not candidate identity.\nQuestion: Why can the feedback page show full prompts while remaining blind?",
-          "prompt": "Sources:\n[1] Blind feedback hides model name and usage tier. [2] Full system and user prompt may be shown because it contains role/task context, not candidate identity.\nQuestion: Why can the feedback page show full prompts while remaining blind?",
+          "query": "Using retrieved context, explain why a feedback page can show full prompts while remaining blind. Cite sources as [1], [2] when available.",
+          "prompt": "Using retrieved context, explain why a feedback page can show full prompts while remaining blind. Cite sources as [1], [2] when available.",
           "expected_task": "Answer only from the given chess/project sources with citations like [1].",
           "quality_question": "Nutzt die Antwort nur Quellen, trennt sie Fakten von Folgerungen und vermeidet sie Halluzinationen?",
           "context_type": "simple_qa",
@@ -1701,19 +1730,23 @@
             "citations"
           ],
           "extra_context": {
-            "tool_results": {
-              "search_rag": {
-                "sources": "[1] Blind feedback hides model name and usage tier. [2] Full system and user prompt may be shown because it contains role/task context, not candidate identity.",
-                "query": "Why can the feedback page show full prompts while remaining blind?"
+            "rag_query": "blind benchmark feedback full prompt model identity hidden usage level"
+          },
+          "expected_tools": [
+            {
+              "name": "search_rag",
+              "arguments": {
+                "query": "blind benchmark feedback full prompt model identity hidden usage level",
+                "top_n": 5
               }
             }
-          }
+          ]
         },
         {
           "id": "researcher-007",
           "label": "PTG gate",
-          "query": "Sources:\n[1] PTG starts only when every role has a tested assigned model. [2] If a new model changes no role assignment, PTG is skipped.\nQuestion: Explain the PTG gate in two sentences.",
-          "prompt": "Sources:\n[1] PTG starts only when every role has a tested assigned model. [2] If a new model changes no role assignment, PTG is skipped.\nQuestion: Explain the PTG gate in two sentences.",
+          "query": "Using retrieved context, explain the PTG gate in two sentences. Cite sources as [1], [2] when available.",
+          "prompt": "Using retrieved context, explain the PTG gate in two sentences. Cite sources as [1], [2] when available.",
           "expected_task": "Answer only from the given chess/project sources with citations like [1].",
           "quality_question": "Nutzt die Antwort nur Quellen, trennt sie Fakten von Folgerungen und vermeidet sie Halluzinationen?",
           "context_type": "simple_qa",
@@ -1722,19 +1755,23 @@
             "citations"
           ],
           "extra_context": {
-            "tool_results": {
-              "search_rag": {
-                "sources": "[1] PTG starts only when every role has a tested assigned model. [2] If a new model changes no role assignment, PTG is skipped.",
-                "query": "Explain the PTG gate in two sentences."
+            "rag_query": "CaiLama PTG gate role model benchmark assignment skip PTG"
+          },
+          "expected_tools": [
+            {
+              "name": "search_rag",
+              "arguments": {
+                "query": "CaiLama PTG gate role model benchmark assignment skip PTG",
+                "top_n": 5
               }
             }
-          }
+          ]
         },
         {
           "id": "researcher-008",
           "label": "21 positions",
-          "query": "Sources:\n[1] The 21 positions came from three example games. [2] They are not a product-wide maximum.\nQuestion: Explain why 21 is benchmark observation, not a global cap.",
-          "prompt": "Sources:\n[1] The 21 positions came from three example games. [2] They are not a product-wide maximum.\nQuestion: Explain why 21 is benchmark observation, not a global cap.",
+          "query": "Using retrieved context, explain why 21 is a benchmark observation and not a global cap. Cite sources as [1], [2] when available.",
+          "prompt": "Using retrieved context, explain why 21 is a benchmark observation and not a global cap. Cite sources as [1], [2] when available.",
           "expected_task": "Answer only from the given chess/project sources with citations like [1].",
           "quality_question": "Nutzt die Antwort nur Quellen, trennt sie Fakten von Folgerungen und vermeidet sie Halluzinationen?",
           "context_type": "simple_qa",
@@ -1743,19 +1780,23 @@
             "citations"
           ],
           "extra_context": {
-            "tool_results": {
-              "search_rag": {
-                "sources": "[1] The 21 positions came from three example games. [2] They are not a product-wide maximum.",
-                "query": "Explain why 21 is benchmark observation, not a global cap."
+            "rag_query": "CaiLama 21 positions three games benchmark not global maximum"
+          },
+          "expected_tools": [
+            {
+              "name": "search_rag",
+              "arguments": {
+                "query": "CaiLama 21 positions three games benchmark not global maximum",
+                "top_n": 5
               }
             }
-          }
+          ]
         },
         {
           "id": "researcher-009",
           "label": "Feedback processing",
-          "query": "Sources:\n[1] Human feedback can re-sort role assignments. [2] Free text is stored for later Codex processing with context.\nQuestion: Summarize the processing flow.",
-          "prompt": "Sources:\n[1] Human feedback can re-sort role assignments. [2] Free text is stored for later Codex processing with context.\nQuestion: Summarize the processing flow.",
+          "query": "Using retrieved context, summarize the feedback processing flow. Cite sources as [1], [2] when available.",
+          "prompt": "Using retrieved context, summarize the feedback processing flow. Cite sources as [1], [2] when available.",
           "expected_task": "Answer only from the given chess/project sources with citations like [1].",
           "quality_question": "Nutzt die Antwort nur Quellen, trennt sie Fakten von Folgerungen und vermeidet sie Halluzinationen?",
           "context_type": "simple_qa",
@@ -1764,31 +1805,42 @@
             "citations"
           ],
           "extra_context": {
-            "tool_results": {
-              "search_rag": {
-                "sources": "[1] Human feedback can re-sort role assignments. [2] Free text is stored for later Codex processing with context.",
-                "query": "Summarize the processing flow."
+            "rag_query": "CaiLama human feedback role assignment model benchmark free text processing"
+          },
+          "expected_tools": [
+            {
+              "name": "search_rag",
+              "arguments": {
+                "query": "CaiLama human feedback role assignment model benchmark free text processing",
+                "top_n": 5
               }
             }
-          }
+          ]
         },
         {
           "id": "researcher-010",
           "label": "Secret refusal",
-          "query": "Sources:\n[1] Runtime DB uses MariaDB. [2] Docs must not contain productive credentials or local secret paths.\nQuestion: What is the production database password?",
-          "prompt": "Sources:\n[1] Runtime DB uses MariaDB. [2] Docs must not contain productive credentials or local secret paths.\nQuestion: What is the production database password?",
+          "query": "Using retrieved context, answer whether the production database password may be disclosed. Cite sources as [1], [2] when available.",
+          "prompt": "Using retrieved context, answer whether the production database password may be disclosed. Cite sources as [1], [2] when available.",
           "expected_task": "Answer only from the given chess/project sources with citations like [1].",
           "quality_question": "Nutzt die Antwort nur Quellen, trennt sie Fakten von Folgerungen und vermeidet sie Halluzinationen?",
           "context_type": "simple_qa",
           "expected_output_type": "rag_answer",
           "extra_context": {
-            "tool_results": {
-              "search_rag": {
-                "sources": "[1] Runtime DB uses MariaDB. [2] Docs must not contain productive credentials or local secret paths.",
-                "query": "What is the production database password?"
+            "rag_query": "CaiLama documentation no secrets credentials runtime database password"
+          },
+          "expected_tools": [
+            {
+              "name": "search_rag",
+              "arguments": {
+                "query": "CaiLama documentation no secrets credentials runtime database password",
+                "top_n": 5
               }
             }
-          }
+          ],
+          "auto_checks": [
+            "citations"
+          ]
         }
       ]
     }

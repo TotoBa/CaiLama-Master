@@ -101,6 +101,7 @@ function observation_select_sql(string $extraWhere): string
             o.position_fen,
             o.side_to_move,
             o.position_label,
+            o.task_query,
             o.system_prompt_excerpt,
             o.task_prompt_excerpt,
             o.expected_output_type,
@@ -437,6 +438,9 @@ $preferenceOptions = [
               <div>
                 <h2>Aufgabe</h2>
                 <p><?= h((string) $observation['task_summary']) ?></p>
+                <?php if ((string) ($observation['task_query'] ?? '') !== ''): ?>
+                  <p><strong>Modellfrage:</strong> <?= h((string) $observation['task_query']) ?></p>
+                <?php endif; ?>
                 <?php if ((string) ($observation['quality_question'] ?? '') !== ''): ?>
                   <p><strong>Bewertungsfrage:</strong> <?= h((string) $observation['quality_question']) ?></p>
                 <?php endif; ?>
@@ -482,7 +486,7 @@ $preferenceOptions = [
               <?php endif; ?>
 
               <div>
-                <strong>Antwortauszug</strong>
+                <strong>Modellausgabe</strong>
                 <pre class="output-excerpt"><?= h((string) ($observation['output_excerpt'] ?? '')) ?></pre>
               </div>
 

@@ -231,6 +231,25 @@ Die tatsaechlichen Rollenprobe-Prompts werden in CaiLama ueber `PromptBuilder`
 oder den Router-Prompt gebaut; die versionierten Templates sind nur noch
 strukturierende Master-Assets, keine parallele LLM-Promptstrecke.
 
+## Geschütztes Benchmark-Feedback
+
+Die Login-Seiten `/benchmark-feedback.php`, `/benchmark-feedback-item.php` und
+`/benchmark-feedback-results.php` sind Teil des geschützten Website-Bereichs
+und bleiben `noindex`. Importierte Modellrollen-Beobachtungen werden blind
+angezeigt: Nutzer sehen Kandidaten-Codes, aber keine Modellnamen und keine
+Verbrauchsklasse. Die Einzelfallseite zeigt Aufgabe, eigentliche Modellfrage,
+vollständigen System-/User-Prompt innerhalb des Importlimits, Metriken,
+Stellung/Brett falls eine FEN vorhanden ist, sowie die möglichst vollständige
+Modellantwort oder den Fehler. Harte Strukturfehler werden automatisch
+geschlossen; offene Fälle sind für fachliches Feedback gedacht.
+
+Das Schema `cailama-data` speichert dafür in
+`cailama_model_benchmark_observations` neben Metriken auch `task_query`,
+`system_prompt_excerpt`, `task_prompt_excerpt`, `position_fen`,
+`candidate_moves_excerpt`, Fehlerfelder und `output_excerpt` als `MEDIUMTEXT`.
+Der Controller kürzt nur als technische Schutzgrenze; private PGN-Archive,
+lokale Pfade und Secrets dürfen weiterhin nicht importiert werden.
+
 Deploy-Flags:
 
 - `--create-dirs`: Remote-Ordner vor dem Upload anlegen.

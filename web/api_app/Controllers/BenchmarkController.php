@@ -233,13 +233,14 @@ final class BenchmarkController
             'position_fen' => $this->optionalFen($row, 'position_fen'),
             'side_to_move' => $this->optionalSideToMove($row, 'side_to_move'),
             'position_label' => $this->optionalString($row, 'position_label', 190),
-            'system_prompt_excerpt' => $this->optionalString($row, 'system_prompt_excerpt', 60000),
-            'task_prompt_excerpt' => $this->optionalString($row, 'task_prompt_excerpt', 60000),
+            'task_query' => $this->optionalString($row, 'task_query', 60000),
+            'system_prompt_excerpt' => $this->optionalString($row, 'system_prompt_excerpt', 200000),
+            'task_prompt_excerpt' => $this->optionalString($row, 'task_prompt_excerpt', 200000),
             'expected_output_type' => $this->optionalString($row, 'expected_output_type', 80),
             'candidate_moves_excerpt' => $this->optionalString($row, 'candidate_moves_excerpt', 5000),
             'error_status' => $this->optionalString($row, 'error_status', 40),
             'error_message' => $this->optionalString($row, 'error_message', 500),
-            'output_excerpt' => $this->optionalString($row, 'output_excerpt', 20000),
+            'output_excerpt' => $this->optionalString($row, 'output_excerpt', 1000000),
         ];
     }
 
@@ -282,12 +283,12 @@ final class BenchmarkController
             "INSERT INTO cailama_model_benchmark_observations
                 (case_id, run_key, model_label, duration_ms, input_tokens, thinking_tokens, output_tokens,
                  total_tokens, model_usage_level, model_usage_weight, weighted_token_units, estimated_usage_units,
-                 artifact_ref, position_fen, side_to_move, position_label, system_prompt_excerpt, task_prompt_excerpt,
+                 artifact_ref, position_fen, side_to_move, position_label, task_query, system_prompt_excerpt, task_prompt_excerpt,
                  expected_output_type, candidate_moves_excerpt, error_status, error_message, output_excerpt)
              VALUES
                  (:case_id, :run_key, :model_label, :duration_ms, :input_tokens, :thinking_tokens, :output_tokens,
                   :total_tokens, :model_usage_level, :model_usage_weight, :weighted_token_units, :estimated_usage_units,
-                 :artifact_ref, :position_fen, :side_to_move, :position_label, :system_prompt_excerpt, :task_prompt_excerpt,
+                 :artifact_ref, :position_fen, :side_to_move, :position_label, :task_query, :system_prompt_excerpt, :task_prompt_excerpt,
                  :expected_output_type, :candidate_moves_excerpt, :error_status, :error_message, :output_excerpt)
              ON DUPLICATE KEY UPDATE
                 duration_ms = VALUES(duration_ms),
@@ -302,6 +303,7 @@ final class BenchmarkController
                 position_fen = VALUES(position_fen),
                 side_to_move = VALUES(side_to_move),
                 position_label = VALUES(position_label),
+                task_query = VALUES(task_query),
                 system_prompt_excerpt = VALUES(system_prompt_excerpt),
                 task_prompt_excerpt = VALUES(task_prompt_excerpt),
                 expected_output_type = VALUES(expected_output_type),
@@ -327,6 +329,7 @@ final class BenchmarkController
             'position_fen' => $observation['position_fen'],
             'side_to_move' => $observation['side_to_move'],
             'position_label' => $observation['position_label'],
+            'task_query' => $observation['task_query'],
             'system_prompt_excerpt' => $observation['system_prompt_excerpt'],
             'task_prompt_excerpt' => $observation['task_prompt_excerpt'],
             'expected_output_type' => $observation['expected_output_type'],

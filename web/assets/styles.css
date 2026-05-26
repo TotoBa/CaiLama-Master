@@ -608,8 +608,8 @@ section {
 }
 
 .output-excerpt {
-  max-height: none;
-  overflow: visible;
+  max-height: min(64vh, 980px);
+  overflow: auto;
   padding: 12px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -835,14 +835,15 @@ pre {
 
 pre.output-excerpt {
   padding: 12px;
-  overflow: visible;
+  max-height: min(64vh, 980px);
+  overflow: auto;
   color: var(--ink);
   background: #fffaf0;
   box-shadow: none;
 }
 
 pre.prompt-excerpt {
-  max-height: 360px;
+  max-height: min(52vh, 760px);
   overflow: auto;
 }
 
