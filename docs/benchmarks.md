@@ -195,6 +195,11 @@ Ein Ergebnis enthaelt mindestens:
   wird. Pro Modell werden nacheinander alle Rollenaufgaben fuer alle
   CaiLama-Rollen erzeugt: `router`, `small`, `large`, `task`, `translator`,
   `coach`, `analyst`, `critic`, `vision`, `scribe` und `researcher`. Die
+  Der Runner nutzt die Rollen-Systemprompts aus demselben kopierten
+  `system_prompts/`-Verzeichnis; damit weichen Benchmark und interaktive
+  Console nicht still auseinander. Das ist wichtig fuer Coach-/Vision-Faelle,
+  in denen das Modell keine Bretter oder FENs erfinden darf, sondern nur
+  belegte FENs weitergibt und die Console das Unicode-Brett rendert. Die
   Reihenfolge ist modellzentriert: ein Modell durchlaeuft alle Rollenaufgaben,
   danach startet das naechste Modell. Erst nach der automatischen Rollen-
   Zuordnung startet der teure PTG-Classify-/Analyze-Teil, und dann nur fuer
@@ -226,7 +231,12 @@ Ein Ergebnis enthaelt mindestens:
   Die Rollenprobe nutzt fuer Nicht-Router-Rollen den echten CaiLama-
   `PromptBuilder` inklusive Brettwahrheit-/Kontextbloecken; RAG-/Researcher-
   Faelle holen ihren Kontext vor dem Prompt ueber das echte `search_rag`-Tool
-  und bekommen dadurch denselben Search-Kontext wie der Live-Pfad. Router-
+  und bekommen dadurch denselben Search-Kontext wie der Live-Pfad. Der
+  Search-Seed enthaelt neben kuratiertem Basiswissen den Lichess-ECO-Katalog
+  A-E, damit Eröffnungsnamen und Zugfolgen in Benchmark und Live-Konsole
+  gleich auffindbar sind. Externe Websuche kann ueber eine lokale SearXNG-
+  Instanz angebunden werden; ohne Konfiguration bleibt der interne
+  CaiLama-Search-Pfad massgeblich. Router-
   Probes nutzen denselben kompakten Router-Prompt mit aktueller Toolliste wie
   die interaktive Konsole. Es gibt dadurch keine parallele Benchmark-
   Promptlogik.

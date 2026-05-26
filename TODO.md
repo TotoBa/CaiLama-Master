@@ -253,6 +253,14 @@ Vor Arbeitsbeginn lesen:
   `PromptBuilder` beziehungsweise den echten Router-Prompt; die Website zeigt
   im Blindfeedback den vollstaendigen System- und User-Prompt der Rollenprobe
   ohne Modellnamen oder Verbrauchsklasse.
+  **Update 2026-05-26:** CaiLama laedt die Rollen-Systemprompts nun
+  explizit aus dem kopierten Master-Katalog-Verzeichnis, damit der Benchmark
+  nicht auf alte Built-in-Prompts zurueckfaellt. BoardTruth-Prompts enthalten
+  durchgehend Stockfish-Stellungsbewertung plus Bewertung aller legalen Zuege;
+  nutzernahe Zugnotation wird zusaetzlich deutsch angezeigt, UCI bleibt
+  stabil. Search seedet neben kuratiertem Basiswissen auch den oeffentlichen
+  Lichess-ECO-Katalog A-E, sodass Eröffnungsnamen und Zugfolgen im RAG
+  suchbar sind. CaiLama kann SearXNG als externen Search-Fallback nutzen.
   Offen bleibt die fachliche
   Bewertung der heutigen Laeufe und die Ableitung belastbarer Modell-/Prompt-
   Regeln.

@@ -54,7 +54,7 @@ done
 target_arg=""
 create_dirs="${CAILAMA_DEPLOY_CREATE_DIRS:-0}"
 include_vendor="${CAILAMA_DEPLOY_INCLUDE_VENDOR:-0}"
-deploy_smarty="${CAILAMA_DEPLOY_SMARTY:-1}"
+deploy_smarty="${CAILAMA_DEPLOY_SMARTY:-0}"
 reset_smarty_cache="${CAILAMA_DEPLOY_RESET_SMARTY_CACHE:-1}"
 deploy_method="${CAILAMA_WEB_DEPLOY_METHOD:-}"
 public_url="${CAILAMA_PUBLIC_URL:-https://cailama.org}"
@@ -68,14 +68,14 @@ Usage: scripts/deploy-website.sh [options] [local-target]
 Options:
   --create-dirs    Create remote directories before uploading files.
   --with-vendor    Include web-smarty/vendor in the private upload.
-  --with-smarty    Upload private web-smarty app files (default).
+  --with-smarty    Upload private web-smarty app files.
   --skip-smarty    Upload public web/ only.
   --no-cache-reset Do not clear remote Smarty/opcache after upload.
   --full           Equivalent to --create-dirs --with-vendor --with-smarty.
   -h, --help       Show this help.
 
-Default SFTP mode uploads code only, assumes directories already exist, and
-skips third-party vendor libraries.
+Default SFTP mode uploads public web/ code only, assumes directories already
+exist, and skips private Smarty app files and third-party vendor libraries.
 USAGE
 }
 

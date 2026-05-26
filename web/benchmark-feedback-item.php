@@ -70,6 +70,50 @@ function candidate_label(array $row): string
     );
 }
 
+function render_model_output(string $text): string
+{
+    if ($text === '') {
+        return '<p class="notice">Keine Modellausgabe hinterlegt.</p>';
+    }
+
+    $parts = preg_split(
+        '/(<think>|<\/think>)/i',
+        $text,
+        -1,
+        PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+    );
+    if ($parts === false || $parts === []) {
+        return '<pre class="output-excerpt model-output-full">' . h($text) . '</pre>';
+    }
+
+    $html = '<div class="model-output-blocks">';
+    $inThinking = false;
+    $seenThinkTag = false;
+    foreach ($parts as $part) {
+        $lower = strtolower($part);
+        if ($lower === '<think>') {
+            $inThinking = true;
+            $seenThinkTag = true;
+            continue;
+        }
+        if ($lower === '</think>') {
+            $inThinking = false;
+            continue;
+        }
+        if ($part === '') {
+            continue;
+        }
+        $label = $inThinking ? 'Thinking' : ($seenThinkTag ? 'Antwort' : 'Modellausgabe');
+        $class = $inThinking ? 'thinking-output' : 'answer-output';
+        $html .= '<section class="model-output-section ' . $class . '">';
+        $html .= '<strong>' . h($label) . '</strong>';
+        $html .= '<pre class="output-excerpt model-output-full">' . h($part) . '</pre>';
+        $html .= '</section>';
+    }
+    $html .= '</div>';
+    return $html;
+}
+
 function benchmark_piece_config(array $config): array
 {
     $feedback = is_array($config['benchmark_feedback'] ?? null) ? $config['benchmark_feedback'] : [];
@@ -487,7 +531,7 @@ $preferenceOptions = [
 
               <div>
                 <strong>Modellausgabe</strong>
-                <pre class="output-excerpt"><?= h((string) ($observation['output_excerpt'] ?? '')) ?></pre>
+                <?= render_model_output((string) ($observation['output_excerpt'] ?? '')) ?>
               </div>
 
               <div

@@ -3,6 +3,7 @@
   "description": "Editable CaiLama chess model-role benchmark catalog. Every task is chess-related. The runner builds prompts through the real CaiLama PromptBuilder or router prompt path and exports full system/user prompts for blind feedback.",
   "default_tasks_per_role": 10,
   "prompt_template": "prompt_templates/role_task.md",
+  "system_prompt_dir": "system_prompts",
   "roles": {
     "router": {
       "tasks": [

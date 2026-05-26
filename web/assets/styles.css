@@ -502,7 +502,7 @@ section {
 }
 
 .feedback-item-workspace {
-  width: min(calc(100vw - 24px), 1580px);
+  width: min(calc(100vw - 24px), 1480px);
 }
 
 .feedback-toolbar,
@@ -548,7 +548,7 @@ section {
 
 .feedback-item-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 400px);
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
   gap: 18px;
   align-items: start;
 }
@@ -618,6 +618,33 @@ section {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   box-shadow: none;
+}
+
+.model-output-blocks {
+  display: grid;
+  gap: 12px;
+}
+
+.model-output-section {
+  display: grid;
+  gap: 6px;
+}
+
+.model-output-section > strong {
+  color: var(--ink);
+}
+
+.model-output-section.thinking-output > strong {
+  color: var(--blue);
+}
+
+.model-output-section.thinking-output pre {
+  border-left: 4px solid var(--blue);
+  background: #f5f0e7;
+}
+
+pre.model-output-full {
+  max-height: none;
 }
 
 .detail-grid {
@@ -845,6 +872,10 @@ pre.output-excerpt {
 pre.prompt-excerpt {
   max-height: min(52vh, 760px);
   overflow: auto;
+}
+
+.benchmark-observation-detail pre.model-output-full {
+  max-height: none;
 }
 
 code {

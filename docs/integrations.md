@@ -69,7 +69,12 @@ Zu klaerende bzw. laufend zu pruefende Punkte:
 - SearchAdapter in CaiLama als Standardpfad vor browserbasierter Websuche.
 - Normalisierte `items`/`results` aus `/v1/search` und `context`/`sources` aus
   `/v1/context` synchron halten.
-- Browserbasierter Webpfad nur als expliziter Fallback.
+- Externer Webpfad bevorzugt ueber lokale SearXNG-JSON-Suche
+  (`search_api.searxng_url`, `CAILAMA_SEARXNG_URL` oder `SEARXNG_URL`);
+  browserbasierter Webpfad nur als nachrangiger Fallback.
+- `seed-knowledge` spielt neben kuratiertem Basiswissen auch den versionierten
+  Lichess-ECO-Katalog A-E in `web_chunks`, damit Eröffnungsnamen und
+  Zugfolgen in Benchmark und interaktiver Konsole gleich auffindbar sind.
 - Quellenprovenienz bei RAG-Antworten sichtbar halten.
 - DWZ-Identity-Linking mit Ambiguitaetsbehandlung und PII-Minimierung.
 - Search-/RAG-Ergebnisse fuer Benchmarks so exportieren, dass Recall, MRR,

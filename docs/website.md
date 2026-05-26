@@ -183,11 +183,11 @@ cd web-smarty
 composer install --no-dev --optimize-autoloader
 ```
 
-Live-Deployment ist ein nativer SFTP-Upload von `web/` nach `public/` und
-`web-smarty/` nach `smarty/`. Der Standardmodus ist bewusst schlank: Es wird
-Code hochgeladen, bestehende Zielordner werden vorausgesetzt und
-`web-smarty/vendor/` bleibt unberuehrt. Ordneranlage und Dependency-Upload
-werden nur mit expliziten Flags ausgefuehrt.
+Live-Deployment ist ein nativer SFTP-Upload von `web/` nach `public/`. Der
+Standardmodus ist bewusst schlank: Es wird nur oeffentlicher Website-Code
+hochgeladen, bestehende Zielordner werden vorausgesetzt, `web-smarty/` und
+`web-smarty/vendor/` bleiben unberuehrt. Private Smarty-Dateien,
+Ordneranlage und Dependency-Upload werden nur mit expliziten Flags ausgefuehrt.
 
 Standardbefehl:
 
@@ -212,12 +212,13 @@ Das Skript:
 1. ermittelt das Git-Root,
 2. prüft `web/`, `web-smarty/`, `web-smarty/bootstrap.php` und
    `web-smarty/vendor/autoload.php`,
-3. lädt zuerst `web-smarty/` ohne `vendor/` in den privaten Smarty-Zielordner,
-   sofern `--skip-smarty` nicht gesetzt ist,
-4. lädt danach `web/` per OpenSSH-`sftp` in den öffentlichen Document Root,
+3. lädt `web-smarty/` nur bei `--with-smarty` oder `--full` in den privaten
+   Smarty-Zielordner; `vendor/` nur zusaetzlich bei `--with-vendor`/`--full`,
+4. lädt `web/` per OpenSSH-`sftp` in den öffentlichen Document Root,
 5. entfernt stale Dateien anhand getrennter SFTP-Deploy-Manifeste,
 6. schützt die echte, ignorierte `web/api_app/config.local.php` vor Löschung,
-7. leert beim Standard-Live-Ziel OPcache und den privaten Smarty-Cache,
+7. leert beim Standard-Live-Ziel OPcache und, sofern vorhanden, den privaten
+   Smarty-Cache,
 8. prüft beim Standard-Live-Ziel die gerenderten öffentlichen Seiten,
    statischen Dateien und LLM-Referenzen per SHA-256 über HTTPS.
 
@@ -253,6 +254,7 @@ lokale Pfade und Secrets dürfen weiterhin nicht importiert werden.
 Deploy-Flags:
 
 - `--create-dirs`: Remote-Ordner vor dem Upload anlegen.
+- `--with-smarty`: private `web-smarty/`-App-Dateien mit hochladen.
 - `--with-vendor`: `web-smarty/vendor/` mit hochladen.
 - `--skip-smarty`: nur `web/` hochladen.
 - `--no-cache-reset`: OPcache/Smarty-Cache nach dem Upload nicht leeren.
