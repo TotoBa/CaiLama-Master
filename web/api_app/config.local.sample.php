@@ -14,7 +14,7 @@ return [
         [
             'name' => 'local-sync',
             'hash' => 'sha256:replace_with_sha256_hash_of_bearer_token',
-            'scopes' => ['status:read', 'db_import:write', 'db_import:reset', 'admin'],
+            'scopes' => ['status:read', 'db_import:write', 'db_import:reset', 'benchmark:write', 'benchmark:feedback', 'admin'],
         ],
     ],
     'imports' => [

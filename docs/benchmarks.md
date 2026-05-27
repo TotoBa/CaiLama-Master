@@ -128,6 +128,25 @@ Laufs; bereits bewertete Kandidaten verschwinden aus der Liste. Ein Klick auf
 dem Speichern automatisch den naechsten offenen Fall, damit lange Laeufe zuegig
 und ohne Modell-Bias bewertet werden koennen.
 
+Für agentengestützte Auswertung gibt es zusätzlich geschützte API-Endpunkte:
+
+- `POST /api/v1/benchmarks/feedback/open` mit Scope `benchmark:feedback` oder
+  `admin` liefert offene Beobachtungen inklusive Aufgabe, Promptauszügen,
+  Modellausgabe, Metriken, Kandidaten-Code und Run-Übersicht. `run_key`,
+  `limit` und `include_model_labels` sind optionale Body-Felder;
+  Modellnamen werden nur mit `admin`-Scope ausgeliefert.
+- `POST /api/v1/benchmarks/feedback` mit Scope `benchmark:feedback` oder
+  `admin` speichert ein Feedback-Objekt oder ein `feedback`-Array. Erforderlich
+  sind `observation_id`, `quality_score`, `task_solution_score`,
+  `duration_score`, `logic_error_level` und `preferred_option`; optionale Felder
+  sind `translation_score`, `feedback_text`, `improvement_note` und
+  `translation_note`.
+- `POST /api/v1/benchmarks/feedback/summary` liefert rollen- und
+  modellgruppierte Aggregationen, Fehlerklassen pro Rolle/Kandidat und
+  Rollenempfehlungen mit bester Kandidat, Ausschlussgruenden und offenen
+  Vertragsfehlern. Modellnamen werden nur mit `admin`-Scope und
+  `include_model_labels` ausgeliefert.
+
 ## Ergebnisformat
 
 Neue Benchmark-Ergebnisse sollen als klare Master-Artefakte abgelegt werden,
@@ -216,8 +235,10 @@ Ein Ergebnis enthaelt mindestens:
   als Feedbackfaelle importiert und brechen den Gesamtlauf nicht ab. Router-/
   Provider-Fehler 429/500/503 werden pro LLM-Call bis zu drei Mal mit
   Wartezeit wiederholt; erst danach wird der Fall als Fehler exportiert.
-  Leere Modellantworten werden automatisch als Strukturfehler geschlossen,
-  damit sie nicht in der manuellen Bewertung landen. Strukturfehler
+  Leere Modellantworten und konkrete Vertragsfehlerklassen wie `invalid_json`,
+  `missing_required_field`, `unexpected_tool`, `boardtruth_conflict`,
+  `empty_optional_field_reference` oder `missing_citation` werden automatisch
+  geschlossen, damit sie nicht in der manuellen Bewertung landen. Strukturfehler
   koennen serverseitig automatisch als nicht manuell bewertbar geschlossen
   werden. Unerwartete, aber formal strukturierte Tool-Aufrufe bleiben als
   menschlich zu bewertende Feedback-Faelle offen. Der Website-Upload streamt

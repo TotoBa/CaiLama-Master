@@ -14,7 +14,7 @@ $config = [
          * [
          *   'name' => 'local-sync',
          *   'hash' => 'sha256:<hash-of-bearer-token>',
-         *   'scopes' => ['status:read', 'db_import:write', 'db_import:reset', 'benchmark:write', 'admin'],
+         *   'scopes' => ['status:read', 'db_import:write', 'db_import:reset', 'benchmark:write', 'benchmark:feedback', 'admin'],
          * ]
          */
     ],

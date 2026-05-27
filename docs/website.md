@@ -353,6 +353,9 @@ POST /api/v1/status
 POST /api/v1/imports/cailama/append
 POST /api/v1/imports/cailama/reset
 POST /api/v1/benchmarks/observations
+POST /api/v1/benchmarks/feedback/open
+POST /api/v1/benchmarks/feedback
+POST /api/v1/benchmarks/feedback/summary
 POST /api/v1/benchmarks/feedback/export
 POST /api/v1/benchmarks/reset
 POST /api/v1/admin/schema/cailama
@@ -369,7 +372,10 @@ begrenzten JSON-Body mit secretfreien Beobachtungszeilen an. Gesendet wird nur
 ein Bearer-Key mit passendem Scope: `status:read` für Status,
 `db_import:write` für Append-Import, `db_import:reset` für Reset-Import,
 `benchmark:write` oder `admin` für Benchmark-Beobachtungen oder `admin` für
-Feedback-Export, Schema-Setup, Benchmark-Reset und Admin-Aktionen. Ohne gültigen Key liefert die API keine API-,
+Benchmark-Feedback-Lesen/-Schreiben nutzt `benchmark:feedback` oder `admin`;
+Modellnamen werden bei `feedback/open` nur mit `admin`-Scope ausgeliefert.
+Feedback-Export, Schema-Setup, Benchmark-Reset und Admin-Aktionen erfordern
+`admin`. Ohne gültigen Key liefert die API keine API-,
 DB-, Schema-, Import- oder Benchmarkdetails. Der Import-Modus wird über den Pfad gewählt: `append`
 fügt erlaubte Insert-Daten in die bestehende CaiLama-Datenbank ein; `reset`
 ist nur aktiv, wenn `allow_reset` in der lokalen Konfiguration bewusst gesetzt
@@ -464,16 +470,25 @@ Feedbacklauf nicht blockieren; die PTG-Tiefenanalyse bleibt separat. Lokale
 Benchmark-Artefakte duerfen Router-Backend-/Provider-/Fallback-Metriken
 speichern, die Website zeigt diese technische Zuordnung aber nicht im
 Bewertungsformular.
-Harte Strukturfehler (`structure_failed`) wie falsche Router-Toolwahl,
-ungueltige JSON-Struktur, fehlende Quellenmarker oder verbotene FEN-Ausgabe
-werden beim Import automatisch als nicht manuell bewertbare Fehlerfaelle
-geschlossen. Dadurch bleibt die offene Feedbackliste auf inhaltlich noch zu
-bewertende Antworten fokussiert.
+Harte Strukturfehler und konkrete Fehlerklassen wie `invalid_json`,
+`missing_required_field`, `unexpected_tool`, `boardtruth_conflict`,
+`empty_optional_field_reference`, fehlende Quellenmarker oder verbotene
+FEN-Ausgabe werden beim Import automatisch als nicht manuell bewertbare
+Fehlerfaelle geschlossen. Dadurch bleibt die offene Feedbackliste auf
+inhaltlich noch zu bewertende Antworten fokussiert.
 Für interne Auswertungen steht zusätzlich
-`POST /api/v1/benchmarks/feedback/export` mit Admin-Scope bereit. Der Endpunkt
-liefert Feedbackzeilen mit Kandidaten-Code; Modellnamen werden nur auf
-explizite Admin-Anforderung im JSON-Body ergänzt und bleiben nicht Teil des
-Blind-Feedbackformulars.
+`POST /api/v1/benchmarks/feedback/open` für offene Fälle und
+`POST /api/v1/benchmarks/feedback` zum Speichern agentengestützter Bewertungen
+bereit. Beide Endpunkte akzeptieren `benchmark:feedback` oder `admin`; der
+Open-Endpunkt liefert Modellnamen nur bei `admin` und explizitem
+`include_model_labels`. `POST /api/v1/benchmarks/feedback/summary` liefert
+rollen- und modellgruppierte Aggregationen, Fehlerklassen und
+Rollenempfehlungen; Modellnamen werden ebenfalls nur bei `admin` und
+explizitem `include_model_labels` ausgeliefert.
+`POST /api/v1/benchmarks/feedback/export` erfordert
+weiterhin Admin-Scope und liefert Feedbackzeilen mit Kandidaten-Code;
+Modellnamen werden nur auf explizite Admin-Anforderung im JSON-Body ergänzt und
+bleiben nicht Teil des Blind-Feedbackformulars.
 
 Wenn eine importierte Beobachtung eine FEN enthält, rendert die Feedback-Seite
 ein responsives 8x8-Brett. Figurensätze sind konfigurierbar über
