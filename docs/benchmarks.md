@@ -213,8 +213,11 @@ Ein Ergebnis enthaelt mindestens:
   ausgeschlossen, solange `--include-local-models` nicht explizit gesetzt
   wird. Pro Modell werden nacheinander alle Rollenaufgaben fuer alle
   CaiLama-Rollen erzeugt: `router`, `small`, `large`, `task`, `translator`,
-  `coach`, `analyst`, `critic`, `vision`, `scribe` und `researcher`. Die
-  Der Runner nutzt die Rollen-Systemprompts aus demselben kopierten
+  `coach`, `analyst`, `critic`, `vision`, `scribe` und `researcher`.
+  `router`-Aufgaben laufen ueber `ModelRouter.decide()`, `task`-Aufgaben ueber
+  einen begrenzten `AgentLoop`; beide verwenden dieselben Parser und
+  Output-Vertraege wie die Console. Der Runner nutzt die Rollen-Systemprompts
+  aus demselben kopierten
   `system_prompts/`-Verzeichnis; damit weichen Benchmark und interaktive
   Console nicht still auseinander. Das ist wichtig fuer Coach-/Vision-Faelle,
   in denen das Modell keine Bretter oder FENs erfinden darf, sondern nur

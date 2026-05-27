@@ -142,7 +142,25 @@ function load_results(PDO $pdo, array $filters): array
     $feedback = $pdo->prepare($feedbackSql);
     $feedback->execute($feedbackParams);
 
-    return [$summary->fetchAll(), $feedback->fetchAll()];
+    $errorParams = [];
+    $errorWhere = filter_clause($filters, $errorParams, 'o.');
+    $errorSql =
+        "SELECT
+            o.run_key,
+            c.role_name,
+            o.error_status,
+            COUNT(*) AS error_count,
+            COUNT(DISTINCT o.model_label) AS candidate_count
+         FROM cailama_model_benchmark_observations o
+         INNER JOIN cailama_model_benchmark_cases c ON c.id = o.case_id"
+        . ($errorWhere === '' ? " WHERE o.error_status <> ''" : $errorWhere . " AND o.error_status <> ''") .
+        " GROUP BY o.run_key, c.role_name, o.error_status
+          ORDER BY o.run_key DESC, c.role_name, error_count DESC, o.error_status
+          LIMIT 120";
+    $errors = $pdo->prepare($errorSql);
+    $errors->execute($errorParams);
+
+    return [$summary->fetchAll(), $feedback->fetchAll(), $errors->fetchAll()];
 }
 
 $filters = [
@@ -154,10 +172,11 @@ $filters = [
 $loadError = null;
 $summary = [];
 $feedbackRows = [];
+$errorRows = [];
 
 try {
     $pdo = ConnectionFactory::fromConfig($config, 'cailama');
-    [$summary, $feedbackRows] = load_results($pdo, $filters);
+    [$summary, $feedbackRows, $errorRows] = load_results($pdo, $filters);
 } catch (Throwable) {
     $loadError = 'Die Benchmark-Datenbank ist noch nicht bereit. Bitte zuerst das aktuelle Datenbankschema einspielen.';
 }
@@ -255,6 +274,33 @@ try {
               </tbody>
             </table>
           </div>
+
+          <?php if ($errorRows !== []): ?>
+            <h2>Fehlerklassen</h2>
+            <p class="muted">Harte Vertragsfehler werden gruppiert angezeigt, damit Rollenprobleme und Prompt-/Output-Brueche sichtbar bleiben.</p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Lauf/Rolle</th>
+                    <th>Fehlerklasse</th>
+                    <th>Fälle</th>
+                    <th>Kandidaten</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($errorRows as $row): ?>
+                    <tr>
+                      <td><strong><?= h((string) $row['role_name']) ?></strong><br><span class="muted"><?= h((string) $row['run_key']) ?></span></td>
+                      <td><span class="status-pill error-pill"><?= h((string) $row['error_status']) ?></span></td>
+                      <td><?= h((string) $row['error_count']) ?></td>
+                      <td><?= h((string) $row['candidate_count']) ?></td>
+                    </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
+          <?php endif; ?>
 
           <?php if ($feedbackRows !== []): ?>
             <div class="table-wrap">

@@ -440,8 +440,9 @@ Es gibt keine öffentliche Kontoanlage und keinen Registrierungsendpunkt. Nutzer
 werden direkt als `web_users` in der Provider-Datenbank angelegt. Die Seite
 `/benchmark-feedback.php` ist nur nach Login erreichbar und nutzt dieselbe
 Session. Die zusätzliche Seite `/benchmark-feedback-results.php` zeigt
-geschützte Blind-Aggregationen nach Lauf, Rolle, Fall und Kandidat. Beide
-Seiten bleiben `noindex`/`nofollow`. Gespeichert werden wiederverwendbare
+geschützte Blind-Aggregationen nach Lauf, Rolle, Fall und Kandidat sowie
+Fehlerklassen pro Lauf/Rolle. Beide Seiten bleiben `noindex`/`nofollow`.
+Gespeichert werden wiederverwendbare
 Bewertungsdaten für Modellrollen in `cailama_model_benchmark_cases`,
 `cailama_model_benchmark_observations` und `cailama_model_feedback`:
 Laufzeit, Input-/Thinking-/Output-/Total-Tokens, Verbrauchsklasse,
