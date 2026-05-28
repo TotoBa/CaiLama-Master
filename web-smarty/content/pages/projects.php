@@ -42,8 +42,8 @@ return [
             'tag_class' => 'red',
             'repo_url' => 'https://github.com/TotoBa/CaiLama-Search',
             'summary' => 'CaiLama-Search ist der schachspezifische Search-, DWZ- und RAG-Dienst. Er stellt kontrollierten Kontext bereit, ohne CaiLama direkt an Meilisearch oder externe Websuche zu koppeln.',
-            'status' => 'Search-API, Context-API, DWZ-Pfade, Quellenverwaltung, Jobs, Goldsets, Observability, RAG-Provenienz, Source-Quality-Kennzahlen, Datenvertrag, Benchmark-Export und optionale semantische Suche sind umgesetzt oder vorbereitet. Filter+Hybrid und Multi-Index-Response sind behoben; lexical und hybrid erreichen im Goldset beide Pass-Rate 1.0.',
-            'open' => 'Offen bleibt die produktive Freigabeentscheidung für Hybrid auf größerem Eval. DWZ-Staging ist offline verifiziert; semantic.enabled bleibt default false.',
+            'status' => 'Search-API, Context-API, DWZ-Pfade, Quellenverwaltung, Jobs, Goldsets, Observability, RAG-Provenienz, Source-Quality-Kennzahlen, Datenvertrag, Benchmark-Export und optionale semantische Suche sind umgesetzt oder vorbereitet. Filter+Hybrid und Multi-Index-Response sind behoben; lexical und hybrid erreichen im Goldset beide Pass-Rate 1.0. Der aktuelle SVW/DSB-DWZ-v2-Import ist live verifiziert und reichert Spieler mit Verein und Bezirk an.',
+            'open' => 'Offen bleibt die produktive Freigabeentscheidung für Hybrid auf größerem Eval. Die Source-Registry enthält jetzt offene Kernquellen und rechtekritische Kandidaten; als Nächstes müssen Source-Policy-Gates verhindern, dass ungeklärte Quellen als Volltext- oder Trainingskorpus genutzt werden.',
         ],
         [
             'id' => 'master',
@@ -52,8 +52,8 @@ return [
             'tag_class' => 'moss',
             'repo_url' => 'https://github.com/TotoBa/CaiLama-Master',
             'summary' => 'Der Master ist Website, Roadmap, Status, Betrieb und Ecosystem-Dokumentation. Er enthält keine Runtime-Logik der Unterprojekte.',
-            'status' => 'cailama.org läuft als PHP-Webspace mit öffentlichem Document Root, privatem Smarty-App-Bereich, Login, geschütztem Benchmark-Feedback, LLM-Referenzen, JSON-Referenz, Sitemap, robots.txt, Deployment-Skript und Webspace-DB-API-Fassade.',
-            'open' => 'Benchmark-Feedback mit Router-/CaiLama-Metriken verbinden, Unterrepo-Status regelmäßig synchronisieren, Runtime/Webseite deployen und die Inhalte datengetrieben aktuell halten.',
+            'status' => 'cailama.org läuft als PHP-Webspace mit öffentlichem Document Root, privatem Smarty-App-Bereich, Login, geschütztem Benchmark-Feedback, LLM-Referenzen, JSON-Referenz, Sitemap, robots.txt, Deployment-Skript und Webspace-DB-API-Fassade. Automatisch bewertbare Benchmarkfälle können per Feedback-Agent über die geschützte API geschlossen werden.',
+            'open' => 'Menschliches Benchmark-Feedback auswerten, Unterrepo-Status regelmäßig synchronisieren, Runtime/Webseite deployen und die Inhalte datengetrieben aktuell halten.',
         ],
     ],
 ];

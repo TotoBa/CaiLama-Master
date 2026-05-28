@@ -76,10 +76,21 @@ Zu klaerende bzw. laufend zu pruefende Punkte:
   Lichess-ECO-Katalog A-E in `web_chunks`, damit Eröffnungsnamen und
   Zugfolgen in Benchmark und interaktiver Konsole gleich auffindbar sind.
 - Quellenprovenienz bei RAG-Antworten sichtbar halten.
+- Quellen tragen Rechte-/Zugriffsmarker (`source_license`, `access_mode`,
+  `usage_policy`, `ugc_level`, `annotation_level`, `rights_reviewed`), damit
+  CaiLama offene Volltextquellen, offizielle Referenzen und nur referenziell
+  nutzbare Kandidaten unterscheiden kann.
 - DWZ-Identity-Linking mit Ambiguitaetsbehandlung und PII-Minimierung.
+- DWZ-Daten kommen produktnah aus dem aktuellen SVW/DSB-v2-Gesamtexport; der
+  Importpfad reichert Spieler mit Verein und Verband an. Live verifiziert:
+  `baublies`, `baublies, torsten`, `torsten baublies`,
+  `Ratinger Schachklub`.
 - Search-/RAG-Ergebnisse fuer Benchmarks so exportieren, dass Recall, MRR,
   Zero-Hit-Rate, Latenz und Quellenqualitaet im Master dokumentierbar sind,
   ohne Rohqueries, private Texte oder Credentials zu speichern.
+- Source-Registry-Metadaten muessen verhindern, dass offene Quellen,
+  offizielle Referenzen und rechtekritische Kandidaten in Benchmarks oder
+  spaeteren Trainingsdaten vermischt werden.
 
 ### CaiLama -> Training/Benchmark-Artefakte
 

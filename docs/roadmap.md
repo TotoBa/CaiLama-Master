@@ -115,9 +115,16 @@ Koordinationspunkte:
 - Umgesetzt: Docker-faehiger Vergleich `lexical` gegen `hybrid` und
   Ergebnisbericht fuer den Master; filter+hybrid-500er und Multi-Index-
   Normalisierung sind behoben, beide Modi erreichen Pass-Rate 1.0.
+- Umgesetzt: aktueller SVW/DSB-DWZ-v2-Liveimport mit
+  `spieler.csv`/`vereine.csv`/`verbaende.csv`, Verein-/Verbandsanreicherung
+  und verifizierten Namens-/Vereinssuchen (`baublies`, `torsten baublies`,
+  `Ratinger Schachklub`).
+- Umgesetzt: Webquellen-Bericht in `sources.yaml` uebernommen. Offene
+  Kernquellen wie Wikibooks, Stockfish und Lc0 sind aktiv; rechte- oder
+  UGC-sensible Kandidaten bleiben deaktiviert und tragen Review-Metadaten.
 - Naechster Search-Fokus: Entscheidung, ob Hybrid auf groesserem Eval
-  produktiv freigegeben wird. DWZ-Staging-Verifikation ist offline erledigt;
-  echter Live-Import bleibt zustimmungspflichtig.
+  produktiv freigegeben wird, plus Source-Policy-Gates fuer ungeklaerte
+  Volltext-/Trainingsnutzung.
 
 ## Danach
 
@@ -221,6 +228,10 @@ Koordinationspunkte:
   CaiLama-, Router- und Search-Ergebnisse vergleichbar bleiben.
 - Die Modellrollen-Hypothese ist als Matrix dokumentiert und wird ueber
   geschuetztes Website-Feedback messbar gemacht.
+- Automatisch bewertbare Struktur-, Tool-, Fehler-, Dauer- und
+  Basisqualitaets-Faelle koennen per `scripts/benchmark_feedback_agent.py`
+  ueber die geschuetzte Website-API geschlossen werden; menschliches Feedback
+  bleibt fuer Schachintuition und echte Analysequalitaet massgeblich.
 - Pflichtmetriken fuer Modellrollen: Dauer, Input-/Thinking-/Output-Tokens,
   Qualitaetsurteil, Aufgabenloesung, Logikfehler-Klasse und A/B-Praeferenz.
 - Ergebnisdateien duerfen nur synthetische, anonymisierte oder bewusst

@@ -86,6 +86,11 @@ Vor Arbeitsbeginn lesen:
   `context`/`sources` und DWZ-Endpunkte **in `docs/integrations.md` als
   Response-Vertrag ergaenzt**; Website (`ecosystem-reference.md` und
   `ecosystem.json`) sind synchron.
+  Update 2026-05-28: Der aktuelle SVW/DSB-DWZ-v2-Liveimport ist in Search
+  umgesetzt und verifiziert; `baublies`, `baublies, torsten`,
+  `torsten baublies` und `Ratinger Schachklub` liefern Treffer mit
+  Verein/Bezirk. Die Source-Registry enthaelt zusaetzlich offene Kernquellen
+  und deaktivierte rechtekritische Kandidaten mit Rechte-/Zugriffsmetadaten.
 - [x] Kimi-CLI-Ecosystem-Skill nach erstem realen Kimi-Lauf geprueft und
   geschaerft: `skills/kimi-cli-cailama-ecosystem/SKILL.md` enthaelt jetzt
   explizite Initialisierungspruefungen (`pwd`, `git rev-parse`,
@@ -258,12 +263,19 @@ Vor Arbeitsbeginn lesen:
   nicht auf alte Built-in-Prompts zurueckfaellt. BoardTruth-Prompts enthalten
   durchgehend Stockfish-Stellungsbewertung plus Bewertung aller legalen Zuege;
   nutzernahe Zugnotation wird zusaetzlich deutsch angezeigt, UCI bleibt
-  stabil. Search seedet neben kuratiertem Basiswissen auch den oeffentlichen
+  als technische Referenz stabil. Search seedet neben kuratiertem Basiswissen
+  auch den oeffentlichen
   Lichess-ECO-Katalog A-E, sodass Eröffnungsnamen und Zugfolgen im RAG
   suchbar sind. CaiLama kann SearXNG als externen Search-Fallback nutzen.
   Offen bleibt die fachliche
   Bewertung der heutigen Laeufe und die Ableitung belastbarer Modell-/Prompt-
   Regeln.
+  **Update 2026-05-28:** `scripts/benchmark_feedback_agent.py` ist als
+  secretfreier Master-CLI-Client fuer die geschuetzte Feedback-API
+  dokumentiert und getestet. Der Agent verarbeitet automatisch bewertbare
+  Struktur-, Tool-, Fehler-, Dauer- und Basisqualitaets-Faelle, laesst
+  Modellnamen standardmaessig verborgen und ersetzt kein menschliches Feedback
+  fuer Schachintuition oder echte Analysequalitaet.
 - [ ] Spaeteres spezialisiertes LLM-Training als Roadmap-Hebel vorbereiten:
   erst nach Benchmark-Baseline, Datenfreigabe, sauberer Test-/Eval-/Train-
   Trennung und Datenschutzklaerung planen. Modelle werden nur ueber den
@@ -302,8 +314,13 @@ Vor Arbeitsbeginn lesen:
   das Website-Feedback sind im Goldset-/Benchmark-Vertrag umgesetzt
   (Provenienz-Abdeckung, Quellen pro Fall, Domain-Diversitaet als Count,
   Freshness-Signal-Rate und Herkunftstypen; keine URLs/Domains im Export).
+  Search-Update 2026-05-28: aktueller SVW/DSB-DWZ-v2-Import mit
+  Verein-/Verbandsanreicherung ist live verifiziert; die Webquellen-
+  Recherche wurde in `sources.yaml` uebernommen und der Crawler bewahrt
+  Rechte-/Zugriffsmetadaten fuer RAG- und spaetere Trainingsentscheidungen.
   Offen bleibt die semantische Freigabeentscheidung auf groesserem Eval und
-  API-/README-Pflege bei neuen Vertragsaenderungen.
+  ein haerteres Source-Policy-Gate fuer rechtekritische oder UGC-lastige
+  Quellen.
 
 ## Kimi-Handoff
 

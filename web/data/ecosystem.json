@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "generated_for": "CaiLama ecosystem documentation",
-  "last_reviewed": "2026-05-26",
+  "last_reviewed": "2026-05-28",
   "features_added": [
     "Review-Gate for key-position selection after Stockfish analysis",
     "Plan mode with heuristic or LLM-backed task planning",
@@ -14,7 +14,10 @@
     "OCR/FEN validity gates and analysis/training quality gates beyond PTG",
     "Profile export and confirmed profile deletion",
     "Privacy-safe RAG/researcher source_quality metrics in Search goldset and benchmark exports",
-    "Model-role benchmark feedback now shows model question, full prompts within import limits, live RAG context and full answer payloads within MEDIUMTEXT limits"
+    "Model-role benchmark feedback now shows model question, full prompts within import limits, live RAG context and full answer payloads within MEDIUMTEXT limits",
+    "Benchmark feedback agent can process automatically assessable open observations through the protected website API",
+    "CaiLama-Search supports the current SVW/DSB DWZ v2 ZIP export and enriches players with club and association data",
+    "CaiLama-Search source registry now carries rights and access metadata for open, official, commercial and UGC-sensitive sources"
   ],
   "canonical_url": "https://cailama.org/",
   "language": "de",
@@ -230,12 +233,17 @@
         "privacy-safe RAG/researcher source_quality metrics cover provenance, source count, unique domain count, freshness signals and source types without exporting URLs or domains",
         "Docker-capable lexical versus hybrid benchmark comparison is documented; filter+hybrid and grouped multi-index response fixes are complete with pass rate 1.0 in both modes",
         "DWZ staging verification is implemented as offline ZIP/CSV checks without import or network access",
+        "current SVW/DSB DWZ v2 live import is verified; player rows, club rows and association rows are joined so name, club and association searches work",
+        "verified live DWZ search forms include baublies, baublies, torsten, torsten baublies and Ratinger Schachklub",
+        "sources.yaml includes open core sources such as Wikibooks Opening Theory, Stockfish and Lc0 plus disabled rights-sensitive candidates such as Lichess Studies, Chess.com, ChessBase, 365Chess and Saint Louis",
+        "crawler source metadata now preserves source_license, access_mode, usage_policy, country_scope, ugc_level, annotation_level, rights_reviewed and tags",
         "semantic.enabled remains false by default until a larger eval shows product benefit"
       ],
       "constraints": [
         "No real Meilisearch keys, master keys, admin keys or .env files in repository files.",
         "Live imports, crawls and external network calls require explicit instruction.",
-        "Do not rely on disabled tokenized DWZ interfaces."
+        "Do not rely on disabled tokenized DWZ interfaces.",
+        "Disabled or rights-sensitive sources must not become fulltext or training corpora before robots, license and product usage are reviewed."
       ]
     }
   ],
@@ -264,7 +272,9 @@
         "POST /v1/search is canonical; GET /v1/search?q=... remains compatible.",
         "POST /v1/context accepts query parameters or JSON with query and limit.",
         "Search responses expose native hits and normalized items/results.",
-        "Context responses expose context_blocks plus compatible context/sources."
+        "Context responses expose context_blocks plus compatible context/sources.",
+        "DWZ search is populated from the current v2 bulk export and can expose player, club and association context.",
+        "RAG source records can carry rights and access metadata so open sources, official references and restricted sources stay distinguishable."
       ]
     },
     {
@@ -321,7 +331,7 @@
       "PTG card retrieval and review prioritization after offline artifact generation",
       "CaiLama deterministic scoring, mistake taxonomy and card types are implemented",
       "DWZ identity linking and normalized RAG provenance are implemented in the current agent/researcher paths",
-      "Search benchmark comparison lexical versus hybrid is documented; correctness fixes are complete and hybrid remains default-off pending product decision",
+      "Search benchmark comparison lexical versus hybrid is documented; correctness fixes, DWZ v2 live import and source registry metadata are complete; hybrid remains default-off pending product decision",
       "Router infrastructure hardening is complete with backend API key forwarding, privacy-safe usage metrics, usage CLI and benchmark export",
       "Model-role hypothesis is documented as a benchmark matrix and protected website feedback stores reusable quality data plus imported role-specific run observations in the provider database"
     ],
@@ -330,7 +340,8 @@
       "human review of imported PTG model benchmark observations in the protected website feedback flow",
       "Unified job orchestration for CaiLama and Search",
       "Benchmark framework in Master for cross-repo measurements, website feedback, router usage metrics and result documentation",
-      "Search semantic production decision on a larger eval"
+      "Search semantic production decision on a larger eval",
+      "Search source-policy gate for rights-sensitive and UGC-heavy candidates"
     ],
     "later": [
       "RAG-assisted analysis packages",

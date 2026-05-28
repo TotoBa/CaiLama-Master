@@ -3,7 +3,8 @@
 Zielgruppe: Menschen, Codex, Kimi und andere LLM-Agenten, die schnell den
 aktuellen Systemzuschnitt verstehen müssen.
 
-Stand: 2026-05-24 (CaiLama-/Search-Härtung, Runtime- und Website-Deploy).
+Stand: 2026-05-28 (DWZ-v2-Livefix, Source-Registry-Erweiterung und
+Benchmark-Feedback-Agent).
 
 ## Kurzfassung
 
@@ -266,6 +267,8 @@ Rolle:
 - FastAPI-Zugriffsschicht.
 - Meilisearch-Indizes für Webseiten, Chunks und DWZ-Spielerdaten.
 - Crawler, Quellenlisten und DWZ-Importpfade.
+- Rechte-/Zugriffsmarker für Quellen, damit RAG, Recherche und spätere
+  Trainingsdaten sauber getrennt werden können.
 
 Wichtige Endpunkte:
 
@@ -306,9 +309,18 @@ Aktueller Fokus:
   filter+hybrid-500er und Multi-Index-Response sind behoben, beide Modi
   erreichen Pass-Rate 1.0. `semantic.enabled=false` bleibt Default, bis ein
   größeres Eval einen produktiven Nutzen belegt.
-- DWZ-Staging-Test: `dwz_staging.py` validiert lokale DSB-CSV-ZIP-Artefakte
-  offline ohne Import, Netzwerk oder Meilisearch-Mutation. Live-Download und
-  echter Import bleiben bewusste manuelle Schritte.
+- DWZ-v2-Livepfad ist verifiziert: der aktuelle SVW/DSB-Gesamtexport
+  `LV-0-csv_v2.zip` wird gelesen, alte Semikolon- und aktuelle Komma-CSV
+  werden erkannt, `spieler.csv`, `vereine.csv` und `verbaende.csv` werden
+  gemeinsam verarbeitet und `dwz_players` enthält Verein/Verband.
+  Verifiziert wurden `baublies`, `baublies, torsten`,
+  `torsten baublies` und `Ratinger Schachklub`.
+- `sources.yaml` enthält offene Kernquellen wie Wikibooks Opening Theory,
+  Stockfish und Lc0 sowie deaktivierte rechte-/UGC-sensible Kandidaten wie
+  Lichess Openings/Practice/Studies, Chess.com, ChessBase, 365Chess und
+  Saint Louis. Der Crawler übernimmt `source_license`, `access_mode`,
+  `usage_policy`, `country_scope`, `ugc_level`, `annotation_level`,
+  `rights_reviewed` und `tags` in `web_pages`/`web_chunks`.
 
 Grenzen:
 
@@ -316,6 +328,9 @@ Grenzen:
   committen.
 - Live-Importe, Crawler-Läufe und Netzwerkzugriffe nur auf ausdrücklichen
   Auftrag.
+- Deaktivierte oder rechtekritische Quellen nicht als Volltext- oder
+  Trainingskorpus verwenden, bevor Robots, Lizenz und Produktnutzung geprüft
+  und freigegeben sind.
 
 ## Schnittstellen
 
@@ -346,6 +361,10 @@ Vertrag:
 - Search liefert strukturierte Such- und Kontextantworten.
 - CaiLama normalisiert Resultate über einen SearchAdapter.
 - Quellenprovenienz bleibt sichtbar.
+- DWZ-Suche ist gegen den aktuellen v2-Gesamtexport produktnah gefüllt und
+  kann Personen-, Vereins- und Verbandsbezug liefern.
+- RAG-Quellen tragen Rechte-/Zugriffsmarker, damit offene Quellen, offizielle
+  Referenzen und nur referenziell nutzbare Quellen unterscheidbar bleiben.
 - `/v1/search` ist kanonisch `POST`, bleibt für einfache Clients aber auch
   als `GET` kompatibel. JSON-Felder `query`/`limit` werden akzeptiert.
 - `/v1/context` akzeptiert Query-Parameter oder JSON und liefert kompatible
@@ -440,12 +459,16 @@ Jetzt:
   privacy-safe Token-/Usage-Metriken, `llm-router usage`, Benchmark-Export
   und generische Endpoint-Pfade sind umgesetzt.
 - Search als aktuellen Ausbau-Fokus weiter messen: lexical-vs-hybrid ist
-  benchmarkbar dokumentiert, Filter-/Multi-Index-Bugs, DWZ-Staging und
-  privacy-safe RAG-/Researcher-`source_quality`-Kennzahlen sind erledigt;
-  offen bleibt die Freigabeentscheidung für Hybrid auf größerem Eval.
+  benchmarkbar dokumentiert, Filter-/Multi-Index-Bugs, DWZ-v2-Liveimport,
+  Source-Registry-Metadaten und privacy-safe RAG-/Researcher-
+  `source_quality`-Kennzahlen sind erledigt; offen bleiben die
+  Freigabeentscheidung für Hybrid auf größerem Eval und strengere
+  Source-Policy-Gates.
 - Modellrollen-Hypothese als Benchmark validieren: geschütztes Website-
   Feedback erfasst importierte Laufdaten, Tokenwerte, Qualität,
-  Aufgabenlösung, Logikfehler und A/B-Präferenz.
+  Aufgabenlösung, Logikfehler und A/B-Präferenz; automatisch bewertbare
+  Vertrags-/Struktur-/Dauerfälle können per Master-Feedback-Agent geschlossen
+  werden.
 
 Danach:
 
@@ -455,6 +478,8 @@ Danach:
 - Einheitliche Job-Orchestrierung vorbereiten.
 - Benchmark-Rahmen im Master weiter ausbauen, Website-Feedback mit Router- und
   CaiLama-Metriken verbinden und Ergebnisse repo-übergreifend dokumentieren.
+- Search-Source-Policy so härten, dass offene Volltextquellen, offizielle
+  Referenzen und rechte-/UGC-sensible Kandidaten nicht vermischt werden.
 
 Später:
 

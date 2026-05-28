@@ -147,6 +147,16 @@ Für agentengestützte Auswertung gibt es zusätzlich geschützte API-Endpunkte:
   Vertragsfehlern. Modellnamen werden nur mit `admin`-Scope und
   `include_model_labels` ausgeliefert.
 
+Der Master enthält mit `scripts/benchmark_feedback_agent.py` einen
+secretfreien CLI-Client für diese Feedback-API. Er liest den Bearer-Key aus
+lokaler privater Konfiguration oder Umgebung, bewertet offene Fälle mit
+einfachen rollen- und Ausgabetyp-Heuristiken, schreibt optional eine
+Summary-JSON und zeigt Top-Kandidaten pro Rolle. Standardmäßig bleiben
+Modellnamen verborgen; `--dry-run` prüft offene Fälle ohne Schreibzugriff.
+Der Agent ist für automatisch bewertbare Vertrags-, Struktur-, Dauer- und
+Basisqualitätsfälle gedacht und ersetzt keine fachliche menschliche Bewertung
+von Schachintuition, Analysequalität oder unerwartet sinnvollen Tool-Aufrufen.
+
 ## Ergebnisformat
 
 Neue Benchmark-Ergebnisse sollen als klare Master-Artefakte abgelegt werden,

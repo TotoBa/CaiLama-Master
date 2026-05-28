@@ -251,6 +251,13 @@ Das Schema `cailama-data` speichert dafür in
 Der Controller kürzt nur als technische Schutzgrenze; private PGN-Archive,
 lokale Pfade und Secrets dürfen weiterhin nicht importiert werden.
 
+Für automatisch bewertbare Struktur-, Vertrags-, Dauer- und Basisqualitätsfälle
+steht im Master `scripts/benchmark_feedback_agent.py` bereit. Das Skript nutzt
+die geschützte Feedback-API, liest den Bearer-Key nur aus lokaler privater
+Konfiguration oder Umgebung und lässt Modellnamen im Standardmodus verborgen.
+Fachliche Schachintuition, unerwartet sinnvolle Tool-Aufrufe und echte
+Analysequalität bleiben menschliches Feedback.
+
 Deploy-Flags:
 
 - `--create-dirs`: Remote-Ordner vor dem Upload anlegen.

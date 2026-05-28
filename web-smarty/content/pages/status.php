@@ -58,7 +58,8 @@ return [
             'points' => [
                 'Lexical-vs-Hybrid-Benchmark liegt vor; semantic.enabled bleibt default false.',
                 'Filter+Hybrid, Multi-Index-Response und privacy-safe RAG-/Researcher-Source-Quality-Kennzahlen sind umgesetzt.',
-                'DWZ-Staging ist offline verifiziert; offen bleibt die Freigabeentscheidung für Hybrid auf größerem Eval.',
+                'DWZ-v2-Liveimport ist verifiziert: Baublies- und Ratinger-Schachklub-Suchen liefern Treffer mit Verein und Bezirk.',
+                'Die Source-Registry enthält offene Kernquellen und rechtekritische Kandidaten mit Zugriffs-/Rechtemarkern; offen bleibt die Hybrid-Freigabe auf größerem Eval.',
             ],
         ],
         [
@@ -75,8 +76,8 @@ return [
         ],
     ],
     'next' => [
-        ['title' => 'Jetzt', 'text' => 'Retention und Profilbindung für dateibasierte Trainingskarten und Review-Historien abschließen und Benchmarkmetriken ins geschützte Feedback übernehmen.'],
-        ['title' => 'Danach', 'text' => 'Semantische Freigabe auf größerem Eval und Search/RAG-Kennzahlen weiter gegen Produktfälle messen.'],
+        ['title' => 'Jetzt', 'text' => 'Retention und Profilbindung für dateibasierte Trainingskarten und Review-Historien abschließen und Benchmark-Feedback auswerten.'],
+        ['title' => 'Danach', 'text' => 'Semantische Freigabe auf größerem Eval, Source-Policy-Gates und Search/RAG-Kennzahlen weiter gegen Produktfälle messen.'],
         ['title' => 'Später', 'text' => 'Spezialisierte Modelle erst nach Benchmark-Baseline, Datenfreigabe und Router-kompatibler Bereitstellung.'],
         ['title' => 'Betrieb', 'text' => 'Runtime und Website über secretfreie Skripte deployen, private Smarty-Abhängigkeit getrennt halten und Repos sauber für Kimi übergeben.'],
     ],

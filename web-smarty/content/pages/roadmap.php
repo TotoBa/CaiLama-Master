@@ -45,7 +45,9 @@ return [
                 'Quellenformat ist im Agent-/Researcher-Pfad vereinheitlicht.',
                 'Antworten führen Titel, Quelle/URL oder Herkunft, Stand/Freshness, Verwendungszweck und Unsicherheit.',
                 'Source-Quality-Kennzahlen erfassen Provenienz, Quellenanzahl, Domain-Diversität als Count, Freshness-Signale und Herkunftstypen ohne URL-/Domain-Export.',
-                'DWZ-Staging ist offline verifiziert; echte Live-Importe bleiben zustimmungspflichtig.',
+                'DWZ-v2-Liveimport ist verifiziert; Namens- und Vereinssuchen liefern Spieler, Verein und Bezirk.',
+                'Source-Registry-Metadaten trennen offene Volltextquellen, offizielle Referenzen und rechtekritische Kandidaten.',
+                'Source-Policy-Gates für ungeklärte kommerzielle oder UGC-lastige Quellen schärfen.',
                 'Hybrid bleibt trotz behobener Korrektheitsfehler bis zur Produktentscheidung default-off.',
             ],
         ],
@@ -56,6 +58,7 @@ return [
             'items' => [
                 'Search-Benchmark lexical vs hybrid und PTG-Offline-Baseline im Master dokumentiert halten.',
                 'Modellrollen-Hypothese über geschütztes Website-Feedback messen.',
+                'Automatisch bewertbare Struktur-, Tool-, Fehler- und Dauerfälle per Feedback-Agent schließen.',
                 'Router-Benchmark-Exports einsammeln.',
                 'OCR/FEN-False-Positive- und Validitätsgates dokumentiert halten.',
                 'Ergebnisformat in docs/benchmark-results/ standardisieren.',

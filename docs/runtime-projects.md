@@ -100,6 +100,12 @@ installiert und Router/Search über die vorhandene Dienstlogik neu gestartet.
 Lokale Health-Checks antworteten mit Router `/health` und Search `/healthz`;
 beide User-Services waren aktiv.
 
+Stand 2026-05-28: Der Search-Live-Dienst wurde gezielt fuer den aktuellen
+SVW/DSB-DWZ-v2-Import genutzt, ohne Router oder laufende Benchmarks zu
+unterbrechen. Der Import schrieb `dwz_players` neu und verifizierte
+Namens-/Vereinssuchen. Solche Live-Importe bleiben bewusste
+Operator-Aktionen und werden nicht durch Standard-Smokes ausgeloest.
+
 ## Secretfreie Runtime-Smokes
 
 Nach einem Deploy sind nur secretfreie Checks Standard:
