@@ -161,13 +161,15 @@ Aktueller Fokus:
   auf dem Webspace; lokale MySQL-Zugriffe auf Provider-DBs sind nicht der
   Betriebsweg.
 - PTG Phase 2: Queue-Einspeisung ist im PTG-Kommando angebunden;
-  `--run-llm-stages` verdrahtet die bestehende classify/analyze-Trifecta
-  explizit vor der Kartengenerierung.
+  `--run-llm-stages` verdrahtet jetzt standardmäßig die Game-Flow-/
+  Schlüsselstellungsanalyse statt jeder einzelnen Stellung.
 - PTG-Produktloop ist offline/deterministisch als Artefakt-Scheibe umgesetzt:
-  pro Session entstehen `source.pgn`, `annotated.pgn`, `training.json` und
-  `quality_gates.json`; die CLI meldet Schlüsselstellungen und gültige
-  Sessions. Agent-/DGT-naher Kartenabruf, `ReplayPosition.card_id` und
-  Review-Stats in der Trainingspriorisierung sind umgesetzt.
+  pro Session entstehen `source.pgn`, `flow_analysis.json`, `annotated.pgn`,
+  `training.json` Schema `1.2` und `quality_gates.json`; die CLI meldet
+  Schlüsselstellungen und gültige Sessions. Key-Positions tragen Flow-Kontext,
+  kanonische `position_id`, Legal-Move-Kontext und Brettwahrheit.
+  Agent-/DGT-naher Kartenabruf, `ReplayPosition.card_id` und Review-Stats in
+  der Trainingspriorisierung sind umgesetzt.
 - Deterministisches Karten-Scoring, Fehler-/Mustertaxonomie und Kartentypen
   für personalisiertes Training sind umgesetzt.
 - Interne Search-Anbindung ist Standardpfad für `web_search` und

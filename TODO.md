@@ -68,6 +68,10 @@ Vor Arbeitsbeginn lesen:
   in Review-/Coach-/Benchmark-Artefakten, RAG-Provenienz, OCR/FEN-Gates,
   Analyse-/Training-Qualitaetsgates sowie Profil-Export und bestaetigte
   Profil-Loeschung sind in CaiLama umgesetzt.
+  Update 2026-05-28: CaiLama ersetzt den Standard-PTG-Einzelzug-LLM-Pfad durch
+  Game-Flow-/Schluesselstellungsanalyse: Stockfish-/Heuristikvollanalyse,
+  `flow_analysis.json`, kanonische `position_id`, Ausnutzung gegnerischer
+  Fehler, Schärfe/Forcing-Tiefe und optional lokale Positionshistorie.
 - [x] Website-Struktur auf Trainingsfokus als Startseite umstellen:
   `web/index.php` ist die Trainingsfokus-/Trainingswerkstatt-Seite,
   die bisherige Status-Startseite liegt als `web/status.php`. Navigation,
@@ -221,6 +225,12 @@ Vor Arbeitsbeginn lesen:
   Beobachtungen und Benchmark-Feedback zurueck. CaiLama nutzt fuer den vollen
   PTG-Modellbenchmark standardmaessig die lokale MariaDB-Konfiguration statt
   SQLite, damit keine NAS-Locks entstehen.
+  **Update 2026-05-28:** Der PTG-Teil des Modellbenchmarks nutzt nun denselben
+  Game-Flow-/Schluesselstellungsanalysepfad wie die interaktive Console:
+  Stockfish-Wertverlauf und Schluesselstellungen statt LLM-Bewertung jeder
+  einzelnen Stellung. `training.json` Schema `1.2` und `flow_analysis.json`
+  liefern zusaetzliche Benchmarksignale wie Positions-ID, Forcing-Tiefe,
+  Ausnutzung gegnerischer Fehler und PV-/Material-Evidenz.
   **Update 2026-05-26:** Schema `0.8.3` speichert fuer importierte
   Modellrollen-Beobachtungen zusaetzlich die eigentliche Modellfrage
   (`task_query`), System-/User-Prompt als `MEDIUMTEXT` und die moeglichst
@@ -231,6 +241,9 @@ Vor Arbeitsbeginn lesen:
   Strukturfehler und nutzt fuer Researcher/RAG-Faelle das echte `search_rag`-
   Tool vor dem Prompt. Search liefert dafuer einen versionierten Public-
   Knowledge-Seed fuer Eröffnungen und Endspiele.
+  **Update 2026-05-28:** Schema `0.8.4` archiviert die alten PTG-Classify-/
+  Analyze-Feedbackfaelle und seedet stattdessen `ptg-three-games-flow`, passend
+  zum neuen Game-Flow-/Schluesselstellungspfad.
   **Update 2026-05-25:** Der Router erzwingt jetzt backendweite In-Flight-
   Limits. In der Dual-Ollama-Runtime duerfen je Docker-Ollama-Cloud-Account
   maximal drei Requests gleichzeitig laufen; Host-Ollama lokal bleibt auf

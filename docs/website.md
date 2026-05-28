@@ -250,6 +250,9 @@ Das Schema `cailama-data` speichert dafür in
 `candidate_moves_excerpt`, Fehlerfelder und `output_excerpt` als `MEDIUMTEXT`.
 Der Controller kürzt nur als technische Schutzgrenze; private PGN-Archive,
 lokale Pfade und Secrets dürfen weiterhin nicht importiert werden.
+Schema `0.8.4` archiviert die alten PTG-Classify-/Analyze-Fälle und seedet
+`ptg-three-games-flow`, damit Website-Feedback denselben Game-Flow- und
+Schlüsselstellungspfad bewertet wie die interaktive Konsole.
 
 Für automatisch bewertbare Struktur-, Vertrags-, Dauer- und Basisqualitätsfälle
 steht im Master `scripts/benchmark_feedback_agent.py` bereit. Das Skript nutzt
@@ -474,7 +477,7 @@ Drei-Spiele-Benchmark erzeugt Fälle für alle CaiLama-Rollen: `router`,
 `small`, `large`, `task`, `translator`, `coach`, `analyst`, `critic`,
 `vision`, `scribe` und `researcher`. Rollen-Probes duerfen mit
 `--role-max-tokens` gekappt werden, damit einzelne Modellantworten den
-Feedbacklauf nicht blockieren; die PTG-Tiefenanalyse bleibt separat. Lokale
+Feedbacklauf nicht blockieren; die PTG-Flow-/Schluesselstellungsanalyse bleibt separat. Lokale
 Benchmark-Artefakte duerfen Router-Backend-/Provider-/Fallback-Metriken
 speichern, die Website zeigt diese technische Zuordnung aber nicht im
 Bewertungsformular.
@@ -520,9 +523,10 @@ Webspace-API; `POST /api/v1/status` meldet `databases.cailama: ok`, und
 `POST /api/v1/admin/schema/cailama` beziehungsweise
 `POST /api/v1/admin/schema/all` wenden dasselbe Schema an. Echte Host-, User-
 oder Passwortwerte werden nicht in Doku oder Repo geschrieben.
-Schema-Stand 2026-05-25: `cailama-data` ist auf Version `0.8.1` angehoben und
-enthält die zusätzlichen Benchmark-Usage-Felder in Beobachtungen und Feedback
-sowie eine harte Dauerbewertung pro manuellem Feedback.
+Schema-Stand 2026-05-28: `cailama-data` ist auf Version `0.8.4` angehoben.
+Es enthält die Benchmark-Usage-Felder, vollständige Prompt-/Antwortfelder,
+Positions-/Fehlerfelder, harte Dauer-/Übersetzungsbewertungen und den neuen
+PTG-Flow-Feedbackfall.
 
 Deployment-Status am 2026-05-24: `scripts/deploy-website.sh` hat `web/` und
 den privaten Smarty-Bereich per SFTP deployt und die öffentlichen Dateien per

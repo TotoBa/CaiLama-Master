@@ -53,6 +53,9 @@ in diese Koordination.
   `moves_out_of_attack` plus `loosing-blunder`, `blunder`, `mistake`,
   `ungenau`, `okay`, `good`, `stark`, `brilliant`.
 - Zahl und Qualitaet extrahierter Schluesselstellungen.
+- Game-Flow-Artefakt: Wertverlauf, Bewertungspruenge, gegnerische Fehler,
+  Ausnutzung/Miss, scharfe/forcierte Stellungen, Forcing-Tiefe,
+  kanonische `position_id` und PV-/Material-Evidenz.
 - Anteil gueltiger PTG-Sessions aus `quality_gates.json`.
 - Grounding-Zaehler fuer Board, Engine, Klassifikation und Analyse.
 - Redundanz von Trainingskarten.
@@ -234,8 +237,10 @@ Ein Ergebnis enthaelt mindestens:
   belegte FENs weitergibt und die Console das Unicode-Brett rendert. Die
   Reihenfolge ist modellzentriert: ein Modell durchlaeuft alle Rollenaufgaben,
   danach startet das naechste Modell. Erst nach der automatischen Rollen-
-  Zuordnung startet der teure PTG-Classify-/Analyze-Teil, und dann nur fuer
-  die Modelle, die mindestens eine Rolle uebernommen haben.
+  Zuordnung startet der teure PTG-Flow-/Schluesselstellungsteil, und dann nur
+  fuer die Modelle, die mindestens eine Rolle uebernommen haben. Dieser PTG-
+  Teil nutzt denselben Game-Flow-, PromptBuilder- und Brettwahrheitspfad wie
+  die interaktive Console; es gibt keine separate Benchmark-Analyseprompts.
   Beobachtungen enthalten neben Dauer, Tokens, Artefakt, eigentlicher
   Modellfrage und moeglichst vollstaendiger Ausgabe auch den konstruierten
   System- und User-Prompt der Rollenprobe, erwarteten Ausgabetyp, optionale
@@ -275,7 +280,8 @@ Ein Ergebnis enthaelt mindestens:
   die interaktive Konsole. Es gibt dadurch keine parallele Benchmark-
   Promptlogik.
   `--skip-ptg` ist fuer schnelle Feedbacklaeufe erlaubt; `--max-analysis-
-  positions` ist ein explizites Laufzeitbudget fuer den vollen PTG-Lauf,
+  positions` ist ein explizites Laufzeitbudget fuer die tiefen
+  PTG-Schluesselstellungen,
   keine allgemeine 21er-Regel. Fuer vollstaendige Laeufe koennen
   `--llm-timeout-seconds 0`, `--role-max-tokens 0` und
   `--max-analysis-positions 0` gesetzt werden; fuer den finalen Upload gilt
@@ -449,7 +455,7 @@ Kandidatenzuege enthalten, aber keine Modellidentitaet, keine
 Verbrauchsklasse, keine lokalen Pfade und keine Secrets.
 `--role-max-tokens` begrenzt nur die kurzen Rollen-Probes auf
 OpenAI-kompatiblen Backends. Damit werden Laufzeit und Antwortlaenge
-vergleichbarer; der volle PTG-Classify-/Analyze-Lauf bleibt davon unberuehrt.
+vergleichbarer; der volle PTG-Flow-/Schluesselstellungslauf bleibt davon unberuehrt.
 Lokale Artefakte erfassen Router-Header fuer Backend, Provider-Modell und
 Fallback, sofern der Router sie liefert. Das ist wichtig, weil `vm`/`pi`-
 Routing die Laufzeitmessung beeinflusst. Die geschuetzte Website zeigt diese

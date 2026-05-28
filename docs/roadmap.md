@@ -138,8 +138,9 @@ Koordinationspunkte:
 - Schwaechenprofil und Kartenqueue nachvollziehbar ableiten.
 - Umgesetzt: optionale Queue-Einspeisung ueber `ptg-games --queue-dir`.
 - Umgesetzt: offline/deterministische PTG-Artefakt-Scheibe mit
-  `source.pgn`, `annotated.pgn`, drei bis sieben Schluesselstellungen,
-  Trainingsfragen, `training.json`, `quality_gates.json` und CLI-Ausgabe.
+  `source.pgn`, `flow_analysis.json`, `annotated.pgn`, drei bis sieben
+  Schluesselstellungen, Trainingsfragen, `training.json` Schema `1.2`,
+  `quality_gates.json` und CLI-Ausgabe.
 - Umgesetzt: Agent-/DGT-naher Kartenabruf, `ReplayPosition.card_id` und
   Review-Stats in der Trainingspriorisierung.
 - Umgesetzt: deterministisches Scoring, Fehler-/Mustertaxonomie, Kartentypen

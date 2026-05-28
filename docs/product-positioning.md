@@ -21,13 +21,16 @@ Vom PGN zur persoenlichen Trainingsaufgabe:
 9. Review-Ergebnisse in Prioritaet, Schwierigkeit und Wiederholung
    zurueckfuehren.
 
-Stand 2026-05-24: Die offline/deterministische PTG-Scheibe erzeugt bereits
-`source.pgn`, `annotated.pgn`, `training.json` und `quality_gates.json`.
+Stand 2026-05-28: Die offline/deterministische PTG-Scheibe erzeugt bereits
+`source.pgn`, `flow_analysis.json`, `annotated.pgn`, `training.json` Schema
+`1.2` und `quality_gates.json`.
 Agent-/DGT-naher Kartenabruf, `card_id`-Durchstich, CardType/Muster und
 Review-Stats in der Trainingspriorisierung sind umgesetzt. Gewichtete
 Trainingspositionen, kurzlebige Coach-Sessions on demand, Review-Gate-
 Console, Planmodus, Hintergrund-Agenten, Benchmark-Events, PGN-/LLM-
-Resilienz und Legal-Move-/Brettwahrheit-Tags sind vorhanden. PTG ist live
+Resilienz und Legal-Move-/Brettwahrheit-Tags sind vorhanden. PTG analysiert
+standardmäßig erst den Stockfish-Wertverlauf und danach ausgewählte
+Schlüsselstellungen statt jede Stellung einzeln per LLM. PTG ist live
 gegen Router verifiziert, Legal-Move-/Brettwahrheit-Daten laufen durch
 Review-, Coach- und Benchmark-Artefakte, RAG-Provenienz wird in Agent-Prompts
 normalisiert, OCR/FEN-Gates sind gehärtet und Analyse-/Training-Gates reichen

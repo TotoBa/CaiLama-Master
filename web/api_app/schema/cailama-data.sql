@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS cailama_schema_meta (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO cailama_schema_meta (id, schema_name, schema_version)
-VALUES (1, 'cailama-data', '0.8.3')
+VALUES (1, 'cailama-data', '0.8.4')
 ON DUPLICATE KEY UPDATE schema_version = VALUES(schema_version);
 
 -- Website user authentication table (formerly in a separate auth database).
@@ -165,6 +165,10 @@ ALTER TABLE cailama_model_feedback
     ADD COLUMN IF NOT EXISTS translation_score TINYINT UNSIGNED NULL AFTER preferred_option,
     ADD COLUMN IF NOT EXISTS translation_note TEXT NULL AFTER improvement_note;
 
+UPDATE cailama_model_benchmark_cases
+SET status = 'archived'
+WHERE case_key IN ('ptg-three-games-classify', 'ptg-three-games-analysis');
+
 INSERT INTO cailama_model_benchmark_cases
     (case_key, area, role_name, model_a, model_b, task_label, task_summary, quality_question, status)
 VALUES
@@ -175,30 +179,19 @@ VALUES
         'kimi-k2.6:cloud',
         'gemma4:31b-cloud',
         'PTG-Drei-Spiele-Benchmark',
-        'Modell klassifiziert alle Zuege der drei freigegebenen PTG-Baseline-Spiele und analysiert die priorisierten Schluesselstellungen tief.',
-        'Wie gut sind Klassifikation, Trainingsfragen und Analysequalitaet fuer diese drei Spiele?',
+        'Modell liest den Stockfish-gestuetzten Partieverlauf der drei freigegebenen PTG-Baseline-Spiele und analysiert priorisierte Schluesselstellungen tief.',
+        'Wie gut sind Verlaufsverstaendnis, Trainingsfragen und Analysequalitaet fuer diese drei Spiele?',
         'active'
     ),
     (
-        'ptg-three-games-classify',
-        'pipeline',
-        'chess-small',
-        'gemma4:31b-cloud',
-        'deepseek-v4-flash:cloud',
-        'PTG-Zugklassifikation',
-        'Modell klassifiziert alle Zuege der drei freigegebenen PTG-Baseline-Spiele und muss stabile, weiterverarbeitbare Klassifikationsdaten liefern.',
-        'Wie korrekt, stabil und pipeline-tauglich ist die Zugklassifikation?',
-        'active'
-    ),
-    (
-        'ptg-three-games-analysis',
+        'ptg-three-games-flow',
         'pipeline',
         'chess-analyst',
-        'qwen3.5:397b-cloud',
         'kimi-k2.6:cloud',
-        'PTG-Schluesselstellungsanalyse',
-        'Modell analysiert die priorisierten Schluesselstellungen der drei freigegebenen PTG-Baseline-Spiele mit Engine- und BoardTruth-Kontext.',
-        'Wie gut sind Analysequalitaet, Engine-Grounding, Variantenlogik und Trainingsnutzen?',
+        'qwen3.5:397b-cloud',
+        'PTG-Verlauf und Schluesselstellungen',
+        'Modell liest den Stockfish-gestuetzten Partieverlauf und analysiert nur die priorisierten Schluesselstellungen mit Engine- und BoardTruth-Kontext.',
+        'Wie gut sind Verlaufsverstaendnis, Engine-Grounding, Variantenlogik und Trainingsnutzen?',
         'active'
     ),
     (
