@@ -16,6 +16,11 @@ sondern nur in lokale Service-, Shell- oder Env-Konfigurationen.
 - Lokale `.env`, `configs/*.local.yaml`, `.venv`, Logs, Daten- und
   Meilisearch-Verzeichnisse werden beim Aktualisieren nicht ueberschrieben.
 
+**Konfiguration:** Echte Betriebs-, Server- und Operator-Konfigurationen gehoeren
+nicht ins Repository. Sie sind gitignored und nur lokal verfuegbar. Versionierte
+Dateien im Repo sind Muster, Beispiele oder secretfreie Defaults – keine
+produktiven Pfade, Hostnamen oder Zugangsdaten.
+
 Der Router laeuft aus einer separaten Runtime-Kopie, nicht aus dem Git-Repo.
 Das ist Absicht: Der laufende Dienst soll stabil bleiben, auch wenn im Repo
 gerade gearbeitet, getestet oder reviewed wird.
