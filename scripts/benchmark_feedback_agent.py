@@ -224,12 +224,132 @@ def base_quality(output: str) -> tuple[int, list[str]]:
     return clamp_score(score), notes
 
 
+def extract_json_object(output: str) -> dict[str, Any] | None:
+    candidates: list[str] = []
+    fenced = re.findall(r"```(?:json)?\s*(\{.*?\})\s*```", output, flags=re.I | re.S)
+    candidates.extend(fenced)
+    start = output.find("{")
+    end = output.rfind("}")
+    if start != -1 and end > start:
+        candidates.append(output[start : end + 1])
+
+    for candidate in candidates:
+        try:
+            parsed = json.loads(candidate)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(parsed, dict):
+            return parsed
+    return None
+
+
+def score_routing_decision(output: str) -> tuple[int, int, list[str]]:
+    notes: list[str] = []
+    quality, base_notes = base_quality(output)
+    task = quality
+    notes.extend(base_notes)
+
+    parsed = extract_json_object(output)
+    if parsed is None:
+        return clamp_score(quality), 1, notes + ["expected routing JSON but no parseable object was found"]
+
+    role = str(parsed.get("role") or parsed.get("role_hint") or "").strip()
+    source = str(parsed.get("routing_source") or "").strip()
+    reason = str(parsed.get("reason") or "").strip()
+    confidence = parsed.get("confidence")
+
+    if role:
+        task += 2
+    else:
+        notes.append("routing role missing")
+
+    if source == "llm_semantic":
+        task += 2
+    elif source:
+        task += 1
+        notes.append(f"routing_source={source}")
+    else:
+        notes.append("routing_source missing")
+
+    if reason:
+        task += 1
+    else:
+        notes.append("routing reason missing")
+
+    if isinstance(confidence, (int, float)):
+        task += 1
+    else:
+        notes.append("routing confidence missing")
+
+    tools = parsed.get("tools")
+    if isinstance(tools, list):
+        quality += 1
+
+    return clamp_score(max(quality, task - 1)), clamp_score(task), notes
+
+
+def score_task_plan(output: str) -> tuple[int, int, list[str]]:
+    notes: list[str] = []
+    quality, base_notes = base_quality(output)
+    task = quality
+    notes.extend(base_notes)
+
+    parsed = extract_json_object(output)
+    if parsed is None:
+        return clamp_score(quality), 1, notes + ["expected task plan JSON but no parseable object was found"]
+
+    steps = parsed.get("steps")
+    if not isinstance(steps, list) or not steps:
+        return clamp_score(quality), 1, notes + ["task plan has no steps array"]
+
+    actions: list[str] = []
+    for step in steps:
+        if not isinstance(step, dict):
+            continue
+        action = str(step.get("action") or step.get("tool_name") or "").strip()
+        if action:
+            actions.append(action)
+
+    if not actions:
+        return clamp_score(quality), 1, notes + ["task plan steps contain no tool actions"]
+
+    task += 1
+    if len(actions) >= 2:
+        task += 2
+    if len(actions) >= 3:
+        quality += 1
+
+    source = str(parsed.get("planning_source") or "").strip()
+    if source == "llm_semantic":
+        task += 2
+    elif source:
+        task += 1
+        notes.append(f"planning_source={source}")
+    else:
+        notes.append("planning_source missing")
+
+    reason = str(parsed.get("reason") or "").strip()
+    if reason:
+        task += 1
+
+    if all(isinstance(step, dict) and str(step.get("description") or step.get("purpose") or "").strip() for step in steps if isinstance(step, dict)):
+        quality += 1
+
+    return clamp_score(max(quality, task - 1)), clamp_score(task), notes
+
+
 def expected_type_score(expected: str, role: str, output: str) -> tuple[int, int, list[str]]:
     lower = output.lower()
     notes: list[str] = []
     quality, base_notes = base_quality(output)
     task = quality
     notes.extend(base_notes)
+
+    if expected == "routing_decision":
+        return score_routing_decision(output)
+
+    if expected == "task_plan":
+        return score_task_plan(output)
 
     if expected == "json_array":
         parsed = extract_json_array(output)
@@ -346,7 +466,12 @@ def evaluate_observation(observation: dict[str, Any]) -> Evaluation:
     output = text_value(observation, "output_excerpt")
     expected = text_value(observation, "expected_output_type")
     role = text_value(observation, "role_name")
-    quality, task, notes = expected_type_score(expected, role, output)
+    error_status = text_value(observation, "error_status")
+
+    if error_status:
+        quality, task, notes = 1, 1, [f"contract error: {error_status}"]
+    else:
+        quality, task, notes = expected_type_score(expected, role, output)
 
     duration = duration_score(
         int_value(observation, "duration_ms"),
