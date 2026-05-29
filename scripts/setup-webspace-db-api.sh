@@ -54,6 +54,9 @@ Environment:
   CAILAMA_DATABASES_INI           default: $CAILAMA_PRIVATE_CONFIG_DIR/databases.ini
   CAILAMA_WEB_API_KEYS_FILE       default: $CAILAMA_PRIVATE_CONFIG_DIR/web-api.keys
   CAILAMA_WEB_API_PRIVATE_CONFIG  default: $CAILAMA_PRIVATE_CONFIG_DIR/web-api/config.local.php
+  CAILAMA_ORIGIN_BASE_URL         default: https://server.cailama.org
+  CAILAMA_ORIGIN_PROXY_KEY        required for console proxy config
+  CAILAMA_ORIGIN_HMAC_SECRET      required for console proxy config
   CAILAMA_WEB_DEPLOY_CONFIG       default: ~/.config/cailama/web-deploy.env
   CAILAMA_WEB_PRIVATE_REMOTE_DIR  default: /cailama-private
   CAILAMA_WEB_IMPORT_REMOTE_DIR   default: /cailama-imports
@@ -344,6 +347,7 @@ write_configs() {
 
   local local_host local_user local_pass local_db
   local provider_host provider_user provider_pass provider_db
+  local origin_base_url origin_proxy_key origin_hmac_secret
   local_host="$(ini_get lokal host)"
   local_user="$(ini_get lokal user)"
   local_pass="$(ini_get lokal password)"
@@ -358,6 +362,9 @@ write_configs() {
   if [[ -n "${CAILAMA_PROVIDER_PHP_HOST:-}" ]]; then
     provider_host="$CAILAMA_PROVIDER_PHP_HOST"
   fi
+  origin_base_url="${CAILAMA_ORIGIN_BASE_URL:-https://server.cailama.org}"
+  origin_proxy_key="${CAILAMA_ORIGIN_PROXY_KEY:-}"
+  origin_hmac_secret="${CAILAMA_ORIGIN_HMAC_SECRET:-}"
 
   write_mysql_cnf local-main "$local_host" "$local_user" "$local_pass"
   write_mysql_cnf provider-main "$provider_host" "$provider_user" "$provider_pass"
@@ -384,6 +391,12 @@ write_configs() {
             "max_execution_seconds" => 1800,
         ],
         "auth" => ["enabled" => true],
+        "origin" => [
+            "base_url" => $values["origin_base_url"],
+            "proxy_key" => $values["origin_proxy_key"],
+            "hmac_secret" => $values["origin_hmac_secret"],
+            "timeout_seconds" => 20,
+        ],
         "databases" => [
             "cailama" => [
                 "enabled" => true,
@@ -411,12 +424,16 @@ write_configs() {
       "provider_user" => $argv[6],
       "provider_pass" => $argv[7],
       "provider_db" => $argv[8],
+      "origin_base_url" => $argv[9],
+      "origin_proxy_key" => $argv[10],
+      "origin_hmac_secret" => $argv[11],
     ], JSON_UNESCAPED_SLASHES);' \
       "$(sha256_token "$status_key")" \
       "$(sha256_token "$import_key")" \
       "$(sha256_token "$reset_key")" \
       "$(sha256_token "$admin_key")" \
-      "$provider_host" "$provider_user" "$provider_pass" "$provider_db"
+      "$provider_host" "$provider_user" "$provider_pass" "$provider_db" \
+      "$origin_base_url" "$origin_proxy_key" "$origin_hmac_secret"
   )"
   chmod 600 "$server_config" 2>/dev/null || true
 

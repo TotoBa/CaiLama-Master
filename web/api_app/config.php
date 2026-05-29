@@ -47,6 +47,17 @@ $config = [
         'max_attempts_per_session' => 5,
         'attempt_window_seconds' => 600,
     ],
+    'origin' => [
+        'base_url' => 'https://server.cailama.org',
+        'proxy_key' => '',
+        'hmac_secret' => '',
+        'timeout_seconds' => 20,
+        'allowed_routes' => [
+            'llm_chat' => ['method' => 'POST', 'path' => '/v1/llm/chat', 'scope' => 'llm:chat'],
+            'search_query' => ['method' => 'POST', 'path' => '/v1/search/query', 'scope' => 'search:query'],
+            'jobs_create' => ['method' => 'POST', 'path' => '/v1/jobs', 'scope' => 'jobs:write'],
+        ],
+    ],
     'benchmark_feedback' => [
         'piece_asset_base_url' => '',
         'piece_sets' => [],

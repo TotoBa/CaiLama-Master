@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 use CaiLama\WebApi\Controllers\StatusController;
 use CaiLama\WebApi\Controllers\BenchmarkController;
+use CaiLama\WebApi\Controllers\ConsoleKeyAdminController;
+use CaiLama\WebApi\Controllers\ConsoleProxyController;
 use CaiLama\WebApi\Controllers\ImportController;
 use CaiLama\WebApi\Controllers\SchemaController;
 use CaiLama\WebApi\Http\Request;
@@ -19,10 +21,15 @@ $router->post('/api/v1/benchmarks/feedback', BenchmarkController::class, 'feedba
 $router->post('/api/v1/benchmarks/feedback/summary', BenchmarkController::class, 'feedbackSummary');
 $router->post('/api/v1/benchmarks/feedback/export', BenchmarkController::class, 'feedbackExport');
 $router->post('/api/v1/benchmarks/reset', BenchmarkController::class, 'reset');
+$router->post('/api/v1/console/llm/chat', ConsoleProxyController::class, 'llmChat');
+$router->post('/api/v1/console/search/query', ConsoleProxyController::class, 'searchQuery');
+$router->post('/api/v1/console/jobs', ConsoleProxyController::class, 'createJob');
 $router->post('/api/v1/imports/cailama/append', ImportController::class, 'append');
 $router->post('/api/v1/imports/cailama/reset', ImportController::class, 'reset');
 $router->post('/api/v1/admin/schema/cailama', SchemaController::class, 'cailama');
 $router->post('/api/v1/admin/schema/all', SchemaController::class, 'all');
+$router->post('/api/v1/admin/console-keys/upsert', ConsoleKeyAdminController::class, 'upsert');
+$router->post('/api/v1/admin/console-keys/refuse', ConsoleKeyAdminController::class, 'refuse');
 
 try {
     $request = Request::fromGlobals((int) ($config['max_body_bytes'] ?? 1048576));

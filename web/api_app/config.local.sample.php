@@ -34,6 +34,12 @@ return [
     'auth' => [
         'enabled' => true,
     ],
+    'origin' => [
+        'base_url' => 'https://server.cailama.org',
+        'proxy_key' => 'replace_with_origin_proxy_key',
+        'hmac_secret' => 'replace_with_origin_hmac_secret',
+        'timeout_seconds' => 20,
+    ],
     'benchmark_feedback' => [
         /*
          * Optional public URL prefix for mirrored chess piece images.

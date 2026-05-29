@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS cailama_schema_meta (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO cailama_schema_meta (id, schema_name, schema_version)
-VALUES (1, 'cailama-data', '0.8.4')
+VALUES (1, 'cailama-data', '0.9.0')
 ON DUPLICATE KEY UPDATE schema_version = VALUES(schema_version);
 
 -- Website user authentication table (formerly in a separate auth database).
@@ -28,6 +28,42 @@ CREATE TABLE IF NOT EXISTS web_users (
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     last_login_at DATETIME NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS cailama_player_profiles (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    profile_key VARCHAR(80) NOT NULL UNIQUE,
+    display_name VARCHAR(190) NOT NULL,
+    training_name VARCHAR(120) NOT NULL,
+    status ENUM('active', 'locked') NOT NULL DEFAULT 'active',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_cailama_player_profiles_training_name (training_name),
+    INDEX idx_cailama_player_profiles_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS cailama_console_api_keys (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    profile_id BIGINT UNSIGNED NOT NULL,
+    label VARCHAR(120) NOT NULL,
+    key_prefix VARCHAR(32) NOT NULL UNIQUE,
+    key_hash VARCHAR(96) NOT NULL UNIQUE,
+    scopes JSON NOT NULL,
+    status ENUM('active', 'refused') NOT NULL DEFAULT 'active',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_used_at DATETIME NULL,
+    refused_at DATETIME NULL,
+    INDEX idx_cailama_console_api_keys_profile_status (profile_id, status),
+    CONSTRAINT fk_cailama_console_api_keys_profile
+        FOREIGN KEY (profile_id) REFERENCES cailama_player_profiles (id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO cailama_player_profiles (profile_key, display_name, training_name, status)
+VALUES ('torsten-baublies-totomanie', 'Torsten Baublies', 'totomanie', 'active')
+ON DUPLICATE KEY UPDATE
+    display_name = VALUES(display_name),
+    training_name = VALUES(training_name),
+    status = VALUES(status);
 
 -- Example first user (uncomment and replace hash on target system):
 -- INSERT INTO web_users (login_name, email, display_name, password_hash, status)
