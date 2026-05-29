@@ -18,9 +18,14 @@ anonymisierte Daten.
 
 Aktueller Bestand:
 
+- `model-role-results.current.md` - aktueller gemessener Modellrollen-Stand
+  aus Website-Feedback, mit einer separaten Tabelle pro getestetem Modell,
+  Testdatum, Rollenwerten, Fehlern, Laufzeit, Tokens und Usage-Proxy.
 - `model-role-matrix.current.md` - aktuelle Arbeitshypothese fuer
   Coding-Agenten und Schachrollen, mit Pflichtmetriken fuer Laufzeit,
-  Tokenwerte, Qualitaet, Aufgabenloesung, Logikfehler und A/B-Feedback.
+  Tokenwerte, Qualitaet, Aufgabenloesung, Logikfehler und A/B-Feedback. Diese
+  Datei ist historisch; aktuelle Messwerte stehen in
+  `model-role-results.current.md`.
 - `2026-05-23.search-lexical-hybrid.md` - synthetischer CaiLama-Search-
   Goldset-Vergleich lexical gegen hybrid; Folgestand ergänzt privacy-safe
   RAG-/Researcher-`source_quality`-Kennzahlen im Benchmark-Vertrag.

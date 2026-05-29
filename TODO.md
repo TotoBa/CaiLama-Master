@@ -173,15 +173,17 @@ Vor Arbeitsbeginn lesen:
   Upload mit `--require-upload` verbindlich gemacht. Das Feedback ist blind:
   importierte Laeufe zeigen nur Kandidaten-Codes, keine Modellnamen; die
   Zuordnung bleibt serverseitig. `--skip-ptg` erlaubt schnelle Rollen-
-  Feedbacklaeufe ohne den teuren PTG-Teil. `--role-max-tokens` begrenzt nur
-  die kurzen Rollen-Probes, damit Benchmarklaufzeiten vergleichbarer bleiben
-  und langsame Provider nicht den gesamten Upload blockieren. Lokale CaiLama-
+  Feedbacklaeufe ohne den teuren PTG-Teil. Rollen-Probes laufen im
+  vollstaendigen Benchmarkpfad ohne Completion-Token-Grenze und ohne
+  clientseitigen LLM-/Upload-Timeout; positive Limits gehoeren nur in
+  bewusste Kurztests. Lokale CaiLama-
   Artefakte erfassen zusaetzlich Router-Backend, Provider-Modell und Fallback,
   falls der Router diese Header liefert; die Website-Bewertung bleibt blind.
   **Update 2026-05-24:** Der volle Drei-Spiele-Modellbenchmark kann nun
-  bewusst ohne clientseitige Benchmark-Kappung laufen:
-  `--llm-timeout-seconds 0`, `--upload-timeout-seconds 0`,
-  `--role-max-tokens 0` und `--max-analysis-positions 0`. Die Modellliste
+  bewusst ohne clientseitige Benchmark-Kappung laufen. Rollenprobes setzen
+  standardmaessig kein OpenAI-kompatibles `max_tokens` und keinen
+  LLM-/Upload-Timeout; `--max-analysis-positions 0` entfernt zusaetzlich das
+  PTG-Schluesselstellungs-Limit. Die Modellliste
   fuer den naechsten vollstaendigen Feedbacklauf wird per `--models auto` aus
   dem Router gelesen; operative Aliase wie `default`, `kimi-cli-default` und
   `chess-*` bleiben Router-Aliase und werden in CaiLama nicht als
@@ -263,6 +265,22 @@ Vor Arbeitsbeginn lesen:
   Tools bleiben als menschlicher Feedbackfall offen. Die Website blendet
   Usage-Level im Blindfeedback aus und der Playmodus zieht offene Faelle
   zufaellig.
+  **Update 2026-05-29:** Die Website-Feedbacks aus
+  `ptg-three-games-20260526T092135Z` sind als
+  `docs/benchmark-results/model-role-results.current.md` pro Modell
+  ausgewertet. Die alte `model-role-matrix.current.md` bleibt als historische
+  Hypothese erhalten. Der naechste Re-Test ist auf 10 bereits starke Kandidaten
+  plus `mistral-small-latest` begrenzt; bei 11 Rollen und 10 Aufgaben je Rolle
+  entstehen mit `--skip-ptg` 1210 Feedbackfaelle. CaiLama benchmarkt weiterhin
+  alle aktuellen Rollen (`router`, `small`, `large`, `task`, `translator`,
+  `coach`, `analyst`, `critic`, `vision`, `scribe`, `researcher`): `analyst`
+  ist die produktive PTG-/Schluesselstellungsrolle, `large` bleibt ein
+  separater starker generischer Slot, und `critic` bleibt fuer Trainings-/
+  Coach-Review relevant. Router- und Task-Probes nutzen jetzt wieder den
+  echten AgentLoop-/Tool-Vertrag, damit die frueher zu strenge Strukturpruefung
+  im Re-Test sauber bewertet wird. Mistral API ist im Router als direkter
+  OpenAI-kompatibler Backend-Pfad mit `mistral-small-latest` und maximal einem
+  gleichzeitigen Request dokumentiert.
   **Update 2026-05-25:** Der Katalog wurde komplett auf schachbezogene
   Aufgaben umgestellt: lokale FENs aus den drei freigegebenen PGN-
   Baseline-Spielen, oeffentliche Referenzmotive wie Opera Game/Kiwipete/
@@ -414,10 +432,12 @@ Resume-Semantik (überspringt vorhandene Plies). Neue Doku:
 `CaiLama/docs/pipeline-resilienz.md`.
 Search danach nur fuer DWZ-Staging und semantische Freigabeentscheidung; Router
 nur bei neuem Alias-/Benchmark-Auftrag. Die Modellrollen-Hypothese aus
-docs/benchmark-results/model-role-matrix.current.md soll durch Messdaten
-validiert werden: Dauer, Input-/Thinking-/Output-Tokens, Qualitaet,
-Aufgabenloesung, Logikfehler und A/B-Feedback, ohne Rohprompts, volle private
-Partien oder Secrets zu speichern.
+docs/benchmark-results/model-role-matrix.current.md wurde mit
+docs/benchmark-results/model-role-results.current.md erstmals durch
+Website-Feedbackdaten validiert. Offen bleibt der reduzierte Re-Test mit den
+10 ausgewaehlten Kandidaten plus `mistral-small-latest`, damit die Fixes an
+Task-/Tool-Struktur, Rollenworkflow und Mistral-Backend in vergleichbaren
+Feedbackdaten sichtbar werden.
 
 Nach jeder Aenderung:
 1. Betroffene Master-Doku oder Website knapp aktualisieren.

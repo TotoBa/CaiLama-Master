@@ -182,10 +182,17 @@ Ein Ergebnis enthaelt mindestens:
 
 ## Vorliegende Ergebnisse
 
+- `docs/benchmark-results/model-role-results.current.md`:
+  aktueller gemessener Modellrollen-Stand aus dem abgeschlossenen
+  Website-Feedbacklauf `ptg-three-games-20260526T092135Z`. Jedes getestete
+  Modell besitzt eine eigene Tabelle mit Testdatum, Rollenwerten, Fehlern,
+  Tokens, Laufzeit und Usage-Proxy. Der Folgelauf testet bewusst nur die 10
+  besten bisherigen Kandidaten plus `mistral-small-latest`.
 - `docs/benchmark-results/model-role-matrix.current.md`:
-  aktuelle Arbeitshypothese fuer Coding-Agenten und Schachrollen, inklusive
-  Messdimensionen fuer Laufzeit, Thinking-/Output-Tokens, Qualitaet,
-  Aufgabenloesung, Logikfehler und A/B-Feedback.
+  historische Arbeitshypothese fuer Coding-Agenten und Schachrollen,
+  inklusive Messdimensionen fuer Laufzeit, Thinking-/Output-Tokens,
+  Qualitaet, Aufgabenloesung, Logikfehler und A/B-Feedback. Aktuelle
+  Messwerte stehen in `model-role-results.current.md`.
 - `docs/benchmark-results/2026-05-23.search-lexical-hybrid.md`:
   CaiLama-Search-Goldsets, lexical gegen hybrid. Ergebnis: Recall@5 und
   Recall@10 sind in beiden Modi 1.0; MRR ist in beiden Modi 0.9167; die
@@ -282,11 +289,10 @@ Ein Ergebnis enthaelt mindestens:
   `--skip-ptg` ist fuer schnelle Feedbacklaeufe erlaubt; `--max-analysis-
   positions` ist ein explizites Laufzeitbudget fuer die tiefen
   PTG-Schluesselstellungen,
-  keine allgemeine 21er-Regel. Fuer vollstaendige Laeufe koennen
-  `--llm-timeout-seconds 0`, `--role-max-tokens 0` und
-  `--max-analysis-positions 0` gesetzt werden; fuer den finalen Upload gilt
-  entsprechend `--upload-timeout-seconds 0`. `0` bedeutet in diesem Runner
-  bewusst unbegrenzt.
+  keine allgemeine 21er-Regel. Fuer vollstaendige Laeufe setzt der Runner
+  standardmaessig keine Completion-Token-Grenze und keinen clientseitigen
+  LLM-/Upload-Timeout. `--max-analysis-positions 0` bedeutet zusaetzlich keine
+  Begrenzung der tief analysierten PTG-Schluesselstellungen.
   Der LLM-Router begrenzt parallel laufende Requests zusätzlich pro Ollama-
   Backend: in der aktuellen Dual-Ollama-Runtime maximal drei gleichzeitige
   Cloud-Requests je Docker-Ollama-Account und maximal ein lokaler Host-Ollama-
@@ -338,7 +344,8 @@ Der echte Drei-Spiele-Lauf ist bewusst kein Standard-Check. Er benoetigt
 Router, Stockfish und freigegebene lokale PGN-Daten. Der Lauf kann im
 Hintergrund gestartet werden; fuer Feedback-Laeufe ist der Website-Upload
 verbindlich. Der API-Token kommt nur aus einer lokalen Env-Variable und wird
-nicht ausgegeben. Fuer schnelle Proben bleiben positive Limits sinnvoll:
+nicht ausgegeben. Fuer schnelle Proben koennen positive PTG-Positionslimits
+gesetzt werden:
 
 ```bash
 env CAILAMA_LLM_PROVIDER=openai_compatible \
@@ -369,7 +376,6 @@ env CAILAMA_LLM_PROVIDER=openai_compatible \
   --tasks-per-role 10 \
   --llm-timeout-seconds 0 \
   --upload-timeout-seconds 0 \
-  --role-max-tokens 0 \
   --max-analysis-positions 0 \
   --cloud-concurrency 4 \
   --llm-retry-attempts 3 \
@@ -433,12 +439,42 @@ env CAILAMA_LLM_PROVIDER=openai_compatible \
   --models auto \
   --task-catalog config/model_role_benchmark/tasks.json \
   --tasks-per-role 10 \
-  --role-max-tokens 700 \
   --skip-ptg \
   --upload-url https://cailama.org/api/v1/benchmarks/observations \
   --upload-token-env CAILAMA_DB_API_ADMIN_KEY \
   --require-upload
 ```
+
+Aktueller Re-Test mit 10 ausgewaehlten Kandidaten plus Mistral API:
+
+```bash
+MODELS='gpt-oss:20b-cloud:think-medium,gemini-3-flash-preview:cloud:think-on,qwen3-next:80b-cloud:think-on,gemini-3-flash-preview:cloud:think-off,qwen3-coder:480b-cloud,gpt-oss:120b-cloud:think-medium,devstral-small-2:24b-cloud,minimax-m2.7:cloud:think-off,ministral-3:3b-cloud,kimi-k2.6:cloud:think-on,mistral-small-latest'
+
+env CAILAMA_LLM_PROVIDER=openai_compatible \
+  CAILAMA_LLM_BASE_URL=http://127.0.0.1:18080/v1 \
+  .venv/bin/python scripts/run_ptg_model_benchmark.py \
+  --pgn /pfad/zum/freigegebenen/import.pgn \
+  --output-dir ~/.local/share/cailama/benchmarks/ptg-models \
+  --models "$MODELS" \
+  --task-catalog config/model_role_benchmark/tasks.json \
+  --tasks-per-role 10 \
+  --skip-ptg \
+  --cloud-concurrency 4 \
+  --llm-retry-attempts 3 \
+  --llm-retry-wait-seconds 180 \
+  --ptg-db-backend mariadb \
+  --upload-url https://cailama.org/api/v1/benchmarks/observations \
+  --upload-token-env CAILAMA_DB_API_ADMIN_KEY \
+  --require-upload
+```
+
+Mit 11 Modellen, 11 Standardrollen und 10 Aufgaben je Rolle erzeugt dieser
+Rollenlauf 1210 Feedbackfaelle. Ohne `--skip-ptg` kaemen fuer die drei
+freigegebenen Spiele weitere 33 PTG-Modellfaelle hinzu. Der Runner setzt in
+diesem Pfad standardmaessig keine Completion-Token-Grenze und keinen LLM- oder
+Upload-Timeout; positive Limits gehoeren nur in bewusste Kurztests. Mistral
+laeuft dabei ueber den direkten Router-Backend-Alias `mistral-small-latest`;
+dieser Backend-Pfad ist absichtlich auf einen gleichzeitigen Request begrenzt.
 
 Nach dem Upload erscheint der Lauf unter
 `https://cailama.org/benchmark-feedback.php`; aggregierte Auswertungen liegen
@@ -453,9 +489,10 @@ Antwort gegen den tatsaechlichen Konsolenkontext bewertet werden kann. Diese
 Prompts duerfen Rolle, Aufgabe, Toolliste, Brettwahrheit, FEN und
 Kandidatenzuege enthalten, aber keine Modellidentitaet, keine
 Verbrauchsklasse, keine lokalen Pfade und keine Secrets.
-`--role-max-tokens` begrenzt nur die kurzen Rollen-Probes auf
-OpenAI-kompatiblen Backends. Damit werden Laufzeit und Antwortlaenge
-vergleichbarer; der volle PTG-Flow-/Schluesselstellungslauf bleibt davon unberuehrt.
+Positive `--role-max-tokens`- oder Timeout-Werte begrenzen nur bewusste
+Kurztests. Der lange Feedbacklauf laeuft ohne Completion-Token-Grenze und ohne
+clientseitigen LLM-/Upload-Timeout; der volle PTG-Flow-/
+Schluesselstellungslauf bleibt davon ebenfalls unberuehrt.
 Lokale Artefakte erfassen Router-Header fuer Backend, Provider-Modell und
 Fallback, sofern der Router sie liefert. Das ist wichtig, weil `vm`/`pi`-
 Routing die Laufzeitmessung beeinflusst. Die geschuetzte Website zeigt diese

@@ -109,7 +109,9 @@ Dieses Repo dient dazu:
   ohne Secrets oder private Rohdaten.
 - `docs/benchmark-results/README.md` - Ablage- und Formatregeln fuer spaetere
   Master-Benchmark-Ergebnisse.
-- `docs/benchmark-results/model-role-matrix.current.md` - aktuelle
+- `docs/benchmark-results/model-role-results.current.md` - aktueller
+  gemessener Modellrollen-Stand, je Modell als eigene Tabelle.
+- `docs/benchmark-results/model-role-matrix.current.md` - historische
   Modellrollen-Hypothese und Feedback-Metriken.
 - `docs/roadmap.md` - Roadmap aus `status.plan.cailama.md` als pflegbare
   Master-Sicht.

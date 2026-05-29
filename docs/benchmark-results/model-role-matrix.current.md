@@ -5,6 +5,8 @@ Stand: 2026-05-23.
 Diese Matrix ist eine messbare Arbeitshypothese fuer CaiLama-Modellrollen.
 Sie ersetzt keine Benchmark-Ergebnisse. Jede Zeile muss ueber wiederholbare
 Aufgaben, Router-/Client-Metriken und menschliches Feedback validiert werden.
+Aktuelle gemessene Rollenwerte stehen in
+`docs/benchmark-results/model-role-results.current.md`.
 
 ## Grundannahmen
 
