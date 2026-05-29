@@ -1,6 +1,16 @@
 # Aktuelle Modellrollen-Ergebnisse
 
-Stand: 2026-05-29T10:11:02Z.
+Stand: 2026-05-29 (Router/Task-Semantik-Lauf ausgewertet).
+
+Neuester semantischer Teillauf (nur `router` + `task`):
+`docs/benchmark-results/2026-05-29.router-task-semantic.md`
+(Run `ptg-three-games-20260529T145606Z`, 64 Modelle, Struktur-Pass Router 55,5 % /
+Task 34,7 %). Vollständiger 11-Rollen-Stand unten stammt noch aus
+`ptg-three-games-20260526T092135Z`.
+
+---
+
+Stand (11-Rollen-Lauf): 2026-05-29T10:11:02Z.
 Quelle: Website-Feedback-Summary fuer Run `ptg-three-games-20260526T092135Z`.
 Testlauf erzeugt: 2026-05-28T21:49:20+00:00.
 Umfang: 63 Modelle, 11 Rollen, 110 Rollenaufgaben, PTG-Teil uebersprungen.

@@ -260,6 +260,10 @@ Vor Arbeitsbeginn lesen:
   **Update 2026-05-29:** Plan fuer halb deterministischen Router und Benchmark-/
   Console-Align: `2026-05-29.router-console-alignment.plan.md` (Intent-Routing
   deterministisch, LLM nur Semantik, gemeinsame `RoutingPipeline`).
+  Erster semantischer Router/Task-Lauf ausgewertet:
+  `docs/benchmark-results/2026-05-29.router-task-semantic.md`
+  (`ptg-three-games-20260529T145606Z`). Folge-Fix in CaiLama: semantisches
+  `role_hint` darf nicht durch deterministischen Tool-Rebound überschrieben werden.
   **Update 2026-05-25:** Der Master enthaelt jetzt den editierbaren
   Modellrollen-Aufgabenkatalog `benchmarks/model-role/tasks.json` mit 10
   Aufgaben je Rolle sowie versionierte Systemprompts und Prompt-Templates.

@@ -182,6 +182,10 @@ Ein Ergebnis enthaelt mindestens:
 
 ## Vorliegende Ergebnisse
 
+- `docs/benchmark-results/2026-05-29.router-task-semantic.md`:
+  erster semantischer Router-/Task-Benchmark (`ptg-three-games-20260529T145606Z`,
+  64 Modelle × 20 Aufgaben). Struktur-Pass Router 55,5 %, Task 34,7 %; Hauptursache
+  Router: deterministischer Tool-Rebound überschrieb LLM-`role_hint` (Fix in CaiLama).
 - `docs/benchmark-results/model-role-results.current.md`:
   aktueller gemessener Modellrollen-Stand aus dem abgeschlossenen
   Website-Feedbacklauf `ptg-three-games-20260526T092135Z`. Jedes getestete
