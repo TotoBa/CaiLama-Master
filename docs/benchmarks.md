@@ -234,13 +234,20 @@ Ein Ergebnis enthaelt mindestens:
   wird. Pro Modell werden nacheinander alle Rollenaufgaben fuer alle
   CaiLama-Rollen erzeugt: `router`, `small`, `large`, `task`, `translator`,
   `coach`, `analyst`, `critic`, `vision`, `scribe` und `researcher`.
-  `router`-Aufgaben laufen ueber `ModelRouter.decide()` und damit die gemeinsame
-  `RoutingPipeline` (deterministisch zuerst, optional LLM-Semantik). Der
-  Benchmark prueft fuer Router **Intent** (`expected_role`, erwartete Tool-
-  **Namen**), nicht mehr exakte LLM-JSON-`tool_params`. Observations enthalten
-  zusaetzlich `routing_source` und `confidence`. `task`-Aufgaben laufen ueber
-  einen begrenzten `AgentLoop`; beide verwenden dieselben Parser und
-  Output-Vertraege wie die Console. Der Runner nutzt die Rollen-Systemprompts
+  `router`-Aufgaben laufen ueber `RoutingPipeline.route_user_request()` (deterministisch
+  zuerst, optional LLM-Semantik). Der Benchmark-Katalog enthaelt fuer Router und Task je
+  10 **semantische** Faelle ohne harte Marker (Mehrdeutigkeit, widerspruechliche Signale).
+  Deterministische Router-/Task-Muster gehoeren in pytest (`test_routing_pipeline.py`,
+  `test_task_pipeline.py`), nicht in den Benchmark. Fuer Router prueft der Benchmark
+  **Intent** (`expected_role`, optional erwartete Tool-**Namen**); bei semantischen Faellen
+  muss zusaetzlich `routing_source=llm_semantic` gelten. Observations enthalten
+  `routing_source` und `confidence`. `task`-Aufgaben laufen ueber
+  `TaskPlanningPipeline.plan_user_task()` mit demselben Muster: deterministischer
+  Mehrschrittplan zuerst, LLM nur fuer mehrdeutige Nutzerauftraege. Der Benchmark prueft
+  Tool-Schritte und Reihenfolge (`expected_tool_names`, `expected_step_sequence`), bei
+  semantischen Faellen zusaetzlich `planning_source=llm_semantic`. Die eigentliche
+  AgentLoop-Ausfuehrung bleibt ein separater Console-Pfad. Beide Pipelines verwenden
+  dieselben Parser und Output-Vertraege wie die Console. Der Runner nutzt die Rollen-Systemprompts
   aus demselben kopierten
   `system_prompts/`-Verzeichnis; damit weichen Benchmark und interaktive
   Console nicht still auseinander. Das ist wichtig fuer Coach-/Vision-Faelle,
@@ -266,7 +273,8 @@ Ein Ergebnis enthaelt mindestens:
   Wartezeit wiederholt; erst danach wird der Fall als Fehler exportiert.
   Leere Modellantworten und konkrete Vertragsfehlerklassen wie `invalid_json`,
   `missing_required_field`, `unexpected_tool`, `routing_role_mismatch`,
-  `routing_tool_mismatch`, `boardtruth_conflict`,
+  `routing_tool_mismatch`, `routing_not_semantic`, `planning_not_semantic`,
+  `task_step_mismatch`, `task_tool_mismatch`, `boardtruth_conflict`,
   `empty_optional_field_reference` oder `missing_citation` werden automatisch
   geschlossen, damit sie nicht in der manuellen Bewertung landen. Strukturfehler
   koennen serverseitig automatisch als nicht manuell bewertbar geschlossen

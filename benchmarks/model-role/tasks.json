@@ -1,6 +1,6 @@
 {
-  "schema_version": "1.1",
-  "description": "Editable CaiLama chess model-role benchmark catalog. Every task is chess-related. The runner builds prompts through the real CaiLama PromptBuilder or router prompt path and exports full system/user prompts for blind feedback.",
+  "schema_version": "1.2",
+  "description": "Editable CaiLama chess model-role benchmark catalog. Router and task probes focus on ambiguous semantic decisions; deterministic routing/planning belongs in pytest.",
   "default_tasks_per_role": 10,
   "prompt_template": "prompt_templates/role_task.md",
   "system_prompt_dir": "system_prompts",
@@ -8,236 +8,143 @@
     "router": {
       "tasks": [
         {
-          "id": "router-001",
-          "label": "Route PGN analysis",
-          "query": "User wants the approved benchmark-three-games.pgn loaded, fully analyzed with Stockfish, and converted into feedback-ready chess cases. Return the router decision.",
-          "prompt": "User wants the approved benchmark-three-games.pgn loaded, fully analyzed with Stockfish, and converted into feedback-ready chess cases. Return the router decision.",
-          "expected_task": "Select the chess analysis tool path for PGN loading and game analysis.",
-          "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
-          "expected_role": "task",
-          "expected_output_type": "routing_decision",
-          "expected_tools": [
-            {
-              "name": "load_pgn",
-              "arguments": {
-                "path": "benchmark-three-games.pgn"
-              }
-            },
-            {
-              "name": "analyze_game",
-              "arguments": {
-                "input_pgn": "benchmark-three-games.pgn",
-                "stockfish_path": "/usr/games/stockfish18"
-              }
-            }
-          ],
-          "auto_checks": [
-            "routing_role",
-            "expected_tool_names"
-          ]
-        },
-        {
-          "id": "router-002",
-          "label": "Route legal move tags",
-          "query": "User asks: classify every legal move in FEN rn1qkb1r/pp3ppp/2p1pnb1/4N3/3P4/6N1/PPP2PPP/R1BQKB1R w KQkq - 0 8 with BoardTruth tags and quality bands.",
-          "prompt": "User asks: classify every legal move in FEN rn1qkb1r/pp3ppp/2p1pnb1/4N3/3P4/6N1/PPP2PPP/R1BQKB1R w KQkq - 0 8 with BoardTruth tags and quality bands.",
-          "expected_task": "Route to legal-move evaluation before verbal analysis.",
-          "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
-          "expected_role": "task",
-          "expected_output_type": "routing_decision",
-          "position_fen": "rn1qkb1r/pp3ppp/2p1pnb1/4N3/3P4/6N1/PPP2PPP/R1BQKB1R w KQkq - 0 8",
-          "expected_tools": [
-            {
-              "name": "evaluate_legal_moves",
-              "arguments": {
-                "fen": "rn1qkb1r/pp3ppp/2p1pnb1/4N3/3P4/6N1/PPP2PPP/R1BQKB1R w KQkq - 0 8"
-              }
-            }
-          ],
-          "auto_checks": [
-            "routing_role",
-            "expected_tool_names"
-          ]
-        },
-        {
-          "id": "router-003",
-          "label": "Route position eval",
-          "query": "User asks only for the current engine-style evaluation of FEN 3r1rk1/p1pqbppp/2p5/3n4/3P4/P1N1B3/1PP3PP/R2Q1RK1 w - - 1 16.",
-          "prompt": "User asks only for the current engine-style evaluation of FEN 3r1rk1/p1pqbppp/2p5/3n4/3P4/P1N1B3/1PP3PP/R2Q1RK1 w - - 1 16.",
-          "expected_task": "Request the position-eval tool with the provided FEN.",
-          "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
-          "expected_role": "analyst",
-          "expected_output_type": "routing_decision",
-          "position_fen": "3r1rk1/p1pqbppp/2p5/3n4/3P4/P1N1B3/1PP3PP/R2Q1RK1 w - - 1 16",
-          "expected_tools": [
-            {
-              "name": "get_position_eval",
-              "arguments": {
-                "fen": "3r1rk1/p1pqbppp/2p5/3n4/3P4/P1N1B3/1PP3PP/R2Q1RK1 w - - 1 16"
-              }
-            }
-          ],
-          "auto_checks": [
-            "routing_role",
-            "expected_tool_names"
-          ]
-        },
-        {
-          "id": "router-004",
-          "label": "Route coach start",
-          "query": "User wants a short on-demand coach session for FEN 4kb1r/p2n1ppp/4q3/4p1B1/4P3/1Q6/PPP2PPP/2KR4 w k - 0 16, with DGT setup prompt if connected and Unicode board fallback.",
-          "prompt": "User wants a short on-demand coach session for FEN 4kb1r/p2n1ppp/4q3/4p1B1/4P3/1Q6/PPP2PPP/2KR4 w k - 0 16, with DGT setup prompt if connected and Unicode board fallback.",
-          "expected_task": "Select the coach role and start_coach_session tool.",
-          "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
+          "id": "router-sem-001",
+          "label": "Coach vs analyst under time trouble",
+          "query": "I keep blundering when the clock runs low. Is this a tactics issue or should we rethink how I play?",
+          "prompt": "I keep blundering when the clock runs low. Is this a tactics issue or should we rethink how I play?",
+          "expected_task": "Route to coaching guidance rather than deep engine analysis.",
+          "quality_question": "Wählt die Routing-Rolle den Trainings-/Coach-Intent statt Analyse?",
           "expected_role": "coach",
           "expected_output_type": "routing_decision",
-          "position_fen": "4kb1r/p2n1ppp/4q3/4p1B1/4P3/1Q6/PPP2PPP/2KR4 w k - 0 16",
-          "expected_tools": [
-            {
-              "name": "start_coach_session",
-              "arguments": {
-                "fen": "4kb1r/p2n1ppp/4q3/4p1B1/4P3/1Q6/PPP2PPP/2KR4 w k - 0 16",
-                "dgt_check": true
-              }
-            }
-          ],
           "auto_checks": [
-            "routing_role",
-            "expected_tool_names"
-          ]
-        },
-        {
-          "id": "router-005",
-          "label": "Route OCR diagram",
-          "query": "User provides a chess PDF page with one diagram and asks to extract text, detect board diagrams, verify FEN uncertainty, and export OCR gates.",
-          "prompt": "User provides a chess PDF page with one diagram and asks to extract text, detect board diagrams, verify FEN uncertainty, and export OCR gates.",
-          "expected_task": "Route through OCR before any chess interpretation.",
-          "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
-          "expected_role": "vision",
-          "expected_output_type": "routing_decision",
-          "expected_tools": [
-            {
-              "name": "analyze_ocr_document",
-              "arguments": {
-                "path": "approved-chess-page.pdf"
-              }
-            }
-          ],
-          "auto_checks": [
-            "routing_role",
-            "expected_tool_names"
-          ]
-        },
-        {
-          "id": "router-006",
-          "label": "Route opening text",
-          "query": "User asks for the opening idea after 1.e4 c6 2.d4 d5 3.Nc3 dxe4 and wants source-backed explanation.",
-          "prompt": "User asks for the opening idea after 1.e4 c6 2.d4 d5 3.Nc3 dxe4 and wants source-backed explanation.",
-          "expected_task": "Attach opening text context instead of guessing theory.",
-          "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
-          "expected_role": "researcher",
-          "expected_output_type": "routing_decision",
-          "expected_tools": [
-            {
-              "name": "get_opening_text",
-              "arguments": {
-                "moves": "1. e4 c6 2. d4 d5 3.Nc3 dxe4"
-              }
-            }
-          ],
-          "auto_checks": [
-            "routing_role",
-            "expected_tool_names"
-          ]
-        },
-        {
-          "id": "router-007",
-          "label": "Route DWZ context",
-          "query": "User asks for DWZ context for an opponent before building a chess training note.",
-          "prompt": "User asks for DWZ context for an opponent before building a chess training note.",
-          "expected_task": "Use the DWZ lookup path and do not invent rating data.",
-          "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
-          "expected_role": "researcher",
-          "expected_output_type": "routing_decision",
-          "expected_tools": [
-            {
-              "name": "search_dwz",
-              "arguments": {
-                "name": "example opponent"
-              }
-            }
-          ],
-          "auto_checks": [
-            "routing_role",
-            "expected_tool_names"
-          ]
-        },
-        {
-          "id": "router-008",
-          "label": "Route FIDE context",
-          "query": "User asks for a FIDE rating context and source citation before comparing chess strengths.",
-          "prompt": "User asks for a FIDE rating context and source citation before comparing chess strengths.",
-          "expected_task": "Use the FIDE lookup path and keep source intent.",
-          "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
-          "expected_role": "researcher",
-          "expected_output_type": "routing_decision",
-          "expected_tools": [
-            {
-              "name": "search_fide",
-              "arguments": {
-                "name": "example player"
-              }
-            }
-          ],
-          "auto_checks": [
-            "routing_role",
-            "expected_tool_names"
-          ]
-        },
-        {
-          "id": "router-009",
-          "label": "Route chess translation",
-          "query": "User asks: translate this English chess analysis into German, preserve SAN notation and FEN unchanged, no engine analysis.",
-          "prompt": "User asks: translate this English chess analysis into German, preserve SAN notation and FEN unchanged, no engine analysis.",
-          "expected_task": "Choose translator and avoid unnecessary tools.",
-          "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
-          "expected_role": "translator",
-          "expected_output_type": "routing_decision",
-          "auto_checks": [
+            "requires_llm_semantic",
             "routing_role"
           ]
         },
         {
-          "id": "router-010",
-          "label": "Route profile import",
-          "query": "User wants to import approved games for a chess profile and then generate weighted training positions.",
-          "prompt": "User wants to import approved games for a chess profile and then generate weighted training positions.",
-          "expected_task": "Plan the import and personalized-training tool path.",
-          "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
+          "id": "router-sem-002",
+          "label": "Explain opening idea without lookup markers",
+          "query": "Why is the Caro-Kann strategically sound for Black in many club games?",
+          "prompt": "Why is the Caro-Kann strategically sound for Black in many club games?",
+          "expected_task": "Route to concise explanation, not tool automation.",
+          "quality_question": "Landet die Anfrage bei einer erklärenden Rolle?",
+          "expected_role": "small",
+          "expected_output_type": "routing_decision",
+          "auto_checks": [
+            "requires_llm_semantic",
+            "routing_role"
+          ]
+        },
+        {
+          "id": "router-sem-003",
+          "label": "Magazine scan without file path",
+          "query": "Some positions in my club magazine look wrong on paper. How should we handle that?",
+          "prompt": "Some positions in my club magazine look wrong on paper. How should we handle that?",
+          "expected_task": "Route through vision/OCR before chess interpretation.",
+          "quality_question": "Erkennt der Router den OCR-/Diagramm-Intent?",
+          "expected_role": "vision",
+          "expected_output_type": "routing_decision",
+          "auto_checks": [
+            "requires_llm_semantic",
+            "routing_role"
+          ]
+        },
+        {
+          "id": "router-sem-004",
+          "label": "Contradictory engine request",
+          "query": "Do not use any engine, but tell me the objectively best continuation in this sharp line.",
+          "prompt": "Do not use any engine, but tell me the objectively best continuation in this sharp line.",
+          "expected_task": "Route to critique/review of conflicting instructions.",
+          "quality_question": "Erkennt der Router den Widerspruch und wählt eine prüfende Rolle?",
+          "expected_role": "critic",
+          "expected_output_type": "routing_decision",
+          "auto_checks": [
+            "requires_llm_semantic",
+            "routing_role"
+          ]
+        },
+        {
+          "id": "router-sem-005",
+          "label": "Tournament prep ambiguity",
+          "query": "Help me prepare for tomorrow's tournament. I cannot decide whether to drill openings or review recent losses.",
+          "prompt": "Help me prepare for tomorrow's tournament. I cannot decide whether to drill openings or review recent losses.",
+          "expected_task": "Route to coaching/training guidance.",
+          "quality_question": "Landet die Mehrdeutigkeit bei coach statt task/router-JSON?",
+          "expected_role": "coach",
+          "expected_output_type": "routing_decision",
+          "auto_checks": [
+            "requires_llm_semantic",
+            "routing_role"
+          ]
+        },
+        {
+          "id": "router-sem-006",
+          "label": "Historical opening question",
+          "query": "Who developed the Réti idea and why does it work as a practical repertoire choice?",
+          "prompt": "Who developed the Réti idea and why does it work as a practical repertoire choice?",
+          "expected_task": "Route to source-backed research rather than casual chat.",
+          "quality_question": "Wählt der Router researcher für Quellen-/Historien-Intent?",
+          "expected_role": "researcher",
+          "expected_output_type": "routing_decision",
+          "auto_checks": [
+            "requires_llm_semantic",
+            "routing_role"
+          ]
+        },
+        {
+          "id": "router-sem-007",
+          "label": "Translate coach feedback",
+          "query": "My club coach wrote feedback in English. Make it readable for me without changing the moves.",
+          "prompt": "My club coach wrote feedback in English. Make it readable for me without changing the moves.",
+          "expected_task": "Route to translator, not analysis.",
+          "quality_question": "Erkennt der Router reinen Übersetzungsbedarf?",
+          "expected_role": "translator",
+          "expected_output_type": "routing_decision",
+          "auto_checks": [
+            "requires_llm_semantic",
+            "routing_role"
+          ]
+        },
+        {
+          "id": "router-sem-008",
+          "label": "Deep review without uploaded game",
+          "query": "I want a deep post-mortem of my last classical game, but I have not uploaded anything yet.",
+          "prompt": "I want a deep post-mortem of my last classical game, but I have not uploaded anything yet.",
+          "expected_task": "Route to deep analysis role despite missing concrete files.",
+          "quality_question": "Wählt der Router large/analyst für tiefe Partieanalyse?",
+          "expected_role": "large",
+          "expected_output_type": "routing_decision",
+          "auto_checks": [
+            "requires_llm_semantic",
+            "routing_role"
+          ]
+        },
+        {
+          "id": "router-sem-009",
+          "label": "Turn notes into review material",
+          "query": "Turn my bullet-session notes into something I can review next week.",
+          "prompt": "Turn my bullet-session notes into something I can review next week.",
+          "expected_task": "Route to scribe/report shaping.",
+          "quality_question": "Landet der Intent bei scribe?",
+          "expected_role": "scribe",
+          "expected_output_type": "routing_decision",
+          "auto_checks": [
+            "requires_llm_semantic",
+            "routing_role"
+          ]
+        },
+        {
+          "id": "router-sem-010",
+          "label": "Forgotten multi-step workflow",
+          "query": "Set up everything I need before the next training block. I keep forgetting the workflow.",
+          "prompt": "Set up everything I need before the next training block. I keep forgetting the workflow.",
+          "expected_task": "Route to task automation rather than one-shot Q&A.",
+          "quality_question": "Erkennt der Router Mehrschritt-/Workflow-Intent?",
           "expected_role": "task",
           "expected_output_type": "routing_decision",
-          "expected_tools": [
-            {
-              "name": "import_games",
-              "arguments": {
-                "platform": "lichess",
-                "username": "example",
-                "profile_id": "benchmark-profile",
-                "max_games": 20
-              }
-            },
-            {
-              "name": "generate_personalized_training",
-              "arguments": {
-                "analysis_dirs": [
-                  "benchmark-three-games"
-                ]
-              }
-            }
-          ],
           "auto_checks": [
-            "routing_role",
-            "expected_tool_names"
+            "requires_llm_semantic",
+            "routing_role"
           ]
         }
       ]
@@ -553,248 +460,214 @@
     "task": {
       "tasks": [
         {
-          "id": "task-001",
-          "label": "PGN analysis tool plan",
-          "query": "Return JSON only: plan tools to load benchmark-three-games.pgn, run game analysis, then generate weighted training cards from chess key positions.",
-          "prompt": "Return JSON only: plan tools to load benchmark-three-games.pgn, run game analysis, then generate weighted training cards from chess key positions.",
-          "expected_task": "Emit a valid CaiLama tool-plan JSON using the expected tool names and argument shape.",
-          "quality_question": "Ist der Toolplan strukturell korrekt und schachlich passend?",
-          "context_type": "task_execution",
-          "expected_output_type": "json_object",
+          "id": "task-sem-001",
+          "label": "Import and train this week",
+          "query": "Pull in my recent online games and build something I can train with this week.",
+          "prompt": "Pull in my recent online games and build something I can train with this week.",
+          "expected_task": "Plan import then personalized training generation.",
+          "quality_question": "Plant das Modell Import und Training in sinnvoller Reihenfolge?",
+          "expected_output_type": "task_plan",
           "expected_tools": [
             {
-              "name": "load_pgn",
-              "arguments": {
-                "path": "benchmark-three-games.pgn"
-              }
+              "name": "import_games"
             },
             {
-              "name": "analyze_game",
-              "arguments": {
-                "input_pgn": "benchmark-three-games.pgn",
-                "stockfish_path": "/usr/games/stockfish18"
-              }
+              "name": "generate_personalized_training"
+            }
+          ],
+          "auto_checks": [
+            "requires_llm_semantic",
+            "expected_tool_names",
+            "expected_step_sequence"
+          ]
+        },
+        {
+          "id": "task-sem-002",
+          "label": "Tournament export to drills",
+          "query": "I exported a tournament batch and want mistakes I can drill from it.",
+          "prompt": "I exported a tournament batch and want mistakes I can drill from it.",
+          "expected_task": "Plan PGN load, analysis, then training generation.",
+          "quality_question": "Erkennt der Plan die Analyse-Pipeline vor Training?",
+          "expected_output_type": "task_plan",
+          "expected_tools": [
+            {
+              "name": "load_pgn"
             },
             {
-              "name": "generate_personalized_training",
-              "arguments": {
-                "analysis_dirs": [
-                  "benchmark-three-games"
-                ]
-              }
+              "name": "analyze_game"
+            },
+            {
+              "name": "generate_personalized_training"
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "requires_llm_semantic",
+            "expected_tool_names",
+            "expected_step_sequence"
           ]
         },
         {
-          "id": "task-002",
-          "label": "Legal move evaluation plan",
-          "query": "Return JSON only: plan a tool call to evaluate every legal move in FEN rn1qkb1r/pp3ppp/2p1pnb1/4N3/3P4/6N1/PPP2PPP/R1BQKB1R w KQkq - 0 8 with depth 20.",
-          "prompt": "Return JSON only: plan a tool call to evaluate every legal move in FEN rn1qkb1r/pp3ppp/2p1pnb1/4N3/3P4/6N1/PPP2PPP/R1BQKB1R w KQkq - 0 8 with depth 20.",
-          "expected_task": "Emit a valid CaiLama tool-plan JSON using the expected tool names and argument shape.",
-          "quality_question": "Ist der Toolplan strukturell korrekt und schachlich passend?",
-          "context_type": "task_execution",
-          "expected_output_type": "json_object",
+          "id": "task-sem-003",
+          "label": "Opponent prep workflow",
+          "query": "Before my next match I want background on my opponent and a few training ideas.",
+          "prompt": "Before my next match I want background on my opponent and a few training ideas.",
+          "expected_task": "Plan lookup then training material.",
+          "quality_question": "Plant das Modell Gegner-Recherche vor Training?",
+          "expected_output_type": "task_plan",
           "expected_tools": [
             {
-              "name": "evaluate_legal_moves",
-              "arguments": {
-                "fen": "rn1qkb1r/pp3ppp/2p1pnb1/4N3/3P4/6N1/PPP2PPP/R1BQKB1R w KQkq - 0 8",
-                "depth": 20
-              }
+              "name": "search_dwz"
+            },
+            {
+              "name": "generate_personalized_training"
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
-          ],
-          "position_fen": "rn1qkb1r/pp3ppp/2p1pnb1/4N3/3P4/6N1/PPP2PPP/R1BQKB1R w KQkq - 0 8"
-        },
-        {
-          "id": "task-003",
-          "label": "Coach session plan",
-          "query": "Return JSON only: start an on-demand coach session for FEN 4kb1r/p2n1ppp/4q3/4p1B1/4P3/1Q6/PPP2PPP/2KR4 w k - 0 16; DGT check true, Unicode board fallback implicit.",
-          "prompt": "Return JSON only: start an on-demand coach session for FEN 4kb1r/p2n1ppp/4q3/4p1B1/4P3/1Q6/PPP2PPP/2KR4 w k - 0 16; DGT check true, Unicode board fallback implicit.",
-          "expected_task": "Emit a valid CaiLama tool-plan JSON using the expected tool names and argument shape.",
-          "quality_question": "Ist der Toolplan strukturell korrekt und schachlich passend?",
-          "context_type": "task_execution",
-          "expected_output_type": "json_object",
-          "expected_tools": [
-            {
-              "name": "start_coach_session",
-              "arguments": {
-                "fen": "4kb1r/p2n1ppp/4q3/4p1B1/4P3/1Q6/PPP2PPP/2KR4 w k - 0 16",
-                "dgt_check": true
-              }
-            }
-          ],
-          "auto_checks": [
-            "json_object",
-            "expected_tools"
-          ],
-          "position_fen": "4kb1r/p2n1ppp/4q3/4p1B1/4P3/1Q6/PPP2PPP/2KR4 w k - 0 16"
-        },
-        {
-          "id": "task-004",
-          "label": "Opening context plan",
-          "query": "Return JSON only: fetch opening text for 1.e4 c6 2.d4 d5 3.Nc3 dxe4 before writing a training note.",
-          "prompt": "Return JSON only: fetch opening text for 1.e4 c6 2.d4 d5 3.Nc3 dxe4 before writing a training note.",
-          "expected_task": "Emit a valid CaiLama tool-plan JSON using the expected tool names and argument shape.",
-          "quality_question": "Ist der Toolplan strukturell korrekt und schachlich passend?",
-          "context_type": "task_execution",
-          "expected_output_type": "json_object",
-          "expected_tools": [
-            {
-              "name": "get_opening_text",
-              "arguments": {
-                "moves": "1. e4 c6 2. d4 d5 3.Nc3 dxe4"
-              }
-            }
-          ],
-          "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "requires_llm_semantic",
+            "expected_tool_names",
+            "expected_step_sequence"
           ]
         },
         {
-          "id": "task-005",
-          "label": "OCR gate plan",
-          "query": "Return JSON only: process approved-chess-page.pdf for OCR chess diagram detection and FEN gates.",
-          "prompt": "Return JSON only: process approved-chess-page.pdf for OCR chess diagram detection and FEN gates.",
-          "expected_task": "Emit a valid CaiLama tool-plan JSON using the expected tool names and argument shape.",
-          "quality_question": "Ist der Toolplan strukturell korrekt und schachlich passend?",
-          "context_type": "task_execution",
-          "expected_output_type": "json_object",
+          "id": "task-sem-004",
+          "label": "Book diagram trust check",
+          "query": "I photographed pages from a chess book. Check whether the diagram positions look trustworthy.",
+          "prompt": "I photographed pages from a chess book. Check whether the diagram positions look trustworthy.",
+          "expected_task": "Plan OCR/document analysis first.",
+          "quality_question": "Plant das Modell OCR vor Interpretation?",
+          "expected_output_type": "task_plan",
           "expected_tools": [
             {
-              "name": "analyze_ocr_document",
-              "arguments": {
-                "path": "approved-chess-page.pdf"
-              }
+              "name": "analyze_ocr_document"
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "requires_llm_semantic",
+            "expected_tool_names"
           ]
         },
         {
-          "id": "task-006",
-          "label": "DWZ staging plan",
-          "query": "Return JSON only: obtain DWZ context for a chess opponent and keep result source-bound.",
-          "prompt": "Return JSON only: obtain DWZ context for a chess opponent and keep result source-bound.",
-          "expected_task": "Emit a valid CaiLama tool-plan JSON using the expected tool names and argument shape.",
-          "quality_question": "Ist der Toolplan strukturell korrekt und schachlich passend?",
-          "context_type": "task_execution",
-          "expected_output_type": "json_object",
+          "id": "task-sem-005",
+          "label": "On-board coaching setup",
+          "query": "Set up a short coaching session for the position I am struggling with on the board.",
+          "prompt": "Set up a short coaching session for the position I am struggling with on the board.",
+          "expected_task": "Plan coach session start.",
+          "quality_question": "Plant das Modell start_coach_session?",
+          "expected_output_type": "task_plan",
           "expected_tools": [
             {
-              "name": "search_dwz",
-              "arguments": {
-                "name": "example opponent"
-              }
+              "name": "start_coach_session"
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "requires_llm_semantic",
+            "expected_tool_names"
           ]
         },
         {
-          "id": "task-007",
-          "label": "FIDE lookup plan",
-          "query": "Return JSON only: obtain FIDE context for a chess player before analysis.",
-          "prompt": "Return JSON only: obtain FIDE context for a chess player before analysis.",
-          "expected_task": "Emit a valid CaiLama tool-plan JSON using the expected tool names and argument shape.",
-          "quality_question": "Ist der Toolplan strukturell korrekt und schachlich passend?",
-          "context_type": "task_execution",
-          "expected_output_type": "json_object",
+          "id": "task-sem-006",
+          "label": "Human vs engine judgment",
+          "query": "Compare how engines and more human-style models would judge the critical moment I am worried about.",
+          "prompt": "Compare how engines and more human-style models would judge the critical moment I am worried about.",
+          "expected_task": "Plan ensemble-style position comparison.",
+          "quality_question": "Plant das Modell analyze_position_ensemble?",
+          "expected_output_type": "task_plan",
           "expected_tools": [
             {
-              "name": "search_fide",
-              "arguments": {
-                "name": "example player"
-              }
+              "name": "analyze_position_ensemble"
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "requires_llm_semantic",
+            "expected_tool_names"
           ]
         },
         {
-          "id": "task-008",
-          "label": "RAG opening query",
-          "query": "Return JSON only: search internal RAG for Caro-Kann Advance pawn-break training themes.",
-          "prompt": "Return JSON only: search internal RAG for Caro-Kann Advance pawn-break training themes.",
-          "expected_task": "Emit a valid CaiLama tool-plan JSON using the expected tool names and argument shape.",
-          "quality_question": "Ist der Toolplan strukturell korrekt und schachlich passend?",
-          "context_type": "task_execution",
-          "expected_output_type": "json_object",
+          "id": "task-sem-007",
+          "label": "Club training organization",
+          "query": "Organize next week's club training from my profile data and recent results.",
+          "prompt": "Organize next week's club training from my profile data and recent results.",
+          "expected_task": "Plan import/analysis/training stack.",
+          "quality_question": "Plant das Modell Import und Training?",
+          "expected_output_type": "task_plan",
           "expected_tools": [
             {
-              "name": "search_rag",
-              "arguments": {
-                "query": "Caro-Kann Advance pawn break training",
-                "top_n": 5
-              }
+              "name": "import_games"
+            },
+            {
+              "name": "generate_personalized_training"
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "requires_llm_semantic",
+            "expected_tool_names",
+            "expected_step_sequence"
           ]
         },
         {
-          "id": "task-009",
-          "label": "Import games plan",
-          "query": "Return JSON only: import up to 20 approved chess games for benchmark-profile from Lichess.",
-          "prompt": "Return JSON only: import up to 20 approved chess games for benchmark-profile from Lichess.",
-          "expected_task": "Emit a valid CaiLama tool-plan JSON using the expected tool names and argument shape.",
-          "quality_question": "Ist der Toolplan strukturell korrekt und schachlich passend?",
-          "context_type": "task_execution",
-          "expected_output_type": "json_object",
+          "id": "task-sem-008",
+          "label": "Opening line keeps crushing me",
+          "query": "Find opening context for the line that keeps crushing me in league games.",
+          "prompt": "Find opening context for the line that keeps crushing me in league games.",
+          "expected_task": "Plan opening text or RAG lookup.",
+          "quality_question": "Plant das Modell get_opening_text oder search_rag?",
+          "expected_output_type": "task_plan",
           "expected_tools": [
             {
-              "name": "import_games",
-              "arguments": {
-                "platform": "lichess",
-                "username": "example",
-                "profile_id": "benchmark-profile",
-                "max_games": 20
-              }
+              "name": "get_opening_text"
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "requires_llm_semantic",
+            "expected_tool_names"
           ]
         },
         {
-          "id": "task-010",
-          "label": "Position eval plan",
-          "query": "Return JSON only: evaluate FEN 3r1rk1/p1pqbppp/2p5/3n4/3P4/P1N1B3/1PP3PP/R2Q1RK1 w - - 1 16 before any prose analysis.",
-          "prompt": "Return JSON only: evaluate FEN 3r1rk1/p1pqbppp/2p5/3n4/3P4/P1N1B3/1PP3PP/R2Q1RK1 w - - 1 16 before any prose analysis.",
-          "expected_task": "Emit a valid CaiLama tool-plan JSON using the expected tool names and argument shape.",
-          "quality_question": "Ist der Toolplan strukturell korrekt und schachlich passend?",
-          "context_type": "task_execution",
-          "expected_output_type": "json_object",
+          "id": "task-sem-009",
+          "label": "Usual post-game pipeline",
+          "query": "Run the usual post-game pipeline on my latest batch of classical games.",
+          "prompt": "Run the usual post-game pipeline on my latest batch of classical games.",
+          "expected_task": "Plan load, analyze, training generation.",
+          "quality_question": "Erkennt das Modell die Standard-Pipeline?",
+          "expected_output_type": "task_plan",
           "expected_tools": [
             {
-              "name": "get_position_eval",
-              "arguments": {
-                "fen": "3r1rk1/p1pqbppp/2p5/3n4/3P4/P1N1B3/1PP3PP/R2Q1RK1 w - - 1 16"
-              }
+              "name": "load_pgn"
+            },
+            {
+              "name": "analyze_game"
+            },
+            {
+              "name": "generate_personalized_training"
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "requires_llm_semantic",
+            "expected_tool_names",
+            "expected_step_sequence"
+          ]
+        },
+        {
+          "id": "task-sem-010",
+          "label": "Overnight analysis queue",
+          "query": "Queue the workflow so imported games can be analyzed overnight and be ready in the morning.",
+          "prompt": "Queue the workflow so imported games can be analyzed overnight and be ready in the morning.",
+          "expected_task": "Plan import and queued/batch analysis workflow.",
+          "quality_question": "Plant das Modell Import und Analyse-Schritte?",
+          "expected_output_type": "task_plan",
+          "expected_tools": [
+            {
+              "name": "import_games"
+            },
+            {
+              "name": "analyze_game"
+            }
           ],
-          "position_fen": "3r1rk1/p1pqbppp/2p5/3n4/3P4/P1N1B3/1PP3PP/R2Q1RK1 w - - 1 16"
+          "auto_checks": [
+            "requires_llm_semantic",
+            "expected_tool_names",
+            "expected_step_sequence"
+          ]
         }
       ]
     },
