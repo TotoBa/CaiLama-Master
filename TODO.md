@@ -257,6 +257,9 @@ Vor Arbeitsbeginn lesen:
   sondern am Website-Upload: Batch 1 mit 50 Beobachtungen lieferte HTTP 413,
   weil die volle Prompt-/Antwort-Nutzlast das 1-MiB-API-Limit ueberschritt.
   CaiLama nutzt deshalb standardmaessig `--upload-batch-size 20`.
+  **Update 2026-05-29:** Plan fuer halb deterministischen Router und Benchmark-/
+  Console-Align: `2026-05-29.router-console-alignment.plan.md` (Intent-Routing
+  deterministisch, LLM nur Semantik, gemeinsame `RoutingPipeline`).
   **Update 2026-05-25:** Der Master enthaelt jetzt den editierbaren
   Modellrollen-Aufgabenkatalog `benchmarks/model-role/tasks.json` mit 10
   Aufgaben je Rolle sowie versionierte Systemprompts und Prompt-Templates.

@@ -234,7 +234,11 @@ Ein Ergebnis enthaelt mindestens:
   wird. Pro Modell werden nacheinander alle Rollenaufgaben fuer alle
   CaiLama-Rollen erzeugt: `router`, `small`, `large`, `task`, `translator`,
   `coach`, `analyst`, `critic`, `vision`, `scribe` und `researcher`.
-  `router`-Aufgaben laufen ueber `ModelRouter.decide()`, `task`-Aufgaben ueber
+  `router`-Aufgaben laufen ueber `ModelRouter.decide()` und damit die gemeinsame
+  `RoutingPipeline` (deterministisch zuerst, optional LLM-Semantik). Der
+  Benchmark prueft fuer Router **Intent** (`expected_role`, erwartete Tool-
+  **Namen**), nicht mehr exakte LLM-JSON-`tool_params`. Observations enthalten
+  zusaetzlich `routing_source` und `confidence`. `task`-Aufgaben laufen ueber
   einen begrenzten `AgentLoop`; beide verwenden dieselben Parser und
   Output-Vertraege wie die Console. Der Runner nutzt die Rollen-Systemprompts
   aus demselben kopierten
@@ -261,7 +265,8 @@ Ein Ergebnis enthaelt mindestens:
   Provider-Fehler 429/500/503 werden pro LLM-Call bis zu drei Mal mit
   Wartezeit wiederholt; erst danach wird der Fall als Fehler exportiert.
   Leere Modellantworten und konkrete Vertragsfehlerklassen wie `invalid_json`,
-  `missing_required_field`, `unexpected_tool`, `boardtruth_conflict`,
+  `missing_required_field`, `unexpected_tool`, `routing_role_mismatch`,
+  `routing_tool_mismatch`, `boardtruth_conflict`,
   `empty_optional_field_reference` oder `missing_citation` werden automatisch
   geschlossen, damit sie nicht in der manuellen Bewertung landen. Strukturfehler
   koennen serverseitig automatisch als nicht manuell bewertbar geschlossen

@@ -15,7 +15,7 @@
           "expected_task": "Select the chess analysis tool path for PGN loading and game analysis.",
           "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
           "expected_role": "task",
-          "expected_output_type": "json_object",
+          "expected_output_type": "routing_decision",
           "expected_tools": [
             {
               "name": "load_pgn",
@@ -32,8 +32,8 @@
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "routing_role",
+            "expected_tool_names"
           ]
         },
         {
@@ -44,7 +44,7 @@
           "expected_task": "Route to legal-move evaluation before verbal analysis.",
           "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
           "expected_role": "task",
-          "expected_output_type": "json_object",
+          "expected_output_type": "routing_decision",
           "position_fen": "rn1qkb1r/pp3ppp/2p1pnb1/4N3/3P4/6N1/PPP2PPP/R1BQKB1R w KQkq - 0 8",
           "expected_tools": [
             {
@@ -55,8 +55,8 @@
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "routing_role",
+            "expected_tool_names"
           ]
         },
         {
@@ -67,7 +67,7 @@
           "expected_task": "Request the position-eval tool with the provided FEN.",
           "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
           "expected_role": "analyst",
-          "expected_output_type": "json_object",
+          "expected_output_type": "routing_decision",
           "position_fen": "3r1rk1/p1pqbppp/2p5/3n4/3P4/P1N1B3/1PP3PP/R2Q1RK1 w - - 1 16",
           "expected_tools": [
             {
@@ -78,8 +78,8 @@
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "routing_role",
+            "expected_tool_names"
           ]
         },
         {
@@ -90,7 +90,7 @@
           "expected_task": "Select the coach role and start_coach_session tool.",
           "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
           "expected_role": "coach",
-          "expected_output_type": "json_object",
+          "expected_output_type": "routing_decision",
           "position_fen": "4kb1r/p2n1ppp/4q3/4p1B1/4P3/1Q6/PPP2PPP/2KR4 w k - 0 16",
           "expected_tools": [
             {
@@ -102,8 +102,8 @@
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "routing_role",
+            "expected_tool_names"
           ]
         },
         {
@@ -114,7 +114,7 @@
           "expected_task": "Route through OCR before any chess interpretation.",
           "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
           "expected_role": "vision",
-          "expected_output_type": "json_object",
+          "expected_output_type": "routing_decision",
           "expected_tools": [
             {
               "name": "analyze_ocr_document",
@@ -124,8 +124,8 @@
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "routing_role",
+            "expected_tool_names"
           ]
         },
         {
@@ -136,7 +136,7 @@
           "expected_task": "Attach opening text context instead of guessing theory.",
           "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
           "expected_role": "researcher",
-          "expected_output_type": "json_object",
+          "expected_output_type": "routing_decision",
           "expected_tools": [
             {
               "name": "get_opening_text",
@@ -146,8 +146,8 @@
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "routing_role",
+            "expected_tool_names"
           ]
         },
         {
@@ -158,7 +158,7 @@
           "expected_task": "Use the DWZ lookup path and do not invent rating data.",
           "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
           "expected_role": "researcher",
-          "expected_output_type": "json_object",
+          "expected_output_type": "routing_decision",
           "expected_tools": [
             {
               "name": "search_dwz",
@@ -168,8 +168,8 @@
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "routing_role",
+            "expected_tool_names"
           ]
         },
         {
@@ -180,7 +180,7 @@
           "expected_task": "Use the FIDE lookup path and keep source intent.",
           "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
           "expected_role": "researcher",
-          "expected_output_type": "json_object",
+          "expected_output_type": "routing_decision",
           "expected_tools": [
             {
               "name": "search_fide",
@@ -190,8 +190,8 @@
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "routing_role",
+            "expected_tool_names"
           ]
         },
         {
@@ -202,9 +202,9 @@
           "expected_task": "Choose translator and avoid unnecessary tools.",
           "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
           "expected_role": "translator",
-          "expected_output_type": "json_object",
+          "expected_output_type": "routing_decision",
           "auto_checks": [
-            "json_object"
+            "routing_role"
           ]
         },
         {
@@ -215,7 +215,7 @@
           "expected_task": "Plan the import and personalized-training tool path.",
           "quality_question": "Ist die Antwort schachlich korrekt, knapp und für CaiLama weiterverarbeitbar?",
           "expected_role": "task",
-          "expected_output_type": "json_object",
+          "expected_output_type": "routing_decision",
           "expected_tools": [
             {
               "name": "import_games",
@@ -236,8 +236,8 @@
             }
           ],
           "auto_checks": [
-            "json_object",
-            "expected_tools"
+            "routing_role",
+            "expected_tool_names"
           ]
         }
       ]
