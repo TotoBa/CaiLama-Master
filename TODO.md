@@ -248,9 +248,15 @@ Vor Arbeitsbeginn lesen:
   zum neuen Game-Flow-/Schluesselstellungspfad.
   **Update 2026-05-25:** Der Router erzwingt jetzt backendweite In-Flight-
   Limits. In der Dual-Ollama-Runtime duerfen je Docker-Ollama-Cloud-Account
-  maximal drei Requests gleichzeitig laufen; Host-Ollama lokal bleibt auf
-  einen Request begrenzt. Damit koennen Benchmarklaeufe parallel bleiben, ohne
-  dass ein einzelner Cloud-Account versehentlich ueberlastet wird.
+  maximal zwei Requests gleichzeitig laufen; Host-Ollama lokal bleibt auf
+  einen Request begrenzt; Mistral API bleibt auf einen Request begrenzt.
+  Damit koennen Benchmarklaeufe parallel bleiben, ohne dass ein einzelner
+  Cloud-Account versehentlich ueberlastet wird.
+  **Update 2026-05-29:** Der fehlgeschlagene Re-Test
+  `ptg-three-games-20260529T102238Z` scheiterte nicht an Router-Parallelitaet,
+  sondern am Website-Upload: Batch 1 mit 50 Beobachtungen lieferte HTTP 413,
+  weil die volle Prompt-/Antwort-Nutzlast das 1-MiB-API-Limit ueberschritt.
+  CaiLama nutzt deshalb standardmaessig `--upload-batch-size 20`.
   **Update 2026-05-25:** Der Master enthaelt jetzt den editierbaren
   Modellrollen-Aufgabenkatalog `benchmarks/model-role/tasks.json` mit 10
   Aufgaben je Rolle sowie versionierte Systemprompts und Prompt-Templates.

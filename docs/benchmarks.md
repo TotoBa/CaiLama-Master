@@ -294,9 +294,10 @@ Ein Ergebnis enthaelt mindestens:
   LLM-/Upload-Timeout. `--max-analysis-positions 0` bedeutet zusaetzlich keine
   Begrenzung der tief analysierten PTG-Schluesselstellungen.
   Der LLM-Router begrenzt parallel laufende Requests zusätzlich pro Ollama-
-  Backend: in der aktuellen Dual-Ollama-Runtime maximal drei gleichzeitige
+  Backend: in der aktuellen Dual-Ollama-Runtime maximal zwei gleichzeitige
   Cloud-Requests je Docker-Ollama-Account und maximal ein lokaler Host-Ollama-
-  Request. Der Runner darf dadurch weiterhin parallel starten; der Router
+  Request. Mistral API bleibt auf einen gleichzeitigen Request begrenzt. Der
+  Runner darf dadurch weiterhin parallel starten; der Router
   reiht zusätzliche Requests pro Backend ein, statt einen einzelnen Account zu
   überlasten.
   PTG-Modelllaeufe verwenden standardmaessig MariaDB/MySQL ueber die lokale
@@ -460,6 +461,7 @@ env CAILAMA_LLM_PROVIDER=openai_compatible \
   --tasks-per-role 10 \
   --skip-ptg \
   --cloud-concurrency 4 \
+  --upload-batch-size 20 \
   --llm-retry-attempts 3 \
   --llm-retry-wait-seconds 180 \
   --ptg-db-backend mariadb \
@@ -475,6 +477,9 @@ diesem Pfad standardmaessig keine Completion-Token-Grenze und keinen LLM- oder
 Upload-Timeout; positive Limits gehoeren nur in bewusste Kurztests. Mistral
 laeuft dabei ueber den direkten Router-Backend-Alias `mistral-small-latest`;
 dieser Backend-Pfad ist absichtlich auf einen gleichzeitigen Request begrenzt.
+Die Website-API akzeptiert maximal 1 MiB Request-Body; volle Rollenprompts
+machen Upload-Batches mit 50 Beobachtungen zu gross. Standard ist deshalb
+`--upload-batch-size 20`.
 
 Nach dem Upload erscheint der Lauf unter
 `https://cailama.org/benchmark-feedback.php`; aggregierte Auswertungen liegen
