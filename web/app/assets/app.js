@@ -122,41 +122,111 @@
     return { model_role: role, model };
   }
 
+  function applyMessageContent($div, text, kind, meta) {
+    $div.text(text || "");
+    if (meta && debugMode && String(kind || "").indexOf("status") !== -1) {
+      $div.append($("<small>").css({ display: "block", opacity: 0.7, marginTop: "0.35rem" }).text(JSON.stringify(meta)));
+    }
+  }
+
   function appendMessage(text, kind, meta) {
     $messages.find(".app-empty-state").remove();
     const $div = $("<div>").addClass(`app-message ${kind || "assistant"}`);
-    $div.text(text || "");
-    if (meta && debugMode && kind === "status") {
-      $div.append($("<small>").css({ display: "block", opacity: 0.7, marginTop: "0.35rem" }).text(JSON.stringify(meta)));
-    }
+    applyMessageContent($div, text, kind, meta);
     $messages.append($div);
     $messages.scrollTop($messages[0].scrollHeight);
+    return $div;
   }
 
-  function renderEvents(events) {
+  function replaceMessage($message, text, kind, meta) {
+    if (!$message || !$message.length) {
+      return appendMessage(text, kind, meta);
+    }
+    $message.attr("class", `app-message ${kind || "assistant"}`);
+    applyMessageContent($message, text, kind, meta);
+    $messages.scrollTop($messages[0].scrollHeight);
+    return $message;
+  }
+
+  function statusDisplayText(event, text) {
+    const role = event.role || event.model_role || "";
+    const model = event.model || "";
+    const routing = event.routing_source || "";
+    if (text.indexOf("Modell:") === 0 && (role || model)) {
+      const parts = [`Modell: ${role || "auto"} / ${model || "auto"}`];
+      if (routing) parts.push(routing);
+      return parts.join(" · ");
+    }
+    return text || "";
+  }
+
+  function pendingLabelFor(text) {
+    if ((text || "").trim().startsWith("/")) {
+      return "Befehl wird ausgeführt …";
+    }
+    return "Router prüft Eingabe …";
+  }
+
+  function appendActivityMessage(label, meta) {
+    return appendMessage(label || "Verarbeite …", "status activity is-pending", meta)
+      .attr("role", "status")
+      .attr("aria-live", "polite");
+  }
+
+  function renderEvents(events, options) {
+    const opts = options || {};
+    let pending = opts.pendingMessage || null;
+    let pendingFinalized = false;
+    let skippedEcho = false;
+
+    function renderFinal(text, kind, event) {
+      if (pending && pending.length && !pendingFinalized) {
+        replaceMessage(pending, text, kind, event);
+        pendingFinalized = true;
+        return;
+      }
+      appendMessage(text, kind, event);
+    }
+
     (events || []).forEach((event) => {
       const type = event.type || "";
       const text = event.text || "";
       switch (type) {
         case "user_message":
+          if (
+            opts.skipUserText &&
+            !skippedEcho &&
+            text.trim() === String(opts.skipUserText).trim()
+          ) {
+            skippedEcho = true;
+            break;
+          }
           appendMessage(text, "user");
           break;
         case "assistant_message":
         case "assistant_delta":
-          appendMessage(text, "assistant");
+          renderFinal(text, "assistant", event);
           break;
         case "slash_result":
-          appendMessage(text, "slash");
+          renderFinal(text, "slash", event);
           break;
         case "status":
-          appendMessage(text, "status", event);
+          if (pending && pending.length && !pendingFinalized) {
+            replaceMessage(pending, statusDisplayText(event, text), "status activity is-pending", event);
+          } else {
+            appendMessage(statusDisplayText(event, text), "status", event);
+          }
           if (text.indexOf("Modell:") === 0) {
             $statusText.text(text.replace(/^Modell:\s*/, "").slice(0, 80));
           }
           break;
         case "tool_start":
           $statusText.text(`Tool: ${event.tool || "…"}`);
-          appendMessage(`Tool start: ${event.tool || "?"}`, "tool");
+          if (pending && pending.length && !pendingFinalized) {
+            replaceMessage(pending, `Tool: ${event.tool || "…"}`, "status activity is-pending", event);
+          } else {
+            appendMessage(`Tool: ${event.tool || "?"}`, "tool");
+          }
           break;
         case "tool_result":
           if (debugMode) {
@@ -164,7 +234,7 @@
           }
           break;
         case "error":
-          appendMessage(text || "Fehler", "error");
+          renderFinal(text || "Fehler", "error", event);
           break;
         case "board_update":
           if (event.fen) {
@@ -177,6 +247,9 @@
           }
       }
     });
+    if (pending && pending.length && !pendingFinalized) {
+      pending.removeClass("is-pending");
+    }
   }
 
   function capabilityLabel(model) {
@@ -382,8 +455,11 @@
     if (!trimmed) return Promise.resolve();
 
     const ensureSession = currentSessionId ? Promise.resolve() : createSession();
+    let $pending = null;
     return ensureSession
       .then(() => {
+        appendMessage(trimmed, "user");
+        $pending = appendActivityMessage(pendingLabelFor(trimmed));
         $input.val("");
         setBusy(true, trimmed.startsWith("/") ? "Befehl …" : "Verarbeite …");
         const path = trimmed.startsWith("/") ? "commands" : "messages";
@@ -397,8 +473,12 @@
         return api("POST", `/sessions/${currentSessionId}/${path}`, payload);
       })
       .then((data) => {
-        renderEvents(data.events || []);
+        renderEvents(data.events || [], { pendingMessage: $pending, skipUserText: trimmed });
         return refreshBoardSvg();
+      })
+      .catch((error) => {
+        replaceMessage($pending, error.message || String(error), "error");
+        throw error;
       })
       .finally(() => setBusy(false));
   }

@@ -339,6 +339,32 @@ body.app-document {
   max-width: 90%;
 }
 
+.app-message.activity {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: rgba(138, 180, 248, 0.1);
+  color: #d9e8ff;
+  border: 1px solid rgba(138, 180, 248, 0.28);
+  max-width: min(620px, 92%);
+}
+
+.app-message.activity.is-pending::before {
+  content: "";
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  border: 2px solid rgba(217, 232, 255, 0.35);
+  border-top-color: var(--app-accent);
+  animation: app-spin 0.8s linear infinite;
+  flex: 0 0 auto;
+}
+
+@keyframes app-spin {
+  to { transform: rotate(360deg); }
+}
+
 .app-message.tool {
   align-self: flex-start;
   background: rgba(240, 173, 78, 0.1);

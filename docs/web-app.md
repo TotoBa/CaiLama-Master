@@ -28,8 +28,15 @@ Website-User werden über `web_users.player_profile_id` mit
 
 1. Master-Website deployen (`~/bin/cailama-deploy-website`)
 2. Schema anwenden (`POST /api/v1/admin/schema/cailama`)
-3. Runtime: `cailama-web` aus CaiLama-Source starten
+3. Runtime deployen; der Stack baut `cailama-web` aus `CaiLama/Dockerfile.web`
+   und startet den ASGI-Origin im internen Docker-Netz.
 4. Private `web_api`-Werte setzen (gleiche Origin-Basis oder dedizierter Web-Port)
+
+`cailama-web` ist kein manuell gestarteter Orphan-Container. Der Dienst gehoert
+zur Runtime-Compose, laeuft ohne Root-Rechte, mit Read-only-RootFS,
+expliziten Schreibpfaden fuer Home, Jobs und Artefakte sowie lokaler
+Stockfish-Anbindung fuer Stellungsanalysen. Secrets bleiben in privater
+Operator-Konfiguration, nicht im Repository.
 
 ## Smoke-Test
 

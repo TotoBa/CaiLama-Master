@@ -133,7 +133,7 @@ werden nicht mit echten Secrets versioniert. Fuer den Docker-Betrieb gilt als
 Baseline:
 
 - Nur der Reverse Proxy bindet oeffentliche Ports; Router, Search, Meilisearch,
-  Datenbank und Modell-Backends bleiben im internen Docker-Netz.
+  `cailama-web`, Datenbank und Modell-Backends bleiben im internen Docker-Netz.
 - Dienste laufen nicht als Root, wenn das Image dies sauber unterstuetzt.
 - `read_only: true` ist fuer zustandslose Dienste und Dienste mit expliziten
   Datenvolumes zu setzen. Schreibpfade werden als benannte Volumes, Bind-Mounts
@@ -145,7 +145,12 @@ Baseline:
   Zertifikatsverwaltung. Zertifikatsdaten liegen in einem persistenten
   Proxy-Volume, nicht im Git-Checkout.
 - Persistente Datenvolumes muessen zur Container-UID passen. Besonders
-  betroffen sind Suchindex-, Modell-Cache-, Job- und Zertifikatsvolumes.
+  betroffen sind Suchindex-, Modell-Cache-, Job-, Web-Artefakt- und
+  Zertifikatsvolumes.
+- Web-Origin-Dienste muessen compose-gefuert sein. Manuell gestartete
+  Orphan-Container sind nach der Uebernahme in Compose mit
+  `--remove-orphans` zu entfernen, damit Haertungsregeln und Deploys
+  tatsaechlich auf alle laufenden Dienste greifen.
 - Startfehler nach Haertung sind zuerst gegen drei Punkte zu pruefen:
   UID/GID des Volumes, notwendige Schreibpfade bei Read-only-RootFS und
   Lesbarkeit lokal gemounteter Runtime-Konfiguration.
