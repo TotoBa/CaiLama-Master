@@ -567,6 +567,8 @@ deploy_sftp() {
   delete_batch="$tmp_dir/delete-stale.sftp"
 
   write_manifest "$manifest"
+  LC_ALL=C sort -u "$manifest" > "$tmp_dir/manifest.sorted"
+  mv "$tmp_dir/manifest.sorted" "$manifest"
 
   {
     printf -- "-get %s %s\n" \
