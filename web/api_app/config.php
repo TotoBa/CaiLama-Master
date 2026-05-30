@@ -56,6 +56,9 @@ $config = [
             'llm_chat' => ['method' => 'POST', 'path' => '/v1/llm/chat', 'scope' => 'llm:chat'],
             'search_query' => ['method' => 'POST', 'path' => '/v1/search/query', 'scope' => 'search:query'],
             'jobs_create' => ['method' => 'POST', 'path' => '/v1/jobs', 'scope' => 'jobs:write'],
+            'jobs_list' => ['method' => 'POST', 'path' => '/v1/jobs/list', 'scope' => 'jobs:write'],
+            'jobs_status' => ['method' => 'POST', 'path' => '/v1/jobs/status', 'scope' => 'jobs:write'],
+            'jobs_result' => ['method' => 'POST', 'path' => '/v1/jobs/result', 'scope' => 'jobs:write'],
         ],
     ],
     'benchmark_feedback' => [

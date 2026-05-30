@@ -28,9 +28,13 @@ web-smarty/
 ```
 
 `web/` wird nach `<webspace-root>/public/` deployt und bleibt der öffentliche
-Document Root. `web-smarty/` wird nach `<webspace-root>/smarty/` deployt und
-liegt als privater Sibling neben `public/`. Smarty-Templates, Content-Daten,
-Cache und Dependency-Dateien dürfen nicht unter `web/` liegen.
+Document Root der Website. Die Webspace-API bekommt einen eigenen öffentlichen
+Dispatcher unter `<webspace-root>/api/`, damit eine API-Subdomain diesen Ordner
+als Document Root nutzen kann. Die eigentliche API-App wird privat daneben
+deployt, zum Beispiel nach `<webspace-root>/api-app/`. `web-smarty/` wird nach
+`<webspace-root>/smarty/` deployt und liegt ebenfalls als privater Sibling neben
+`public/`. Smarty-Templates, API-App-Dateien, Content-Daten, Cache und
+Dependency-Dateien dürfen nicht unter `public/` liegen.
 
 Wichtige Dateien:
 
@@ -143,6 +147,8 @@ CAILAMA_WEB_DEPLOY_METHOD=sftp
 CAILAMA_WEB_SFTP_TARGET=<sftp-user-and-host>
 CAILAMA_WEB_SFTP_REMOTE_DIR=<remote-public-dir>
 CAILAMA_WEB_SFTP_REMOTE_ROOT=<remote-webspace-root>
+CAILAMA_WEB_SFTP_REMOTE_API_DIR=<remote-api-dir>
+CAILAMA_WEB_SFTP_REMOTE_API_APP_DIR=<remote-private-api-app-dir>
 CAILAMA_WEB_SFTP_REMOTE_SMARTY_DIR=<remote-smarty-dir>
 CAILAMA_WEB_SFTP_IP_VERSION=4
 CAILAMA_WEB_SFTP_PORT=<optional-port>

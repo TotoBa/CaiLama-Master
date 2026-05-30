@@ -6,10 +6,14 @@ deploy_config="${CAILAMA_WEB_DEPLOY_CONFIG:-$HOME/.config/cailama/web-deploy.env
 configurable_vars=(
   CAILAMA_WEB_DEPLOY_METHOD
   CAILAMA_WEB_LOCAL_TARGET
+  CAILAMA_WEB_LOCAL_API_TARGET
+  CAILAMA_WEB_LOCAL_API_APP_TARGET
   CAILAMA_WEB_LOCAL_SMARTY_TARGET
   CAILAMA_WEB_SFTP_TARGET
   CAILAMA_WEB_SFTP_REMOTE_DIR
   CAILAMA_WEB_SFTP_REMOTE_ROOT
+  CAILAMA_WEB_SFTP_REMOTE_API_DIR
+  CAILAMA_WEB_SFTP_REMOTE_API_APP_DIR
   CAILAMA_WEB_SFTP_REMOTE_SMARTY_DIR
   CAILAMA_WEB_SFTP_IP_VERSION
   CAILAMA_WEB_SFTP_PORT
@@ -175,6 +179,7 @@ fi
 if [[ -z "$deploy_method" ]]; then
   if [[ -n "${CAILAMA_WEB_SFTP_REMOTE_ROOT:-}" ]]; then
     CAILAMA_WEB_SFTP_REMOTE_DIR="${CAILAMA_WEB_SFTP_REMOTE_ROOT%/}/public"
+    CAILAMA_WEB_SFTP_REMOTE_API_DIR="${CAILAMA_WEB_SFTP_REMOTE_ROOT%/}/api"
     CAILAMA_WEB_SFTP_REMOTE_SMARTY_DIR="${CAILAMA_WEB_SFTP_REMOTE_ROOT%/}/smarty"
   fi
   if [[ -n "${CAILAMA_WEB_SFTP_TARGET:-}" && -n "${CAILAMA_WEB_SFTP_REMOTE_DIR:-}" ]]; then
@@ -189,10 +194,17 @@ fi
 if [[ "$deploy_method" == "sftp" ]]; then
   if [[ -n "${CAILAMA_WEB_SFTP_REMOTE_ROOT:-}" ]]; then
     CAILAMA_WEB_SFTP_REMOTE_DIR="${CAILAMA_WEB_SFTP_REMOTE_ROOT%/}/public"
+    CAILAMA_WEB_SFTP_REMOTE_API_DIR="${CAILAMA_WEB_SFTP_REMOTE_ROOT%/}/api"
     CAILAMA_WEB_SFTP_REMOTE_SMARTY_DIR="${CAILAMA_WEB_SFTP_REMOTE_ROOT%/}/smarty"
   elif [[ -z "${CAILAMA_WEB_SFTP_REMOTE_SMARTY_DIR:-}" ]]; then
     public_dir="${CAILAMA_WEB_SFTP_REMOTE_DIR%/}"
+    if [[ -z "${CAILAMA_WEB_SFTP_REMOTE_API_DIR:-}" ]]; then
+      CAILAMA_WEB_SFTP_REMOTE_API_DIR="${public_dir%/*}/api"
+    fi
     CAILAMA_WEB_SFTP_REMOTE_SMARTY_DIR="${public_dir%/*}/smarty"
+  elif [[ -z "${CAILAMA_WEB_SFTP_REMOTE_API_DIR:-}" ]]; then
+    public_dir="${CAILAMA_WEB_SFTP_REMOTE_DIR%/}"
+    CAILAMA_WEB_SFTP_REMOTE_API_DIR="${public_dir%/*}/api"
   fi
 fi
 
@@ -223,6 +235,7 @@ verify_http_render_hash() {
 write_manifest() {
   local manifest="$1"
   find web -type f \
+    ! -path "web/api_app/*" \
     ! -path "web/api_app/config.local.php" \
     ! -path "web/api_app/config.local.*.php" \
     -printf "%P\n" | LC_ALL=C sort > "$manifest"
@@ -365,14 +378,24 @@ SH
 
 deploy_local() {
   local target="$1"
+  local api_target="${CAILAMA_WEB_LOCAL_API_TARGET:-$(dirname "$target")/api}"
+  local api_app_target="${CAILAMA_WEB_LOCAL_API_APP_TARGET:-$(dirname "$target")/api-app}"
   local smarty_target="${CAILAMA_WEB_LOCAL_SMARTY_TARGET:-$(dirname "$target")/smarty}"
 
   mkdir -p "$target"
+  mkdir -p "$api_target"
+  mkdir -p "$api_app_target"
   mkdir -p "$smarty_target/cache/smarty" "$smarty_target/cache/templates_c"
   rsync -a --delete \
+    --exclude "/api_app/" \
     --exclude "/api_app/config.local.php" \
     --exclude "/api_app/config.local.*.php" \
     "web/" "$target/"
+  rsync -a --delete "web/api/" "$api_target/"
+  rsync -a --delete \
+    --exclude "/config.local.php" \
+    --exclude "/config.local.*.php" \
+    "web/api_app/" "$api_app_target/"
   if [[ "$deploy_smarty" == "1" ]]; then
     local smarty_rsync_args=(
       -a
@@ -395,6 +418,8 @@ deploy_local() {
   fi
 
   echo "Deployed web/ to $target"
+  echo "Deployed API app to $api_target"
+  echo "Deployed private API implementation to $api_app_target"
   if [[ "$deploy_smarty" == "1" ]]; then
     if [[ "$include_vendor" == "1" ]]; then
       echo "Deployed web-smarty/ including vendor to $smarty_target"
@@ -404,6 +429,109 @@ deploy_local() {
   else
     echo "SKIP: private web-smarty deployment disabled"
   fi
+}
+
+write_api_manifest() {
+  local manifest="$1"
+  find web/api -type f -printf "api:%P\n" | LC_ALL=C sort > "$manifest"
+}
+
+api_remote_path() {
+  local relative="${1:-}"
+  local base="${CAILAMA_WEB_SFTP_REMOTE_API_DIR%/}"
+  if [[ -z "$relative" ]]; then
+    printf "%s" "$base"
+  else
+    printf "%s/%s" "$base" "$relative"
+  fi
+}
+
+deploy_api_sftp() {
+  if [[ -z "${CAILAMA_WEB_SFTP_TARGET:-}" || -z "${CAILAMA_WEB_SFTP_REMOTE_API_DIR:-}" ]]; then
+    echo "ERROR: SFTP API deployment requires CAILAMA_WEB_SFTP_REMOTE_API_DIR" >&2
+    exit 2
+  fi
+
+  local tmp_dir manifest batch
+  tmp_dir="$(mktemp -d)"
+  manifest="$tmp_dir/api-manifest"
+  batch="$tmp_dir/upload-api.sftp"
+  write_api_manifest "$manifest"
+
+  {
+    if [[ "$create_dirs" == "1" ]]; then
+      printf -- "-mkdir %s\n" "$(sftp_quote "$(api_remote_path)")"
+      printf -- "-mkdir %s\n" "$(sftp_quote "$(api_remote_path "public")")"
+      while IFS= read -r directory; do
+        printf -- "-mkdir %s\n" "$(sftp_quote "$(api_remote_path "$directory")")"
+      done < <(
+        awk -F: '
+          $1 == "api" && index($2, "/") {
+            path = "public"
+            n = split($2, parts, "/")
+            for (i = 1; i < n; i++) {
+              path = path "/" parts[i]
+              print path
+            }
+          }
+        ' "$manifest" | LC_ALL=C sort -u
+      )
+    fi
+    while IFS=: read -r group relative; do
+      if [[ "$group" == "api" ]]; then
+        printf "put -p %s %s\n" \
+          "$(sftp_quote "web/api/$relative")" \
+          "$(sftp_quote "$(api_remote_path "$relative")")"
+      fi
+    done < "$manifest"
+  } > "$batch"
+
+  sftp_batch "$batch" >/dev/null
+  rm -rf "$tmp_dir"
+  echo "Deployed API public dispatcher to SFTP target $CAILAMA_WEB_SFTP_REMOTE_API_DIR"
+}
+
+deploy_api_app_sftp() {
+  if [[ -z "${CAILAMA_WEB_SFTP_TARGET:-}" ]]; then
+    echo "ERROR: SFTP private API deployment requires CAILAMA_WEB_SFTP_TARGET" >&2
+    exit 2
+  fi
+  local public_dir api_app_dir tmp_dir manifest batch
+  public_dir="${CAILAMA_WEB_SFTP_REMOTE_DIR%/}"
+  api_app_dir="${CAILAMA_WEB_SFTP_REMOTE_API_APP_DIR:-${public_dir%/*}/api-app}"
+  tmp_dir="$(mktemp -d)"
+  manifest="$tmp_dir/api-app-manifest"
+  batch="$tmp_dir/upload-api-app.sftp"
+  find web/api_app -type f \
+    ! -path "web/api_app/config.local.php" \
+    ! -path "web/api_app/config.local.*.php" \
+    -printf "%P\n" | LC_ALL=C sort > "$manifest"
+  {
+    if [[ "$create_dirs" == "1" ]]; then
+      printf -- "-mkdir %s\n" "$(sftp_quote "$api_app_dir")"
+      while IFS= read -r directory; do
+        printf -- "-mkdir %s\n" "$(sftp_quote "$(remote_path_from_base "$api_app_dir" "$directory")")"
+      done < <(
+        awk -F/ '
+          NF > 1 {
+            path = ""
+            for (i = 1; i < NF; i++) {
+              path = path ? path "/" $i : $i
+              print path
+            }
+          }
+        ' "$manifest" | LC_ALL=C sort -u
+      )
+    fi
+    while IFS= read -r relative; do
+      printf "put -p %s %s\n" \
+        "$(sftp_quote "web/api_app/$relative")" \
+        "$(sftp_quote "$(remote_path_from_base "$api_app_dir" "$relative")")"
+    done < "$manifest"
+  } > "$batch"
+  sftp_batch "$batch" >/dev/null
+  rm -rf "$tmp_dir"
+  echo "Deployed private API implementation to SFTP target"
 }
 
 deploy_sftp() {
@@ -752,6 +880,9 @@ verify_deploy() {
     while IFS= read -r -d '' source; do
       relative="${source#web/}"
       case "$relative" in
+        api_app/*)
+          continue
+          ;;
         api_app/config.local.php|api_app/config.local.*.php)
           continue
           ;;
@@ -791,6 +922,8 @@ case "$deploy_method" in
     else
       echo "SKIP: private web-smarty deployment disabled"
     fi
+    deploy_api_app_sftp
+    deploy_api_sftp
     deploy_sftp
     verify_deploy
     ;;

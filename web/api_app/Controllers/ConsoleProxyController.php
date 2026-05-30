@@ -25,6 +25,21 @@ final class ConsoleProxyController
         return $this->proxy($request, $config, 'jobs_create');
     }
 
+    public function listJobs(Request $request, array $config): Response
+    {
+        return $this->proxy($request, $config, 'jobs_list');
+    }
+
+    public function jobStatus(Request $request, array $config): Response
+    {
+        return $this->proxy($request, $config, 'jobs_status');
+    }
+
+    public function jobResult(Request $request, array $config): Response
+    {
+        return $this->proxy($request, $config, 'jobs_result');
+    }
+
     private function proxy(Request $request, array $config, string $routeName): Response
     {
         $route = $config['origin']['allowed_routes'][$routeName] ?? null;
