@@ -95,6 +95,10 @@
           <button type="button" class="app-board-btn" id="app-board-undo" title="Zug zuruecknehmen">↶</button>
           <button type="button" class="app-board-btn" id="app-board-reset" title="Startstellung">⌂</button>
           <button type="button" class="app-board-btn" id="app-board-flip" title="Brett drehen">⇅</button>
+          <select id="app-engine-profile" class="app-engine-profile" title="Engine-Profil">
+            <option value="stockfish18">Stockfish 18</option>
+          </select>
+          <button type="button" class="app-board-btn" id="app-engine-move" title="Enginezug spielen">Engine</button>
         </div>
         <p id="app-board-status" class="app-board-status">Figur und Zielfeld anklicken.</p>
       </div>

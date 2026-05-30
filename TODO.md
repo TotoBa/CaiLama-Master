@@ -128,6 +128,10 @@ Vor Arbeitsbeginn lesen:
   Dienste laufen nicht-root, mit Read-only-RootFS, `cap_drop: ALL` und
   `no-new-privileges`; MariaDB bleibt der bewusst beschreibbare Datendienst.
   Runtime-Smokes und Web-Konsolen-Smoke liefen erfolgreich.
+  Update 2026-05-30: Das Deploy-Overlay stellt fuer `cailama-web` zusaetzlich
+  lc0 und Maia-Gewichte als read-only Mounts bereit. CaiLama exponiert
+  Stockfish18 und Maia 1100-1900 ueber `GET /engine-profiles`; das Brettpanel
+  und Engine-Games nutzen echte `EnginePlayer`-Zuege statt Platzhalterzuegen.
 - [ ] Benchmark-Rahmen im Master vorbereiten: gemeinsame Benchmark-
   Orchestrierung fuer CaiLama, Router und Search definieren, Ergebnisablage im
   Master unter `docs/benchmark-results/` oder einer klar benannten

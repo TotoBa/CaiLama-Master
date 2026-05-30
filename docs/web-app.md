@@ -38,6 +38,19 @@ expliziten Schreibpfaden fuer Home, Jobs und Artefakte sowie lokaler
 Stockfish-Anbindung fuer Stellungsanalysen. Secrets bleiben in privater
 Operator-Konfiguration, nicht im Repository.
 
+Engine-Profile fuer die Web-App kommen aus `TotoBa/CaiLama`:
+
+- `GET /engine-profiles` listet Stockfish18 und Maia 1100-1900 mit
+  Verfuegbarkeitsstatus.
+- `POST /boards/{board_id}/engine-move` spielt einen Enginezug auf dem
+  Browserbrett.
+- `POST /engine-games/{game_id}/move` nutzt denselben Profilpfad.
+
+Die Runtime mountet die lokalen Engine-Assets read-only in den Container und
+uebergibt nur containerinterne Pfade per Env (`CAILAMA_WEB_STOCKFISH_PATH`,
+`CAILAMA_WEB_LC0_PATH`, `CAILAMA_WEB_MAIA_WEIGHTS_DIR`). Echte lokale
+Serverpfade bleiben private Operator-Information.
+
 ## Smoke-Test
 
 1. Mit `testuser` einloggen
@@ -61,5 +74,8 @@ Operator-Konfiguration, nicht im Repository.
 - Die Kopfzeile laedt die Modellliste aus der CaiLama-Web-API (`GET /models`).
   Nutzer koennen eine CaiLama-Rolle und einen Router-Modellalias waehlen; die
   Auswahl wird pro Nachricht oder Slash-Command an die Session uebergeben.
+- Das Brettpanel laedt die Engine-Profile aus der CaiLama-Web-API
+  (`GET /engine-profiles`). Der Button `Engine` fuehrt fuer die aktuelle
+  Brettstellung einen Enginezug mit dem gewaehlten Profil aus.
 
 Siehe auch [`web-app.plan.md`](web-app.plan.md) und [`integrations.md`](integrations.md).

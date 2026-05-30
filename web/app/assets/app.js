@@ -25,6 +25,8 @@
   const $debugToggle = $("#app-debug-toggle");
   const $modelRole = $("#app-model-role");
   const $modelSelect = $("#app-model-select");
+  const $engineProfile = $("#app-engine-profile");
+  const $engineMove = $("#app-engine-move");
   const $navItems = $(".app-nav-item[data-mode]");
   const $flexPanel = $("#app-flex");
   const $flexContent = $("#app-flex-content");
@@ -36,6 +38,7 @@
   let currentMode = "chat";
   let selectedSquare = null;
   let availableModels = [];
+  let availableEngineProfiles = [];
 
   const slashHints = [
     "/help",
@@ -97,7 +100,11 @@
     return fetch(apiUrl(path), options).then(async (response) => {
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        const message = data?.error?.message || `HTTP ${response.status}`;
+        const message =
+          data?.error?.message ||
+          data?.detail?.message ||
+          data?.detail?.error ||
+          `HTTP ${response.status}`;
         throw new Error(message);
       }
       return data;
@@ -120,6 +127,11 @@
     const role = String($modelRole.val() || "").trim();
     if (!model || !role) return {};
     return { model_role: role, model };
+  }
+
+  function selectedEnginePayload() {
+    const profile = String($engineProfile.val() || "stockfish18").trim();
+    return { engine_profile: profile || "stockfish18" };
   }
 
   function applyMessageContent($div, text, kind, meta) {
@@ -292,6 +304,43 @@
       })
       .catch(() => {
         renderModelOptions([]);
+      });
+  }
+
+  function renderEngineProfiles(profiles, defaultProfile) {
+    availableEngineProfiles = profiles || [];
+    const previous = String($engineProfile.val() || "");
+    $engineProfile.empty();
+    availableEngineProfiles.forEach((profile) => {
+      const id = String(profile.id || "");
+      if (!id) return;
+      const label = profile.available
+        ? profile.name || id
+        : `${profile.name || id} (fehlt)`;
+      $engineProfile.append(
+        $("<option>")
+          .attr("value", id)
+          .prop("disabled", !profile.available)
+          .text(label)
+      );
+    });
+    const fallback = defaultProfile || "stockfish18";
+    if (previous && availableEngineProfiles.some((profile) => profile.id === previous && profile.available)) {
+      $engineProfile.val(previous);
+    } else {
+      $engineProfile.val(fallback);
+    }
+    $engineProfile.prop("disabled", availableEngineProfiles.every((profile) => !profile.available));
+    $engineMove.prop("disabled", $engineProfile.prop("disabled"));
+  }
+
+  function refreshEngineProfiles() {
+    return api("GET", "/engine-profiles")
+      .then((data) => {
+        renderEngineProfiles(data.profiles || [], data.default_profile || "stockfish18");
+      })
+      .catch(() => {
+        renderEngineProfiles([{ id: "stockfish18", name: "Stockfish 18", available: false }], "stockfish18");
       });
   }
 
@@ -582,6 +631,28 @@
       .catch((error) => showError(error.message || String(error)));
   });
 
+  $engineMove.on("click", () => {
+    if (!currentBoardId) return;
+    showError("");
+    setBusy(true, "Enginezug …");
+    api("POST", `/boards/${currentBoardId}/engine-move`, selectedEnginePayload())
+      .then((payload) => {
+        const move = payload.engine_move || {};
+        const label = move.san ? `Enginezug (${move.profile}): ${move.san}` : "Kein Enginezug.";
+        setBoardStatus(label);
+        appendMessage(label, "status", move);
+        if (payload.board) {
+          renderBoardState(payload.board);
+        }
+        return refreshBoardSvg();
+      })
+      .catch((error) => {
+        setBoardStatus("Enginezug fehlgeschlagen.");
+        showError(error.message || String(error));
+      })
+      .finally(() => setBusy(false));
+  });
+
   $navItems.on("click", function () {
     const mode = $(this).data("mode");
     switchMode(mode);
@@ -676,5 +747,6 @@
   createBoard().catch(() => {});
   
   refreshModels();
+  refreshEngineProfiles();
   refreshSessions().catch(() => {});
 })(jQuery);
