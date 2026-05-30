@@ -23,6 +23,8 @@
   const $statusDot = $("#app-status-dot");
   const $statusText = $("#app-status-text");
   const $debugToggle = $("#app-debug-toggle");
+  const $modelRole = $("#app-model-role");
+  const $modelSelect = $("#app-model-select");
   const $navItems = $(".app-nav-item[data-mode]");
   const $flexPanel = $("#app-flex");
   const $flexContent = $("#app-flex-content");
@@ -33,6 +35,7 @@
   let busyCount = 0;
   let currentMode = "chat";
   let selectedSquare = null;
+  let availableModels = [];
 
   const slashHints = [
     "/help",
@@ -112,6 +115,13 @@
     $boardStatus.text(message || "Figur und Zielfeld anklicken.");
   }
 
+  function selectedModelPayload() {
+    const model = String($modelSelect.val() || "").trim();
+    const role = String($modelRole.val() || "").trim();
+    if (!model || !role) return {};
+    return { model_role: role, model };
+  }
+
   function appendMessage(text, kind, meta) {
     $messages.find(".app-empty-state").remove();
     const $div = $("<div>").addClass(`app-message ${kind || "assistant"}`);
@@ -172,6 +182,49 @@
           }
       }
     });
+  }
+
+  function capabilityLabel(model) {
+    const caps = model.capabilities || {};
+    const tags = caps.route_capabilities || [];
+    if (Array.isArray(tags) && tags.length > 0) {
+      return tags.slice(0, 3).join("/");
+    }
+    const roles = caps.roles || [];
+    if (Array.isArray(roles) && roles.length > 0) {
+      return roles.slice(0, 2).join("/");
+    }
+    return "";
+  }
+
+  function renderModelOptions(models) {
+    availableModels = models || [];
+    const previous = String($modelSelect.val() || "");
+    $modelSelect.empty().append($("<option>").attr("value", "").text("Auto"));
+    availableModels.forEach((model) => {
+      const name = String(model.name || "");
+      if (!name) return;
+      const label = capabilityLabel(model);
+      $modelSelect.append(
+        $("<option>")
+          .attr("value", name)
+          .text(label ? `${name} (${label})` : name)
+      );
+    });
+    if (previous && availableModels.some((model) => model.name === previous)) {
+      $modelSelect.val(previous);
+    }
+    $modelSelect.prop("disabled", availableModels.length === 0);
+  }
+
+  function refreshModels() {
+    return api("GET", "/models")
+      .then((data) => {
+        renderModelOptions(data.models || []);
+      })
+      .catch(() => {
+        renderModelOptions([]);
+      });
   }
 
   function refreshSessions() {
@@ -340,8 +393,12 @@
         setBusy(true, trimmed.startsWith("/") ? "Befehl …" : "Verarbeite …");
         const path = trimmed.startsWith("/") ? "commands" : "messages";
         const payload = trimmed.startsWith("/")
-          ? { command: trimmed, board_state: currentBoardId ? { board_id: currentBoardId } : {} }
-          : { message: trimmed };
+          ? {
+              command: trimmed,
+              board_state: currentBoardId ? { board_id: currentBoardId } : {},
+              ...selectedModelPayload(),
+            }
+          : { message: trimmed, ...selectedModelPayload() };
         return api("POST", `/sessions/${currentSessionId}/${path}`, payload);
       })
       .then((data) => {
@@ -543,5 +600,6 @@
   // Initial board creation
   createBoard().catch(() => {});
   
+  refreshModels();
   refreshSessions().catch(() => {});
 })(jQuery);

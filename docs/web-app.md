@@ -48,5 +48,8 @@ Website-User werden über `web_users.player_profile_id` mit
   Zielfeld anklicken, danach validiert die CaiLama-Web-API den Zug und liefert
   aktualisierte FEN/SVG-Daten. Undo, Reset und Drehen laufen ebenfalls ueber
   Board-Endpunkte.
+- Die Kopfzeile laedt die Modellliste aus der CaiLama-Web-API (`GET /models`).
+  Nutzer koennen eine CaiLama-Rolle und einen Router-Modellalias waehlen; die
+  Auswahl wird pro Nachricht oder Slash-Command an die Session uebergeben.
 
 Siehe auch [`web-app.plan.md`](web-app.plan.md) und [`integrations.md`](integrations.md).

@@ -127,6 +127,41 @@ body.app-document {
   border: 1px solid var(--app-border);
 }
 
+.app-model-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.app-model-role,
+.app-model-select {
+  height: 32px;
+  max-width: 170px;
+  background: var(--app-bg-tertiary);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-sm);
+  color: var(--app-text-secondary);
+  font: inherit;
+  font-size: 0.8rem;
+  padding: 0 0.5rem;
+}
+
+.app-model-role {
+  max-width: 118px;
+}
+
+.app-model-select {
+  max-width: min(260px, 24vw);
+}
+
+.app-model-role:focus,
+.app-model-select:focus {
+  outline: none;
+  border-color: var(--app-border-active);
+  color: var(--app-text-primary);
+}
+
 .app-header-status {
   display: flex;
   align-items: center;
@@ -749,6 +784,14 @@ body.app-document {
 
   .app-header-inner {
     padding: 0 0.75rem;
+  }
+
+  .app-header-title {
+    justify-content: flex-start;
+  }
+
+  .app-model-picker {
+    display: none;
   }
 
   .app-back-link span:last-child {

@@ -20,6 +20,24 @@
         {if $page.user.profile_key}
           <span class="app-profile-badge">{$page.user.player_display_name|escape}</span>
         {/if}
+        <div class="app-model-picker" aria-label="Modellauswahl">
+          <select id="app-model-role" class="app-model-role" title="Modellrolle">
+            <option value="large">Large</option>
+            <option value="small">Small</option>
+            <option value="task">Task</option>
+            <option value="coach">Coach</option>
+            <option value="analyst">Analyst</option>
+            <option value="critic">Critic</option>
+            <option value="vision">Vision</option>
+            <option value="scribe">Scribe</option>
+            <option value="researcher">Researcher</option>
+            <option value="router">Router</option>
+            <option value="translator">Translator</option>
+          </select>
+          <select id="app-model-select" class="app-model-select" title="Modell">
+            <option value="">Auto</option>
+          </select>
+        </div>
       </div>
       <div class="app-header-status">
         <span class="app-status-indicator" id="app-status-dot"></span>

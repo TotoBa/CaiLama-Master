@@ -19,6 +19,7 @@ Basis-Pfad intern: `/api/web/` (cailama-web Service).
 |---|---|---|
 | GET | `/health` | Health |
 | GET | `/capabilities` | Feature-Flags |
+| GET | `/models` | Modell-/Capability-Liste |
 | POST | `/sessions` | Session anlegen |
 | GET | `/sessions` | Session-Liste |
 | GET | `/sessions/{id}` | Session-Details |
