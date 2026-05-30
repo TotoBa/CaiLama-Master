@@ -122,6 +122,12 @@ Vor Arbeitsbeginn lesen:
   `scripts/update-runtime-projects.sh --install --restart all` aus den
   lokalen Source-Repos aktualisiert; Router `/health` und Search `/healthz`
   antworteten lokal und beide User-Services waren aktiv.
+  Update 2026-05-30: Der Docker-Stack wurde nach der Container-Haertung wieder
+  lauffaehig gemacht. `cailama-web` ist jetzt compose-gefuehrt statt Orphan-
+  Container; SearXNG ist ebenfalls im Deploy-Overlay gehaertet. Nicht-DB-
+  Dienste laufen nicht-root, mit Read-only-RootFS, `cap_drop: ALL` und
+  `no-new-privileges`; MariaDB bleibt der bewusst beschreibbare Datendienst.
+  Runtime-Smokes und Web-Konsolen-Smoke liefen erfolgreich.
 - [ ] Benchmark-Rahmen im Master vorbereiten: gemeinsame Benchmark-
   Orchestrierung fuer CaiLama, Router und Search definieren, Ergebnisablage im
   Master unter `docs/benchmark-results/` oder einer klar benannten
@@ -362,9 +368,11 @@ Vor Arbeitsbeginn lesen:
   Verein-/Verbandsanreicherung ist live verifiziert; die Webquellen-
   Recherche wurde in `sources.yaml` uebernommen und der Crawler bewahrt
   Rechte-/Zugriffsmetadaten fuer RAG- und spaetere Trainingsentscheidungen.
-  Offen bleibt die semantische Freigabeentscheidung auf groesserem Eval und
-  ein haerteres Source-Policy-Gate fuer rechtekritische oder UGC-lastige
-  Quellen.
+  Search-Update 2026-05-30: Das Source-Policy-Gate fuer Fulltext-Nutzung ist
+  umgesetzt; rechtekritische oder UGC-lastige Quellen werden vor Volltext-,
+  RAG- und spaeterer Trainingsnutzung anhand strukturierter Policy-Felder
+  begrenzt. Offen bleibt die semantische Freigabeentscheidung auf groesserem
+  Eval.
 
 ## Kimi-Handoff
 

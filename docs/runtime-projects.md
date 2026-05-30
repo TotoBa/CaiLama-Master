@@ -132,8 +132,9 @@ Produktive Runtime-Compose-Konfigurationen bleiben lokale Operator-Dateien und
 werden nicht mit echten Secrets versioniert. Fuer den Docker-Betrieb gilt als
 Baseline:
 
-- Nur der Reverse Proxy bindet oeffentliche Ports; Router, Search, Meilisearch,
-  `cailama-web`, Datenbank und Modell-Backends bleiben im internen Docker-Netz.
+- Nur der Reverse Proxy bindet oeffentliche Ports; Router, Search, SearXNG,
+  Meilisearch, `cailama-web`, Datenbank und Modell-Backends bleiben im
+  internen Docker-Netz.
 - Dienste laufen nicht als Root, wenn das Image dies sauber unterstuetzt.
 - `read_only: true` ist fuer zustandslose Dienste und Dienste mit expliziten
   Datenvolumes zu setzen. Schreibpfade werden als benannte Volumes, Bind-Mounts
