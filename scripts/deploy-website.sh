@@ -579,7 +579,7 @@ deploy_sftp() {
 
   if [[ -f "$previous_manifest" ]]; then
     LC_ALL=C sort -u "$previous_manifest" > "$tmp_dir/previous-manifest.sorted"
-    comm -23 "$tmp_dir/previous-manifest.sorted" "$manifest" > "$stale_files"
+    LC_ALL=C comm -23 "$tmp_dir/previous-manifest.sorted" "$manifest" > "$stale_files"
   else
     : > "$stale_files"
   fi
@@ -675,7 +675,7 @@ deploy_smarty_sftp() {
 
   if [[ -f "$previous_manifest" ]]; then
     filter_previous_smarty_manifest "$previous_manifest" "$tmp_dir/previous-smarty-manifest.sorted"
-    comm -23 "$tmp_dir/previous-smarty-manifest.sorted" "$manifest" > "$stale_files"
+    LC_ALL=C comm -23 "$tmp_dir/previous-smarty-manifest.sorted" "$manifest" > "$stale_files"
   else
     : > "$stale_files"
   fi
