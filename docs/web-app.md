@@ -67,6 +67,11 @@ Serverpfade bleiben private Operator-Information.
 - Modell- und Tool-Statusmeldungen werden direkt im Chatverlauf angezeigt,
   an derselben Stelle wie die spaetere Antwort. Der Debug-Modus ergaenzt nur
   die Rohmetadaten, versteckt aber keine normalen Aktivitaetsmeldungen.
+- PGN-Analysejobs zeigen laufenden Status im Chatverlauf und im Analyse-
+  Seitenpanel. Die Web-API liefert `events`, `progress`, kritische Momente,
+  Zusammenfassung und Artefakt-IDs; die UI pollt den Job bis `done`/`failed`
+  und verlinkt `source.pgn`, `summary.md`, `annotated.pgn` und
+  `analysis.json`.
 - Das Browserbrett ist als Eingabegeraet verdrahtet: Quadrat anklicken,
   Zielfeld anklicken, danach validiert die CaiLama-Web-API den Zug und liefert
   aktualisierte FEN/SVG-Daten. Undo, Reset und Drehen laufen ebenfalls ueber

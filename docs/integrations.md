@@ -253,10 +253,15 @@ Aktuelle Webspace-Endpunkte fuer die Konsole:
 | `POST /api/v1/console/jobs` | `jobs:write` | Asynchrone Jobs, insbesondere PGN-Analyse |
 
 PGN-Analyse ist kein langer synchroner HTTP-Request. Die Konsole legt einen Job
-an und erhaelt eine stabile Job-Referenz. Der Origin fuehrt Stockfish-,
-Search-, Router- und Trainingsartefakt-Erzeugung serverseitig aus. Ergebnisse
-muessen profilgebunden persistiert werden, damit ein spaeter erneut gestarteter
-Client abgeschlossene oder offene Jobs fuer denselben Profil-Key melden kann.
+an und erhaelt eine stabile Job-Referenz. Der Origin liefert fuer direkte
+Konsolenjobs eine strukturierte rueckwaerts-PGN-Antwort mit Events,
+kritischen Momenten und annotierter PGN. Die fachlich tiefe Engine-Analyse
+liegt im CaiLama-Web-/Agent-Pfad: Dort nutzt `run_pgn_analysis` integrierte
+Stockfish-Suche, optionale Maia-/DWZ-Side-Info und schreibt
+`source.pgn`, `summary.md`, `annotated.pgn` und `analysis.json` als
+Web-Job-Artefakte. Ergebnisse muessen profilgebunden persistiert werden,
+damit ein spaeter erneut gestarteter Client abgeschlossene oder offene Jobs
+fuer denselben Profil-Key melden kann.
 
 Akzeptanzkriterien fuer den End-to-End-Test:
 

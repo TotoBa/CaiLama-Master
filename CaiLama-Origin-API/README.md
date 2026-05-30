@@ -16,6 +16,12 @@ Webspace API:
 The gateway is not a public API. It is intended to run behind the CaiLama
 reverse proxy and accepts signed server-to-server requests only.
 
+PGN jobs are intentionally lightweight in this component. They validate normal
+English SAN and additionally normalize German SAN letters, return backward progress events, critical
+mate/end moments, a summary and an annotated PGN. Deep Stockfish/Maia/DWZ
+analysis stays in the CaiLama Web/Agent pipeline; the Origin response keeps the
+console job contract useful even before a client fetches richer Web artifacts.
+
 ## Configuration
 
 Runtime configuration is read from environment variables:

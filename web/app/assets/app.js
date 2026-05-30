@@ -39,6 +39,10 @@
   let selectedSquare = null;
   let availableModels = [];
   let availableEngineProfiles = [];
+  let activeAnalysisJobId = null;
+  let activeAnalysisTimer = null;
+  let $activeAnalysisMessage = null;
+  let analysisBusy = false;
 
   const slashHints = [
     "/help",
@@ -158,6 +162,120 @@
     applyMessageContent($message, text, kind, meta);
     $messages.scrollTop($messages[0].scrollHeight);
     return $message;
+  }
+
+  function latestAnalysisMessage(record) {
+    const events = record?.events || record?.result?.events || [];
+    if (events.length) {
+      const event = events[events.length - 1] || {};
+      return event.message || event.stage || "Analyse laeuft …";
+    }
+    if (record?.status === "queued") return "Analysejob wartet …";
+    if (record?.status === "done") return "Analyse abgeschlossen.";
+    if (record?.status === "failed") return record.error || "Analyse fehlgeschlagen.";
+    return "Analyse laeuft …";
+  }
+
+  function renderAnalysisProgress(record) {
+    const progress = Math.max(0, Math.min(100, Number(record?.progress || 0)));
+    const running = ["queued", "running"].includes(record?.status);
+    const summary = record?.result?.summary || "";
+    const moments = record?.result?.critical_moments || [];
+    const events = (record?.events || record?.result?.events || []).slice(-5);
+    const $card = $("<div>").addClass("app-analysis-card");
+    $card.append(
+      $("<div>").addClass("app-analysis-head").append(
+        $("<strong>").text(record?.status === "done" ? "PGN-Analyse" : "PGN-Analyse laeuft"),
+        $("<span>").text(`${progress}%`)
+      ),
+      $("<div>").addClass("app-analysis-shimmer").text(latestAnalysisMessage(record)),
+      $("<div>").addClass("app-analysis-bar").append(
+        $("<span>").css("width", `${progress}%`)
+      )
+    );
+    if (events.length) {
+      const $log = $("<ol>").addClass("app-analysis-log");
+      events.forEach((event) => {
+        $log.append($("<li>").text(event.message || event.stage || ""));
+      });
+      $card.append($log);
+    }
+    if (summary) {
+      $card.append($("<p>").addClass("app-analysis-summary").text(summary));
+    }
+    if (moments.length) {
+      const text = moments.slice(0, 3).map((item) => `${item.move_number}.${item.san}: ${item.reason}`).join(" · ");
+      $card.append($("<p>").addClass("app-analysis-summary").text(text));
+    }
+    if (record?.artifact_ids?.length) {
+      const $links = $("<div>").addClass("app-analysis-links");
+      record.artifact_ids.slice(0, 4).forEach((id, index) => {
+        $links.append(
+          $("<a>")
+            .attr("href", apiUrl(`/artifacts/${id}`))
+            .attr("target", "_blank")
+            .attr("rel", "noopener")
+            .text(["source.pgn", "summary.md", "annotated.pgn", "analysis.json"][index] || "Artefakt")
+        );
+      });
+      $card.append($links);
+    }
+    if (!$activeAnalysisMessage || !$activeAnalysisMessage.length) {
+      $activeAnalysisMessage = appendMessage("", "activity");
+    }
+    $activeAnalysisMessage
+      .attr("class", `app-message activity${running ? " is-pending" : ""}`)
+      .empty()
+      .append($card);
+    $messages.scrollTop($messages[0].scrollHeight);
+  }
+
+  function renderAnalysisPanel(record) {
+    if (currentMode !== "analysis") return;
+    const progress = Math.max(0, Math.min(100, Number(record?.progress || 0)));
+    const events = (record?.events || record?.result?.events || []).slice(-10);
+    $flexContent.empty().append(
+      $("<h3>").text("Analyse"),
+      $("<div>").addClass("app-analysis-side-status").text(latestAnalysisMessage(record)),
+      $("<div>").addClass("app-analysis-bar").append($("<span>").css("width", `${progress}%`))
+    );
+    if (record?.result?.final_fen) {
+      $flexContent.append($("<p>").addClass("app-meta").text(record.result.final_fen));
+    }
+    const $log = $("<ol>").addClass("app-analysis-log");
+    events.forEach((event) => $log.append($("<li>").text(event.message || event.stage || "")));
+    $flexContent.append($log);
+  }
+
+  function finishAnalysisBusy() {
+    if (analysisBusy) {
+      analysisBusy = false;
+      setBusy(false);
+    }
+  }
+
+  function pollAnalysisJob(jobId) {
+    if (activeAnalysisTimer) {
+      window.clearTimeout(activeAnalysisTimer);
+      activeAnalysisTimer = null;
+    }
+    return api("GET", `/analysis/jobs/${jobId}`)
+      .then((record) => {
+        renderAnalysisProgress(record);
+        renderAnalysisPanel(record);
+        if (["queued", "running"].includes(record.status)) {
+          activeAnalysisTimer = window.setTimeout(() => pollAnalysisJob(jobId), 1400);
+        } else {
+          finishAnalysisBusy();
+          if (record.status === "failed") {
+            showError(record.error || "Analyse fehlgeschlagen.");
+          }
+        }
+      })
+      .catch((error) => {
+        finishAnalysisBusy();
+        showError(error.message || String(error));
+      });
   }
 
   function statusDisplayText(event, text) {
@@ -564,11 +682,16 @@
         refreshBoardState().catch(() => {});
         break;
       case "analysis":
-        $flexContent.append(
-          $("<h3>").text("Analyse"),
-          $("<p>").addClass("app-meta").text("Engine-Analyse wird geladen…"),
-          $("<div>").addClass("app-analysis-placeholder")
-        );
+        if (activeAnalysisJobId) {
+          api("GET", `/analysis/jobs/${activeAnalysisJobId}`)
+            .then((record) => renderAnalysisPanel(record))
+            .catch(() => {});
+        } else {
+          $flexContent.append(
+            $("<h3>").text("Analyse"),
+            $("<p>").addClass("app-meta").text("Noch kein PGN-Analysejob.")
+          );
+        }
         break;
       case "training":
         $flexContent.append(
@@ -681,10 +804,18 @@
         })
       )
       .then((job) => {
-        appendMessage(`Analysejob gestartet: ${job.job_id} (${job.status})`, "assistant");
+        activeAnalysisJobId = job.job_id;
+        $activeAnalysisMessage = appendMessage("Analysejob gestartet …", "activity is-pending");
+        analysisBusy = true;
+        setBusy(true, "PGN-Analyse …");
         if (analyseDialog) analyseDialog.close();
+        switchMode("analysis");
+        return pollAnalysisJob(job.job_id);
       })
-      .catch((error) => showError(error.message || String(error)));
+      .catch((error) => {
+        finishAnalysisBusy();
+        showError(error.message || String(error));
+      });
   });
 
   $debugToggle.on("change", function () {

@@ -104,3 +104,5 @@ def test_pgn_analysis_job_completes(monkeypatch, tmp_path) -> None:
     assert result.status_code == 200
     assert result.json()["result"]["legal"] is True
     assert result.json()["result"]["move_count"] == 6
+    assert result.json()["result"]["analysis_direction"] == "backward"
+    assert "annotated_pgn" in result.json()["result"]

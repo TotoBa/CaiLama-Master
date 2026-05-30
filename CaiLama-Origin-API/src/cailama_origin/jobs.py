@@ -117,22 +117,124 @@ def analyze_pgn_payload(raw_pgn: str) -> dict[str, Any]:
     board = game.board()
     moves: list[dict[str, Any]] = []
     for ply, move in enumerate(game.mainline_moves(), start=1):
+        board_before = board.copy(stack=False)
         san = board.san(move)
         board.push(move)
-        moves.append({"ply": ply, "san": san, "uci": move.uci(), "fen_after": board.fen()})
+        moves.append({
+            "ply": ply,
+            "san": san,
+            "uci": move.uci(),
+            "fen_before": board_before.fen(),
+            "fen_after": board.fen(),
+            "is_checkmate": board.is_checkmate(),
+        })
     if "#" in raw_pgn and not board.is_checkmate():
         board, moves = parse_san_movetext(raw_pgn)
     headers = headers_from_pgn(raw_pgn) or {key: str(value) for key, value in game.headers.items()}
+    critical = _critical_moments_from_moves(moves)
+    summary = _summary(headers, moves, board.is_checkmate(), critical)
+    annotated_pgn = _annotated_pgn(pgn, critical, summary)
     return {
         "headers": headers,
         "move_count": len(moves),
         "moves": moves,
         "final_fen": board.fen(),
         "is_checkmate": board.is_checkmate(),
+        "analysis_direction": "backward",
+        "critical_moments": critical,
+        "events": _events_for_moves(moves),
+        "annotated_pgn": annotated_pgn,
         "legal": True,
         "result": headers.get("Result", "*"),
-        "summary": "PGN parsed and analysed on server origin.",
+        "summary": summary,
     }
+
+
+def _critical_moments_from_moves(moves: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    critical: list[dict[str, Any]] = []
+    for move in moves:
+        if move.get("is_checkmate"):
+            critical.append({
+                "ply": move.get("ply"),
+                "san": move.get("san"),
+                "uci": move.get("uci"),
+                "reason": "Mattstellung",
+                "fen_before": move.get("fen_before", ""),
+            })
+    if not critical and moves:
+        last = moves[-1]
+        critical.append({
+            "ply": last.get("ply"),
+            "san": last.get("san"),
+            "uci": last.get("uci"),
+            "reason": "Endstellung",
+            "fen_before": last.get("fen_before", ""),
+        })
+    return critical[:5]
+
+
+def _events_for_moves(moves: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    events = [
+        {"progress": 5, "stage": "parse_pgn", "message": "PGN validiert."},
+        {
+            "progress": 10,
+            "stage": "extract_positions",
+            "message": f"{len(moves)} Halbzuege fuer Rueckwaerts-Analyse vorbereitet.",
+        },
+    ]
+    total = max(1, len(moves))
+    for index, move in enumerate(reversed(moves), start=1):
+        progress = 10 + int(index / total * 80)
+        events.append({
+            "progress": progress,
+            "stage": "backward_scan",
+            "message": f"Stellung {move.get('ply')} von {total} rueckwaerts verarbeitet.",
+            "ply": move.get("ply"),
+        })
+    events.append({"progress": 100, "stage": "done", "message": "Origin-PGN-Analyse abgeschlossen."})
+    return events
+
+
+def _summary(
+    headers: dict[str, str],
+    moves: list[dict[str, Any]],
+    is_checkmate: bool,
+    critical: list[dict[str, Any]],
+) -> str:
+    white = headers.get("White", "Weiss")
+    black = headers.get("Black", "Schwarz")
+    result = headers.get("Result", "*")
+    if critical:
+        first = critical[0]
+        reason = f"kritischer Moment Ply {first.get('ply')}: {first.get('san')} ({first.get('reason')})"
+    else:
+        reason = "kein kritischer Moment erkannt"
+    mate = " Matt erkannt." if is_checkmate else ""
+    return f"{white} gegen {black}, Ergebnis {result}, {len(moves)} Halbzuege; {reason}.{mate}"
+
+
+def _annotated_pgn(normalized_pgn: str, critical: list[dict[str, Any]], summary: str) -> str:
+    import chess.pgn
+
+    game = chess.pgn.read_game(io.StringIO(normalized_pgn))
+    if game is None:
+        return normalized_pgn
+    game.headers["Annotator"] = "CaiLama Origin PGN-Analyse"
+    game.headers["Cailama_Analysis_Direction"] = "backward"
+    game.headers["Cailama_Critical_Moments"] = ",".join(str(item.get("ply")) for item in critical) or "-"
+    by_ply = {int(item.get("ply") or 0): item for item in critical}
+    for node in game.mainline():
+        item = by_ply.get(node.ply())
+        if not item:
+            continue
+        extra = f"CaiLama: {item.get('reason', 'kritische Stellung')}."
+        node.comment = f"{node.comment}\n\n{extra}".strip()
+    final_node: chess.pgn.GameNode = game
+    while final_node.variations:
+        final_node = final_node.variation(0)
+    final_node.comment = f"{final_node.comment}\n\nZusammenfassung: {summary}".strip()
+    exporter = chess.pgn.StringExporter(headers=True, comments=True, variations=True, columns=88)
+    return str(game.accept(exporter))
 
 
 def run_pgn_analysis_job(store: JobStore, job_id: str) -> None:

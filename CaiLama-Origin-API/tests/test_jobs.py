@@ -37,6 +37,9 @@ def test_analyze_pgn_payload_accepts_german_notation_and_checkmate() -> None:
     assert result["move_count"] == 22
     assert result["moves"][1]["san"] == "e5"
     assert result["headers"]["Event"] == "Smoke"
+    assert result["analysis_direction"] == "backward"
+    assert result["events"][-1]["stage"] == "done"
+    assert "Cailama_Analysis_Direction" in result["annotated_pgn"]
 
 
 def test_analyze_pgn_payload_rejects_invalid_move() -> None:

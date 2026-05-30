@@ -128,6 +128,15 @@ Vor Arbeitsbeginn lesen:
   Dienste laufen nicht-root, mit Read-only-RootFS, `cap_drop: ALL` und
   `no-new-privileges`; MariaDB bleibt der bewusst beschreibbare Datendienst.
   Runtime-Smokes und Web-Konsolen-Smoke liefen erfolgreich.
+  Update 2026-05-30: `CaiLama-Origin-API/` ist als direkt getrackte
+  Master-Komponente versioniert und liefert fuer Konsolenjobs eine
+  profilgebundene, signierte Origin-API mit Health, Search, LLM und
+  rueckwaerts strukturierten PGN-Jobantworten. Der tiefe Web-/Agent-PGN-Pfad
+  liegt im CaiLama-Repo und erzeugt Fortschritt, kritische Momente,
+  Maia-/DWZ-Side-Info und annotierte PGN-Artefakte. Verifiziert wurden
+  Origin-API-Tests, CaiLama-Agent/Web/PGN-Fokustests, JS-Syntax und ein
+  CLI-Engine-Smoke; bekannte breite CaiLama-Offline-Testluecken sind im
+  CaiLama-TODO und privaten Server-TODO dokumentiert.
   Update 2026-05-30: Das Deploy-Overlay stellt fuer `cailama-web` zusaetzlich
   lc0 und Maia-Gewichte als read-only Mounts bereit. CaiLama exponiert
   Stockfish18 und Maia 1100-1900 ueber `GET /engine-profiles`; das Brettpanel
