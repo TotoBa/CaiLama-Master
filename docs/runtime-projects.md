@@ -135,6 +135,10 @@ Baseline:
 - Nur der Reverse Proxy bindet oeffentliche Ports; Router, Search, SearXNG,
   Meilisearch, `cailama-web`, Datenbank und Modell-Backends bleiben im
   internen Docker-Netz.
+- Der interne Origin-Hop fuer Webspace-Konsole und Konsolenjobs wird aus der
+  versionierten Master-Komponente `CaiLama-Origin-API/` gebaut. Die Runtime-
+  Kopie unter dem Compose-Build-Kontext ist generiert und keine Quelle fuer
+  manuelle Entwicklung.
 - Dienste laufen nicht als Root, wenn das Image dies sauber unterstuetzt.
 - `read_only: true` ist fuer zustandslose Dienste und Dienste mit expliziten
   Datenvolumes zu setzen. Schreibpfade werden als benannte Volumes, Bind-Mounts

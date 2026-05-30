@@ -25,6 +25,13 @@ if [[ -n "$tracked_subrepos" ]]; then
 fi
 echo "OK: no sub-repository files tracked by master"
 
+if git check-ignore -q "CaiLama-Origin-API"; then
+  echo "ERROR: CaiLama-Origin-API must be tracked by master, not ignored"
+  git check-ignore -v "CaiLama-Origin-API" || true
+  exit 1
+fi
+echo "OK: CaiLama-Origin-API is tracked by master"
+
 tracked_env="$(git ls-files | grep -E '(^|/)\.env($|\.)' || true)"
 if [[ -n "$tracked_env" ]]; then
   echo "ERROR: environment files are tracked in master:"
@@ -55,6 +62,16 @@ required_files=(
   "AGENTS.md"
   "README.md"
   "TODO.md"
+  "CaiLama-Origin-API/README.md"
+  "CaiLama-Origin-API/Dockerfile"
+  "CaiLama-Origin-API/pyproject.toml"
+  "CaiLama-Origin-API/docs/security.md"
+  "CaiLama-Origin-API/src/cailama_origin/auth.py"
+  "CaiLama-Origin-API/src/cailama_origin/jobs.py"
+  "CaiLama-Origin-API/src/cailama_origin/main.py"
+  "CaiLama-Origin-API/tests/test_auth.py"
+  "CaiLama-Origin-API/tests/test_jobs.py"
+  "CaiLama-Origin-API/tests/test_main.py"
   "hinweise.md"
   "docs/ecosystem-map.md"
   "docs/ecosystem-reference.md"

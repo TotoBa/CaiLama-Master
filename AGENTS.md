@@ -15,9 +15,12 @@ Die lokal darunter liegenden Repositories sind eigenstaendig:
 - `CaiLama-LLM-Router` - eigenstaendiger LLM-Router mit OpenAI-kompatibler API,
   Modell-Aliasen, Backend-Routing und Fallbacks.
 - `CaiLama-Search` - eigenstaendiger Such-, Index-, DWZ- und RAG-Dienst.
+- `CaiLama-Origin-API` - versionierte Master-Komponente fuer den internen
+  Webspace-Origin-Hop und Konsolen-/Job-Proxy.
 
-Diese drei Unterordner sind lokal hilfreich, muessen aber im Master-Repo
-vollstaendig ignoriert bleiben.
+Die ersten drei Unterordner sind eigenstaendige Repositories und muessen im
+Master-Repo vollstaendig ignoriert bleiben. `CaiLama-Origin-API/` ist kein
+Sub-Repo und wird direkt im Master getrackt.
 
 ## Grundregel
 
@@ -96,6 +99,7 @@ Agenten duerfen im Master-Repo folgende Dateien und Ordner bearbeiten:
 - `scripts/`
 - `web/`
 - weitere reine Planungs-, Status- und Orchestrierungsdateien
+- `CaiLama-Origin-API/` als versionierte Origin-Gateway-Komponente
 
 ## Verbotene Aktionen
 
@@ -103,6 +107,7 @@ Agenten duerfen nicht:
 
 - Dateien aus `CaiLama/`, `CaiLama-LLM-Router/` oder `CaiLama-Search/` in das
   Master-Repo committen.
+- `CaiLama-Origin-API/` in `.gitignore` aufnehmen oder als Sub-Repo anlegen.
 - Die Unter-Repos als Submodules hinzufuegen.
 - `.git`-Verzeichnisse der Unter-Repos veraendern.
 - Unter-Repos loeschen, verschieben oder automatisch normalisieren.

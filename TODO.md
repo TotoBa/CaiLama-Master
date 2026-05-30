@@ -132,6 +132,10 @@ Vor Arbeitsbeginn lesen:
   lc0 und Maia-Gewichte als read-only Mounts bereit. CaiLama exponiert
   Stockfish18 und Maia 1100-1900 ueber `GET /engine-profiles`; das Brettpanel
   und Engine-Games nutzen echte `EnginePlayer`-Zuege statt Platzhalterzuegen.
+  Update 2026-05-30: Die Origin-API ist als `CaiLama-Origin-API/` direkt im
+  Master versioniert. Authentifizierung, HMAC-Signatur, Job-Store,
+  Audit-Logging und Dockerfile liegen jetzt in Source; das Runtime-Deploy
+  synchronisiert diese Komponente in den `api-gateway`-Build-Kontext.
 - [ ] Benchmark-Rahmen im Master vorbereiten: gemeinsame Benchmark-
   Orchestrierung fuer CaiLama, Router und Search definieren, Ergebnisablage im
   Master unter `docs/benchmark-results/` oder einer klar benannten

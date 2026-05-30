@@ -239,6 +239,11 @@ Body-SHA256 und HMAC-Signatur abgesichert. Echte Origin-Hosts, Keys, Secrets,
 lokale Pfade und Benutzerkonten bleiben ausschliesslich in privaten
 Operator-Konfigurationen.
 
+Die Origin-API ist als `CaiLama-Origin-API/` direkt im Master versioniert. Sie
+bleibt ein interner Dienst und wird beim Runtime-Deploy in den Compose-
+Build-Kontext synchronisiert. Fachlogik fuer Schachanalyse bleibt in CaiLama;
+der Origin-Dienst kapselt Proxy-, Auth-, Health- und Job-Vertrag.
+
 Aktuelle Webspace-Endpunkte fuer die Konsole:
 
 | Endpunkt | Scope | Zweck |
