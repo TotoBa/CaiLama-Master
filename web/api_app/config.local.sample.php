@@ -37,6 +37,11 @@ return [
         'hmac_secret' => 'replace_with_origin_hmac_secret',
         'timeout_seconds' => 20,
     ],
+    'web_api' => [
+        'base_url' => 'https://replace-with-web-api-host.example',
+        'session_token' => 'replace_with_web_api_session_token',
+        'timeout_seconds' => 60,
+    ],
     'benchmark_feedback' => [
         /*
          * Optional public URL prefix for mirrored chess piece images.

@@ -54,6 +54,10 @@ web/benchmark-feedback.php    # geschützte Benchmark-Feedback-Erfassung
 web/benchmark-feedback-item.php # einzelner blinder Feedback-Fall / Playmodus
 web/benchmark-feedback-results.php # geschützte aggregierte Feedback-Auswertung
 web/logout.php                # CSRF-geschützter Logout
+web/app.php                   # Login-geschützter Front-Controller für /app/
+web/app/index.php             # Interne Chat-/Analyse-Web-App
+web/app/assets/app.css        # Web-App-Styling
+web/app/assets/app.js         # Web-App-Client (SSE, Board)
 web/robots.txt                # Crawler-Regeln mit Sitemap-Verweis
 web/sitemap.xml               # Canonical XML-Sitemap für Suchmaschinen
 web/api/public/index.php      # vorbereiteter API-Frontcontroller
@@ -380,6 +384,8 @@ POST /api/v1/admin/schema/cailama
 POST /api/v1/admin/schema/all
 /login.php
 /account.php
+/app.php
+/app/
 /benchmark-feedback.php
 /benchmark-feedback-results.php
 ```

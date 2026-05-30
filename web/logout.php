@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 use CaiLama\WebApi\Auth\SessionManager;
 
-$config = require __DIR__ . '/api_app/init.php';
+require __DIR__ . '/_private_api.php';
+$config = cailama_api_config();
 $session = new SessionManager($config['session'] ?? []);
 $session->start();
 

@@ -2,8 +2,11 @@
 declare(strict_types=1);
 
 use CaiLama\WebApi\Auth\SessionManager;
+use CaiLama\WebApi\Auth\UserProfileService;
+use CaiLama\WebApi\Db\ConnectionFactory;
 
-$config = require __DIR__ . '/api_app/init.php';
+require __DIR__ . '/_private_api.php';
+$config = cailama_api_config();
 $session = new SessionManager($config['session'] ?? []);
 $session->start();
 $user = $session->currentUser();
@@ -11,6 +14,13 @@ $user = $session->currentUser();
 if ($user === null) {
     header('Location: login.php', true, 303);
     exit;
+}
+
+try {
+    $pdo = ConnectionFactory::fromConfig($config, 'cailama');
+    $user = (new UserProfileService($pdo, $config['auth'] ?? []))->attachProfile($user);
+} catch (Throwable) {
+    // Profile lookup is optional for account display.
 }
 
 function h(string $value): string
@@ -67,10 +77,22 @@ function h(string $value): string
               <dd><?= h((string) ($user['login_name'] ?? '')) ?></dd>
             </div>
             <div>
+              <dt>CaiLama-Profil</dt>
+              <dd>
+                <?php if (!empty($user['profile_key'])): ?>
+                  <?= h((string) ($user['player_display_name'] ?? '')) ?>
+                  (Training: <?= h((string) ($user['training_name'] ?? '')) ?>)
+                <?php else: ?>
+                  nicht verknüpft
+                <?php endif; ?>
+              </dd>
+            </div>
+            <div>
               <dt>Datenbank</dt>
               <dd><?= ($config['databases']['cailama']['enabled'] ?? false) ? 'konfiguriert' : 'nicht konfiguriert' ?></dd>
             </div>
           </dl>
+          <a class="button light form-button" href="app.php">CaiLama App öffnen</a>
           <a class="button light form-button" href="benchmark-feedback.php">Benchmark-Feedback öffnen</a>
           <a class="button light form-button" href="benchmark-feedback-results.php">Benchmark-Auswertung öffnen</a>
           <form method="post" action="logout.php">

@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS cailama_schema_meta (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO cailama_schema_meta (id, schema_name, schema_version)
-VALUES (1, 'cailama-data', '0.9.0')
+VALUES (1, 'cailama-data', '0.9.1')
 ON DUPLICATE KEY UPDATE schema_version = VALUES(schema_version);
 
 -- Website user authentication table (formerly in a separate auth database).
@@ -24,9 +24,11 @@ CREATE TABLE IF NOT EXISTS web_users (
     display_name VARCHAR(120) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     status ENUM('active', 'locked') NOT NULL DEFAULT 'active',
+    player_profile_id BIGINT UNSIGNED NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    last_login_at DATETIME NULL
+    last_login_at DATETIME NULL,
+    INDEX idx_web_users_player_profile (player_profile_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS cailama_player_profiles (
@@ -188,6 +190,18 @@ WHERE login_name = '' AND email IS NOT NULL AND email <> '';
 
 ALTER TABLE web_users
     MODIFY COLUMN email VARCHAR(190) NULL;
+
+ALTER TABLE web_users
+    ADD COLUMN IF NOT EXISTS player_profile_id BIGINT UNSIGNED NULL AFTER status;
+
+ALTER TABLE web_users
+    ADD INDEX IF NOT EXISTS idx_web_users_player_profile (player_profile_id);
+
+UPDATE web_users w
+JOIN cailama_player_profiles p ON p.profile_key = 'torsten-baublies-totomanie'
+SET w.player_profile_id = p.id
+WHERE w.login_name = 'testuser'
+  AND (w.player_profile_id IS NULL OR w.player_profile_id <> p.id);
 
 ALTER TABLE cailama_model_feedback
     ADD COLUMN IF NOT EXISTS observation_id BIGINT UNSIGNED NULL AFTER id,

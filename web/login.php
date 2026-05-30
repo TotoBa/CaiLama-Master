@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 use CaiLama\WebApi\Auth\AuthService;
 use CaiLama\WebApi\Auth\SessionManager;
+use CaiLama\WebApi\Auth\UserProfileService;
 use CaiLama\WebApi\Db\ConnectionFactory;
 
-$config = require __DIR__ . '/api_app/init.php';
+require __DIR__ . '/_private_api.php';
+$config = cailama_api_config();
 $session = new SessionManager($config['session'] ?? []);
 $session->start();
 
@@ -34,6 +36,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $auth = new AuthService($pdo, $config['auth'] ?? []);
             $user = $auth->authenticate($login, $password);
             if ($user !== null) {
+                $user = (new UserProfileService($pdo, $config['auth'] ?? []))->attachProfile($user);
                 $session->clearLoginFailures();
                 $session->login($user);
                 header('Location: account.php', true, 303);

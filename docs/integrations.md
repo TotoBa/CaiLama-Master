@@ -146,6 +146,10 @@ Zu klaerende bzw. laufend zu pruefende Punkte:
 - Website-Login trennt die Tabellen logisch (z.B. `web_users`) von den
   Fachdaten; eine strikte Trennung auf Datenbank-Ebene ist technisch
   nicht moeglich.
+- `web_users.player_profile_id` verknuepft Website-Accounts optional mit
+  `cailama_player_profiles`. Der operative Testaccount `testuser` zeigt auf
+  `torsten-baublies-totomanie` (`training_name`: `totomanie`). Die Zuordnung
+  wird idempotent per Schema-Setup gesetzt.
 - Keine SQL-over-HTTP-API und keine DB-Secrets im Master.
 - Private Webspace-Konfiguration wird ausserhalb des Public-Webroots unter
   `cailama-private/api/config.local.php` abgelegt; alte Public-Konfigdateien
@@ -261,6 +265,29 @@ Akzeptanzkriterien fuer den End-to-End-Test:
   sichtbar.
 - Testdaten enthalten keine Secrets, keine produktiven Zugangsdaten und keine
   privaten lokalen Pfade.
+
+### Web-App -> Webspace-Proxy -> cailama-web
+
+Die login-geschützte interne Web-App unter `/app/` nutzt denselben fachlichen
+Kern wie die Konsole, aber über eine Browser-Session statt Konsolen-Keys.
+
+```text
+Browser -> /app/ (PHP/Smarty) -> /api/v1/web/* (Webspace-Proxy) -> cailama-web (ASGI)
+```
+
+Relevante Webspace-Endpunkte (Phase 4):
+
+| Endpunkt | Auth | Zweck |
+|---|---|---|
+| `POST /api/v1/web/sessions` | Website-Session | Web-Session anlegen |
+| `POST /api/v1/web/sessions/{id}/messages` | Website-Session | Chat-Nachricht |
+| `POST /api/v1/web/sessions/{id}/commands` | Website-Session | Slash-Command |
+| `GET /api/v1/web/sessions/{id}/events` | Website-Session | SSE-Events |
+| `POST /api/v1/web/boards/{id}/move` | Website-Session | Brettzug (Backend validiert) |
+| `POST /api/v1/web/analysis/jobs` | Website-Session | PGN-Analysejob |
+
+Der PHP-Proxy mappt `web_users`-Login auf ein internes Profil/Token. Keine
+Schachlogik im Webspace. Details: [`docs/web-app.plan.md`](web-app.plan.md).
 
 ## Runtime-Konfiguration ohne Secrets
 

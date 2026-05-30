@@ -1,0 +1,258 @@
+.app-shell {
+  padding: 0 1rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.app-hero {
+  padding-bottom: 0.5rem;
+}
+
+.app-profile-badge {
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.app-activity-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+}
+
+.app-activity-bar.is-busy {
+  border-color: rgba(120, 200, 255, 0.35);
+  background: rgba(80, 160, 255, 0.08);
+}
+
+.app-activity-bar.is-busy .app-activity-pulse {
+  display: inline-block;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  background: #6ec6ff;
+  animation: app-pulse 1s ease-in-out infinite;
+}
+
+@keyframes app-pulse {
+  0%, 100% { opacity: 0.35; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+.app-debug-toggle {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  opacity: 0.85;
+  cursor: pointer;
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  gap: 1.25rem;
+}
+
+.app-sidebar,
+.app-main {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.app-session-list {
+  list-style: none;
+  margin: 0.75rem 0 1.5rem;
+  padding: 0;
+}
+
+.app-session-list li {
+  margin-bottom: 0.45rem;
+}
+
+.app-session-list button {
+  width: 100%;
+  text-align: left;
+}
+
+.app-session-list button.is-active {
+  outline: 2px solid rgba(120, 200, 255, 0.55);
+}
+
+.app-messages {
+  min-height: 340px;
+  max-height: 62vh;
+  overflow-y: auto;
+  padding: 0.65rem;
+  margin-bottom: 1rem;
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 10px;
+}
+
+.app-message {
+  margin-bottom: 0.85rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  line-height: 1.45;
+  animation: app-msg-in 0.25s ease-out;
+}
+
+@keyframes app-msg-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.app-message.user {
+  background: rgba(255, 255, 255, 0.07);
+  margin-left: 1.5rem;
+}
+
+.app-message.assistant,
+.app-message.slash {
+  background: rgba(80, 160, 120, 0.12);
+  color: #d7f0df;
+  margin-right: 1.5rem;
+}
+
+.app-message.status {
+  background: rgba(100, 140, 200, 0.1);
+  color: #c8daf5;
+  font-size: 0.88rem;
+  border-left: 3px solid rgba(120, 180, 255, 0.5);
+}
+
+.app-message.status.debug-only {
+  display: none;
+}
+
+.app-shell.is-debug .app-message.status.debug-only {
+  display: block;
+}
+
+.app-message.tool {
+  background: rgba(200, 160, 80, 0.1);
+  color: #f5e6c8;
+  font-size: 0.9rem;
+  border-left: 3px solid rgba(220, 180, 90, 0.45);
+}
+
+.app-message.error {
+  background: rgba(200, 80, 80, 0.15);
+  color: #ffb4b4;
+}
+
+.app-input-form textarea {
+  width: 100%;
+  margin-bottom: 0.75rem;
+  resize: vertical;
+  min-height: 3.2rem;
+  font: inherit;
+  border-radius: 10px;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.2);
+  color: inherit;
+}
+
+.app-input-form textarea:focus {
+  outline: 2px solid rgba(120, 180, 255, 0.45);
+  border-color: transparent;
+}
+
+.app-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.app-board svg {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+}
+
+.app-meta,
+.app-errors {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.app-errors:not(:empty) {
+  margin-top: 0.75rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(200, 60, 60, 0.15);
+  color: #ffb4b4;
+}
+
+.app-dialog {
+  border: none;
+  border-radius: 12px;
+  padding: 1rem;
+  max-width: 640px;
+  width: 90vw;
+  background: #1a1f24;
+  color: inherit;
+}
+
+.app-dialog textarea,
+.app-dialog select {
+  width: 100%;
+  margin: 0.75rem 0;
+}
+
+.ui-autocomplete {
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 1200;
+}
+
+@media (max-width: 900px), (hover: none) and (pointer: coarse) {
+  .app-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-sidebar {
+    order: 2;
+  }
+
+  .app-main {
+    order: 1;
+  }
+
+  .app-messages {
+    max-height: 50vh;
+  }
+
+  .app-input-form {
+    position: sticky;
+    bottom: 0;
+    background: rgba(20, 24, 28, 0.95);
+    padding-top: 0.5rem;
+    margin: 0 -0.25rem;
+    z-index: 5;
+  }
+
+  .app-message.user {
+    margin-left: 0.5rem;
+  }
+
+  .app-message.assistant,
+  .app-message.slash {
+    margin-right: 0.5rem;
+  }
+}
+
+.app-shell.is-mobile .app-actions .button {
+  flex: 1 1 auto;
+  min-height: 2.75rem;
+}

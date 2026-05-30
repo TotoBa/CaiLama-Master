@@ -47,6 +47,10 @@ final class SessionManager
             'login_name' => (string) ($user['login_name'] ?? ''),
             'email' => (string) ($user['email'] ?? ''),
             'display_name' => (string) ($user['display_name'] ?? ''),
+            'player_profile_id' => isset($user['player_profile_id']) ? (string) $user['player_profile_id'] : null,
+            'profile_key' => isset($user['profile_key']) ? (string) $user['profile_key'] : null,
+            'player_display_name' => isset($user['player_display_name']) ? (string) $user['player_display_name'] : null,
+            'training_name' => isset($user['training_name']) ? (string) $user['training_name'] : null,
         ];
         $_SESSION['auth_time'] = time();
         $_SESSION['last_seen'] = time();

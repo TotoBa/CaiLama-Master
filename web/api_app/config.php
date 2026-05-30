@@ -61,6 +61,11 @@ $config = [
             'jobs_result' => ['method' => 'POST', 'path' => '/v1/jobs/result', 'scope' => 'jobs:write'],
         ],
     ],
+    'web_api' => [
+        'base_url' => '',
+        'session_token' => '',
+        'timeout_seconds' => 60,
+    ],
     'benchmark_feedback' => [
         'piece_asset_base_url' => '',
         'piece_sets' => [],
