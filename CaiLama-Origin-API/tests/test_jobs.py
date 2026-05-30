@@ -42,6 +42,22 @@ def test_analyze_pgn_payload_accepts_german_notation_and_checkmate() -> None:
     assert "Cailama_Analysis_Direction" in result["annotated_pgn"]
 
 
+def test_analyze_pgn_payload_keeps_english_san_as_normal_input() -> None:
+    pgn = """
+[Event "English"]
+[Result "*"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 *
+"""
+    result = analyze_pgn_payload(pgn)
+
+    assert result["legal"] is True
+    assert result["move_count"] == 6
+    assert result["moves"][2]["san"] == "Nf3"
+    assert result["moves"][4]["san"] == "Bb5"
+    assert "Nf3" in result["annotated_pgn"]
+
+
 def test_analyze_pgn_payload_rejects_invalid_move() -> None:
     try:
         analyze_pgn_payload("1. e4 e5 2. e5")
