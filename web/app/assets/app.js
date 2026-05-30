@@ -12,21 +12,25 @@
     $root.data("debug") === "1" ||
     localStorage.getItem("cailama_app_debug") === "1";
 
+  // New selectors for updated DOM
   const $messages = $("#app-messages");
   const $errors = $("#app-errors");
-  const $sessionList = $("#app-session-list");
-  const $boardSvg = $("#app-board-svg");
-  const $boardFen = $("#app-board-fen");
   const $form = $("#app-input-form");
   const $input = $("#app-input");
-  const $activityBar = $("#app-activity-bar");
-  const $activityLabel = $("#app-activity-label");
+  const $boardSvg = $("#app-board-svg");
+  const $boardFen = $("#app-board-fen");
+  const $statusDot = $("#app-status-dot");
+  const $statusText = $("#app-status-text");
   const $debugToggle = $("#app-debug-toggle");
+  const $navItems = $(".app-nav-item[data-mode]");
+  const $flexPanel = $("#app-flex");
+  const $flexContent = $("#app-flex-content");
   const analyseDialog = document.getElementById("app-analyse-dialog");
 
   let currentSessionId = null;
   let currentBoardId = null;
   let busyCount = 0;
+  let currentMode = "chat";
 
   const slashHints = [
     "/help",
@@ -44,7 +48,7 @@
 
   function isMobileClient() {
     return (
-      window.matchMedia("(max-width: 900px)").matches ||
+      window.matchMedia("(max-width: 768px)").matches ||
       window.matchMedia("(hover: none) and (pointer: coarse)").matches
     );
   }
@@ -62,12 +66,11 @@
       busyCount = Math.max(0, busyCount - 1);
     }
     const on = busyCount > 0;
-    $activityBar.toggleClass("is-busy", on);
-    $activityBar.find(".app-activity-pulse").prop("hidden", !on);
+    $statusDot.toggleClass("is-busy", on);
     if (label) {
-      $activityLabel.text(label);
+      $statusText.text(label);
     } else if (!on) {
-      $activityLabel.text("Bereit");
+      $statusText.text("Bereit");
     }
   }
 
@@ -98,6 +101,9 @@
 
   function showError(message) {
     $errors.text(message || "");
+    if (message) {
+      setTimeout(() => $errors.text(""), 5000);
+    }
   }
 
   function appendMessage(text, kind, meta) {
@@ -163,22 +169,23 @@
 
   function refreshSessions() {
     return api("GET", "/sessions").then((data) => {
-      $sessionList.empty();
+      // Sessions now shown in flex panel
+      const $list = $("#app-session-list");
+      const $container = $list.length ? $list : $("<ul>").attr("id", "app-session-list").addClass("app-session-list");
+      
+      $container.empty();
       (data.sessions || []).forEach((session) => {
         const $btn = $("<button>")
           .attr("type", "button")
-          .addClass("button light ui-button")
+          .addClass("app-session-btn")
           .toggleClass("is-active", session.id === currentSessionId)
           .text(session.title || session.id)
           .on("click", () => selectSession(session.id));
-        $sessionList.append($("<li>").append($btn));
+        $container.append($("<li>").append($btn));
       });
-      if ($root.hasClass("is-mobile") && $.mobile && $sessionList.listview) {
-        try {
-          $sessionList.listview("refresh");
-        } catch (_e) {
-          /* listview optional */
-        }
+      
+      if (!$list.length && $container.children().length > 0) {
+        $flexContent.prepend($("<h3>").text("Sessions")).append($container);
       }
     });
   }
@@ -244,6 +251,53 @@
       .finally(() => setBusy(false));
   }
 
+  // Navigation handlers
+  function switchMode(mode) {
+    currentMode = mode;
+    $navItems.removeClass("is-active");
+    $navItems.filter(`[data-mode="${mode}"]`).addClass("is-active");
+    
+    // Show/hide flex panel based on mode
+    if (["board", "analysis", "training"].includes(mode)) {
+      $flexPanel.addClass("is-visible");
+      if (mode === "board" && !currentBoardId) {
+        createBoard();
+      }
+    } else {
+      $flexPanel.removeClass("is-visible");
+    }
+    
+    // Update flex content
+    updateFlexContent(mode);
+  }
+
+  function updateFlexContent(mode) {
+    $flexContent.empty();
+    
+    switch (mode) {
+      case "board":
+        $flexContent.append(
+          $("<h3>").text("Schachbrett"),
+          $("<p>").addClass("app-meta").text("Brett wird rechts angezeigt.")
+        );
+        break;
+      case "analysis":
+        $flexContent.append(
+          $("<h3>").text("Analyse"),
+          $("<p>").addClass("app-meta").text("Engine-Analyse wird geladen…"),
+          $("<div>").addClass("app-analysis-placeholder")
+        );
+        break;
+      case "training":
+        $flexContent.append(
+          $("<h3>").text("Training"),
+          $("<p>").addClass("app-meta").text("Trainingsaufgaben werden vorbereitet…")
+        );
+        break;
+    }
+  }
+
+  // Event handlers
   $form.on("submit", (event) => {
     event.preventDefault();
     sendText($input.val()).catch((error) => {
@@ -254,6 +308,11 @@
 
   $("#app-new-session").on("click", () => {
     createSession().catch((error) => showError(error.message || String(error)));
+  });
+
+  $navItems.on("click", function () {
+    const mode = $(this).data("mode");
+    switchMode(mode);
   });
 
   $("#app-analyse-open").on("click", () => {
@@ -290,6 +349,13 @@
     applyDebugMode();
   });
 
+  // Auto-resize textarea
+  $input.on("input", function () {
+    this.style.height = "auto";
+    this.style.height = Math.min(this.scrollHeight, 120) + "px";
+  });
+
+  // Initialize
   if (isMobileClient()) {
     $root.addClass("is-mobile").attr("data-mobile", "1");
     if ($.mobile) {
@@ -325,15 +391,17 @@
       },
     });
     $input.on("focus", function () {
-      if (($(this).val() || "").startsWith("/")) {
+      if ($(this).val().startsWith("/")) {
         $(this).autocomplete("search", $(this).val());
       }
     });
   }
 
-  if ($.fn.button) {
-    $(".ui-button").button();
-  }
-
+  // Initialize with chat mode
+  switchMode("chat");
+  
+  // Initial board creation
+  createBoard().catch(() => {});
+  
   refreshSessions().catch(() => {});
 })(jQuery);

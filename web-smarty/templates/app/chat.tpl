@@ -1,16 +1,27 @@
 {extends file="app/layout.tpl"}
 
 {block name="content"}
-<section class="page-hero app-hero">
-  <div class="page-hero-inner">
-    <p class="eyebrow">{$page.eyebrow|escape}</p>
-    <h1>{$page.heading|escape}</h1>
-    <p class="page-lead">{$page.lead|escape}</p>
-    {if $page.user.profile_key}
-      <p class="page-lead app-profile-badge">Profil: {$page.user.player_display_name|escape} ({$page.user.training_name|escape})</p>
-    {/if}
+<header class="app-header">
+  <div class="app-header-inner">
+    <a href="index.php" class="app-back-link" title="Zurück zur Startseite">
+      <span aria-hidden="true">←</span> Zurück
+    </a>
+    <div class="app-header-title">
+      <span class="app-brand">CaiLama</span>
+      {if $page.user.profile_key}
+        <span class="app-profile-badge">{$page.user.player_display_name|escape}</span>
+      {/if}
+    </div>
+    <div class="app-header-status">
+      <span class="app-status-indicator" id="app-status-dot"></span>
+      <span id="app-status-text">Bereit</span>
+      <label class="app-debug-toggle" title="Debug-Infos einblenden">
+        <input type="checkbox" id="app-debug-toggle"{if $page.debug} checked{/if}>
+        Debug
+      </label>
+    </div>
   </div>
-</section>
+</header>
 
 <div id="cailama-app"
      class="app-shell"
@@ -18,57 +29,87 @@
      data-csrf="{$page.csrf_token|escape}"
      data-debug="{if $page.debug}1{else}0{/if}"
      data-profile="{$page.user.training_name|default:''|escape}"
-     data-mobile="0">
+     data-mobile="0"
+     role="application"
+     aria-label="CaiLama Chat Anwendung">
 
-  <div id="app-activity-bar" class="app-activity-bar" aria-live="polite" aria-atomic="true">
-    <span class="app-activity-pulse" hidden></span>
-    <span id="app-activity-label">Bereit</span>
-    <label class="app-debug-toggle" title="Debug-Infos einblenden">
-      <input type="checkbox" id="app-debug-toggle"{if $page.debug} checked{/if}>
-      Debug
-    </label>
-  </div>
-
-  <div class="app-grid">
-    <aside class="app-sidebar" id="app-sidebar">
-      <h2>Sessions</h2>
-      <button type="button" class="button light ui-button" id="app-new-session">Neue Session</button>
-      <ul id="app-session-list" class="app-session-list" data-role="listview" data-inset="true"></ul>
-      <h2>Brett</h2>
-      <div id="app-board-svg" class="app-board"></div>
-      <p id="app-board-fen" class="app-meta"></p>
+  <div class="app-layout">
+    <aside class="app-nav" id="app-nav">
+      <nav class="app-nav-list">
+        <button type="button" class="app-nav-item is-active" data-mode="chat">
+          <span class="app-nav-icon">💬</span>
+          <span>Chat</span>
+        </button>
+        <button type="button" class="app-nav-item" data-mode="board">
+          <span class="app-nav-icon">♟️</span>
+          <span>Brett</span>
+        </button>
+        <button type="button" class="app-nav-item" data-mode="analysis">
+          <span class="app-nav-icon">🔍</span>
+          <span>Analyse</span>
+        </button>
+        <button type="button" class="app-nav-item" data-mode="training">
+          <span class="app-nav-icon">📚</span>
+          <span>Training</span>
+        </button>
+      </nav>
+      <div class="app-nav-footer">
+        <button type="button" class="app-nav-item" id="app-new-session">
+          <span class="app-nav-icon">+</span>
+          <span>Neu</span>
+        </button>
+      </div>
     </aside>
 
-    <div class="app-main">
-      <div id="app-messages" class="app-messages" aria-live="polite"></div>
+    <main class="app-chat" id="app-chat">
+      <div id="app-messages" class="app-messages" aria-live="polite" aria-atomic="true"></div>
+    </main>
+
+    <aside class="app-flex" id="app-flex">
+      <div id="app-board-container" class="app-board-container">
+        <div id="app-board-svg" class="app-board"></div>
+        <p id="app-board-fen" class="app-board-fen"></p>
+      </div>
+      <div id="app-flex-content" class="app-flex-content"></div>
+    </div>
+
+    <footer class="app-footer" id="app-footer">
       <form id="app-input-form" class="app-input-form">
         <input type="hidden" name="csrf_token" value="{$page.csrf_token|escape}">
-        <textarea id="app-input" name="message" rows="3" placeholder="Nachricht oder /help …"></textarea>
-        <div class="app-actions">
-          <button type="submit" class="button ui-button" id="app-send">Senden</button>
-          <button type="button" class="button light ui-button" id="app-analyse-open">PGN analysieren</button>
+        <div class="app-input-wrapper">
+          <textarea id="app-input" name="message" rows="2" placeholder="Nachricht oder /help …" aria-label="Nachricht eingeben"></textarea>
+          <div class="app-input-actions">
+            <button type="button" class="app-action-btn" id="app-analyse-open" title="PGN analysieren">
+              <span>📄</span>
+              <span>PGN</span>
+            </button>
+            <button type="submit" class="app-send-btn" id="app-send">
+              <span>Senden</span>
+              <span aria-hidden="true">➤</span>
+            </button>
+          </div>
         </div>
-      </form>
+      </div>
       <div id="app-errors" class="app-errors" role="alert"></div>
-    </div>
+    </footer>
   </div>
 
-  <dialog id="app-analyse-dialog" class="app-dialog">
+  <dialog id="app-analyse-dialog" class="app-dialog" aria-labelledby="app-analyse-title">
     <form method="dialog" id="app-analyse-form">
-      <h2>PGN analysieren</h2>
-      <textarea id="app-analyse-pgn" rows="8" placeholder="PGN einfügen"></textarea>
+      <h2 id="app-analyse-title">PGN analysieren</h2>
+      <textarea id="app-analyse-pgn" rows="8" placeholder="PGN hier einfügen…" aria-label="PGN Inhalt"></textarea>
       <label>
-        Profil
-        <select id="app-analyse-profile">
+        Analyse-Profil
+        <select id="app-analyse-profile" aria-label="Analyse-Profil auswählen">
           <option value="quick">Schnelltest</option>
           <option value="full">Vollständig</option>
           <option value="ptg">PTG</option>
           <option value="stockfish_only">Nur Stockfish</option>
         </select>
       </label>
-      <div class="app-actions">
-        <button type="submit" class="button ui-button">Start</button>
-        <button type="button" class="button light ui-button" id="app-analyse-cancel">Abbrechen</button>
+      <div class="app-dialog-actions">
+        <button type="submit" class="app-btn-primary">Start</button>
+        <button type="button" class="app-btn-secondary" id="app-analyse-cancel">Abbrechen</button>
       </div>
     </form>
   </dialog>
@@ -78,7 +119,7 @@
 <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
 <link rel="stylesheet" href="app/assets/app.css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.min.js" integrity="sha256-DQN+eu7N5cWHj8FQgtlNc6pkgiMDsE+bWKwcwegE0QY=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.min.js" integrity="sha256-DQN+eu7N5cFQgtlNc6pkgiMDsE+bWKwcwegE0QY=" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 <script src="app/assets/app.js" defer></script>
 {/block}
