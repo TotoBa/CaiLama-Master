@@ -218,6 +218,50 @@ Der Master koppelt keine Runtime-Komponenten. Er dokumentiert:
 - Benchmark-Familie und Datenschutzgrenze, falls die Arbeit produktnahe
   Analyse-, Training-, Search- oder Router-Qualitaet beruehrt.
 
+### Lokale Konsole -> Webspace-API -> Origin-Dienst
+
+Die lokale Konsole, kuenftig `cailama-cli`, spricht nicht direkt mit
+produktiven Backend-Diensten. Der Standardpfad ist:
+
+```text
+cailama-cli -> HTTPS-Webspace-API -> signierter HTTPS-Origin-Hop -> CaiLama-Dienste
+```
+
+Die Webspace-API authentifiziert profilgebundene Konsolen-Keys ueber
+`X-CaiLama-Console-Key` und prueft pro Endpunkt den benoetigten Scope. Danach
+sendet sie den unveraenderten JSON-Body an den konfigurierten Origin-Dienst.
+Der Origin-Hop muss HTTPS verwenden und wird mit Proxy-Key, Timestamp,
+Body-SHA256 und HMAC-Signatur abgesichert. Echte Origin-Hosts, Keys, Secrets,
+lokale Pfade und Benutzerkonten bleiben ausschliesslich in privaten
+Operator-Konfigurationen.
+
+Aktuelle Webspace-Endpunkte fuer die Konsole:
+
+| Endpunkt | Scope | Zweck |
+|---|---|---|
+| `POST /api/v1/console/search/query` | `search:query` | Search/RAG/DWZ-nahe Abfragen ueber den Origin-Dienst |
+| `POST /api/v1/console/llm/chat` | `llm:chat` | Rollenbasierte LLM-Antworten ueber den Router |
+| `POST /api/v1/console/jobs` | `jobs:write` | Asynchrone Jobs, insbesondere PGN-Analyse |
+
+PGN-Analyse ist kein langer synchroner HTTP-Request. Die Konsole legt einen Job
+an und erhaelt eine stabile Job-Referenz. Der Origin fuehrt Stockfish-,
+Search-, Router- und Trainingsartefakt-Erzeugung serverseitig aus. Ergebnisse
+muessen profilgebunden persistiert werden, damit ein spaeter erneut gestarteter
+Client abgeschlossene oder offene Jobs fuer denselben Profil-Key melden kann.
+
+Akzeptanzkriterien fuer den End-to-End-Test:
+
+- Ungueltiger oder verweigerter Konsolen-Key liefert HTTP 401.
+- Ein Key ohne passenden Scope darf den jeweiligen Endpunkt nicht nutzen.
+- Der Webspace akzeptiert fuer den Origin nur `https://`-Basis-URLs.
+- Unsigned oder fehlerhaft signierte Origin-Requests werden vom Origin
+  abgewiesen.
+- Search-, LLM- und Job-Endpunkt funktionieren mit einem gueltigen Profil-Key.
+- Ein PGN-Analysejob bleibt nach Konsolen-Neustart ueber denselben Profil-Key
+  sichtbar.
+- Testdaten enthalten keine Secrets, keine produktiven Zugangsdaten und keine
+  privaten lokalen Pfade.
+
 ## Runtime-Konfiguration ohne Secrets
 
 Der Master darf nur Variablennamen, Rollen, Endpunkte und Betriebsannahmen

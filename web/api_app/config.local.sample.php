@@ -3,11 +3,8 @@ declare(strict_types=1);
 
 /*
  * Use this file only as a placeholder reference. Real config.local.php files
- * belong outside the public document root, preferably in:
- *
- *   /cailama-private/api/config.local.php
- *
- * The setup script writes and deploys that private file automatically.
+ * belong outside the public document root. The setup script can write and
+ * deploy that private file from local operator configuration.
  */
 return [
     'api_tokens' => [
@@ -21,10 +18,10 @@ return [
         'enabled' => true,
         /*
          * Relative paths are resolved from /public/api_app/ on the webspace.
-         * With /public as document root, ../../cailama-imports points to
-         * /cailama-imports and is not web-accessible.
+         * Configure a non-public sibling directory in the private webspace
+         * area. Do not put real local paths into this sample file.
          */
-        'drop_dir' => '../../cailama-imports',
+        'drop_dir' => '../../private-imports',
         'filename' => 'cailama-import.sql.gz',
         'allowed_extensions' => ['sql', 'sql.gz'],
         'max_file_bytes' => 2147483648,
@@ -35,7 +32,7 @@ return [
         'enabled' => true,
     ],
     'origin' => [
-        'base_url' => 'https://server.cailama.org',
+        'base_url' => 'https://replace-with-origin-host.example',
         'proxy_key' => 'replace_with_origin_proxy_key',
         'hmac_secret' => 'replace_with_origin_hmac_secret',
         'timeout_seconds' => 20,

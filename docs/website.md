@@ -403,19 +403,13 @@ wird die Datei gelöscht; ein fehlgeschlagener Cleanup wird als eigener Fehler
 gemeldet, damit keine Importdatei versehentlich liegen bleibt.
 
 Die versionierte `web/api_app/config.php` enthält sichere Defaults. Die echte
-Provider-Konfiguration gehört nicht in den öffentlichen Document Root. Auf
-dem Webspace liegt `/public` im öffentlichen Bereich; private Konfiguration
-und Import-Drop liegen als Sibling-Ordner im Webspace-Root. Die API sucht aus
-`/public/api_app/` zuerst diese private Konfig:
-
-```text
-../../cailama-private/api/config.local.php
-```
-
-Nur als lokale Legacy-/Fallback-Variante wird noch
-`web/api_app/config.local.php` unterstützt; diese Datei bleibt gitignoriert und
-wird beim Private-Deploy aus dem Public-Webspace entfernt. Als secretfreie
-Vorlage dient `web/api_app/config.local.sample.php`.
+Provider- und Origin-Konfiguration gehört nicht in den öffentlichen Document
+Root. Die Doku nennt nur die konfigurierbaren Felder, aber keine echten
+Serverpfade, Hosts, Nutzerkonten, Tokens oder Secrets. Nur als lokale
+Legacy-/Fallback-Variante wird noch `web/api_app/config.local.php` unterstützt;
+diese Datei bleibt gitignoriert und wird beim Private-Deploy aus dem
+Public-Webspace entfernt. Als secretfreie Vorlage dient
+`web/api_app/config.local.sample.php`.
 
 Das wiederholbare Setup läuft über:
 

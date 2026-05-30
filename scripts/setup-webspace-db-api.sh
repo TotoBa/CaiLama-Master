@@ -54,12 +54,12 @@ Environment:
   CAILAMA_DATABASES_INI           default: $CAILAMA_PRIVATE_CONFIG_DIR/databases.ini
   CAILAMA_WEB_API_KEYS_FILE       default: $CAILAMA_PRIVATE_CONFIG_DIR/web-api.keys
   CAILAMA_WEB_API_PRIVATE_CONFIG  default: $CAILAMA_PRIVATE_CONFIG_DIR/web-api/config.local.php
-  CAILAMA_ORIGIN_BASE_URL         default: https://server.cailama.org
+  CAILAMA_ORIGIN_BASE_URL         required for console proxy config
   CAILAMA_ORIGIN_PROXY_KEY        required for console proxy config
   CAILAMA_ORIGIN_HMAC_SECRET      required for console proxy config
   CAILAMA_WEB_DEPLOY_CONFIG       default: ~/.config/cailama/web-deploy.env
-  CAILAMA_WEB_PRIVATE_REMOTE_DIR  default: /cailama-private
-  CAILAMA_WEB_IMPORT_REMOTE_DIR   default: /cailama-imports
+  CAILAMA_WEB_PRIVATE_REMOTE_DIR  default: /private-api
+  CAILAMA_WEB_IMPORT_REMOTE_DIR   default: /private-imports
   CAILAMA_PUBLIC_URL              default: https://cailama.org
 USAGE
 }
@@ -362,9 +362,13 @@ write_configs() {
   if [[ -n "${CAILAMA_PROVIDER_PHP_HOST:-}" ]]; then
     provider_host="$CAILAMA_PROVIDER_PHP_HOST"
   fi
-  origin_base_url="${CAILAMA_ORIGIN_BASE_URL:-https://server.cailama.org}"
+  origin_base_url="${CAILAMA_ORIGIN_BASE_URL:-}"
   origin_proxy_key="${CAILAMA_ORIGIN_PROXY_KEY:-}"
   origin_hmac_secret="${CAILAMA_ORIGIN_HMAC_SECRET:-}"
+  if [[ -z "$origin_base_url" || -z "$origin_proxy_key" || -z "$origin_hmac_secret" ]]; then
+    echo "ERROR: CAILAMA_ORIGIN_BASE_URL, CAILAMA_ORIGIN_PROXY_KEY and CAILAMA_ORIGIN_HMAC_SECRET are required" >&2
+    exit 2
+  fi
 
   write_mysql_cnf local-main "$local_host" "$local_user" "$local_pass"
   write_mysql_cnf provider-main "$provider_host" "$provider_user" "$provider_pass"
@@ -383,7 +387,7 @@ write_configs() {
         ],
         "imports" => [
             "enabled" => true,
-            "drop_dir" => "../../cailama-imports",
+            "drop_dir" => "../../private-imports",
             "filename" => "cailama-import.sql.gz",
             "allowed_extensions" => ["sql", "sql.gz"],
             "max_file_bytes" => 2147483648,
@@ -519,8 +523,8 @@ deploy_private() {
   local public_dir root_dir private_remote import_remote batch
   public_dir="${CAILAMA_WEB_SFTP_REMOTE_DIR%/}"
   root_dir="$(remote_parent "$public_dir")"
-  private_remote="${CAILAMA_WEB_PRIVATE_REMOTE_DIR:-/cailama-private}"
-  import_remote="${CAILAMA_WEB_IMPORT_REMOTE_DIR:-/cailama-imports}"
+  private_remote="${CAILAMA_WEB_PRIVATE_REMOTE_DIR:-/private-api}"
+  import_remote="${CAILAMA_WEB_IMPORT_REMOTE_DIR:-/private-imports}"
   batch="$(mktemp)"
   {
     printf -- "-mkdir %s\n" "$(sftp_quote "$private_remote")"

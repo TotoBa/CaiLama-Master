@@ -52,14 +52,13 @@ Deployt wird der komplette Inhalt von `web/`, also PHP-Seiten, Stylesheet,
 Die URL `https://cailama.org/` wurde am 2026-05-20 per `curl -I -L` mit
 `HTTP/2 200` verifiziert.
 
-Die Webspace-API liest echte DB-Zugaenge, API-Token-Hashes und das
-Import-Drop-Verzeichnis aus einer privaten Konfig ausserhalb des oeffentlichen
-Document Roots. Auf dem Webspace ist `/public` der oeffentliche Bereich; echte
-Konfig und Import-Drop liegen im privaten Webspace-Root, zum Beispiel
-`/cailama-private/api/config.local.php` und `/cailama-imports`. Aus
-`/public/api_app/` werden diese Pfade relativ ueber `../../...` erreicht.
-Grosse CaiLama-Dumps werden per SFTP in den privaten Import-Ordner gelegt und
-danach per no-query/no-body-Import-Endpunkt verarbeitet.
+Die Webspace-API liest echte DB-Zugaenge, API-Token-Hashes,
+Origin-Proxy-Keys und das Import-Drop-Verzeichnis aus einer privaten Konfig
+ausserhalb des oeffentlichen Document Roots. Die versionierte Doku beschreibt
+nur die konfigurierbaren Felder und Sicherheitsanforderungen, keine echten
+Serverpfade, Hosts, Nutzerkonten oder Zugangsdaten. Grosse CaiLama-Dumps
+werden per SFTP in einen nicht oeffentlich erreichbaren Import-Ordner gelegt
+und danach per no-query/no-body-Import-Endpunkt verarbeitet.
 
 Provider-Datenbanken werden nicht direkt vom lokalen Rechner aus eingerichtet.
 Das Setup-Skript legt lokale Schemas mit dem lokalen MySQL-Client an; Provider-
@@ -90,6 +89,35 @@ separaten Runtime-Ordnern gehalten. Details stehen in
 ```bash
 scripts/update-runtime-projects.sh all
 ```
+
+## Konsolen-Client und Server-Origin
+
+Der lokale Konsolen-Client spricht die oeffentliche Webspace-API per HTTPS an.
+Die Webspace-API prueft profilgebundene Konsolen-Keys und leitet erlaubte
+Requests an einen separat konfigurierten Origin-Dienst weiter. Dieser Origin
+wird in privater Konfiguration ueber folgende Felder beschrieben:
+
+- `origin.base_url`: HTTPS-Basis-URL des Origin-Dienstes.
+- `origin.proxy_key`: shared Proxy-Key fuer den Webspace-Origin-Hop.
+- `origin.hmac_secret`: HMAC-Secret fuer signierte Origin-Requests.
+- `origin.timeout_seconds`: begrenzte Wartezeit fuer synchrone Proxy-Requests.
+
+Versionierte Dateien enthalten dafuer nur Platzhalter. Echte Werte gehoeren in
+private Operator-Konfigurationen ausserhalb des Repos.
+
+Die aktuellen Konsolen-Endpunkte sind:
+
+```text
+POST /api/v1/console/search/query
+POST /api/v1/console/llm/chat
+POST /api/v1/console/jobs
+```
+
+PGN-Analyse ist als asynchroner Job zu behandeln: Die Konsole startet den Job,
+der Origin verarbeitet die Analyse, und der Status beziehungsweise das Ergebnis
+wird profilgebunden abrufbar. Wenn die Konsole zwischenzeitlich beendet wurde,
+muss ein neuer Start ueber denselben Profil-Key offene oder abgeschlossene Jobs
+erkennen koennen.
 
 ## Konfiguration
 
