@@ -82,6 +82,7 @@ $envConfig = getenv('CAILAMA_WEB_API_CONFIG');
 if (is_string($envConfig) && trim($envConfig) !== '') {
     $privateConfigCandidates[] = trim($envConfig);
 }
+$privateConfigCandidates[] = __DIR__ . '/../private-api/api/config.local.php';
 $privateConfigCandidates[] = __DIR__ . '/../../private-api/api/config.local.php';
 $privateConfigCandidates[] = __DIR__ . '/config.local.php';
 
