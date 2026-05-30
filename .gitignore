@@ -4,6 +4,9 @@
 /CaiLama/
 /CaiLama-LLM-Router/
 /CaiLama-Search/
+/CaiLama
+/CaiLama-LLM-Router
+/CaiLama-Search
 
 # Local prompts supplied to agents
 prompt.md
