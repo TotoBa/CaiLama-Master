@@ -46,12 +46,10 @@ Fuer lokale Tests kann ein lokaler Zielpfad uebergeben werden:
 scripts/deploy-website.sh <local-public-dir>
 ```
 
-Deployt wird der komplette Inhalt von `web/`, also PHP-Seiten, Stylesheet,
-`llms.txt`, `ecosystem-reference.md` und `data/ecosystem.json`. Die
-Webspace-API wird beim SFTP-Deploy zusaetzlich mit einem eigenen oeffentlichen
-`api`-Sibling-Ordner fuer den Dispatcher und einem privaten `api-app`-Sibling
-fuer die Implementierung gespiegelt, damit eine API-Subdomain den `api`-Ordner
-als Document Root verwenden kann.
+Deployt wird der komplette Inhalt von `web/` ohne `web/api/` nach `public/`.
+Die Webspace-API wird beim SFTP-Deploy zusaetzlich mit einem eigenen oeffentlichen
+Dispatcher unter `private-api/api/` fuer die Subdomain `api.cailama.org` und
+einem privaten `api-app`-Sibling fuer die Implementierung gespiegelt.
 
 Die URL `https://cailama.org/` wurde am 2026-05-20 per `curl -I -L` mit
 `HTTP/2 200` verifiziert.

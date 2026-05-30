@@ -258,9 +258,29 @@ if [[ "${CAILAMA_CHECK_DEPLOYED_WEBSITE:-0}" == "1" ]]; then
   curl -fsS --max-time 8 "https://cailama.org/robots.txt" | grep -Fxq "Sitemap: https://cailama.org/sitemap.xml"
   curl -fsS --max-time 8 "https://cailama.org/sitemap.xml" | grep -Fq "https://cailama.org/"
   curl -fsS --max-time 8 "https://cailama.org/data/ecosystem.json" | python3 -m json.tool >/dev/null
+  main_api_status="$(curl -sS --max-time 8 -o /dev/null -w "%{http_code}" -X POST "https://cailama.org/api/v1/status")"
+  if [[ "$main_api_status" != "403" && "$main_api_status" != "404" ]]; then
+    echo "ERROR: main website still exposes /api (HTTP $main_api_status)"
+    exit 1
+  fi
   echo "OK: deployed website responds over HTTPS with robots, sitemap and JSON"
+  echo "OK: main website blocks /api paths"
 else
   echo "SKIP: live website HTTP check disabled; set CAILAMA_CHECK_DEPLOYED_WEBSITE=1 to enable"
+fi
+
+if [[ "${CAILAMA_CHECK_DEPLOYED_API:-0}" == "1" ]]; then
+  api_status="$(curl -sS --max-time 8 -o /dev/null -w "%{http_code}" -X POST \
+    -H "Content-Type: application/json" \
+    -d '{}' \
+    "https://api.cailama.org/api/v1/status")"
+  if [[ "$api_status" != "401" ]]; then
+    echo "ERROR: api.cailama.org status endpoint unexpected HTTP $api_status"
+    exit 1
+  fi
+  echo "OK: api.cailama.org responds on /api/v1/status"
+else
+  echo "SKIP: live API HTTP check disabled; set CAILAMA_CHECK_DEPLOYED_API=1 to enable"
 fi
 echo
 
