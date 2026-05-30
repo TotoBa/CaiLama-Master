@@ -467,10 +467,9 @@ deploy_api_sftp() {
       done < <(
         awk -F: '
           $1 == "api" && index($2, "/") {
-            path = "public"
             n = split($2, parts, "/")
             for (i = 1; i < n; i++) {
-              path = path "/" parts[i]
+              path = path ? path "/" parts[i] : parts[i]
               print path
             }
           }
