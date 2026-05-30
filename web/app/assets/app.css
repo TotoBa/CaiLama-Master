@@ -354,14 +354,6 @@ body.app-document {
   border: 1px solid rgba(255, 107, 107, 0.3);
 }
 
-.app-message.status.debug-only {
-  display: none;
-}
-
-.app-shell.is-debug .app-message.status.debug-only {
-  display: block;
-}
-
 .app-empty-state {
   align-self: center;
   margin: auto;

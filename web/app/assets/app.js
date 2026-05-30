@@ -125,9 +125,6 @@
   function appendMessage(text, kind, meta) {
     $messages.find(".app-empty-state").remove();
     const $div = $("<div>").addClass(`app-message ${kind || "assistant"}`);
-    if (kind === "status" && meta && !debugMode) {
-      $div.addClass("debug-only");
-    }
     $div.text(text || "");
     if (meta && debugMode && kind === "status") {
       $div.append($("<small>").css({ display: "block", opacity: 0.7, marginTop: "0.35rem" }).text(JSON.stringify(meta)));
@@ -154,14 +151,12 @@
         case "status":
           appendMessage(text, "status", event);
           if (text.indexOf("Modell:") === 0) {
-            setBusy(true, text.replace(/^Modell:\s*/, "").slice(0, 80));
+            $statusText.text(text.replace(/^Modell:\s*/, "").slice(0, 80));
           }
           break;
         case "tool_start":
-          setBusy(true, `Tool: ${event.tool || "…"}`);
-          if (debugMode) {
-            appendMessage(`Tool start: ${event.tool || "?"}`, "tool");
-          }
+          $statusText.text(`Tool: ${event.tool || "…"}`);
+          appendMessage(`Tool start: ${event.tool || "?"}`, "tool");
           break;
         case "tool_result":
           if (debugMode) {
