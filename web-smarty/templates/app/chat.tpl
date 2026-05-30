@@ -1,28 +1,6 @@
 {extends file="app/layout.tpl"}
 
 {block name="content"}
-<header class="app-header">
-  <div class="app-header-inner">
-    <a href="index.php" class="app-back-link" title="Zurück zur Startseite">
-      <span aria-hidden="true">←</span> Zurück
-    </a>
-    <div class="app-header-title">
-      <span class="app-brand">CaiLama</span>
-      {if $page.user.profile_key}
-        <span class="app-profile-badge">{$page.user.player_display_name|escape}</span>
-      {/if}
-    </div>
-    <div class="app-header-status">
-      <span class="app-status-indicator" id="app-status-dot"></span>
-      <span id="app-status-text">Bereit</span>
-      <label class="app-debug-toggle" title="Debug-Infos einblenden">
-        <input type="checkbox" id="app-debug-toggle"{if $page.debug} checked{/if}>
-        Debug
-      </label>
-    </div>
-  </div>
-</header>
-
 <div id="cailama-app"
      class="app-shell"
      data-api-base="{$page.api_base|escape}"
@@ -32,6 +10,27 @@
      data-mobile="0"
      role="application"
      aria-label="CaiLama Chat Anwendung">
+  <header class="app-header">
+    <div class="app-header-inner">
+      <a href="index.php" class="app-back-link" title="Zurück zur Startseite">
+        <span aria-hidden="true">←</span> Zurück
+      </a>
+      <div class="app-header-title">
+        <span class="app-brand">CaiLama</span>
+        {if $page.user.profile_key}
+          <span class="app-profile-badge">{$page.user.player_display_name|escape}</span>
+        {/if}
+      </div>
+      <div class="app-header-status">
+        <span class="app-status-indicator" id="app-status-dot"></span>
+        <span id="app-status-text">Bereit</span>
+        <label class="app-debug-toggle" title="Debug-Infos einblenden">
+          <input type="checkbox" id="app-debug-toggle"{if $page.debug} checked{/if}>
+          Debug
+        </label>
+      </div>
+    </div>
+  </header>
 
   <div class="app-layout">
     <aside class="app-nav" id="app-nav">
@@ -62,7 +61,12 @@
     </aside>
 
     <main class="app-chat" id="app-chat">
-      <div id="app-messages" class="app-messages" aria-live="polite" aria-atomic="true"></div>
+      <div id="app-messages" class="app-messages" aria-live="polite" aria-atomic="true">
+        <div class="app-empty-state">
+          <h1>CaiLama Chat</h1>
+          <p>Bereit fuer Chat, Slash-Commands, Brettarbeit und Analyse.</p>
+        </div>
+      </div>
     </main>
 
     <aside class="app-flex" id="app-flex">
@@ -71,7 +75,7 @@
         <p id="app-board-fen" class="app-board-fen"></p>
       </div>
       <div id="app-flex-content" class="app-flex-content"></div>
-    </div>
+    </aside>
 
     <footer class="app-footer" id="app-footer">
       <form id="app-input-form" class="app-input-form">
@@ -89,8 +93,8 @@
             </button>
           </div>
         </div>
-      </div>
-      <div id="app-errors" class="app-errors" role="alert"></div>
+        <div id="app-errors" class="app-errors" role="alert"></div>
+      </form>
     </footer>
   </div>
 
@@ -116,10 +120,8 @@
 </div>
 
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.min.css">
-<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
 <link rel="stylesheet" href="app/assets/app.css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.min.js" integrity="sha256-DQN+eu7N5cFQgtlNc6pkgiMDsE+bWKwcwegE0QY=" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 <script src="app/assets/app.js" defer></script>
 {/block}

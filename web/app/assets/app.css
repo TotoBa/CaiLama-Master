@@ -1,28 +1,35 @@
 /* CaiLama App - Modern Landscape-First Design (Sticky Layout) */
 
 :root {
-  --app-bg-primary: #0f1419;
-  --app-bg-secondary: #1a1f26;
-  --app-bg-tertiary: #242b33;
+  --app-bg-primary: #101315;
+  --app-bg-secondary: #181d1f;
+  --app-bg-tertiary: #24292b;
   --app-border: rgba(255, 255, 255, 0.08);
-  --app-border-active: rgba(120, 180, 255, 0.4);
-  --app-text-primary: #e8edf2;
-  --app-text-secondary: #9aa8b5;
-  --app-text-muted: #6b7885;
-  --app-accent: #78b4ff;
-  --app-accent-bg: rgba(120, 180, 255, 0.12);
-  --app-success: #5cb87a;
-  --app-success-bg: rgba(92, 184, 122, 0.12);
-  --app-warning: #f0ad4e;
+  --app-border-active: rgba(88, 166, 255, 0.42);
+  --app-text-primary: #edf0ea;
+  --app-text-secondary: #aeb7af;
+  --app-text-muted: #7f8a84;
+  --app-accent: #8ab4f8;
+  --app-accent-bg: rgba(88, 166, 255, 0.14);
+  --app-success: #75c893;
+  --app-success-bg: rgba(117, 200, 147, 0.13);
+  --app-warning: #e4b45f;
   --app-error: #ff6b6b;
   --app-error-bg: rgba(255, 107, 107, 0.12);
   --app-nav-width: 72px;
   --app-flex-min: 320px;
   --app-header-height: 56px;
   --app-footer-height: 88px;
-  --app-radius: 12px;
+  --app-radius: 8px;
   --app-radius-sm: 8px;
   --app-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.app-document {
+  margin: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--app-bg-primary);
 }
 
 /* Reset & Base */
@@ -42,6 +49,12 @@
 .app-shell *::before,
 .app-shell *::after {
   box-sizing: border-box;
+}
+
+.app-shell button,
+.app-dialog button {
+  appearance: none;
+  font-family: inherit;
 }
 
 /* Header - Fixed Top */
@@ -199,10 +212,10 @@
   justify-content: center;
   gap: 0.35rem;
   padding: 0.75rem 0.5rem;
-  background: transparent;
-  border: none;
+  background: transparent !important;
+  border: 1px solid transparent !important;
   border-radius: var(--app-radius-sm);
-  color: var(--app-text-secondary);
+  color: var(--app-text-secondary) !important;
   font-size: 0.7rem;
   font-weight: 500;
   cursor: pointer;
@@ -212,13 +225,15 @@
 }
 
 .app-nav-item:hover {
-  background: var(--app-bg-tertiary);
-  color: var(--app-text-primary);
+  background: var(--app-bg-tertiary) !important;
+  color: var(--app-text-primary) !important;
+  border-color: var(--app-border) !important;
 }
 
 .app-nav-item.is-active {
-  background: var(--app-accent-bg);
-  color: var(--app-accent);
+  background: var(--app-accent-bg) !important;
+  color: var(--app-accent) !important;
+  border-color: var(--app-border-active) !important;
 }
 
 .app-nav-icon {
@@ -310,6 +325,26 @@
 
 .app-shell.is-debug .app-message.status.debug-only {
   display: block;
+}
+
+.app-empty-state {
+  align-self: center;
+  margin: auto;
+  width: min(560px, 100%);
+  color: var(--app-text-secondary);
+  text-align: center;
+}
+
+.app-empty-state h1 {
+  margin: 0 0 0.6rem;
+  color: var(--app-text-primary);
+  font-size: 1.6rem;
+  font-weight: 650;
+}
+
+.app-empty-state p {
+  margin: 0;
+  font-size: 0.95rem;
 }
 
 /* Flex Workspace - Right, Fixed */
@@ -434,7 +469,7 @@
   justify-content: center;
   gap: 0.4rem;
   padding: 0.6rem 0.9rem;
-  border-radius: var(--app-radius-sm);
+  border-radius: var(--app-radius-sm) !important;
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
@@ -444,25 +479,25 @@
 }
 
 .app-action-btn {
-  background: var(--app-bg-tertiary);
-  border: 1px solid var(--app-border);
-  color: var(--app-text-secondary);
+  background: var(--app-bg-tertiary) !important;
+  border: 1px solid var(--app-border) !important;
+  color: var(--app-text-secondary) !important;
 }
 
 .app-action-btn:hover {
-  background: var(--app-bg-primary);
-  color: var(--app-text-primary);
-  border-color: var(--app-text-muted);
+  background: var(--app-bg-primary) !important;
+  color: var(--app-text-primary) !important;
+  border-color: var(--app-text-muted) !important;
 }
 
 .app-send-btn {
-  background: var(--app-accent);
+  background: var(--app-accent) !important;
   border: 1px solid transparent;
-  color: #0f1419;
+  color: #101315 !important;
 }
 
 .app-send-btn:hover {
-  background: #5c9eff;
+  background: #6fa5f7 !important;
   transform: translateY(-1px);
 }
 

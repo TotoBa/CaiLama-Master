@@ -38,4 +38,11 @@ Website-User werden über `web_users.player_profile_id` mit
 3. Neue Session anlegen, Nachricht senden
 4. PGN-Analyse starten
 
+## UI-Stand
+
+- Die App rendert in einem eigenen Layout ohne öffentliche Website-Navigation.
+- Das Eingabefeld sendet mit `Enter`; `Shift+Enter` fuegt einen Zeilenumbruch ein.
+- Die App laedt jQuery UI fuer Slash-Command-Hinweise, aber kein jQuery Mobile.
+- Das erste leere Chatfenster zeigt einen neutralen Startzustand; echte Antworten und Statusmeldungen kommen aus der Web-API.
+
 Siehe auch [`web-app.plan.md`](web-app.plan.md) und [`integrations.md`](integrations.md).

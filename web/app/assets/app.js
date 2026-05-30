@@ -107,6 +107,7 @@
   }
 
   function appendMessage(text, kind, meta) {
+    $messages.find(".app-empty-state").remove();
     const $div = $("<div>").addClass(`app-message ${kind || "assistant"}`);
     if (kind === "status" && meta && !debugMode) {
       $div.addClass("debug-only");
@@ -304,6 +305,13 @@
       setBusy(false);
       showError(error.message || String(error));
     });
+  });
+
+  $input.on("keydown", (event) => {
+    if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
+      event.preventDefault();
+      $form.trigger("submit");
+    }
   });
 
   $("#app-new-session").on("click", () => {
