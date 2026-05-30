@@ -73,8 +73,17 @@
       <div id="app-board-container" class="app-board-container">
         <div id="app-board-svg" class="app-board"></div>
         <p id="app-board-fen" class="app-board-fen"></p>
+        <div class="app-board-controls" aria-label="Brettaktionen">
+          <button type="button" class="app-board-btn" id="app-board-undo" title="Zug zuruecknehmen">↶</button>
+          <button type="button" class="app-board-btn" id="app-board-reset" title="Startstellung">⌂</button>
+          <button type="button" class="app-board-btn" id="app-board-flip" title="Brett drehen">⇅</button>
+        </div>
+        <p id="app-board-status" class="app-board-status">Figur und Zielfeld anklicken.</p>
       </div>
-      <div id="app-flex-content" class="app-flex-content"></div>
+      <div id="app-flex-content" class="app-flex-content">
+        <h3>Brett</h3>
+        <ol id="app-board-moves" class="app-board-moves"></ol>
+      </div>
     </aside>
 
     <footer class="app-footer" id="app-footer">

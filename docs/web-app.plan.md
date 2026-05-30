@@ -33,6 +33,7 @@ Basis-Pfad intern: `/api/web/` (cailama-web Service).
 | POST | `/boards/{id}/load-pgn` | PGN laden |
 | POST | `/boards/{id}/undo` | Zug zurück |
 | POST | `/boards/{id}/reset` | Startstellung |
+| POST | `/boards/{id}/flip` | Brett drehen |
 | GET | `/boards/{id}/legal-moves` | Legale Züge |
 | GET | `/boards/{id}/svg` | Brett-SVG |
 | POST | `/analysis/jobs` | Analysejob starten |

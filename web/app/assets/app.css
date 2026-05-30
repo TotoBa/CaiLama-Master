@@ -385,6 +385,15 @@ body.app-document {
   height: 100%;
 }
 
+.app-board svg .square {
+  cursor: pointer;
+}
+
+.app-board svg .square.is-selected {
+  stroke: var(--app-accent);
+  stroke-width: 3px;
+}
+
 .app-board-fen {
   font-size: 0.7rem;
   color: var(--app-text-muted);
@@ -394,11 +403,65 @@ body.app-document {
   max-width: 100%;
 }
 
+.app-board-controls {
+  display: flex;
+  gap: 0.45rem;
+  justify-content: center;
+}
+
+.app-board-btn {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--app-bg-tertiary) !important;
+  border: 1px solid var(--app-border) !important;
+  border-radius: var(--app-radius-sm) !important;
+  color: var(--app-text-secondary) !important;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.app-board-btn:hover {
+  color: var(--app-text-primary) !important;
+  border-color: var(--app-border-active) !important;
+}
+
+.app-board-status {
+  min-height: 1rem;
+  margin: 0;
+  color: var(--app-text-muted);
+  font-size: 0.78rem;
+  text-align: center;
+}
+
 .app-flex-content {
   flex: 1;
   padding: 1.25rem;
   overflow-y: auto;
   min-height: 0;
+}
+
+.app-flex-content h3 {
+  margin: 0 0 0.85rem;
+  color: var(--app-text-primary);
+  font-size: 0.95rem;
+  font-weight: 650;
+}
+
+.app-board-moves {
+  margin: 0;
+  padding-left: 1.4rem;
+  color: var(--app-text-secondary);
+  font-size: 0.86rem;
+  line-height: 1.7;
+}
+
+.app-board-moves:empty::before {
+  content: "Noch keine Zuege.";
+  margin-left: -1.4rem;
+  color: var(--app-text-muted);
 }
 
 /* Footer with Input - Fixed Bottom */

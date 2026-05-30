@@ -19,6 +19,7 @@
   const $input = $("#app-input");
   const $boardSvg = $("#app-board-svg");
   const $boardFen = $("#app-board-fen");
+  const $boardStatus = $("#app-board-status");
   const $statusDot = $("#app-status-dot");
   const $statusText = $("#app-status-text");
   const $debugToggle = $("#app-debug-toggle");
@@ -31,6 +32,7 @@
   let currentBoardId = null;
   let busyCount = 0;
   let currentMode = "chat";
+  let selectedSquare = null;
 
   const slashHints = [
     "/help",
@@ -104,6 +106,10 @@
     if (message) {
       setTimeout(() => $errors.text(""), 5000);
     }
+  }
+
+  function setBoardStatus(message) {
+    $boardStatus.text(message || "Figur und Zielfeld anklicken.");
   }
 
   function appendMessage(text, kind, meta) {
@@ -194,7 +200,7 @@
   function createBoard() {
     return api("POST", "/boards", {}).then((board) => {
       currentBoardId = board.id;
-      $boardFen.text(board.fen || "");
+      renderBoardState(board);
       return refreshBoardSvg().then(() => board);
     });
   }
@@ -206,9 +212,102 @@
         if (!response.ok) return;
         return response.text().then((html) => {
           $boardSvg.html(html);
+          bindBoardInteractions();
         });
       }
     );
+  }
+
+  function refreshBoardState() {
+    if (!currentBoardId) return Promise.resolve();
+    return api("GET", `/boards/${currentBoardId}`).then((board) => {
+      renderBoardState(board);
+      return board;
+    });
+  }
+
+  function renderBoardState(board) {
+    if (!board) return;
+    if (board.fen) {
+      $boardFen.text(board.fen);
+    }
+    const $boardMoves = $("#app-board-moves");
+    $boardMoves.empty();
+    (board.move_sans || []).forEach((san) => {
+      $boardMoves.append($("<li>").text(san));
+    });
+  }
+
+  function squareFromElement(element) {
+    const classes = String($(element).attr("class") || "").split(/\s+/);
+    return classes.find((className) => /^[a-h][1-8]$/.test(className)) || "";
+  }
+
+  function clearSelectedSquare() {
+    selectedSquare = null;
+    $boardSvg.find(".square").removeClass("is-selected");
+  }
+
+  function selectSquare(square) {
+    selectedSquare = square;
+    $boardSvg.find(".square").removeClass("is-selected");
+    $boardSvg.find(`.square.${square}`).addClass("is-selected");
+    setBoardStatus(`${square} gewaehlt. Zielfeld anklicken.`);
+  }
+
+  function moveBoardPiece(from, to) {
+    if (!currentBoardId || !from || !to) return Promise.resolve();
+    setBusy(true, "Brettzug …");
+    const payload = { from, to };
+    return api("POST", `/boards/${currentBoardId}/move`, payload)
+      .then((result) => {
+        if (!result.legal) {
+          setBoardStatus(result.error || "Ungueltiger Zug.");
+          showError(result.error || "Ungueltiger Zug.");
+          return null;
+        }
+        setBoardStatus(result.san ? `Zug: ${result.san}` : "Zug ausgefuehrt.");
+        return refreshBoardState().then(() => refreshBoardSvg());
+      })
+      .finally(() => {
+        clearSelectedSquare();
+        setBusy(false);
+      });
+  }
+
+  function handleSquareInput(square) {
+    showError("");
+    if (!square) return;
+    if (!selectedSquare) {
+      selectSquare(square);
+      return;
+    }
+    if (selectedSquare === square) {
+      clearSelectedSquare();
+      setBoardStatus("");
+      return;
+    }
+    moveBoardPiece(selectedSquare, square).catch((error) => {
+      clearSelectedSquare();
+      setBoardStatus("Zug fehlgeschlagen.");
+      showError(error.message || String(error));
+    });
+  }
+
+  function bindBoardInteractions() {
+    $boardSvg.find(".square")
+      .attr("tabindex", "0")
+      .attr("role", "button")
+      .off(".boardInput")
+      .on("click.boardInput", function () {
+        handleSquareInput(squareFromElement(this));
+      })
+      .on("keydown.boardInput", function (event) {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          handleSquareInput(squareFromElement(this));
+        }
+      });
   }
 
   function selectSession(sessionId) {
@@ -278,9 +377,10 @@
     switch (mode) {
       case "board":
         $flexContent.append(
-          $("<h3>").text("Schachbrett"),
-          $("<p>").addClass("app-meta").text("Brett wird rechts angezeigt.")
+          $("<h3>").text("Brett"),
+          $("<ol>").attr("id", "app-board-moves").addClass("app-board-moves")
         );
+        refreshBoardState().catch(() => {});
         break;
       case "analysis":
         $flexContent.append(
@@ -316,6 +416,38 @@
 
   $("#app-new-session").on("click", () => {
     createSession().catch((error) => showError(error.message || String(error)));
+  });
+
+  $("#app-board-undo").on("click", () => {
+    if (!currentBoardId) return;
+    api("POST", `/boards/${currentBoardId}/undo`, {})
+      .then((result) => {
+        setBoardStatus(result.legal ? "Zug zurueckgenommen." : result.error);
+        return refreshBoardState().then(() => refreshBoardSvg());
+      })
+      .catch((error) => showError(error.message || String(error)));
+  });
+
+  $("#app-board-reset").on("click", () => {
+    if (!currentBoardId) return;
+    api("POST", `/boards/${currentBoardId}/reset`, {})
+      .then((board) => {
+        renderBoardState(board);
+        setBoardStatus("Startstellung geladen.");
+        return refreshBoardSvg();
+      })
+      .catch((error) => showError(error.message || String(error)));
+  });
+
+  $("#app-board-flip").on("click", () => {
+    if (!currentBoardId) return;
+    api("POST", `/boards/${currentBoardId}/flip`, {})
+      .then((board) => {
+        renderBoardState(board);
+        setBoardStatus("Brett gedreht.");
+        return refreshBoardSvg();
+      })
+      .catch((error) => showError(error.message || String(error)));
   });
 
   $navItems.on("click", function () {
