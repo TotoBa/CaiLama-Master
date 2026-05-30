@@ -125,3 +125,40 @@ FakeLLM-Console-Befehle. Live-LLMs, echte DBs, DGT-Hardware,
 Webspace-DB-API, Crawls, DWZ-Importe und produktive Search-/Router-Lastläufe
 bleiben bewusste Operator-Aktionen und dürfen nicht durch Agenten aus
 Neugier gestartet werden.
+
+## Container-Haertung
+
+Produktive Runtime-Compose-Konfigurationen bleiben lokale Operator-Dateien und
+werden nicht mit echten Secrets versioniert. Fuer den Docker-Betrieb gilt als
+Baseline:
+
+- Nur der Reverse Proxy bindet oeffentliche Ports; Router, Search, Meilisearch,
+  Datenbank und Modell-Backends bleiben im internen Docker-Netz.
+- Dienste laufen nicht als Root, wenn das Image dies sauber unterstuetzt.
+- `read_only: true` ist fuer zustandslose Dienste und Dienste mit expliziten
+  Datenvolumes zu setzen. Schreibpfade werden als benannte Volumes, Bind-Mounts
+  oder tmpfs ausdruecklich modelliert.
+- `security_opt: ["no-new-privileges:true"]` und `cap_drop: ["ALL"]` sind der
+  Standard. Zusaetzliche Capabilities muessen pro Dienst begruendet sein; der
+  Reverse Proxy braucht nur die Bind-Capability fuer niedrige Ports.
+- TLS-Terminierung erfolgt ueber den Reverse Proxy mit automatischer
+  Zertifikatsverwaltung. Zertifikatsdaten liegen in einem persistenten
+  Proxy-Volume, nicht im Git-Checkout.
+- Persistente Datenvolumes muessen zur Container-UID passen. Besonders
+  betroffen sind Suchindex-, Modell-Cache-, Job- und Zertifikatsvolumes.
+- Startfehler nach Haertung sind zuerst gegen drei Punkte zu pruefen:
+  UID/GID des Volumes, notwendige Schreibpfade bei Read-only-RootFS und
+  Lesbarkeit lokal gemounteter Runtime-Konfiguration.
+
+Die Mindestpruefung nach Aenderungen ist:
+
+```bash
+docker compose config --quiet
+docker compose up -d
+docker compose ps
+```
+
+Danach muessen die Runtime-Smokes laufen. Wenn ein Dienst wegen
+Read-only-RootFS ausfaellt, wird nicht pauschal auf beschreibbare RootFS
+zurueckgestellt; stattdessen wird der konkrete Schreibpfad als tmpfs oder
+dediziertes Volume modelliert.
