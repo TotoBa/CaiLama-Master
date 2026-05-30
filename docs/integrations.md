@@ -243,6 +243,10 @@ Die Origin-API ist als `CaiLama-Origin-API/` direkt im Master versioniert. Sie
 bleibt ein interner Dienst und wird beim Runtime-Deploy in den Compose-
 Build-Kontext synchronisiert. Fachlogik fuer Schachanalyse bleibt in CaiLama;
 der Origin-Dienst kapselt Proxy-, Auth-, Health- und Job-Vertrag.
+Audit-Logs sind JSONL: stderr bleibt fuer Docker-Logs aktiv, und gehaertete
+Runtime kann per `CAILAMA_AUDIT_LOG_PATH` einen agentenlesbaren Dateipfad wie
+`/var/log/cailama/audit.log` anbinden. Der Log enthaelt keine Bodies, Keys,
+Signaturen, Prompts oder Modellantworten.
 
 Aktuelle Webspace-Endpunkte fuer die Konsole:
 

@@ -37,6 +37,25 @@ def test_health_is_public_and_has_security_headers(monkeypatch, tmp_path) -> Non
     assert response.headers["X-Frame-Options"] == "DENY"
 
 
+def test_audit_log_file_receives_json_lines(monkeypatch, tmp_path) -> None:
+    audit_log = tmp_path / "logs" / "audit.log"
+    monkeypatch.setenv("CAILAMA_JOB_DIR", str(tmp_path / "jobs"))
+    monkeypatch.setenv("CAILAMA_AUDIT_LOG_PATH", str(audit_log))
+    client = TestClient(app)
+
+    response = client.get("/v1/health", headers={"User-Agent": "pytest-agent"})
+
+    assert response.status_code == 200
+    line = audit_log.read_text(encoding="utf-8").strip()
+    payload = json.loads(line)
+    assert payload["method"] == "GET"
+    assert payload["path"] == "/v1/health"
+    assert payload["status_code"] == 200
+    assert payload["user_agent"] == "pytest-agent"
+    assert "duration_ms" in payload
+    assert "proxy" not in line.lower()
+
+
 def test_signed_ping_job_roundtrip(monkeypatch, tmp_path) -> None:
     monkeypatch.setenv("CAILAMA_PROXY_KEY", "proxy")
     monkeypatch.setenv("CAILAMA_PROXY_HMAC_SECRET", "secret")

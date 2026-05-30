@@ -146,6 +146,11 @@ Vor Arbeitsbeginn lesen:
   Master versioniert. Authentifizierung, HMAC-Signatur, Job-Store,
   Audit-Logging und Dockerfile liegen jetzt in Source; das Runtime-Deploy
   synchronisiert diese Komponente in den `api-gateway`-Build-Kontext.
+  Update 2026-05-31: Origin-Audit-Logging schreibt weiterhin JSONL auf stderr
+  und kann zusaetzlich per `CAILAMA_AUDIT_LOG_PATH` in eine agentenlesbare
+  Audit-Datei schreiben. Die lokale Runtime-Compose nutzt dafuer
+  `/var/log/cailama/audit.log` als expliziten Schreibpfad fuer den
+  read-only-Container.
 - [ ] Benchmark-Rahmen im Master vorbereiten: gemeinsame Benchmark-
   Orchestrierung fuer CaiLama, Router und Search definieren, Ergebnisablage im
   Master unter `docs/benchmark-results/` oder einer klar benannten

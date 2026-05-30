@@ -24,13 +24,16 @@ class OriginSettings:
     router_base_url: str = "http://router:18080"
     search_base_url: str = "http://search:8080"
     job_dir: Path = Path("/data/jobs")
+    audit_log_path: Path | None = None
 
 
 def load_settings() -> OriginSettings:
+    audit_log_path = os.environ.get("CAILAMA_AUDIT_LOG_PATH", "").strip()
     return OriginSettings(
         router_base_url=os.environ.get("CAILAMA_ROUTER_BASE_URL", "http://router:18080").rstrip("/"),
         search_base_url=os.environ.get("CAILAMA_SEARCH_BASE_URL", "http://search:8080").rstrip("/"),
         job_dir=Path(os.environ.get("CAILAMA_JOB_DIR", "/data/jobs")),
+        audit_log_path=Path(audit_log_path) if audit_log_path else None,
     )
 
 
@@ -121,9 +124,29 @@ async def audit_middleware(request: Request, call_next):
         "duration_ms": round(duration_ms, 2),
         "user_agent": request.headers.get("user-agent", "")[:512],
     }
-    sys.stderr.write(json.dumps(audit_entry, ensure_ascii=False) + "\n")
-    sys.stderr.flush()
+    _write_audit_entry(audit_entry, load_settings().audit_log_path)
     return response
+
+
+def _write_audit_entry(audit_entry: dict[str, Any], audit_log_path: Path | None) -> None:
+    line = json.dumps(audit_entry, ensure_ascii=False) + "\n"
+    sys.stderr.write(line)
+    sys.stderr.flush()
+    if audit_log_path is None:
+        return
+    try:
+        audit_log_path.parent.mkdir(parents=True, exist_ok=True)
+        with audit_log_path.open("a", encoding="utf-8") as handle:
+            handle.write(line)
+    except OSError as exc:
+        error_entry = {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "event": "audit_log_write_failed",
+            "path": str(audit_log_path),
+            "error": exc.__class__.__name__,
+        }
+        sys.stderr.write(json.dumps(error_entry, ensure_ascii=False) + "\n")
+        sys.stderr.flush()
 
 
 @app.middleware("http")

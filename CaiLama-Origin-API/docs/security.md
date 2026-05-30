@@ -23,8 +23,14 @@ match the exact request body. Oversized request bodies are rejected before
 business logic runs.
 
 The service emits JSON audit lines to stderr with timestamp, remote address,
-method, path, status code, duration and user agent. It does not log request
-bodies, signatures, proxy keys, HMAC secrets, prompts or model responses.
+method, path, status code, duration and user agent. If
+`CAILAMA_AUDIT_LOG_PATH` is set, the same JSONL lines are appended to that file
+as an agent-readable runtime audit log. Hardened containers with
+`read_only: true` must expose that path as an explicit writable mount, for
+example `/var/log/cailama/audit.log`.
+
+The audit log does not include request bodies, signatures, proxy keys, HMAC
+secrets, prompts or model responses.
 
 Security headers are added to every response:
 

@@ -152,6 +152,10 @@ Baseline:
 - Persistente Datenvolumes muessen zur Container-UID passen. Besonders
   betroffen sind Suchindex-, Modell-Cache-, Job-, Web-Artefakt- und
   Zertifikatsvolumes.
+- Der Origin-/API-Gateway-Audit-Logger schreibt JSONL auf stderr und in
+  gehaerteter Runtime zusaetzlich in einen expliziten Schreibpfad wie
+  `/var/log/cailama/audit.log`. Bei `read_only: true` muss dieser Pfad als
+  eigenes Volume modelliert und fuer die Container-UID beschreibbar sein.
 - Web-Origin-Dienste muessen compose-gefuert sein. Manuell gestartete
   Orphan-Container sind nach der Uebernahme in Compose mit
   `--remove-orphans` zu entfernen, damit Haertungsregeln und Deploys

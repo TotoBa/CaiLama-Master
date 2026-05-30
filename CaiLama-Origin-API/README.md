@@ -31,10 +31,16 @@ Runtime configuration is read from environment variables:
 - `CAILAMA_ROUTER_BASE_URL`
 - `CAILAMA_SEARCH_BASE_URL`
 - `CAILAMA_JOB_DIR`
+- `CAILAMA_AUDIT_LOG_PATH`
 - `CAILAMA_MAX_BODY_BYTES`
 
 Secrets are provided by the private runtime environment. Do not put real values
 into this repository.
+
+`CAILAMA_AUDIT_LOG_PATH` is optional for development. In hardened runtime it
+should point at a writable JSONL file such as `/var/log/cailama/audit.log`.
+The container must receive that path as an explicit writable volume or tmpfs
+when `read_only: true` is active.
 
 ## Development
 
